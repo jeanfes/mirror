@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { z } from "zod"
 import { authSecret } from "@/lib/auth-secret"
-import { validateUserCredentials } from "@/lib/user-store"
+import { validateUserCredentials } from "@/features/auth/services/user-store"
 
 const credentialsSchema = z.object({
   email: z.string().email(),

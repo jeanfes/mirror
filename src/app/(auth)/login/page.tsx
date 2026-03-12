@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation"
-import { LoginForm } from "@/components/auth/LoginForm"
+import { LoginForm } from "@/features/auth"
 import { getSafeServerSession } from "@/lib/auth-session"
 
 export default async function LoginPage() {
     const session = await getSafeServerSession()
     if (session?.user) {
-        redirect("/dashboard")
+        redirect("/assistant")
     }
 
     return (

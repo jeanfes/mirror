@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { Bot, CalendarDays, CircleDot, Grid2X2, History, Layers3, Plus, Search, Sparkles, Users } from "lucide-react"
 import { Button, Card } from "@/components/ui"
+import Link from "next/link"
 
 const featureCards = [
     {

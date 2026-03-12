@@ -47,7 +47,7 @@ export function RegisterForm() {
             return
         }
 
-        router.push("/dashboard")
+        router.push("/assistant")
         router.refresh()
     }
 
@@ -61,7 +61,7 @@ export function RegisterForm() {
                     type="text"
                     minLength={2}
                     required
-                    className="h-10 w-full rounded-[12px] border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                    className="h-10 w-full rounded-xl border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
                 />
             </div>
             <div>
@@ -71,7 +71,7 @@ export function RegisterForm() {
                     onChange={(event) => setEmail(event.target.value)}
                     type="email"
                     required
-                    className="h-10 w-full rounded-[12px] border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                    className="h-10 w-full rounded-xl border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
                 />
             </div>
             <div>
@@ -82,7 +82,7 @@ export function RegisterForm() {
                     type="password"
                     minLength={8}
                     required
-                    className="h-10 w-full rounded-[12px] border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                    className="h-10 w-full rounded-xl border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
                 />
             </div>
             {error ? <p className="text-[13px] text-red-600">{error}</p> : null}

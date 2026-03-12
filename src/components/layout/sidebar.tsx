@@ -10,24 +10,22 @@ import {
     CreditCard,
     History,
     Settings,
-    Sparkles,
     Trash2,
     User,
     Users
 } from "lucide-react"
 
 const navItems = [
-    { href: "/dashboard", label: "Home", icon: Bot },
-    { href: "/dashboard/assistant", label: "Assistant", icon: Sparkles },
-    { href: "/dashboard/planner", label: "Planner", icon: CalendarDays },
-    { href: "/dashboard/team", label: "Team", icon: Users },
-    { href: "/dashboard/personas", label: "Personas", icon: User },
-    { href: "/dashboard/history", label: "History", icon: History },
-    { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-    { href: "/dashboard/settings", label: "Settings", icon: Settings },
-    { href: "/dashboard/account", label: "Account", icon: CreditCard },
-    { href: "/dashboard/plans", label: "Plans", icon: Bot },
-    { href: "/dashboard/trash", label: "Trash", icon: Trash2 }
+    { href: "/assistant", label: "Home", icon: Bot },
+    { href: "/planner", label: "Planner", icon: CalendarDays },
+    { href: "/team", label: "Team", icon: Users },
+    { href: "/personas", label: "Personas", icon: User },
+    { href: "/history", label: "History", icon: History },
+    { href: "/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/settings", label: "Settings", icon: Settings },
+    { href: "/account", label: "Account", icon: CreditCard },
+    { href: "/plans", label: "Plans", icon: Bot },
+    { href: "/trash", label: "Trash", icon: Trash2 }
 ]
 
 export function Sidebar() {

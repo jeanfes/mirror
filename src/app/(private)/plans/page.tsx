@@ -25,7 +25,7 @@ export default function PlansPage() {
                                 </li>
                             ))}
                         </ul>
-                        <Link className="mt-4 block" href="/dashboard/account">
+                        <Link className="mt-4 block" href="/account">
                             <Button className="w-full">Select {plan.name}</Button>
                         </Link>
                     </Card>
