@@ -7,9 +7,9 @@ export default async function LoginPage() {
     if (user) redirect("/profiles")
 
     return (
-        <div>
-            <h2 className="text-2xl font-bold text-[#141824]">Welcome back</h2>
-            <p className="mb-5 mt-1 text-[14px] text-slate-600">Sign in to continue to your private workspace.</p>
+        <div className="text-center sm:text-left">
+            <h2 className="text-2xl font-bold tracking-tight text-primary-dark sm:text-3xl">Bienvenido de nuevo</h2>
+            <p className="mb-8 mt-2 text-[15px] text-secondary-text leading-relaxed">Inicia sesión y continúa potenciando tu red profesional.</p>
             <LoginForm />
         </div>
     )
