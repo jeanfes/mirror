@@ -18,18 +18,24 @@ export function LoginForm() {
         setIsPending(true)
         setError(null)
 
-        const supabase = createClient()
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+        try {
+            const supabase = createClient()
+            const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
-        setIsPending(false)
+            setIsPending(false)
 
-        if (authError) {
-            setError("Email o contraseña incorrectos.")
+            if (authError) {
+                setError("Email o contraseña incorrectos.")
+                return
+            }
+
+            router.push("/assistant")
+            router.refresh()
+        } catch {
+            setIsPending(false)
+            setError("No se pudo conectar con autenticación. Revisa tu configuración de Supabase.")
             return
         }
-
-        router.push("/assistant")
-        router.refresh()
     }
 
     return (

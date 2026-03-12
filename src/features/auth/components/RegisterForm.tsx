@@ -19,22 +19,28 @@ export function RegisterForm() {
         setIsPending(true)
         setError(null)
 
-        const supabase = createClient()
-        const { error: authError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { name } }
-        })
+        try {
+            const supabase = createClient()
+            const { error: authError } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { name } }
+            })
 
-        setIsPending(false)
+            setIsPending(false)
 
-        if (authError) {
-            setError(authError.message === "User already registered" ? "Email ya registrado." : "No se pudo crear la cuenta.")
+            if (authError) {
+                setError(authError.message === "User already registered" ? "Email ya registrado." : "No se pudo crear la cuenta.")
+                return
+            }
+
+            router.push("/assistant")
+            router.refresh()
+        } catch {
+            setIsPending(false)
+            setError("No se pudo conectar con autenticación. Revisa tu configuración de Supabase.")
             return
         }
-
-        router.push("/assistant")
-        router.refresh()
     }
 
     return (

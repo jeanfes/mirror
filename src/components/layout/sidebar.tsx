@@ -32,7 +32,7 @@ export function Sidebar() {
     const pathname = usePathname()
 
     return (
-        <aside className="w-min p-3 flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-between py-5">
+        <aside className="w-min p-5 flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-between py-5">
             <div className="space-y-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)

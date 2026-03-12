@@ -1,6 +1,11 @@
+import { redirect } from "next/navigation"
+import { getServerSession } from "@/lib/auth"
 import { RegisterForm } from "@/features/auth/components/RegisterForm"
 
 export default async function RegisterPage() {
+    const user = await getServerSession()
+    if (user) redirect("/assistant")
+
     return (
         <div>
             <h2 className="text-2xl font-bold text-[#141824]">Create your account</h2>

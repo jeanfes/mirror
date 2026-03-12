@@ -8,5 +8,5 @@ export default async function HomePage() {
         redirect("/assistant")
     }
 
-    redirect("/login")
+    redirect("/landing")
 }
