@@ -4,27 +4,20 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import clsx from "clsx"
 import {
-    BarChart3,
-    Bot,
-    CalendarDays,
+    Crown,
     CreditCard,
     History,
     Settings,
     Trash2,
-    User,
     Users
 } from "lucide-react"
 
 const navItems = [
-    { href: "/assistant", label: "Home", icon: Bot },
-    { href: "/planner", label: "Planner", icon: CalendarDays },
-    { href: "/team", label: "Team", icon: Users },
-    { href: "/profiles", label: "Profiles", icon: User },
+    { href: "/profiles", label: "Profiles", icon: Users },
     { href: "/history", label: "History", icon: History },
-    { href: "/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/settings", label: "Settings", icon: Settings },
     { href: "/account", label: "Account", icon: CreditCard },
-    { href: "/plans", label: "Plans", icon: Bot },
+    { href: "/plans", label: "Plans", icon: Crown },
     { href: "/trash", label: "Trash", icon: Trash2 }
 ]
 

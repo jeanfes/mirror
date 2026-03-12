@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
-import { isAuthEnabled, isPrivatePath } from "@/lib/auth-config"
+import { isAuthEnabled, isAuthPath, isPrivatePath } from "@/lib/auth-config"
 
 export async function proxy(request: NextRequest) {
   if (!isAuthEnabled()) {
@@ -31,8 +31,13 @@ export async function proxy(request: NextRequest) {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
+  const pathname = request.nextUrl.pathname
 
-  const isPrivate = isPrivatePath(request.nextUrl.pathname)
+  if (user && (pathname === "/" || isAuthPath(pathname))) {
+    return NextResponse.redirect(new URL("/profiles", request.url))
+  }
+
+  const isPrivate = isPrivatePath(pathname)
 
   if (isPrivate && !user) {
     return NextResponse.redirect(new URL("/login", request.url))

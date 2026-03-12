@@ -4,7 +4,7 @@ import { LoginForm } from "@/features/auth/components/LoginForm"
 
 export default async function LoginPage() {
     const user = await getServerSession()
-    if (user) redirect("/assistant")
+    if (user) redirect("/profiles")
 
     return (
         <div>

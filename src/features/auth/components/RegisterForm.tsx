@@ -34,7 +34,7 @@ export function RegisterForm() {
                 return
             }
 
-            router.push("/assistant")
+            router.push("/profiles")
             router.refresh()
         } catch {
             setIsPending(false)

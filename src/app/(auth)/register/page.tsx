@@ -4,7 +4,7 @@ import { RegisterForm } from "@/features/auth/components/RegisterForm"
 
 export default async function RegisterPage() {
     const user = await getServerSession()
-    if (user) redirect("/assistant")
+    if (user) redirect("/profiles")
 
     return (
         <div>

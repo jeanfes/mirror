@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation"
 import { getServerSession } from "@/lib/auth"
+import LandingPage from "./(public)/landing/page"
 
-export default async function HomePage() {
+export default async function EntryRoute() {
     const user = await getServerSession()
 
     if (user) {
-        redirect("/assistant")
+        redirect("/profiles")
     }
 
-    redirect("/landing")
+    return <LandingPage/>
 }
