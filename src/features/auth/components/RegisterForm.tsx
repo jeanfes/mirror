@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui"
 
 export function RegisterForm() {
@@ -19,31 +19,17 @@ export function RegisterForm() {
         setIsPending(true)
         setError(null)
 
-        const response = await fetch("/api/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name, email, password })
-        })
-
-        if (!response.ok) {
-            const data = (await response.json().catch(() => null)) as { error?: string } | null
-            setIsPending(false)
-            setError(data?.error === "EMAIL_EXISTS" ? "Email already registered." : "Could not create account.")
-            return
-        }
-
-        const signInResult = await signIn("credentials", {
+        const supabase = createClient()
+        const { error: authError } = await supabase.auth.signUp({
             email,
             password,
-            redirect: false
+            options: { data: { name } }
         })
 
         setIsPending(false)
 
-        if (!signInResult || signInResult.error) {
-            setError("Account created, but sign-in failed. Please try login.")
+        if (authError) {
+            setError(authError.message === "User already registered" ? "Email ya registrado." : "No se pudo crear la cuenta.")
             return
         }
 

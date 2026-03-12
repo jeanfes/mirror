@@ -3,9 +3,9 @@ import { Check } from "lucide-react"
 import { Card, Button } from "@/components/ui"
 
 const plans = [
-    { name: "Free", credits: 120, price: "$0", features: ["1 active persona", "Basic history", "Community support"] },
-    { name: "Pro", credits: 1200, price: "$19", features: ["10 personas", "Advanced history", "Priority support"] },
-    { name: "Elite", credits: 4000, price: "$59", features: ["Unlimited personas", "Advanced analytics", "Team collaboration"] }
+    { name: "Free", credits: 120, price: "$0", features: ["1 active profile", "Basic history", "Community support"] },
+    { name: "Pro", credits: 1200, price: "$19", features: ["10 profiles", "Advanced history", "Priority support"] },
+    { name: "Elite", credits: 4000, price: "$59", features: ["Unlimited profiles", "Advanced analytics", "Team collaboration"] }
 ]
 
 export default function PlansPage() {

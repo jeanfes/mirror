@@ -1,6 +1,6 @@
-import type { AccountStatus, DashboardSeed, HistoryItem, Persona, QuickStats } from "@/lib/types"
+import { AccountStatus, HistoryItem, Persona } from "@/types/dashboard"
 
-const personas: Persona[] = [
+export const profiles: Persona[] = [
   {
     id: "persona_1",
     name: "Insight Architect",
@@ -33,7 +33,7 @@ const personas: Persona[] = [
   }
 ]
 
-const history: HistoryItem[] = [
+export const history: HistoryItem[] = [
   {
     id: "hist_1",
     personaId: "persona_1",
@@ -60,31 +60,8 @@ const history: HistoryItem[] = [
   }
 ]
 
-const account: AccountStatus = {
+export const account: AccountStatus = {
   plan: "Pro",
   creditsRemaining: 842,
   renewalDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 20).toISOString()
-}
-
-function getQuickStats(): QuickStats {
-  const now = new Date()
-  const generatedThisMonth = history.filter((item) => {
-    const ts = new Date(item.timestamp)
-    return ts.getMonth() === now.getMonth() && ts.getFullYear() === now.getFullYear()
-  }).length
-
-  return {
-    generatedThisMonth,
-    activePersonas: personas.filter((item) => item.enabled).length,
-    lastGeneratedAt: history[0]?.timestamp ?? null
-  }
-}
-
-export function getDashboardSeed(): DashboardSeed {
-  return {
-    personas,
-    history,
-    account,
-    stats: getQuickStats()
-  }
 }

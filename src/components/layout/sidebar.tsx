@@ -19,7 +19,7 @@ const navItems = [
     { href: "/assistant", label: "Home", icon: Bot },
     { href: "/planner", label: "Planner", icon: CalendarDays },
     { href: "/team", label: "Team", icon: Users },
-    { href: "/personas", label: "Personas", icon: User },
+    { href: "/profiles", label: "Profiles", icon: User },
     { href: "/history", label: "History", icon: History },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/settings", label: "Settings", icon: Settings },
@@ -32,8 +32,8 @@ export function Sidebar() {
     const pathname = usePathname()
 
     return (
-        <aside className="neo-panel flex min-h-0 flex-col items-center justify-between rounded-[22px] px-1.5 py-2">
-            <nav className="custom-scrollbar flex min-h-0 flex-1 flex-col items-center gap-1.5 overflow-y-auto">
+        <aside className="w-min p-3 flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-between py-5">
+            <div className="space-y-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
                     const Icon = item.icon
@@ -45,19 +45,18 @@ export function Sidebar() {
                             title={item.label}
                             aria-label={item.label}
                             className={clsx(
-                                "inline-flex h-10 w-10 items-center justify-center rounded-full transition-all",
+                                "inline-flex h-12 w-12 items-center justify-center rounded-full transition-all",
                                 isActive
                                     ? "bg-[#171b2d] text-white shadow-premium-sm"
                                     : "bg-white/90 text-slate-400 hover:bg-white hover:text-slate-700"
                             )}
                         >
-                            <Icon className="h-4 w-4" />
+                            <Icon className="h-5 w-5" />
                         </Link>
                     )
                 })}
-            </nav>
-
-            <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-[14px] font-bold text-white">
+            </div>
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-black text-[14px] font-bold text-white">
                 N
             </div>
         </aside>

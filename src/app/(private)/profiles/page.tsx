@@ -1,13 +1,12 @@
-import { getDashboardPersonas } from "@/lib/data-access/dashboard"
+import { profiles } from "@/lib/mock-data"
 import { Card } from "@/components/ui"
 
-export default async function PersonasPage() {
-    const { personas } = await getDashboardPersonas()
+export default async function ProfilesPage() {
 
     return (
         <div>
             <div className="grid gap-4 md:grid-cols-2">
-                {personas.map((persona) => (
+                {profiles.map((persona) => (
                     <Card key={persona.id} className="p-5">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-semibold text-[#141824]">{persona.name}</h2>

@@ -3,13 +3,13 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui"
 
 export function LoginForm() {
     const router = useRouter()
-    const [email, setEmail] = useState("demo@mirror.app")
-    const [password, setPassword] = useState("Mirror123!")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [error, setError] = useState<string | null>(null)
     const [isPending, setIsPending] = useState(false)
 
@@ -18,16 +18,13 @@ export function LoginForm() {
         setIsPending(true)
         setError(null)
 
-        const result = await signIn("credentials", {
-            email,
-            password,
-            redirect: false
-        })
+        const supabase = createClient()
+        const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
         setIsPending(false)
 
-        if (!result || result.error) {
-            setError("Invalid credentials. Try demo@mirror.app / Mirror123!")
+        if (authError) {
+            setError("Email o contraseña incorrectos.")
             return
         }
 

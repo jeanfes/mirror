@@ -33,13 +33,13 @@ export interface AccountStatus {
 
 export interface QuickStats {
   generatedThisMonth: number
-  activePersonas: number
+  activeProfiles: number
   lastGeneratedAt: number | null
 }
 
 export interface DashboardSeed {
   account: AccountStatus
-  personas: Persona[]
+  profiles: Persona[]
   history: HistoryItem[]
   stats: QuickStats
 }

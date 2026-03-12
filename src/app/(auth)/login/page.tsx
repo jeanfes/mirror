@@ -1,13 +1,6 @@
-import { redirect } from "next/navigation"
-import { LoginForm } from "@/features/auth"
-import { getSafeServerSession } from "@/lib/auth-session"
+import { LoginForm } from "@/features/auth/components/LoginForm"
 
 export default async function LoginPage() {
-    const session = await getSafeServerSession()
-    if (session?.user) {
-        redirect("/assistant")
-    }
-
     return (
         <div>
             <h2 className="text-2xl font-bold text-[#141824]">Welcome back</h2>
