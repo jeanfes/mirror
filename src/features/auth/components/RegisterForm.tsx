@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui"
+import { Button } from "@/components/ui/Button"
 
 export function RegisterForm() {
     const router = useRouter()
@@ -76,9 +76,9 @@ export function RegisterForm() {
             </button>
 
             <div className="relative flex items-center py-2">
-                <div className="flex-grow border-t border-border-soft"></div>
+                <div className="grow border-t border-border-soft"></div>
                 <span className="shrink-0 px-4 text-[12px] font-medium text-muted-text">O con correo electrónico</span>
-                <div className="flex-grow border-t border-border-soft"></div>
+                <div className="grow border-t border-border-soft"></div>
             </div>
 
             <div>

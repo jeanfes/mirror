@@ -1,14 +1,14 @@
-import { PublicHeader } from "@/components/layout/PublicHeader";
-import { PublicFooter } from "@/components/layout/PublicFooter";
+import { LandingFooter } from "@/features/landing/components/footer";
+import { LandingHeader } from "@/features/landing/components/header";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="relative min-h-screen flex flex-col">
-            <PublicHeader />
+            <LandingHeader />
             <div className="flex-1 pt-16">
                 {children}
             </div>
-            <PublicFooter />
+            <LandingFooter />
         </div>
     );
 }

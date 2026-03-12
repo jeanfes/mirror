@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Check } from "lucide-react"
-import { Card, Button } from "@/components/ui"
+import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
 
 const plans = [
     { name: "Free", credits: 120, price: "$0", features: ["1 active profile", "Basic history", "Community support"] },

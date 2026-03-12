@@ -1,5 +1,5 @@
+import { Card } from "@/components/ui/Card"
 import { profiles } from "@/lib/mock-data"
-import { Card } from "@/components/ui"
 
 export default async function ProfilesPage() {
 

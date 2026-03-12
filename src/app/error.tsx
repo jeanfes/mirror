@@ -1,7 +1,8 @@
 "use client"
 
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { useEffect } from "react"
-import { Button, Card } from "@/components/ui"
 
 export default function GlobalError({ error, reset }: { error: Error; reset: () => void }) {
     useEffect(() => {

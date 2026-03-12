@@ -1,7 +1,9 @@
 "use client"
 
+import { Card } from "@/components/ui/Card"
+import { Select } from "@/components/ui/Select"
+import { Toggle } from "@/components/ui/Toggle"
 import { useState } from "react"
-import { Card, Select, Toggle } from "@/components/ui"
 
 export default function SettingsPage() {
     const [autoInsert, setAutoInsert] = useState(false)

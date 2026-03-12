@@ -1,4 +1,5 @@
-import { Card, Button } from "@/components/ui"
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 export default function TrashPage() {
     return (

@@ -24,7 +24,7 @@ export function Select({ value, onChange, options, className = "" }: SelectProps
             <select
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
-                className="w-full h-10 appearance-none rounded-[12px] border border-[#E6EAF2] bg-white px-3 pr-9 text-[13px] font-medium text-[#1A1D26] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                className="w-full h-10 appearance-none rounded-xl border border-[#E6EAF2] bg-white px-3 pr-9 text-[13px] font-medium text-[#1A1D26] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
             >
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -32,8 +32,8 @@ export function Select({ value, onChange, options, className = "" }: SelectProps
                     </option>
                 ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 top-[31px] h-4 w-4 text-slate-500" />
-            {selected && <Check className="pointer-events-none absolute right-8 top-[31px] h-4 w-4 text-[#8B5CF6]" />}
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-7.75 h-4 w-4 text-slate-500" />
+            {selected && <Check className="pointer-events-none absolute right-8 top-7.75 h-4 w-4 text-[#8B5CF6]" />}
         </label>
     )
 }

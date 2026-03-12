@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react"
-import { Button } from "@/components/ui"
+import { Button } from "../ui/Button"
 
 export function Navbar() {
     return (

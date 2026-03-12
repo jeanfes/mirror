@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export function PublicFooter() {
+export function LandingFooter() {
     return (
         <footer id="contact" className="w-full border-t border-border-soft bg-white px-6 py-16">
             <div className="mx-auto max-w-6xl grid gap-12 sm:grid-cols-2 md:grid-cols-4">

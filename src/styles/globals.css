@@ -139,3 +139,69 @@ h6 {
   border: 1px solid rgba(241, 243, 247, 0.9);
   border-radius: 999px;
 }
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+
+.neo-input {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-soft);
+  color: var(--primary-dark);
+  transition: all 200ms ease;
+}
+
+.neo-input:focus {
+  background: rgba(255, 255, 255, 1);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(117, 206, 243, 0.25);
+  outline: none;
+}
+
+.neo-input::placeholder {
+  color: var(--muted-text);
+}
+
+/* fluid internal text gradient effect */
+@keyframes mirror-fluid {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-mirror {
+  background: linear-gradient(
+    270deg,
+    #75cef3,
+    #a8c8f8,
+    #3b82f6,
+    #75cef3
+  );
+  background-size: 400% 400%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: mirror-fluid 8s ease infinite;
+  display: inline-block;
+}

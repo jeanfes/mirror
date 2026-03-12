@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui"
+import { Card } from "@/components/ui/Card";
 
 export default async function HistoryPage() {
     return (
