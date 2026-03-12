@@ -6,7 +6,7 @@ Next.js app for the Mirror product web experience.
 
 - Public landing inspired by the extension visual style.
 - Real authentication flow with Auth.js (NextAuth credentials provider).
-- Private dashboard routes with middleware protection.
+- Private workspace routes with middleware protection.
 - Product modules in English:
 	- Home
 	- Assistant
@@ -19,7 +19,7 @@ Next.js app for the Mirror product web experience.
 	- Account
 	- Plans
 	- Trash
-- API routes for auth and dashboard seed data.
+- API routes for auth and workspace seed data.
 - UI system adapted from extension conventions (neo-shell, neo-card, buttons, toggles, select, Lucide icons).
 
 ## Requirements
@@ -56,15 +56,15 @@ pnpm dev
 
 - Current implementation uses NextAuth credentials plus in-memory user store for MVP speed.
 - Registration endpoint creates users in-memory while the server is running.
-- For production, replace `lib/user-store.ts` with persistent storage (Postgres, Supabase, or Prisma).
+- For production, replace `features/auth/lib/user-store.ts` with persistent storage (Postgres, Supabase, or Prisma).
 
 ## API Routes
 
 - `GET /api/auth/me`
-- `POST /api/register`
-- `GET /api/dashboard/overview`
-- `GET /api/dashboard/personas`
-- `GET /api/dashboard/history`
-- `GET /api/dashboard/account`
-- `GET /api/dashboard/plans`
-- `GET /api/dashboard/trash`
+- `POST /api/auth/register`
+- `GET /api/workspace/overview`
+- `GET /api/workspace/personas`
+- `GET /api/workspace/history`
+- `GET /api/workspace/account`
+- `GET /api/workspace/plans`
+- `GET /api/workspace/trash`

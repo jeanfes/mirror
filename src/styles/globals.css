@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+:root {
+  --primary-dark: #0f1320;
+  --primary-text: #1a1d26;
+  --secondary-text: #6b7280;
+  --muted-text: #9ca3af;
+  --bg-main: #eef1f5;
+  --bg-lavender: #d6d2f0;
+  --bg-beige: #efe6da;
+  --bg-card: #ffffff;
+  --accent-orange: #f59e0b;
+  --accent-green: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --border-soft: #e6eaf2;
+  --border-light: #f1f3f7;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --focus-ring: rgba(139, 92, 246, 0.15);
+}
+
+@theme inline {
+  --font-sans: var(--font-space-grotesk);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--primary-text);
+  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 10% 20%, #d6d2f0 0%, transparent 42%),
+    radial-gradient(circle at 90% 10%, #efe6da 0%, transparent 44%),
+    #eef1f5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.02em;
+}
+
+.neo-shell {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(214, 210, 240, 0.78) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(239, 230, 218, 0.78) 0%, transparent 40%),
+    rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+}
+
+.neo-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.74));
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.neo-panel {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--border-soft);
+  border-radius: 50px;
+  backdrop-filter: blur(20px);
+}
+
+.dashboard-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-shell::before {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: -120px;
+  width: 280px;
+  height: 280px;
+  border-radius: 9999px;
+  background: rgba(214, 210, 240, 0.46);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.dashboard-shell::after {
+  content: "";
+  position: absolute;
+  left: -130px;
+  bottom: -130px;
+  width: 300px;
+  height: 300px;
+  border-radius: 9999px;
+  background: rgba(239, 230, 218, 0.5);
+  filter: blur(46px);
+  pointer-events: none;
+}
+
+.neo-btn-primary {
+  color: #fff;
+  background: var(--primary-dark);
+  border: 1px solid rgba(15, 19, 32, 0.95);
+  border-radius: 12px;
+  transition: all 180ms ease;
+}
+
+.neo-btn-primary:hover {
+  background: #171d2f;
+}
+
+.neo-btn-muted {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  color: var(--secondary-text);
+  transition: all 180ms ease;
+}
+
+.neo-btn-muted:hover {
+  background: #f8fafc;
+}
+
+.neo-btn-muted:focus-visible,
+.neo-btn-primary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+}
+
+.shadow-premium-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-premium-md {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(230, 234, 242, 0.8);
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(156, 163, 175, 0.6) 0%, rgba(107, 114, 128, 0.62) 100%);
+  border: 1px solid rgba(241, 243, 247, 0.9);
+  border-radius: 999px;
+}
