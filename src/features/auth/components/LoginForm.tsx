@@ -5,9 +5,12 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/Button"
+import { useLanguageStore } from "@/store/useLanguageStore"
+import { motion } from "motion/react"
 
 export function LoginForm() {
     const router = useRouter()
+    const { t } = useLanguageStore()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState<string | null>(null)
@@ -40,7 +43,9 @@ export function LoginForm() {
 
     return (
         <form className="space-y-4" onSubmit={onSubmit}>
-            <button 
+            <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 type="button" 
                 className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all hover:bg-slate-50 focus:ring-4 focus:ring-accent-purple/10"
                 onClick={() => {
@@ -67,43 +72,47 @@ export function LoginForm() {
                     />
                     <path d="M1 1h22v22H1z" fill="none" />
                 </svg>
-                Continuar con Google
-            </button>
+                {t.auth.googleBtn}
+            </motion.button>
 
             <div className="relative flex items-center py-2">
                 <div className="grow border-t border-border-soft"></div>
-                <span className="shrink-0 px-4 text-[12px] font-medium text-muted-text">O con correo electrónico</span>
+                <span className="shrink-0 px-4 text-[12px] font-medium text-muted-text">{t.auth.orEmail}</span>
                 <div className="grow border-t border-border-soft"></div>
             </div>
 
             <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">Correo electrónico</label>
-                <input
+                <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">{t.auth.emailLabel}</label>
+                <motion.input
+                    whileFocus={{ scale: 1.01 }}
                     value={email}
-                    onChange={(event) => setEmail(event.target.value)}
+                    onChange={(event: any) => setEmail(event.target.value)}
                     type="email"
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
-                    placeholder="tu@email.com"
+                    placeholder={t.auth.emailPlaceholder}
                 />
             </div>
             <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">Contraseña</label>
-                <input
+                <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">{t.auth.passwordLabel}</label>
+                <motion.input
+                    whileFocus={{ scale: 1.01 }}
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event: any) => setPassword(event.target.value)}
                     type="password"
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
-                    placeholder="••••••••"
+                    placeholder={t.auth.passwordPlaceholder}
                 />
             </div>
             {error ? <p className="text-[13px] font-medium text-danger">{error}</p> : null}
-            <Button className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2" type="submit" disabled={isPending}>
-                {isPending ? "Iniciando sesión..." : "Iniciar sesión"}
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2" type="submit" disabled={isPending}>
+                    {isPending ? t.auth.loading : t.auth.loginBtn}
+                </Button>
+            </motion.div>
             <p className="text-center text-[14px] text-secondary-text pt-4">
-                ¿Eres nuevo aquí? <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href="/register">Crear cuenta</Link>
+                {t.auth.noAccount} <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href="/register">{t.auth.registerLink}</Link>
             </p>
         </form>
     )

@@ -12,12 +12,15 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-        default: "Mirror Web",
+        default: "Mirror | Landing",
         template: "%s | Mirror"
     },
     description: "Digital voice workspace for Mirror",
+    icons: {
+        icon: "/icon.png"
+    },
     openGraph: {
-        title: "Mirror Web",
+        title: "Mirror",
         description: "Digital voice workspace for Mirror",
         url: "/",
         siteName: "Mirror",
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Mirror Web",
+        title: "Mirror",
         description: "Digital voice workspace for Mirror"
     }
 }

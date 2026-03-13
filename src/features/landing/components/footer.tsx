@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 export function LandingFooter() {
+    const { t } = useLanguageStore();
+    const currentYear = new Date().getFullYear();
+
     return (
         <footer id="contact" className="w-full border-t border-border-soft bg-white px-6 py-16">
             <div className="mx-auto max-w-6xl grid gap-12 sm:grid-cols-2 md:grid-cols-4">
@@ -11,39 +17,33 @@ export function LandingFooter() {
                         <h3 className="text-xl font-black text-primary-dark">Mirror</h3>
                     </div>
                     <p className="text-[15px] font-medium text-secondary-text max-w-xs">
-                        Tu asistente inteligente para dominar el networking en LinkedIn. Construye relaciones que importan.
+                        {t.footer.description}
                     </p>
                 </div>
-                
+
                 <div className="space-y-4">
-                    <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">Producto</h4>
+                    <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">{t.footer.product}</h4>
                     <ul className="space-y-3">
-                        <li><Link href="#features" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">Features</Link></li>
-                        <li><Link href="#pricing" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">Pricing</Link></li>
-                        <li><Link href="#faq" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">FAQ</Link></li>
+                        <li><Link href="/features" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.features}</Link></li>
+                        <li><Link href="/pricing" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.pricing}</Link></li>
+                        <li><Link href="/faq" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.faq}</Link></li>
                     </ul>
                 </div>
-                
+
                 <div className="space-y-4">
-                    <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">Contacto</h4>
+                    <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">{t.footer.contactTitle}</h4>
                     <ul className="space-y-3">
                         <li><a href="mailto:soporte@mirror.com" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">soporte@mirror.com</a></li>
-                        <li><a href="#" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">Centro de ayuda</a></li>
-                        <li><a href="#" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">Términos legales</a></li>
+                        <li><Link href="/help" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.helpCenter}</Link></li>
+                        <li><Link href="/legal" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.legal}</Link></li>
                     </ul>
                 </div>
             </div>
-            
+
             <div className="mx-auto max-w-6xl mt-16 pt-8 border-t border-border-soft flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p className="text-[13px] font-medium text-muted-text">
-                    © {new Date().getFullYear()} Mirror. Todos los derechos reservados.
+                    {t.footer.rights.replace("{year}", currentYear.toString())}
                 </p>
-                <div className="flex gap-4">
-                    {/* Social icons could go here */}
-                    <div className="h-4 w-4 rounded-full bg-border-soft"></div>
-                    <div className="h-4 w-4 rounded-full bg-border-soft"></div>
-                    <div className="h-4 w-4 rounded-full bg-border-soft"></div>
-                </div>
             </div>
         </footer>
     );

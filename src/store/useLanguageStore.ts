@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { dictionaries, Dictionary } from "@/lib/i18n";
 
-type Language = "es" | "en";
+type Language = "es" | "en" | "pt" | "fr" | "de";
 
 interface LanguageState {
   language: Language;
@@ -23,6 +23,15 @@ export const useLanguageStore = create<LanguageState>()(
     }),
     {
       name: "mirror-language-storage",
+      partialize: (state) => ({ language: state.language }),
+      merge: (persistedState: any, currentState) => {
+        const lang = persistedState?.language as Language || currentState.language;
+        return {
+          ...currentState,
+          language: lang,
+          t: dictionaries[lang] || currentState.t,
+        };
+      },
     }
   )
 );

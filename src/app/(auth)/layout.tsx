@@ -1,11 +1,10 @@
 import { ChevronLeft } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="dashboard-shell relative min-h-dvh w-full bg-bg-main overflow-hidden">
-            <header className="absolute top-0 left-0 w-full p-6 z-[100] pointer-events-none">
+            <header className="absolute top-0 left-0 w-full p-6 z-100 pointer-events-none">
                 <div className="mx-auto flex max-w-6xl items-center justify-between">
                     <div className="flex flex-1">
                         <Link
@@ -15,9 +14,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                         >
                             <ChevronLeft className="h-5 w-5" />
                         </Link>
-                    </div>
-                    <div className="flex items-center gap-2 flex-1 justify-end pointer-events-auto">
-                        <Image src="/icon.png" alt="Mirror Logo" width={24} height={24} className="rounded-md" />
                     </div>
                 </div>
             </header>

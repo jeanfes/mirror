@@ -25,16 +25,51 @@ export function LandingHeader() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div className="relative group flex items-center hidden sm:flex">
-                        <Globe className="absolute left-3 h-4 w-4 text-secondary-text pointer-events-none transition-colors group-hover:text-primary-dark" />
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value as "es" | "en")}
-                            className="appearance-none h-10 bg-transparent text-secondary-text font-bold text-[12px] uppercase tracking-wider pl-9 pr-4 rounded-full hover:bg-black/5 hover:text-primary-dark transition-colors cursor-pointer outline-none focus:ring-2 focus:ring-black/5"
+                    <div className="relative group hidden sm:block">
+                        <button
+                            className="flex h-10 items-center justify-center gap-1.5 rounded-full px-4 text-secondary-text transition-colors hover:bg-black/5 hover:text-primary-dark"
                         >
-                            <option value="es">ES</option>
-                            <option value="en">EN</option>
-                        </select>
+                            <Globe className="h-4 w-4" />
+                            <span className="text-[12px] font-bold uppercase tracking-wider">{language}</span>
+                        </button>
+                        
+                        <div className="absolute top-full right-0 mt-2 w-36 rounded-2xl bg-white p-2 shadow-premium-md ring-1 ring-border-soft opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 origin-top-right flex flex-col gap-0.5">
+                            <button
+                                onClick={() => setLanguage("es")}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-bg-main ${language === 'es' ? 'text-primary-dark bg-bg-main/50' : 'text-secondary-text'}`}
+                            >
+                                Español
+                                {language === "es" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
+                            </button>
+                            <button
+                                onClick={() => setLanguage("en")}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-bg-main ${language === 'en' ? 'text-primary-dark bg-bg-main/50' : 'text-secondary-text'}`}
+                            >
+                                English
+                                {language === "en" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
+                            </button>
+                            <button
+                                onClick={() => setLanguage("pt")}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-bg-main ${language === 'pt' ? 'text-primary-dark bg-bg-main/50' : 'text-secondary-text'}`}
+                            >
+                                Português
+                                {language === "pt" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
+                            </button>
+                            <button
+                                onClick={() => setLanguage("fr")}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-bg-main ${language === 'fr' ? 'text-primary-dark bg-bg-main/50' : 'text-secondary-text'}`}
+                            >
+                                Français
+                                {language === "fr" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
+                            </button>
+                            <button
+                                onClick={() => setLanguage("de")}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-bg-main ${language === 'de' ? 'text-primary-dark bg-bg-main/50' : 'text-secondary-text'}`}
+                            >
+                                Deutsch
+                                {language === "de" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
+                            </button>
+                        </div>
                     </div>
                     <Link
                         href="/login"
