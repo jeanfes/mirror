@@ -11,7 +11,7 @@ export default function PricingPage() {
     return (
         <main className="relative flex w-full flex-col items-center overflow-x-hidden pt-10 pb-20">
             <section className="w-full max-w-5xl px-6 pt-20 pb-16 text-center z-10">
-                <motion.h1 
+                <motion.h1
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
@@ -19,7 +19,7 @@ export default function PricingPage() {
                 >
                     {t.pricing.title1} <span className="text-mirror font-extrabold pb-2">{t.pricing.titleSpan}</span>
                 </motion.h1>
-                <motion.p 
+                <motion.p
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25, delay: 0.05, ease: "easeOut" }}
@@ -31,13 +31,13 @@ export default function PricingPage() {
 
             <section className="w-full max-w-5xl px-6 py-12">
                 <div className="grid gap-8 md:grid-cols-2 lg:gap-12 items-center max-w-4xl mx-auto">
-                    
+
                     {/* Free Plan */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.1, ease: "easeOut" }}
-                        className="neo-card p-10 flex flex-col border border-border-light h-full"
+                        className="neo-card h-full rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 flex flex-col shadow-premium-sm"
                     >
                         <div className="mb-6">
                             <h2 className="text-2xl font-black text-primary-dark">{t.pricing.freePlan}</h2>
@@ -63,7 +63,7 @@ export default function PricingPage() {
                     </motion.div>
 
                     {/* Pro Plan */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.15, ease: "easeOut" }}

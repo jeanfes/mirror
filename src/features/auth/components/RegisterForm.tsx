@@ -48,10 +48,10 @@ export function RegisterForm() {
 
     return (
         <form className="space-y-4" onSubmit={onSubmit}>
-            <motion.button 
+            <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                type="button" 
+                type="button"
                 className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all hover:bg-slate-50 focus:ring-4 focus:ring-accent-purple/10"
                 onClick={() => {
                     const supabase = createClient()
@@ -91,7 +91,7 @@ export function RegisterForm() {
                 <motion.input
                     whileFocus={{ scale: 1.01 }}
                     value={name}
-                    onChange={(event: any) => setName(event.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
                     type="text"
                     minLength={2}
                     required
@@ -104,7 +104,7 @@ export function RegisterForm() {
                 <motion.input
                     whileFocus={{ scale: 1.01 }}
                     value={email}
-                    onChange={(event: any) => setEmail(event.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                     type="email"
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
@@ -116,7 +116,7 @@ export function RegisterForm() {
                 <motion.input
                     whileFocus={{ scale: 1.01 }}
                     value={password}
-                    onChange={(event: any) => setPassword(event.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                     type="password"
                     minLength={8}
                     required

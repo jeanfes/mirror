@@ -84,7 +84,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
         <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
             <DialogContent className="w-[min(94vw,760px)] rounded-[28px] p-0 overflow-hidden">
                 <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
-                    <div className="border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:border-b-0 lg:border-r">
+                    <div className="overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
                             <Sparkles className="h-3.5 w-3.5" />
                             Voice editor

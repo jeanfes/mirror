@@ -71,11 +71,12 @@ export function HistoryFilters({
                     </div>
                 </div>
 
-                <Select value={profileValue} onChange={onProfileChange} options={profileOptions} className="rounded-2xl" />
+                <Select value={profileValue} onChange={onProfileChange} options={profileOptions} label="Profile" className="rounded-2xl" />
 
                 <Select
                     value={appliedValue}
                     onChange={(value) => onAppliedChange(value as "all" | "applied" | "pending")}
+                    label="Status"
                     options={[
                         { label: "All statuses", value: "all" },
                         { label: "Applied", value: "applied" },

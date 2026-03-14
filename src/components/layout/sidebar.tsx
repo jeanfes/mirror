@@ -11,8 +11,9 @@ import {
     Trash2,
     Users
 } from "lucide-react"
+import { UserMenu } from "./UserMenu"
 
-const navItems = [
+export const navItems = [
     { href: "/profiles", label: "Profiles", icon: Users },
     { href: "/history", label: "History", icon: History },
     { href: "/settings", label: "Settings", icon: Settings },
@@ -25,7 +26,7 @@ export function Sidebar() {
     const pathname = usePathname()
 
     return (
-        <aside className="w-min p-5 flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-between py-5">
+        <aside className="hidden md:flex w-min p-5 h-screen flex-col items-center justify-between py-5 overflow-y-auto custom-scrollbar">
             <div className="space-y-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -49,8 +50,8 @@ export function Sidebar() {
                     )
                 })}
             </div>
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-black text-[14px] font-bold text-white">
-                N
+            <div className="mt-auto">
+                <UserMenu />
             </div>
         </aside>
     )

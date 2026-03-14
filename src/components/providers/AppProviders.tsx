@@ -29,7 +29,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
                 closeButton
                 richColors
                 toastOptions={{
-                    className: "neo-card border border-[#E8ECF4]"
+                    className: "neo-card rounded-[14px] border border-[#E8ECF4] bg-white/85 backdrop-blur-sm shadow-premium-sm"
                 }}
             />
         </QueryClientProvider>

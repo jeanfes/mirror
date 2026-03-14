@@ -24,8 +24,9 @@ export const useLanguageStore = create<LanguageState>()(
     {
       name: "mirror-language-storage",
       partialize: (state) => ({ language: state.language }),
-      merge: (persistedState: any, currentState) => {
-        const lang = persistedState?.language as Language || currentState.language;
+      merge: (persistedState, currentState) => {
+        const savedLanguage = (persistedState as Partial<LanguageState> | undefined)?.language;
+        const lang = (savedLanguage ?? currentState.language) as Language;
         return {
           ...currentState,
           language: lang,

@@ -13,7 +13,7 @@ export default function FAQPage() {
         initial: { opacity: 0, y: 8 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" } as any
+        transition: { duration: 0.25, ease: "easeOut" as const }
     };
 
     return (
@@ -33,9 +33,9 @@ export default function FAQPage() {
                     {t.faqPage.questions.map((faq, i) => {
                         const isOpen = openIndex === i;
                         return (
-                            <div 
-                                key={i} 
-                                className={`neo-card transition-all duration-300 ${isOpen ? 'shadow-premium-md scale-[1.02]' : 'hover:shadow-premium-sm'}`}
+                            <div
+                                key={i}
+                                className={`neo-card rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm shadow-premium-sm transition-all duration-300 ${isOpen ? 'shadow-premium-md scale-[1.02]' : 'hover:shadow-premium-sm'}`}
                             >
                                 <button
                                     onClick={() => setOpenIndex(isOpen ? null : i)}
@@ -46,7 +46,7 @@ export default function FAQPage() {
                                         <Plus className={`h-6 w-6 transition-transform duration-300 ${isOpen ? 'rotate-45' : 'rotate-0'}`} />
                                     </div>
                                 </button>
-                                <div 
+                                <div
                                     className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
                                 >
                                     <div className="overflow-hidden">

@@ -23,17 +23,17 @@ export function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content>) {
     return (
         <DialogPortal>
-            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/35 backdrop-blur-[2px]" />
+            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md animate-in fade-in duration-300" />
             <DialogPrimitive.Content
                 className={cn(
-                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(92vw,620px)] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-[#E8ECF4] p-5 shadow-premium-lg outline-none",
+                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl border border-[#E8ECF4] bg-white/90 backdrop-blur-xl ring-1 ring-black/5 shadow-premium-lg outline-none",
                     className
                 )}
                 {...props}
             >
                 {children}
                 <DialogPrimitive.Close
-                    className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-slate-800"
+                    className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white/90 hover:text-slate-800"
                     aria-label="Close"
                 >
                     <X className="h-4 w-4" />

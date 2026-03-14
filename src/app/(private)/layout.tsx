@@ -11,14 +11,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
     return (
         <AppProviders>
-            <div className="min-h-screen">
-                <div className="min-h-screen grid md:grid-cols-[auto_1fr]">
-                    <Sidebar />
-                    <main className="neo-panel h-full overflow-hidden rounded-l-[50px] p-3 md:p-4">
-                        <Navbar />
-                        <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-6 md:py-5">{children}</div>
-                    </main>
-                </div>
+            <div className="h-screen w-full flex flex-col md:grid md:grid-cols-[auto_1fr] overflow-hidden">
+                <Sidebar />
+                <main className="neo-panel flex h-full flex-col overflow-hidden rounded-none p-3 md:rounded-l-[50px] md:p-4">
+                    <Navbar />
+                    <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-6 md:py-5">{children}</div>
+                </main>
             </div>
         </AppProviders>
     )

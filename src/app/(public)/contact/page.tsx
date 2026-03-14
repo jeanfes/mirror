@@ -11,7 +11,7 @@ export default function ContactPage() {
         initial: { opacity: 0, y: 8 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" } as any
+        transition: { duration: 0.25, ease: "easeOut" as const }
     };
 
     return (
@@ -32,39 +32,39 @@ export default function ContactPage() {
                         <div className="grid gap-6 sm:grid-cols-2">
                             <div className="space-y-2">
                                 <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.nameLabel}</label>
-                                <motion.input 
+                                <motion.input
                                     whileFocus={{ scale: 1.01 }}
-                                    type="text" 
-                                    placeholder={t.contactPage.namePlaceholder} 
-                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow" 
+                                    type="text"
+                                    placeholder={t.contactPage.namePlaceholder}
+                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.emailLabel}</label>
-                                <motion.input 
+                                <motion.input
                                     whileFocus={{ scale: 1.01 }}
-                                    type="email" 
-                                    placeholder={t.contactPage.emailPlaceholder} 
-                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow" 
+                                    type="email"
+                                    placeholder={t.contactPage.emailPlaceholder}
+                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.subjectLabel}</label>
-                            <motion.input 
+                            <motion.input
                                 whileFocus={{ scale: 1.01 }}
-                                type="text" 
-                                placeholder={t.contactPage.subjectPlaceholder} 
-                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow" 
+                                type="text"
+                                placeholder={t.contactPage.subjectPlaceholder}
+                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                             />
                         </div>
                         <div className="space-y-2">
                             <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.messageLabel}</label>
-                            <motion.textarea 
+                            <motion.textarea
                                 whileFocus={{ scale: 1.01 }}
                                 rows={5}
-                                placeholder={t.contactPage.messagePlaceholder} 
-                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow resize-none" 
+                                placeholder={t.contactPage.messagePlaceholder}
+                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow resize-none"
                             />
                         </div>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-4">

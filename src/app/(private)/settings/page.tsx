@@ -143,6 +143,8 @@ export default function SettingsPage() {
                         <Select
                             value={language}
                             onChange={setLanguage}
+                            label="Language"
+                            triggerClassName="h-11 rounded-2xl"
                             options={[
                                 { label: "English", value: "en" },
                                 { label: "Spanish", value: "es" },
@@ -153,6 +155,8 @@ export default function SettingsPage() {
                         <Select
                             value={defaultProfile}
                             onChange={setDefaultProfile}
+                            label="Default profile"
+                            triggerClassName="h-11 rounded-2xl"
                             options={[
                                 { label: "Adaptive starter", value: "adaptive" },
                                 { label: "Insight Architect", value: "insight" },

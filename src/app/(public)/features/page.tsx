@@ -12,7 +12,7 @@ export default function FeaturesPage() {
         initial: { opacity: 0, y: 8 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" } as any
+        transition: { duration: 0.25, ease: "easeOut" as const }
     };
 
     return (
@@ -28,7 +28,7 @@ export default function FeaturesPage() {
 
             <section className="w-full max-w-5xl px-6 py-12">
                 <div className="grid gap-12 sm:grid-cols-2">
-                    
+
                     {/* Feature Card Detailed */}
                     <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.2 }} className="neo-shell p-10 flex flex-col items-start gap-4">
                         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">

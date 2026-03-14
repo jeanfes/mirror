@@ -12,12 +12,12 @@ export default function LandingPage() {
         initial: { opacity: 0, y: 8 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" } as any
+        transition: { duration: 0.25, ease: "easeOut" as const }
     };
 
     const float = {
         animate: { y: [0, -10, 0] },
-        transition: { duration: 4, repeat: Infinity, ease: "easeInOut" } as any
+        transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
     };
 
     return (
@@ -36,7 +36,7 @@ export default function LandingPage() {
                 </motion.div>
 
                 <div className="mx-auto max-w-3xl space-y-7">
-                    <motion.h1 
+                    <motion.h1
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
@@ -44,7 +44,7 @@ export default function LandingPage() {
                     >
                         {t.hero.title1} <br className="hidden md:block" /> {t.hero.title2} <span className="text-mirror font-extrabold pb-2">{t.hero.titleSpan}</span>
                     </motion.h1>
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.03, ease: "easeOut" }}
@@ -53,7 +53,7 @@ export default function LandingPage() {
                         {t.hero.subtitle}
                     </motion.p>
 
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.06, ease: "easeOut" }}
@@ -138,7 +138,7 @@ export default function LandingPage() {
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                         {/* Feature 1 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.05 }} className="neo-card overflow-visible p-10 group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md relative">
+                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.05 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Bot className="h-7 w-7" strokeWidth={2} />
@@ -150,7 +150,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 2 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-card overflow-visible p-10 group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md relative">
+                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Layers className="h-7 w-7" strokeWidth={2} />
@@ -162,7 +162,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 3 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.15 }} className="neo-card overflow-visible p-10 group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md relative">
+                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.15 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Fingerprint className="h-7 w-7" strokeWidth={2} />
