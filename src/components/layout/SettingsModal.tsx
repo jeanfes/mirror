@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
     Bell,
     Download,
@@ -36,6 +35,7 @@ import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
 
 interface SettingsModalProps {
     children: React.ReactNode
@@ -49,8 +49,8 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
-    const [lang, setLang] = React.useState("en")
-    const [activeTheme, setActiveTheme] = React.useState<"light" | "dark" | "system">("light")
+    const [lang, setLang] = useState("en")
+    const [activeTheme, setActiveTheme] = useState<"light" | "dark" | "system">("light")
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

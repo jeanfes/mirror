@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { AlertTriangle } from "lucide-react"
 import { motion } from "motion/react"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog"
