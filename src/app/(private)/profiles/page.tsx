@@ -1,9 +1,10 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Layers3, MessageSquareQuote, Plus, Sparkles, Stars } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Card } from "@/components/ui/Card"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
@@ -24,6 +25,13 @@ export default function ProfilesPage() {
     } = useProfiles()
 
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
+
+    const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
+
+    const deleteTarget = useMemo(
+        () => (profiles ? (profiles.find((p) => p.id === deleteTargetId) ?? null) : null),
+        [profiles, deleteTargetId]
+    )
 
     const editingProfile = useMemo(() => {
         if (!profiles || !editingProfileId) return null
@@ -55,14 +63,19 @@ export default function ProfilesPage() {
         }
     }
 
-    const handleDelete = async (profileId: string) => {
-        if (!window.confirm("Delete this profile? This action cannot be undone.")) return
+    const handleDelete = (profileId: string) => {
+        setDeleteTargetId(profileId)
+    }
 
+    const handleConfirmDelete = async () => {
+        if (!deleteTargetId) return
         try {
-            await deleteProfile(profileId)
+            await deleteProfile(deleteTargetId)
             toast.success("Profile deleted")
         } catch {
             toast.error("Could not delete profile")
+        } finally {
+            setDeleteTargetId(null)
         }
     }
 
@@ -216,6 +229,20 @@ export default function ProfilesPage() {
                 isPending={isMutating}
                 onClose={closeDialog}
                 onSubmit={handleSubmit}
+            />
+
+            <ConfirmDialog
+                open={deleteTargetId !== null}
+                title="Delete this profile?"
+                description={
+                    deleteTarget
+                        ? `"${deleteTarget.name}" will be permanently removed. This action cannot be undone.`
+                        : "This profile will be permanently removed. This action cannot be undone."
+                }
+                confirmLabel="Delete profile"
+                isPending={isMutating}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setDeleteTargetId(null)}
             />
         </div>
     )

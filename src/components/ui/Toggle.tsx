@@ -13,7 +13,7 @@ export function Toggle({ checked, onChange, label, className }: ToggleProps) {
         <label
             className={twMerge(
                 clsx(
-                    "flex items-center justify-between min-h-9 py-1.5 px-3 rounded-xl border border-[#E6EAF2] bg-white text-[12px] font-medium text-[#1A1D26]",
+                    "flex items-center justify-between min-h-9 py-1.5 px-3 rounded-xl border border-border-soft bg-white text-[12px] font-medium text-primary-text",
                     className
                 )
             )}
@@ -25,8 +25,8 @@ export function Toggle({ checked, onChange, label, className }: ToggleProps) {
                 aria-checked={checked}
                 onClick={() => onChange(!checked)}
                 className={clsx(
-                    "relative shrink-0 w-10 h-[1.6rem] rounded-full overflow-hidden transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5CF6]/40",
-                    checked ? "bg-[#0F1320] border-[#0F1320]" : "bg-slate-200 border-[#E6EAF2]"
+                    "relative shrink-0 w-10 h-[1.6rem] rounded-full overflow-hidden transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40",
+                    checked ? "bg-brand-dark border-brand-dark" : "bg-slate-200 border-border-soft"
                 )}
             >
                 <span

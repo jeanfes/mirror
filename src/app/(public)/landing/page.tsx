@@ -9,15 +9,30 @@ export default function LandingPage() {
     const { t } = useLanguageStore();
 
     const fadeInUp = {
-        initial: { opacity: 0, y: 8 },
+        initial: { opacity: 0, y: 20 },
         whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" as const }
+        viewport: { once: true, margin: "-100px" },
+        transition: { duration: 0.5, ease: "easeOut" as const }
+    };
+
+    const staggerContainer = {
+        initial: {},
+        whileInView: {
+            transition: {
+                staggerChildren: 0.1
+            }
+        },
+        viewport: { once: true }
     };
 
     const float = {
-        animate: { y: [0, -10, 0] },
-        transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
+        animate: { y: [0, -12, 0] },
+        transition: { duration: 5, repeat: Infinity, ease: "easeInOut" as const }
+    };
+
+    const pulse = {
+        animate: { scale: [1, 1.05, 1] },
+        transition: { duration: 3, repeat: Infinity, ease: "easeInOut" as const }
     };
 
     return (
@@ -88,12 +103,18 @@ export default function LandingPage() {
                         <p className="mt-4 text-secondary-text font-medium text-lg">{t.howItWorks.subtitle}</p>
                     </motion.div>
 
-                    <div className="grid md:grid-cols-3 gap-8 relative">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="initial"
+                        whileInView="whileInView"
+                        viewport={{ once: true }}
+                        className="grid md:grid-cols-3 gap-8 relative"
+                    >
                         {/* Connecting Line */}
                         <div className="hidden md:block absolute top-13 left-[15%] right-[15%] h-0.5 bg-linear-to-r from-transparent via-border-soft to-transparent -z-10" />
 
                         {/* Step 1 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.05 }} className="flex flex-col items-center text-center">
+                        <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <Download className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
                             </div>
@@ -104,7 +125,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Step 2 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="flex flex-col items-center text-center">
+                        <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <SlidersHorizontal className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
                             </div>
@@ -115,7 +136,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Step 3 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.15 }} className="flex flex-col items-center text-center">
+                        <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <Keyboard className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
                             </div>
@@ -124,7 +145,7 @@ export default function LandingPage() {
                                 {t.howItWorks.s3Desc}
                             </p>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -136,9 +157,15 @@ export default function LandingPage() {
                         <p className="mx-auto max-w-2xl text-secondary-text text-[1.1rem] font-medium">{t.features.subtitle}</p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="initial"
+                        whileInView="whileInView"
+                        viewport={{ once: true }}
+                        className="grid grid-cols-1 gap-8 md:grid-cols-3"
+                    >
                         {/* Feature 1 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.05 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Bot className="h-7 w-7" strokeWidth={2} />
@@ -150,7 +177,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 2 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Layers className="h-7 w-7" strokeWidth={2} />
@@ -162,7 +189,7 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 3 */}
-                        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.15 }} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Fingerprint className="h-7 w-7" strokeWidth={2} />
@@ -172,7 +199,7 @@ export default function LandingPage() {
                                 {t.features.f3Desc}
                             </p>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 

@@ -11,6 +11,7 @@ import {
     Trash2,
     Users
 } from "lucide-react"
+import { motion } from "motion/react"
 import { UserMenu } from "./UserMenu"
 
 export const navItems = [
@@ -39,13 +40,22 @@ export function Sidebar() {
                             title={item.label}
                             aria-label={item.label}
                             className={clsx(
-                                "inline-flex h-12 w-12 items-center justify-center rounded-full transition-all",
-                                isActive
-                                    ? "bg-[#171b2d] text-white shadow-premium-sm"
-                                    : "bg-white/90 text-slate-400 hover:bg-white hover:text-slate-700"
+                                "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors",
+                                isActive ? "text-white" : "text-slate-400 hover:text-slate-700"
                             )}
                         >
-                            <Icon className="h-5 w-5" />
+                            {isActive && (
+                                <motion.div
+                                    layoutId="activeIndicator"
+                                    className="absolute inset-0 bg-[#171b2d] rounded-full shadow-premium-sm"
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 450,
+                                        damping: 35
+                                    }}
+                                />
+                            )}
+                            <Icon className="relative z-10 h-5 w-5" />
                         </Link>
                     )
                 })}

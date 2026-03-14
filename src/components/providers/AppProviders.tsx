@@ -26,10 +26,18 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
             {children}
             <Toaster
                 position="top-right"
+                gap={8}
                 closeButton
-                richColors
                 toastOptions={{
-                    className: "neo-card rounded-[14px] border border-[#E8ECF4] bg-white/85 backdrop-blur-sm shadow-premium-sm"
+                    duration: 4000,
+                    classNames: {
+                        toast: "toast-surface",
+                        title: "toast-title",
+                        description: "toast-description",
+                        success: "toast-success",
+                        error: "toast-error",
+                        closeButton: "toast-close-btn",
+                    },
                 }}
             />
         </QueryClientProvider>

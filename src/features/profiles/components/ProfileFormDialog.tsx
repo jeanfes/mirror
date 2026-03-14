@@ -117,7 +117,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
 
                     <div className="p-5 md:p-6">
                         <DialogHeader>
-                            <DialogTitle className="text-xl font-semibold text-[#141824]">
+                            <DialogTitle className="text-xl font-semibold text-primary-text">
                                 {profile ? "Edit profile" : "Create profile"}
                             </DialogTitle>
                             <p className="text-[13px] leading-6 text-slate-600">Define voice, tone and three sample comments for consistent generation.</p>
@@ -128,10 +128,10 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Name</label>
                                 <input
                                     {...register("name")}
-                                    className="h-11 w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                                    className="h-11 w-full rounded-2xl border border-border-soft bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
                                     placeholder="Example: Insight Architect"
                                 />
-                                {errors.name ? <p className="text-[12px] text-red-600">{errors.name.message}</p> : null}
+                                {errors.name ? <p className="text-[12px] text-danger">{errors.name.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
@@ -139,33 +139,33 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                                 <textarea
                                     {...register("description")}
                                     rows={2}
-                                    className="w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                                    className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
                                     placeholder="What kind of perspective does this profile bring?"
                                 />
-                                {errors.description ? <p className="text-[12px] text-red-600">{errors.description.message}</p> : null}
+                                {errors.description ? <p className="text-[12px] text-danger">{errors.description.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Tone</label>
                                 <input
                                     {...register("tone")}
-                                    className="h-11 w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30"
+                                    className="h-11 w-full rounded-2xl border border-border-soft bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
                                     placeholder="Confident, practical, concise"
                                 />
-                                {errors.tone ? <p className="text-[12px] text-red-600">{errors.tone.message}</p> : null}
+                                {errors.tone ? <p className="text-[12px] text-danger">{errors.tone.message}</p> : null}
                             </div>
 
-                            <div className="rounded-3xl border border-[#E8ECF4] bg-white/70 p-4">
+                            <div className="rounded-3xl border border-border-soft bg-white/70 p-4">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Example comments</label>
                                 <p className="mt-1 text-[13px] text-slate-600">Use three short examples that feel ready to post, not abstract instructions.</p>
 
                                 <div className="mt-3 grid gap-3">
-                                    <textarea {...register("example1")} rows={2} className="w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30" placeholder="Example #1" />
-                                    {errors.example1 ? <p className="-mt-1 text-[12px] text-red-600">{errors.example1.message}</p> : null}
-                                    <textarea {...register("example2")} rows={2} className="w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30" placeholder="Example #2" />
-                                    {errors.example2 ? <p className="-mt-1 text-[12px] text-red-600">{errors.example2.message}</p> : null}
-                                    <textarea {...register("example3")} rows={2} className="w-full rounded-2xl border border-[#E6EAF2] bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-[#8B5CF6]/30" placeholder="Example #3" />
-                                    {errors.example3 ? <p className="-mt-1 text-[12px] text-red-600">{errors.example3.message}</p> : null}
+                                    <textarea {...register("example1")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #1" />
+                                    {errors.example1 ? <p className="-mt-1 text-[12px] text-danger">{errors.example1.message}</p> : null}
+                                    <textarea {...register("example2")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #2" />
+                                    {errors.example2 ? <p className="-mt-1 text-[12px] text-danger">{errors.example2.message}</p> : null}
+                                    <textarea {...register("example3")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #3" />
+                                    {errors.example3 ? <p className="-mt-1 text-[12px] text-danger">{errors.example3.message}</p> : null}
                                 </div>
                             </div>
 

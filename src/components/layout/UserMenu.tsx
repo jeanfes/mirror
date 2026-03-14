@@ -16,7 +16,7 @@ export function UserMenu({ user = { name: "User Name", email: "user@example.com"
     return (
         <SettingsModal user={user}>
             <button
-                className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-black text-[14px] font-bold text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+                className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-brand-dark text-[14px] font-bold text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none"
                 aria-label="User menu"
             >
                 {user.avatar ? (
@@ -24,7 +24,7 @@ export function UserMenu({ user = { name: "User Name", email: "user@example.com"
                 ) : (
                     user.name.charAt(0).toUpperCase()
                 )}
-                <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-green-500" />
+                <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-accent-green" />
             </button>
         </SettingsModal>
     )

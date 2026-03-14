@@ -1,11 +1,15 @@
-﻿import type { ButtonHTMLAttributes } from "react"
+"use client"
+import type { ButtonHTMLAttributes } from "react"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 type ButtonVariant = "primary" | "secondary" | "ghost"
 type ButtonSize = "md" | "lg"
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+import { motion } from "motion/react"
+import type { HTMLMotionProps } from "motion/react"
+
+interface ButtonProps extends HTMLMotionProps<"button"> {
     variant?: ButtonVariant
     size?: ButtonSize
 }
@@ -29,10 +33,12 @@ export function Button({
     ...props
 }: ButtonProps) {
     return (
-        <button
+        <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
             className={twMerge(
                 clsx(
-                    "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5CF6]/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",
+                    "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",
                     variantClasses[variant],
                     sizeClasses[size],
                     className
@@ -41,6 +47,6 @@ export function Button({
             {...props}
         >
             {children}
-        </button>
+        </motion.button>
     )
 }

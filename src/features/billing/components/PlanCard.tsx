@@ -16,15 +16,15 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
     const isCurrent = currentPlan === plan.name
     const actionLabel = isCurrent ? "Current plan" : currentPlan === "Free" ? `Upgrade to ${plan.name}` : `Switch to ${plan.name}`
     const surfaceClass = plan.recommended
-        ? "border-[#171b2d] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.9))] text-white shadow-[0_18px_50px_rgba(15,19,32,0.18)]"
-        : "border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.82))] text-[#141824]"
+        ? "border-brand-dark bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.9))] text-white shadow-[0_18px_50px_rgba(15,19,32,0.18)]"
+        : "border-border-soft bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.82))] text-primary-text"
     const mutedTextClass = plan.recommended ? "text-white/82" : "text-slate-700"
     const subtleTextClass = plan.recommended ? "text-white/80" : "text-slate-600"
     const featureClass = plan.recommended ? "text-white/88" : "text-slate-700"
-    const bulletClass = plan.recommended ? "text-[#75cef3]" : "text-emerald-600"
+    const bulletClass = plan.recommended ? "text-[#75cef3]" : "text-success"
     const badgeClass = plan.recommended
         ? "bg-white/12 text-white ring-1 ring-white/15"
-        : "bg-white text-slate-700 ring-1 ring-[#E6EAF2]"
+        : "bg-white text-slate-700 ring-1 ring-border-soft"
 
     return (
         <Card className={`relative flex min-h-115 flex-col overflow-hidden rounded-[26px] border p-6 ${surfaceClass}`}>

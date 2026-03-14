@@ -77,12 +77,12 @@ export default function ContactPage() {
                 </motion.div>
 
                 <div className="mt-16 grid gap-8 sm:grid-cols-2 max-w-2xl mx-auto">
-                    <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center text-center p-6 bg-white/50 rounded-2xl border border-border-soft backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+                    <motion.div whileHover={{ y: -5 }} className="neo-card flex flex-col items-center rounded-2xl border border-border-soft bg-white/75 p-6 text-center backdrop-blur-sm shadow-premium-sm transition-shadow hover:shadow-premium-md">
                         <Mail className="h-8 w-8 text-accent-blue mb-4" />
                         <h3 className="font-bold text-primary-dark mb-1">{t.contactPage.supportTitle}</h3>
                         <p className="text-secondary-text text-sm font-medium">soporte@mirror.com</p>
                     </motion.div>
-                    <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center text-center p-6 bg-white/50 rounded-2xl border border-border-soft backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+                    <motion.div whileHover={{ y: -5 }} className="neo-card flex flex-col items-center rounded-2xl border border-border-soft bg-white/75 p-6 text-center backdrop-blur-sm shadow-premium-sm transition-shadow hover:shadow-premium-md">
                         <MessageSquare className="h-8 w-8 text-accent-blue mb-4" />
                         <h3 className="font-bold text-primary-dark mb-1">{t.contactPage.socialTitle}</h3>
                         <p className="text-secondary-text text-sm font-medium">@mirror_extension</p>

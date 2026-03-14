@@ -22,13 +22,13 @@ interface ProfileCardProps {
 export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCardProps) {
     return (
         <Card className="relative overflow-hidden rounded-[28px] border border-[#E8ECF4] p-0 shadow-premium-md">
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,rgba(214,210,240,0.34),transparent)]" />
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-white/65 to-transparent" />
 
             <div className="relative p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div className="max-w-[80%]">
-                        <div className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-slate-700 shadow-premium-sm">
-                            <Sparkles className="h-3.5 w-3.5 text-[#8B5CF6]" />
+                        <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E6EAF2] bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-slate-700 shadow-premium-sm">
+                            <Sparkles className="h-3.5 w-3.5 text-slate-500" />
                             Voice profile
                         </div>
                         <h2 className="mt-4 text-2xl font-black tracking-[-0.04em] text-[#141824]">{profile.name}</h2>
@@ -37,7 +37,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button type="button" variant="ghost" className="h-10 w-10 rounded-full p-0 bg-white/80" aria-label="Open profile actions">
+                            <Button type="button" variant="ghost" className="h-10 w-10 rounded-full border border-[#E8ECF4] bg-white/90 p-0" aria-label="Open profile actions">
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -74,7 +74,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                             <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Tone map</p>
                             <p className="mt-1 text-[15px] font-semibold text-[#141824]">{profile.tone}</p>
                         </div>
-                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(139,92,246,0.16),rgba(117,206,243,0.16))]">
+                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#E8ECF4] bg-white/90">
                             <MessageSquareQuote className="h-4 w-4 text-[#141824]" />
                         </div>
                     </div>

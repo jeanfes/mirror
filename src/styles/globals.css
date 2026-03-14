@@ -18,7 +18,19 @@
   --border-light: #f1f3f7;
   --danger: #dc2626;
   --success: #16a34a;
+  --warning: #d97706;
   --focus-ring: rgba(117, 206, 243, 0.15);
+  /* Brand dark surface (active tabs, dark cards, buttons) */
+  --brand-dark: #171b2d;
+  /* Semantic soft surfaces */
+  --danger-soft-bg: #fef2f2;
+  --danger-soft-border: #fecaca;
+  --success-soft-bg: #f0fdf4;
+  --success-soft-border: #bbf7d0;
+  --warning-soft-bg: #fffbeb;
+  --warning-soft-border: #fde68a;
+  --accent-purple-soft-bg: #f5f3ff;
+  --accent-purple-soft-border: #e9d5ff;
 }
 
 @theme inline {
@@ -40,6 +52,8 @@
   --color-border-light: var(--border-light);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-brand-dark: var(--brand-dark);
 }
 
 * {
@@ -178,4 +192,110 @@ h6 {
   -webkit-text-fill-color: transparent;
   animation: mirror-fluid 8s ease infinite;
   display: inline-block;
+}
+
+/* ─── Semantic badge utilities ───────────────────────────────── */
+.badge-success {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--success-soft-border);
+  background-color: var(--success-soft-bg);
+  padding: 0.25rem 0.625rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.badge-warning {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--warning-soft-border);
+  background-color: var(--warning-soft-bg);
+  padding: 0.25rem 0.625rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.badge-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid var(--accent-purple-soft-border);
+  background-color: var(--accent-purple-soft-bg);
+  padding: 0.25rem 0.75rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-purple);
+}
+
+/* Danger zone surface (settings, delete account, revoke, etc.) */
+.surface-danger {
+  border: 1px solid var(--danger-soft-border);
+  background-color: color-mix(in srgb, var(--danger-soft-bg) 20%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Toast / Notification feedback system
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.toast-surface {
+  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-left-width: 3px !important;
+  border-left-color: transparent !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.toast-success {
+  border-left-color: var(--success) !important;
+}
+
+.toast-error {
+  border-left-color: var(--danger) !important;
+}
+
+.toast-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--primary-text) !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.4 !important;
+}
+
+.toast-description {
+  font-size: 12.5px !important;
+  color: var(--secondary-text) !important;
+  line-height: 1.5 !important;
+  margin-top: 2px !important;
+}
+
+.toast-close-btn {
+  border-radius: 8px !important;
+  border: 1px solid var(--border-light) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: var(--muted-text) !important;
+  transition: all 0.15s ease !important;
+}
+
+.toast-close-btn:hover {
+  background: #ffffff !important;
+  color: var(--secondary-text) !important;
+}
+
+/* Shadows premium scale */
+.shadow-premium-lg {
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.06);
 }
