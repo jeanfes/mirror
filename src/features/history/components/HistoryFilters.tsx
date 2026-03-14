@@ -66,7 +66,7 @@ export function HistoryFilters({
                             value={searchValue}
                             onChange={(event) => onSearchChange(event.target.value)}
                             placeholder="Search author, snippet or generated comment"
-                            className="feature-input h-12 bg-white/95 pl-10 pr-3 text-primary-text"
+                            className="feature-input feature-input-with-icon h-12 bg-white/95 pr-3 text-primary-text"
                         />
                     </div>
                 </div>

@@ -27,16 +27,14 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
             <Toaster
                 position="top-right"
                 gap={8}
-                closeButton
                 toastOptions={{
-                    duration: 4000,
+                    duration: 2000,
                     classNames: {
                         toast: "toast-surface",
                         title: "toast-title",
                         description: "toast-description",
                         success: "toast-success",
                         error: "toast-error",
-                        closeButton: "toast-close-btn",
                     },
                 }}
             />

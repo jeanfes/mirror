@@ -1,7 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
-import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, Sparkles } from "lucide-react"
+import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, WandSparkles } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/tooltip"
@@ -47,7 +47,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                         <span className="badge-accent">
-                            <Sparkles className="h-3.5 w-3.5" />
+                            <WandSparkles className="h-3.5 w-3.5" />
                             Comment snapshot
                         </span>
                         <div className="mt-3 flex flex-wrap items-center gap-2">

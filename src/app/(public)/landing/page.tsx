@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Sparkles, Fingerprint, Layers, Rocket, Bot, Download, SlidersHorizontal, Keyboard, MessageSquareText } from "lucide-react";
+import { ArrowRight, WandSparkles, Fingerprint, Layers, Rocket, Bot, Download, SlidersHorizontal, Keyboard, MessageSquareText } from "lucide-react";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -30,11 +30,6 @@ export default function LandingPage() {
         transition: { duration: 5, repeat: Infinity, ease: "easeInOut" as const }
     };
 
-    const pulse = {
-        animate: { scale: [1, 1.05, 1] },
-        transition: { duration: 3, repeat: Infinity, ease: "easeInOut" as const }
-    };
-
     return (
         <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden pt-10">
             {/* Hero Section */}
@@ -46,7 +41,7 @@ export default function LandingPage() {
                 </motion.div>
                 <motion.div {...float} transition={{ ...float.transition, delay: 0.5 }} className="absolute top-44 right-10 hidden lg:block md:block -translate-y-4">
                     <div className="neo-shell flex h-16 w-16 items-center justify-center rounded-2xl shadow-premium-md">
-                        <Sparkles className="h-8 w-8 text-primary-dark/70" />
+                        <WandSparkles className="h-8 w-8 text-primary-dark/70" />
                     </div>
                 </motion.div>
 

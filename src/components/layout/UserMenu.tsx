@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { SettingsModal } from "./SettingsModal"
+import dynamic from "next/dynamic"
+
+const SettingsModal = dynamic(() => import("./SettingsModal").then((mod) => mod.SettingsModal), {
+    ssr: false
+})
 
 interface UserMenuProps {
     user?: {

@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Lightbulb, Sparkles } from "lucide-react"
+import { Lightbulb, WandSparkles } from "lucide-react"
 import type { Persona } from "@/types/dashboard"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
 import { Button } from "@/components/ui/Button"
@@ -86,7 +86,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                 <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
                     <div className="overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
-                            <Sparkles className="h-3.5 w-3.5" />
+                            <WandSparkles className="h-3.5 w-3.5" />
                             Voice editor
                         </div>
                         <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">

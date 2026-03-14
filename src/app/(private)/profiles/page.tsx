@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Layers3, MessageSquareQuote, Plus, Sparkles, Stars } from "lucide-react"
+import { Layers3, MessageSquareQuote, Plus, WandSparkles, Star } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
@@ -124,7 +124,7 @@ export default function ProfilesPage() {
                                 Multiple posting angles
                             </div>
                             <div className="workspace-hero-chip">
-                                <Stars className="h-4 w-4 text-[#141824]" />
+                                <Star className="h-4 w-4 text-[#141824]" />
                                 Reusable brand voices
                             </div>
                         </div>
@@ -181,7 +181,7 @@ export default function ProfilesPage() {
             {list.length === 0 ? (
                 <Card className="rounded-4xl p-8 text-center">
                     <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(139,92,246,0.16),rgba(117,206,243,0.18))]">
-                        <Sparkles className="h-6 w-6 text-[#141824]" />
+                        <WandSparkles className="h-6 w-6 text-[#141824]" />
                     </div>
                     <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-[#141824]">No profiles yet</h2>
                     <p className="mx-auto mt-3 max-w-xl text-[14px] leading-7 text-slate-600">
@@ -200,7 +200,7 @@ export default function ProfilesPage() {
                             <p className="mt-1 text-[14px] text-slate-600">Each card should feel like a distinct commenting posture you can deploy on demand.</p>
                         </div>
                         <div className="hidden rounded-full border border-[#E8ECF4] bg-white/70 px-3 py-1.5 text-[12px] font-semibold text-slate-600 md:inline-flex md:items-center md:gap-1.5">
-                            <Stars className="h-3.5 w-3.5 text-[#8B5CF6]" />
+                            <Star className="h-3.5 w-3.5 text-[#8B5CF6]" />
                             Stronger profiles create better generations
                         </div>
                     </div>

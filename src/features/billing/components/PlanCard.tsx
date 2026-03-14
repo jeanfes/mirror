@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Check, Sparkles, Stars } from "lucide-react"
+import { ArrowRight, Check, WandSparkles, Star } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
@@ -28,7 +28,7 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
                 <div className="flex items-start justify-between gap-3">
                     <div>
                         <div className={cn("plan-card-badge", isRecommended && "plan-card-badge-recommended")}>
-                            {isRecommended ? <Sparkles className="h-3.5 w-3.5" /> : <Stars className="h-3.5 w-3.5" />}
+                            {isRecommended ? <WandSparkles className="h-3.5 w-3.5" /> : <Star className="h-3.5 w-3.5" />}
                             {isRecommended ? "Recommended" : "Designed for"}
                         </div>
                         <p className={`mt-4 text-[12px] font-semibold uppercase tracking-[0.12em] ${subtleTextClass}`}>{plan.name}</p>

@@ -27,7 +27,10 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onCancel() : undefined)}>
-            <DialogContent className="workspace-hero-panel w-[min(94vw,400px)] rounded-3xl p-6">
+            <DialogContent
+                hideCloseButton
+                className="w-[min(94vw,400px)] rounded-3xl border border-border-light bg-white/88 p-6 backdrop-blur-sm [--panel-bg:rgba(255,255,255,0.88)] [--panel-border-color:var(--border-light)]"
+            >
                 <motion.div
                     initial={{ opacity: 0, scale: 0.96, y: 6 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -49,7 +52,7 @@ export function ConfirmDialog({
                     </DialogTitle>
 
                     {description && (
-                        <p className="mt-1.5 text-[13px] leading-[1.6] text-secondary-text">
+                        <p className="mt-1.5 text-[13px] leading-[1.6] text-slate-600">
                             {description}
                         </p>
                     )}

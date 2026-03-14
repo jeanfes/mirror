@@ -1,7 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
-import { Crown, Gauge, Layers3, Stars, Zap } from "lucide-react"
+import { Crown, Gauge, Layers3, Star, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { ProgressBar } from "@/components/ui/ProgressBar"
@@ -133,7 +133,7 @@ export default function PlansPage() {
                         <p className="mt-1 text-[14px] text-slate-600">All tiers keep the same product language. What changes is how far you can push it.</p>
                     </div>
                     <div className="hidden rounded-full border border-[#E8ECF4] bg-white/70 px-3 py-1.5 text-[12px] font-semibold text-slate-600 md:inline-flex md:items-center md:gap-1.5">
-                        <Stars className="h-3.5 w-3.5 text-[#8B5CF6]" />
+                        <Star className="h-3.5 w-3.5 text-[#8B5CF6]" />
                         Pro is tuned as the default sweet spot
                     </div>
                 </div>

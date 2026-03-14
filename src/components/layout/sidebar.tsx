@@ -1,7 +1,8 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import {
     Crown,
@@ -25,6 +26,13 @@ export const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname()
+    const router = useRouter()
+
+    useEffect(() => {
+        navItems.forEach((item) => {
+            router.prefetch(item.href)
+        })
+    }, [router])
 
     return (
         <aside className="hidden md:flex w-min p-5 h-screen flex-col items-center justify-between py-5 overflow-y-auto custom-scrollbar">
@@ -39,6 +47,8 @@ export function Sidebar() {
                             href={item.href}
                             title={item.label}
                             aria-label={item.label}
+                            onMouseEnter={() => router.prefetch(item.href)}
+                            onFocus={() => router.prefetch(item.href)}
                             className={clsx(
                                 "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors",
                                 isActive ? "text-white" : "text-slate-400 hover:text-slate-700"

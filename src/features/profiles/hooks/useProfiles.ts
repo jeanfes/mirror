@@ -18,7 +18,10 @@ export function useProfiles() {
 
   const query = useQuery({
     queryKey: profilesKey,
-    queryFn: listProfiles
+    queryFn: listProfiles,
+    staleTime: 120_000,
+    gcTime: 900_000,
+    refetchOnWindowFocus: false
   })
 
   const createMutation = useMutation({

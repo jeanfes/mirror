@@ -19,10 +19,10 @@ export function Navbar() {
     const pathname = usePathname()
 
     const currentSection =
-        SECTION_TITLES.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Workspace"
+        SECTION_TITLES.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Profiles"
 
     return (
-        <header className="flex h-12 w-full items-center justify-between rounded-[18px] border border-border-light bg-white/78 px-3 backdrop-blur-sm ring-1 ring-white/60 shadow-premium-sm md:px-4">
+        <header className="relative flex h-14 w-full items-center justify-between rounded-[18px] border border-border-light bg-white/78 px-3 py-2 backdrop-blur-sm ring-1 ring-white/60 shadow-premium-sm md:px-4">
             <div className="flex min-w-0 items-center gap-3">
                 <MobileSidebar />
                 <h1 className="truncate text-[14px] font-semibold tracking-[-0.01em] text-primary-text">{currentSection}</h1>

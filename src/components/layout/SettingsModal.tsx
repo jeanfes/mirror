@@ -39,6 +39,8 @@ import { cn } from "@/lib/utils"
 
 interface SettingsModalProps {
     children: React.ReactNode
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
     user?: {
         name: string
         email: string
@@ -46,12 +48,12 @@ interface SettingsModalProps {
     }
 }
 
-export function SettingsModal({ children, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
+export function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
     const [lang, setLang] = React.useState("en")
     const [activeTheme, setActiveTheme] = React.useState<"light" | "dark" | "system">("light")
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
@@ -110,7 +112,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                         </div>
 
                         {/* Content Area */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-white/60 p-10 backdrop-blur-sm">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-white/60 px-10 py-10 backdrop-blur-sm">
                             <AnimatePresence mode="wait">
                                 {/* GENERAL */}
                                 <TabsContent value="general" key="general" asChild>

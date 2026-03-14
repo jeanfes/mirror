@@ -10,7 +10,10 @@ export function useAccount() {
 
   const query = useQuery({
     queryKey: accountKey,
-    queryFn: getAccount
+    queryFn: getAccount,
+    staleTime: 120_000,
+    gcTime: 900_000,
+    refetchOnWindowFocus: false
   })
 
   const mutation = useMutation({

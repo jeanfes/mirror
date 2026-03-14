@@ -10,7 +10,10 @@ export function useHistory() {
 
   const query = useQuery({
     queryKey: historyKey,
-    queryFn: listHistory
+    queryFn: listHistory,
+    staleTime: 120_000,
+    gcTime: 900_000,
+    refetchOnWindowFocus: false
   })
 
   const toggleMutation = useMutation({
