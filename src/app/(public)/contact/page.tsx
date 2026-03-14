@@ -4,8 +4,16 @@ import { Mail, Send, MessageSquare } from "lucide-react";
 import { motion } from "motion/react";
 import { useLanguageStore } from "@/store/useLanguageStore";
 
+import { toast } from "sonner";
+
 export default function ContactPage() {
     const { t } = useLanguageStore();
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Simulate sending
+        toast.success("Mensaje enviado correctamente. Nos pondremos en contacto pronto.");
+    };
 
     const fadeInUp = {
         initial: { opacity: 0, y: 8 },
@@ -28,13 +36,14 @@ export default function ContactPage() {
                 </motion.p>
 
                 <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
-                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid gap-6 sm:grid-cols-2">
                             <div className="space-y-2">
                                 <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.nameLabel}</label>
                                 <motion.input
                                     whileFocus={{ scale: 1.01 }}
                                     type="text"
+                                    required
                                     placeholder={t.contactPage.namePlaceholder}
                                     className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                                 />
@@ -44,6 +53,7 @@ export default function ContactPage() {
                                 <motion.input
                                     whileFocus={{ scale: 1.01 }}
                                     type="email"
+                                    required
                                     placeholder={t.contactPage.emailPlaceholder}
                                     className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                                 />
@@ -54,6 +64,7 @@ export default function ContactPage() {
                             <motion.input
                                 whileFocus={{ scale: 1.01 }}
                                 type="text"
+                                required
                                 placeholder={t.contactPage.subjectPlaceholder}
                                 className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
                             />
@@ -63,12 +74,13 @@ export default function ContactPage() {
                             <motion.textarea
                                 whileFocus={{ scale: 1.01 }}
                                 rows={5}
+                                required
                                 placeholder={t.contactPage.messagePlaceholder}
                                 className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow resize-none"
                             />
                         </div>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-4">
-                            <button type="button" className="neo-btn-primary w-full h-14 rounded-xl flex items-center justify-center gap-2 text-[1.05rem] font-bold shadow-premium-sm transition-transform">
+                            <button type="submit" className="neo-btn-primary w-full h-14 rounded-xl flex items-center justify-center gap-2 text-[1.05rem] font-bold shadow-premium-sm transition-transform">
                                 <Send className="h-5 w-5" />
                                 {t.contactPage.sendBtn}
                             </button>

@@ -23,10 +23,10 @@ export function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content>) {
     return (
         <DialogPortal>
-            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md animate-in fade-in duration-300" />
+            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/55 backdrop-blur-md animate-in fade-in duration-300" />
             <DialogPrimitive.Content
                 className={cn(
-                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl border border-[#E8ECF4] bg-white/90 backdrop-blur-xl ring-1 ring-black/5 shadow-premium-lg outline-none",
+                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
                     className
                 )}
                 {...props}

@@ -52,19 +52,19 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                         </span>
                         <div className="mt-3 flex flex-wrap items-center gap-2">
                             <h2 className="text-[22px] font-semibold tracking-[-0.03em] text-primary-text">{item.postAuthor}</h2>
-                            <span className="rounded-full border border-border-soft bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                            <span className="feature-pill">
                                 {profileName}
                             </span>
                             <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${item.applied ? "badge-success" : "badge-warning"}`}>
                                 {item.applied ? "Applied" : "Pending"}
                             </span>
                             {item.source ? (
-                                <span className="rounded-full border border-border-soft bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+                                <span className="feature-pill">
                                     {sourceLabels[item.source]}
                                 </span>
                             ) : null}
                             {item.goal ? (
-                                <span className="rounded-full border border-border-soft bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+                                <span className="feature-pill">
                                     {goalLabels[item.goal]}
                                 </span>
                             ) : null}
@@ -72,7 +72,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                         {item.postHeadline ? <p className="mt-2 text-[14px] text-slate-600">{item.postHeadline}</p> : null}
                     </div>
 
-                    <div className="rounded-2xl border border-border-soft bg-white/90 px-3 py-2 text-right shadow-premium-sm">
+                    <div className="feature-soft-card-strong px-3 py-2 text-right shadow-premium-sm">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-600">Generated</p>
                         <p className="mt-1 text-[13px] font-medium text-slate-700">{formatDistanceToNow(item.timestamp, { addSuffix: true })}</p>
                         <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-600">{intensityLabel}</p>
@@ -82,13 +82,13 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
 
             <div className="p-5">
                 <div className="mb-4 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-slate-600">
-                    <span className="rounded-full border border-border-soft bg-white px-2.5 py-1">Source {snippetWordCount} words</span>
-                    <span className="rounded-full border border-border-soft bg-white px-2.5 py-1">Comment {commentWordCount} words</span>
-                    <span className="rounded-full border border-border-soft bg-white px-2.5 py-1">{intensityLabel} response</span>
+                    <span className="feature-pill">Source {snippetWordCount} words</span>
+                    <span className="feature-pill">Comment {commentWordCount} words</span>
+                    <span className="feature-pill">{intensityLabel} response</span>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                    <div className="rounded-3xl border border-border-soft bg-white/90 p-4">
+                    <div className="feature-soft-card-strong">
                         <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-600">Source post</p>
                         <p className="mt-3 text-[15px] leading-7 text-slate-700">{item.postSnippet}</p>
                     </div>
@@ -101,7 +101,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                     </div>
                 </div>
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border-soft bg-white/85 p-4 backdrop-blur-sm">
+                <div className="feature-soft-card mt-4 flex flex-wrap items-center justify-between gap-3">
                     <p className="max-w-2xl text-[13px] leading-6 text-slate-600">Use reuse when the angle is still strong, or mark it applied to keep the archive honest and easier to scan later.</p>
 
                     <div className="flex flex-wrap gap-2">

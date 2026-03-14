@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import {
     Bell,
     Download,
@@ -19,6 +18,8 @@ import {
     BadgeCheck
 } from "lucide-react"
 import { motion, AnimatePresence } from "motion/react"
+import { toast } from "sonner"
+import Image from "next/image"
 import {
     Dialog,
     DialogContent,
@@ -71,34 +72,34 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                             </div>
 
                             <TabsList className="flex-1 flex flex-col h-auto items-stretch justify-start rounded-none border-0 bg-transparent p-0 space-y-1.5 focus:outline-none">
-                                <TabsTrigger value="general" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="general" className="settings-nav-trigger">
                                     <User className="h-4.5 w-4.5" />
                                     General
                                 </TabsTrigger>
-                                <TabsTrigger value="appearance" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="appearance" className="settings-nav-trigger">
                                     <Laptop className="h-4.5 w-4.5" />
                                     Appearance
                                 </TabsTrigger>
-                                <TabsTrigger value="security" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="security" className="settings-nav-trigger">
                                     <Shield className="h-4.5 w-4.5" />
                                     Security
                                 </TabsTrigger>
-                                <TabsTrigger value="devices" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="devices" className="settings-nav-trigger">
                                     <Monitor className="h-4.5 w-4.5" />
                                     Sessions
                                 </TabsTrigger>
-                                <TabsTrigger value="notifications" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="notifications" className="settings-nav-trigger">
                                     <Bell className="h-4.5 w-4.5" />
                                     Alerts
                                 </TabsTrigger>
-                                <TabsTrigger value="data" className="justify-start gap-3 h-11 px-4 text-[14px] rounded-xl hover:bg-white hover:text-slate-800 data-[state=active]:bg-brand-dark data-[state=active]:text-white data-[state=active]:shadow-premium-sm transition-all duration-200">
+                                <TabsTrigger value="data" className="settings-nav-trigger">
                                     <Download className="h-4.5 w-4.5" />
                                     Export
                                 </TabsTrigger>
 
                                 <div className="pt-8 mt-auto space-y-2">
-                                    <Button variant="ghost" className="w-full justify-start gap-3 text-slate-500 hover:bg-white hover:text-danger transition-colors">
-                                        <LogOut className="h-4 w-4" />
+                                    <Button type="button" variant="dangerSoft" className="w-full justify-start">
+                                        <LogOut className="h-4 w-4 shrink-0 stroke-[2.2]" />
                                         <span>Log out</span>
                                     </Button>
                                     <div className="px-4 py-2 opacity-50">
@@ -121,8 +122,8 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">General Info</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Manage your personal details and account settings.</p>
+                                            <h3 className="settings-section-title">General Info</h3>
+                                            <p className="settings-section-description">Manage your personal details and account settings.</p>
                                         </div>
 
                                         <Card className="p-6 space-y-6">
@@ -130,13 +131,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                 <div className="group relative h-20 w-20 shrink-0">
                                                     <div className="h-full w-full rounded-3xl bg-linear-to-br from-[#171b2d] to-[#2d334d] flex items-center justify-center text-white text-3xl font-bold shadow-premium-lg">
                                                         {user.avatar ? (
-                                                            <Image
-                                                                src={user.avatar}
-                                                                alt={`${user.name} avatar`}
-                                                                fill
-                                                                sizes="80px"
-                                                                className="rounded-3xl object-cover"
-                                                            />
+                                                            <Image src={user.avatar} alt={`${user.name} avatar`} fill className="rounded-3xl object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                                         ) : user.name.charAt(0)}
                                                     </div>
                                                     <button className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl bg-white text-accent-purple shadow-premium-sm ring-1 ring-slate-100 hover:scale-110 transition-transform">
@@ -153,20 +148,20 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                             <div className="grid gap-5">
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="space-y-2">
-                                                        <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 ml-1">Full Name</label>
+                                                        <label className="settings-field-label">Full Name</label>
                                                         <input className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.name} />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 ml-1">Email Address</label>
+                                                        <label className="settings-field-label">Email Address</label>
                                                         <input className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.email} />
                                                     </div>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 ml-1">Workspace ID</label>
+                                                    <label className="settings-field-label">Workspace ID</label>
                                                     <div className="flex items-center gap-2 neo-input h-11 rounded-2xl px-4 bg-slate-50/50">
                                                         <span className="text-[13px] font-mono text-slate-500">mirror_workspace_0892</span>
-                                                        <Button variant="ghost" size="md" className="ml-auto h-7 px-2 text-[10px] font-bold uppercase">Copy</Button>
+                                                        <Button variant="ghost" size="md" className="ml-auto h-7 px-2 text-[10px] font-bold uppercase" onClick={() => { navigator.clipboard.writeText("mirror_workspace_0892"); toast.success("Copied to clipboard") }}>Copy</Button>
                                                     </div>
                                                 </div>
 
@@ -174,7 +169,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                     <Select
                                                         label="Application Language"
                                                         value={lang}
-                                                        onChange={setLang}
+                                                        onChange={(val) => { setLang(val); toast.success("Language preference updated"); }}
                                                         options={[
                                                             { label: "English (United States)", value: "en" },
                                                             { label: "Español (España)", value: "es" },
@@ -197,18 +192,15 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">Appearance</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Customize the interface visual theme and behavior.</p>
+                                            <h3 className="settings-section-title">Appearance</h3>
+                                            <p className="settings-section-description">Customize the interface visual theme and behavior.</p>
                                         </div>
 
                                         <Card className="p-8">
                                             <div className="grid grid-cols-3 gap-6">
                                                 <button
                                                     onClick={() => setActiveTheme("light")}
-                                                    className={cn(
-                                                        "group relative space-y-3 rounded-3xl border p-3 text-left transition-all duration-200",
-                                                        activeTheme === "light" ? "border-brand-dark bg-white/85 shadow-premium-sm" : "border-border-soft bg-white/70 hover:border-slate-300"
-                                                    )}
+                                                    className={cn("settings-theme-option group space-y-3", activeTheme === "light" ? "settings-theme-option-active" : "settings-theme-option-idle")}
                                                 >
                                                     <div className="aspect-4/3 w-full rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden p-2">
                                                         <div className="h-full w-full bg-white rounded-lg shadow-sm border border-slate-200/50 p-2 space-y-1.5">
@@ -225,10 +217,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
 
                                                 <button
                                                     onClick={() => setActiveTheme("dark")}
-                                                    className={cn(
-                                                        "group relative space-y-3 rounded-3xl border p-3 text-left transition-all duration-200",
-                                                        activeTheme === "dark" ? "border-brand-dark bg-white/85 shadow-premium-sm" : "border-border-soft bg-white/70 hover:border-slate-300"
-                                                    )}
+                                                    className={cn("settings-theme-option group space-y-3", activeTheme === "dark" ? "settings-theme-option-active" : "settings-theme-option-idle")}
                                                 >
                                                     <div className="aspect-4/3 w-full rounded-2xl bg-brand-dark overflow-hidden p-2">
                                                         <div className="h-full w-full bg-[#242942] rounded-lg border border-white/5 p-2 space-y-1.5">
@@ -245,10 +234,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
 
                                                 <button
                                                     onClick={() => setActiveTheme("system")}
-                                                    className={cn(
-                                                        "group relative space-y-3 rounded-3xl border p-3 text-left transition-all duration-200",
-                                                        activeTheme === "system" ? "border-brand-dark bg-white/85 shadow-premium-sm" : "border-border-soft bg-white/70 hover:border-slate-300"
-                                                    )}
+                                                    className={cn("settings-theme-option group space-y-3", activeTheme === "system" ? "settings-theme-option-active" : "settings-theme-option-idle")}
                                                 >
                                                     <div className="aspect-4/3 w-full rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden relative">
                                                         <div className="absolute inset-0 bg-brand-dark [clip-path:polygon(100%_0,0_100%,100%_100%)]" />
@@ -276,12 +262,12 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">Security</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Protect your account with advanced authentication methods.</p>
+                                            <h3 className="settings-section-title">Security</h3>
+                                            <p className="settings-section-description">Protect your account with advanced authentication methods.</p>
                                         </div>
 
                                         <div className="grid gap-4">
-                                            <Card className="flex items-center justify-between p-5 transition-colors hover:border-slate-300">
+                                            <Card className="settings-card-row">
                                                 <div className="flex items-center gap-5">
                                                     <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                                                         <Lock className="h-5.5 w-5.5" />
@@ -291,10 +277,10 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                         <p className="text-xs text-slate-500 font-medium">Last updated March 2026</p>
                                                     </div>
                                                 </div>
-                                                <Button variant="secondary" className="font-bold h-9">Update</Button>
+                                                <Button variant="secondary" className="font-bold h-9" onClick={() => toast.success("Password change requested. Check your email.")}>Update</Button>
                                             </Card>
 
-                                            <Card className="flex items-center justify-between p-5 transition-colors hover:border-slate-300">
+                                            <Card className="settings-card-row">
                                                 <div className="flex items-center gap-5">
                                                     <div className="h-12 w-12 rounded-2xl bg-(--accent-purple-soft-bg) flex items-center justify-center text-accent-purple">
                                                         <Shield className="h-5.5 w-5.5" />
@@ -304,7 +290,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                         <p className="text-xs text-slate-500 font-medium">Add an extra layer of security</p>
                                                     </div>
                                                 </div>
-                                                <Button variant="primary" className="font-bold h-9">Enable</Button>
+                                                <Button variant="primary" className="font-bold h-9" onClick={() => toast.success("2FA setup initiated")}>Enable</Button>
                                             </Card>
                                         </div>
                                     </motion.div>
@@ -320,8 +306,8 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">Active Sessions</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Manage and sign out of your remote active sessions.</p>
+                                            <h3 className="settings-section-title">Active Sessions</h3>
+                                            <p className="settings-section-description">Manage and sign out of your remote active sessions.</p>
                                         </div>
 
                                         <div className="space-y-4">
@@ -332,7 +318,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2">
                                                         <p className="text-[15px] font-bold text-slate-900">Windows PC • Chrome</p>
-                                                        <span className="rounded-full border border-border-soft bg-white px-2 py-0.5 text-[10px] font-black uppercase text-brand-dark">Active</span>
+                                                        <span className="settings-session-badge">Active</span>
                                                     </div>
                                                     <p className="text-xs text-slate-500 font-medium">Medellin, Colombia • IP: 181.12.XXX.XX</p>
                                                 </div>
@@ -346,7 +332,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                     <p className="text-[15px] font-bold text-slate-900">iPhone 15 Pro • App</p>
                                                     <p className="text-xs text-slate-500 font-medium">Miami, USA • 2 days ago</p>
                                                 </div>
-                                                <Button variant="ghost" className="text-danger hover:bg-(--danger-soft-bg) text-xs font-bold">Revoke</Button>
+                                                <Button variant="ghost" className="text-danger hover:bg-(--danger-soft-bg) text-xs font-bold" onClick={() => toast.success("Session revoked successfully")}>Revoke</Button>
                                             </Card>
                                         </div>
                                     </motion.div>
@@ -362,8 +348,8 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">Notifications</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Decide how and when you want to be notified.</p>
+                                            <h3 className="settings-section-title">Notifications</h3>
+                                            <p className="settings-section-description">Decide how and when you want to be notified.</p>
                                         </div>
 
                                         <Card className="p-0 overflow-hidden divide-y divide-border-soft">
@@ -409,8 +395,8 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                         className="mt-0 space-y-8 outline-none"
                                     >
                                         <div className="space-y-1">
-                                            <h3 className="text-[22px] font-bold text-slate-900 tracking-tight">Data & Controls</h3>
-                                            <p className="text-sm text-slate-500 font-medium">Take control of your data and backup your history.</p>
+                                            <h3 className="settings-section-title">Data & Controls</h3>
+                                            <p className="settings-section-description">Take control of your data and backup your history.</p>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4">
@@ -422,7 +408,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                     <p className="text-[15px] font-bold text-slate-900">Export Library</p>
                                                 </div>
                                                 <p className="text-xs leading-5 text-slate-500 font-medium">Download a complete backup of all your created profiles and usage history in JSON format.</p>
-                                                <Button variant="secondary" className="w-full font-bold h-10 mt-2">Start Backup</Button>
+                                                <Button variant="secondary" className="w-full font-bold h-10 mt-2" onClick={() => toast.success("Backup started. You will receive an email shortly.")}>Start Backup</Button>
                                             </Card>
 
                                             <Card className="p-6 space-y-4 surface-danger">
@@ -433,7 +419,7 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
                                                     <p className="text-[15px] font-bold text-danger">Danger Zone</p>
                                                 </div>
                                                 <p className="text-xs leading-5 text-danger/70 font-medium">Deleting your account is permanent. All profiles, history and plans will be lost immediately.</p>
-                                                <Button variant="ghost" className="w-full bg-white border border-(--danger-soft-border) text-danger font-bold h-10 mt-2 hover:bg-(--danger-soft-bg) transition-colors">Delete Account</Button>
+                                                <Button variant="ghost" className="w-full bg-white border border-(--danger-soft-border) text-danger font-bold h-10 mt-2 hover:bg-(--danger-soft-bg) transition-colors" onClick={() => toast.error("Are you sure? This cannot be undone.", { action: { label: "Confirm", onClick: () => toast.success("Account deleted.") } })}>Delete Account</Button>
                                             </Card>
                                         </div>
                                     </motion.div>
@@ -445,13 +431,16 @@ export function SettingsModal({ children, user = { name: "User Name", email: "us
 
                 <div className="relative z-10 flex h-14 shrink-0 items-center justify-between border-t border-border-soft bg-white/70 px-8 backdrop-blur-sm">
                     <div className="flex items-center gap-5">
-                        <button className="flex items-center gap-1 text-[11px] font-bold text-slate-600 transition-colors hover:text-brand-dark hover:underline">Status <ExternalLink className="h-2.5 w-2.5" /></button>
-                        <button className="flex items-center gap-1 text-[11px] font-bold text-slate-600 transition-colors hover:text-brand-dark hover:underline">Docs <ExternalLink className="h-2.5 w-2.5" /></button>
-                        <button className="flex items-center gap-1 text-[11px] font-bold text-slate-600 transition-colors hover:text-brand-dark hover:underline">Changelog <ExternalLink className="h-2.5 w-2.5" /></button>
+                        <button className="settings-footer-link">Status <ExternalLink className="h-2.5 w-2.5" /></button>
+                        <button className="settings-footer-link">Docs <ExternalLink className="h-2.5 w-2.5" /></button>
+                        <button className="settings-footer-link">Changelog <ExternalLink className="h-2.5 w-2.5" /></button>
                     </div>
                     <div className="flex items-center gap-1.5 opacity-60 transition-all duration-300 hover:opacity-100">
                         <p className="text-[10px] font-bold text-slate-400">Powered by </p>
-                        <span className="text-[12px] font-black tracking-tighter text-slate-950 uppercase">Nixtio Tech</span>
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-black tracking-tighter text-slate-950 uppercase">
+                            <Image src="/icon.png" alt="Mirror logo" width={16} height={16} className="h-4 w-auto" />
+                            <span>Mirror</span>
+                        </span>
                     </div>
                 </div>
             </DialogContent>

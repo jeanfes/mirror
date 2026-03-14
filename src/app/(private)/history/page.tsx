@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import { Archive, CheckCircle2, Clock3, Sparkles, Wand2 } from "lucide-react"
+import { Archive, CheckCircle2, Clock3, Wand2 } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { HistoryFilters } from "@/features/history/components/HistoryFilters"
@@ -109,85 +109,75 @@ export default function HistoryPage() {
 
     return (
         <div className="space-y-6">
-            <section className="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_360px]">
-                <Card elevated className="overflow-hidden border-white/70 p-6 md:p-7">
-                    <div className="relative">
-                        <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.24),transparent_68%)] blur-2xl" />
-                        <div className="absolute left-10 top-10 h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.18),transparent_68%)] blur-2xl" />
+            <section className="workspace-hero-shell">
+                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.24),transparent_72%)]" />
+                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.28),transparent_74%)]" />
 
-                        <div className="relative max-w-3xl">
-                            <span className="inline-flex items-center gap-2 rounded-full border border-[#E9DDFE] bg-[#F7F1FF] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#6D28D9]">
-                                <Archive className="h-3.5 w-3.5" />
-                                Comment archive
-                            </span>
-                            <h1 className="mt-4 max-w-2xl text-[34px] font-semibold leading-[1.05] tracking-[-0.04em] text-[#141824] md:text-[42px]">
-                                Keep the best outputs close and the weak ones out of your way.
-                            </h1>
-                            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-slate-600">
-                                History should work like a review desk: quick to scan, honest about what was applied, and useful when you need a proven angle again.
-                            </p>
+                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+                    <div className="max-w-2xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                            Keep the best outputs close and the weak ones out of your way.
+                        </h1>
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                            History should work like a review desk: quick to scan, honest about what was applied, and useful when you need a proven angle again.
+                        </p>
 
-                            <div className="mt-6 flex flex-wrap gap-2 text-[12px] font-semibold text-slate-600">
-                                <span className="rounded-full border border-[#E6EAF2] bg-white px-3 py-1.5">Reusable comment archive</span>
-                                <span className="rounded-full border border-[#E6EAF2] bg-white px-3 py-1.5">Applied status tracking</span>
-                                <span className="rounded-full border border-[#E6EAF2] bg-white px-3 py-1.5">Profile-aware review flow</span>
-                            </div>
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <div className="workspace-hero-chip">Reusable comment archive</div>
+                            <div className="workspace-hero-chip">Applied status tracking</div>
+                            <div className="workspace-hero-chip">Profile-aware review flow</div>
                         </div>
                     </div>
-                </Card>
 
-                <Card className="rounded-4xl border-[#171B2D] bg-[#171B2D] p-6 text-white shadow-[0_28px_80px_rgba(15,23,42,0.22)]">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/85">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        Review pulse
-                    </span>
-                    <h2 className="mt-4 text-[24px] font-semibold tracking-[-0.03em] text-white">Your archive at a glance</h2>
+                    <Card className="dashboard-dark-panel">
+                    <h2 className="text-[24px] font-black tracking-[-0.04em] text-white">Your archive at a glance</h2>
                     <p className="mt-2 text-[14px] leading-6 text-white/82">A quick read on how much of the comment library is already production-ready versus still waiting for a decision.</p>
 
                     <div className="mt-6 grid grid-cols-2 gap-3">
-                        <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
+                        <div className="dashboard-dark-stat">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Archived</p>
                             <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
                         </div>
-                        <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
+                        <div className="dashboard-dark-stat">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Applied</p>
                             <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.applied}</p>
                         </div>
-                        <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
+                        <div className="dashboard-dark-stat">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Pending</p>
                             <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.pending}</p>
                         </div>
-                        <div className="rounded-3xl border border-white/20 bg-white/12 p-4">
+                        <div className="dashboard-dark-stat">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Reused</p>
                             <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.reused}</p>
                         </div>
                     </div>
-                </Card>
+                    </Card>
+                </div>
             </section>
 
             <section className="grid gap-4 md:grid-cols-3">
-                <Card className="rounded-[28px] p-5">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(139,92,246,0.14),rgba(117,206,243,0.14))] text-[#141824]">
+                <Card className="dashboard-card-lg">
+                    <div className="icon-box icon-bg-purple">
                         <Wand2 className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Review angle</h2>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">Compare the original post against the generated comment without losing the tone or goal that produced it.</p>
+                    <p className="mt-2 body-muted">Compare the original post against the generated comment without losing the tone or goal that produced it.</p>
                 </Card>
 
-                <Card className="rounded-[28px] p-5">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(16,185,129,0.14),rgba(125,211,252,0.14))] text-[#141824]">
+                <Card className="dashboard-card-lg">
+                    <div className="icon-box icon-bg-green">
                         <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Execution truth</h2>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">Keep the archive honest by marking what was actually used and what still needs a decision.</p>
+                    <p className="mt-2 body-muted">Keep the archive honest by marking what was actually used and what still needs a decision.</p>
                 </Card>
 
-                <Card className="rounded-[28px] p-5">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(251,191,36,0.18),rgba(248,250,252,0.2))] text-[#141824]">
+                <Card className="dashboard-card-lg">
+                    <div className="icon-box icon-bg-amber">
                         <Clock3 className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Fast retrieval</h2>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">Find a strong previous angle in seconds when you need to comment quickly without starting from zero.</p>
+                    <p className="mt-2 body-muted">Find a strong previous angle in seconds when you need to comment quickly without starting from zero.</p>
                 </Card>
             </section>
 
@@ -207,20 +197,20 @@ export default function HistoryPage() {
             <section>
                 <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-[#141824]">Recent outputs</h2>
-                        <p className="text-[14px] leading-6 text-slate-600">Each card keeps the source, the generated reply and the decision controls in one place.</p>
+                        <h2 className="section-heading">Recent outputs</h2>
+                        <p className="body-muted">Each card keeps the source, the generated reply and the decision controls in one place.</p>
                     </div>
                     <p className="text-[13px] font-medium text-slate-500">{filteredHistory.length} result{filteredHistory.length === 1 ? "" : "s"}</p>
                 </div>
             </section>
 
             {filteredHistory.length === 0 ? (
-                <Card className="rounded-4xl p-10 text-center">
-                    <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(139,92,246,0.14),rgba(117,206,243,0.14))] text-[#141824]">
+                <Card className="dashboard-empty-state">
+                    <div className="mx-auto icon-box-lg icon-bg-purple">
                         <Archive className="h-6 w-6" />
                     </div>
                     <h3 className="mt-5 text-[22px] font-semibold tracking-[-0.03em] text-[#141824]">No comments match this view.</h3>
-                    <p className="mx-auto mt-2 max-w-xl text-[14px] leading-6 text-slate-600">Try widening the search, switching the profile filter or resetting the current status selection to see more of the archive.</p>
+                    <p className="mx-auto mt-2 max-w-xl body-muted">Try widening the search, switching the profile filter or resetting the current status selection to see more of the archive.</p>
                 </Card>
             ) : (
                 <div className="space-y-4">

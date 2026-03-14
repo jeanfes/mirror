@@ -101,17 +101,13 @@ export default function ProfilesPage() {
 
     return (
         <div className="space-y-6">
-            <section className="relative overflow-hidden rounded-4xl border border-[#E8ECF4] bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(214,210,240,0.35)_40%,rgba(117,206,243,0.2)_100%)] p-6 shadow-premium-md md:p-8">
+            <section className="workspace-hero-shell">
                 <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.24),transparent_72%)]" />
                 <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.28),transparent_74%)]" />
 
-                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/75 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700 backdrop-blur-sm">
-                            <Sparkles className="h-3.5 w-3.5 text-[#8B5CF6]" />
-                            Voice studio
-                        </div>
-                        <h1 className="mt-4 max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
                             Build the voices your extension comments with.
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
@@ -119,15 +115,15 @@ export default function ProfilesPage() {
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <MessageSquareQuote className="h-4 w-4 text-[#141824]" />
                                 Tone-led comments
                             </div>
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <Layers3 className="h-4 w-4 text-[#141824]" />
                                 Multiple posting angles
                             </div>
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <Stars className="h-4 w-4 text-[#141824]" />
                                 Reusable brand voices
                             </div>
@@ -166,19 +162,19 @@ export default function ProfilesPage() {
 
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Role</p>
+                    <p className="dashboard-overline">Role</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Identity system</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">Profiles make the extension feel opinionated and consistent instead of random on every generation.</p>
+                    <p className="mt-2 body-muted">Profiles make the extension feel opinionated and consistent instead of random on every generation.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Best practice</p>
+                    <p className="dashboard-overline">Best practice</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Three clear examples</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">A good profile gives enough sample phrasing to guide tone without overfitting every response.</p>
+                    <p className="mt-2 body-muted">A good profile gives enough sample phrasing to guide tone without overfitting every response.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Outcome</p>
+                    <p className="dashboard-overline">Outcome</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Faster daily use</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">When the voices are strong, choosing a comment direction becomes much faster inside the extension.</p>
+                    <p className="mt-2 body-muted">When the voices are strong, choosing a comment direction becomes much faster inside the extension.</p>
                 </Card>
             </section>
 

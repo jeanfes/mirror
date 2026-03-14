@@ -26,13 +26,13 @@ export function MobileSidebar() {
 
             <AnimatePresence>
                 {isOpen && (
-                    <div className="fixed inset-0 z-50 flex">
+                    <div className="fixed inset-0 z-80 flex">
                         {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                            className="fixed inset-0 z-0 bg-black/50 backdrop-blur-sm"
                             onClick={() => setIsOpen(false)}
                             aria-hidden="true"
                         />
@@ -43,7 +43,7 @@ export function MobileSidebar() {
                             animate={{ x: 0 }}
                             exit={{ x: "-100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="neo-panel relative z-50 flex h-screen w-20 flex-col items-center justify-between border-r border-border-soft bg-white/80 py-5 shadow-premium-md backdrop-blur-xl"
+                            className="neo-panel relative z-10 flex h-screen w-20 flex-col items-center justify-between border-r border-border-soft bg-white/80 py-5 shadow-premium-md backdrop-blur-xl"
                         >
                             <motion.button
                                 whileHover={{ scale: 1.1 }}

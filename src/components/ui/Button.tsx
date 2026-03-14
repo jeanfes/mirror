@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from "react"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-type ButtonVariant = "primary" | "secondary" | "ghost"
+type ButtonVariant = "primary" | "secondary" | "ghost" | "dangerSoft"
 type ButtonSize = "md" | "lg"
 
 import { motion } from "motion/react"
@@ -17,7 +17,8 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 const variantClasses: Record<ButtonVariant, string> = {
     primary: "neo-btn-primary",
     secondary: "neo-btn-muted",
-    ghost: "bg-transparent text-slate-600 hover:bg-white/80 hover:text-slate-900"
+    ghost: "bg-transparent text-slate-600 hover:bg-white/80 hover:text-slate-900",
+    dangerSoft: "neo-btn-danger-soft"
 }
 
 const sizeClasses: Record<ButtonSize, string> = {

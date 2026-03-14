@@ -1,9 +1,10 @@
 "use client"
 
 import { format } from "date-fns"
-import { Crown, Gauge, Layers3, Sparkles, Stars, Zap } from "lucide-react"
+import { Crown, Gauge, Layers3, Stars, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
+import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { planDefinitions } from "@/features/billing/services/billing.local.service"
@@ -35,17 +36,15 @@ export default function PlansPage() {
 
     return (
         <div className="space-y-6">
-            <section className="relative overflow-hidden rounded-4xl border border-[#E8ECF4] bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(214,210,240,0.36)_42%,rgba(117,206,243,0.22)_100%)] p-6 shadow-premium-md md:p-8">
-                <div aria-hidden="true" className="absolute -right-15 -top-20 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.35),transparent_72%)]" />
-                <div aria-hidden="true" className="absolute -bottom-16 -left-8 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.2),transparent_70%)]" />
+            <section className="workspace-hero-shell">
+                <div aria-hidden="true" className="absolute inset-0 z-0 overflow-hidden">
+                    <div className="absolute -right-15 -top-20 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.2),transparent_72%)]" />
+                    <div className="absolute -bottom-16 -left-8 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.12),transparent_70%)]" />
+                </div>
 
-                <div className="relative grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+                <div className="relative z-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700 backdrop-blur-sm">
-                            <Sparkles className="h-3.5 w-3.5 text-[#8B5CF6]" />
-                            Capacity planning for Mirror
-                        </div>
-                        <h1 className="mt-4 max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
                             Pick the workspace that matches your posting rhythm.
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
@@ -53,22 +52,22 @@ export default function PlansPage() {
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <Crown className="h-4 w-4 text-[#141824]" />
                                 Premium companion feel
                             </div>
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <Layers3 className="h-4 w-4 text-[#141824]" />
                                 Profiles + history aligned
                             </div>
-                            <div className="inline-flex items-center gap-2 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-[13px] font-medium text-slate-700 shadow-premium-sm">
+                            <div className="workspace-hero-chip">
                                 <Zap className="h-4 w-4 text-[#141824]" />
                                 Clear upgrade path
                             </div>
                         </div>
                     </div>
 
-                    <div className="rounded-[28px] border border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 text-white shadow-[0_18px_50px_rgba(15,19,32,0.16)]">
+                    <div className="dashboard-dark-panel">
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">Current subscription</p>
@@ -94,12 +93,11 @@ export default function PlansPage() {
                         </div>
 
                         <div className="mt-5">
-                            <div className="h-2 rounded-full bg-white/10">
-                                <div
-                                    className="h-2 rounded-full bg-[linear-gradient(90deg,#75cef3,#8b5cf6)]"
-                                    style={{ width: `${monthlyUsagePercent}%` }}
-                                />
-                            </div>
+                            <ProgressBar
+                                trackClassName="bg-white/10"
+                                fillClassName="bg-[linear-gradient(90deg,#75cef3,#8b5cf6)]"
+                                value={monthlyUsagePercent}
+                            />
                             <p className="mt-3 text-[13px] leading-6 text-white/68">
                                 {monthlyUsagePercent > 70
                                     ? "You still have healthy room this cycle, but a higher tier gives you more profile breadth and publishing headroom."
@@ -112,19 +110,19 @@ export default function PlansPage() {
 
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Best for</p>
+                    <p className="dashboard-overline">Best for</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Different growth stages</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">From testing one voice to running several posting angles at the same time.</p>
+                    <p className="mt-2 body-muted">From testing one voice to running several posting angles at the same time.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Upgrade logic</p>
+                    <p className="dashboard-overline">Upgrade logic</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Capacity before friction</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">Move up when you want more monthly attempts, more profiles and less hesitation in daily use.</p>
+                    <p className="mt-2 body-muted">Move up when you want more monthly attempts, more profiles and less hesitation in daily use.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Visual principle</p>
+                    <p className="dashboard-overline">Visual principle</p>
                     <p className="mt-2 text-lg font-bold text-[#141824]">Pricing as product surface</p>
-                    <p className="mt-2 text-[14px] leading-6 text-slate-600">This should feel like part of the workspace, not a detached billing screen.</p>
+                    <p className="mt-2 body-muted">This should feel like part of the workspace, not a detached billing screen.</p>
                 </Card>
             </section>
 
@@ -156,22 +154,22 @@ export default function PlansPage() {
             <section className="rounded-[28px] border border-[#E8ECF4] bg-white/70 p-5 shadow-premium-sm md:p-6">
                 <div className="grid gap-4 md:grid-cols-4">
                     <div>
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Signal</p>
+                        <p className="dashboard-overline">Signal</p>
                         <p className="mt-2 text-[15px] font-semibold text-[#141824]">Profile depth</p>
                         <p className="mt-2 text-[13px] leading-6 text-slate-600">Run one focused voice or several strategic personas depending on your plan.</p>
                     </div>
                     <div>
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Throughput</p>
+                        <p className="dashboard-overline">Throughput</p>
                         <p className="mt-2 text-[15px] font-semibold text-[#141824]">Monthly generation headroom</p>
                         <p className="mt-2 text-[13px] leading-6 text-slate-600">Higher tiers reduce friction when you comment daily or experiment more often.</p>
                     </div>
                     <div>
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Workflow</p>
+                        <p className="dashboard-overline">Workflow</p>
                         <p className="mt-2 text-[15px] font-semibold text-[#141824]">History and reuse</p>
                         <p className="mt-2 text-[13px] leading-6 text-slate-600">Stronger plans make sense when you rely on iteration, reuse and multiple comment directions.</p>
                     </div>
                     <div>
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Decision</p>
+                        <p className="dashboard-overline">Decision</p>
                         <p className="mt-2 text-[15px] font-semibold text-[#141824]">Upgrade when speed matters</p>
                         <p className="mt-2 text-[13px] leading-6 text-slate-600">If the extension becomes part of your weekly publishing habit, optimize for continuity rather than scarcity.</p>
                     </div>

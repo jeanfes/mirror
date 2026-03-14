@@ -27,16 +27,24 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onCancel() : undefined)}>
-            <DialogContent className="w-[min(94vw,380px)] rounded-3xl p-6">
-                <div className="flex flex-col items-center text-center">
-                    <div
-                        className="flex h-12 w-12 items-center justify-center rounded-full border"
+            <DialogContent className="workspace-hero-panel w-[min(94vw,400px)] rounded-3xl p-6">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.96, y: 6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="flex flex-col items-center text-center"
+                >
+                    <motion.div
+                        initial={{ scale: 0.92 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.25, ease: "easeOut", delay: 0.05 }}
+                        className="flex h-12 w-12 items-center justify-center rounded-full border shadow-premium-sm"
                         style={{ background: "var(--danger-soft-bg)", borderColor: "var(--danger-soft-border)" }}
                     >
                         <AlertTriangle className="h-5 w-5 text-danger" />
-                    </div>
+                    </motion.div>
 
-                    <DialogTitle className="mt-4 text-[15px] font-bold tracking-[-0.02em] text-[#141824]">
+                    <DialogTitle className="mt-4 text-[15px] font-bold tracking-[-0.02em] text-primary-text">
                         {title}
                     </DialogTitle>
 
@@ -67,7 +75,7 @@ export function ConfirmDialog({
                             {isPending ? "Deleting…" : confirmLabel}
                         </motion.button>
                     </div>
-                </div>
+                </motion.div>
             </DialogContent>
         </Dialog>
     )

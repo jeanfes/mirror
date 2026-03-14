@@ -32,7 +32,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                             Voice profile
                         </div>
                         <h2 className="mt-4 text-2xl font-black tracking-[-0.04em] text-[#141824]">{profile.name}</h2>
-                        <p className="mt-3 text-[14px] leading-6 text-slate-600">{profile.description}</p>
+                        <p className="mt-3 body-muted">{profile.description}</p>
                     </div>
 
                     <DropdownMenu>
@@ -71,7 +71,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                 <div className="mt-5 rounded-3xl border border-[#E8ECF4] bg-white/75 p-4">
                     <div className="flex items-center justify-between gap-3">
                         <div>
-                            <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">Tone map</p>
+                            <p className="dashboard-overline">Tone map</p>
                             <p className="mt-1 text-[15px] font-semibold text-[#141824]">{profile.tone}</p>
                         </div>
                         <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#E8ECF4] bg-white/90">

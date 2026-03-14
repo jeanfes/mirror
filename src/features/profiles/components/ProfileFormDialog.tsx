@@ -82,7 +82,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
 
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
-            <DialogContent className="w-[min(94vw,760px)] rounded-[28px] p-0 overflow-hidden">
+            <DialogContent className="w-[min(94vw,760px)] rounded-[28px] border border-border-soft bg-white/96 p-0 overflow-hidden">
                 <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
                     <div className="overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
@@ -115,7 +115,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                         </div>
                     </div>
 
-                    <div className="p-5 md:p-6">
+                    <div className="bg-white p-5 md:p-6">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-semibold text-primary-text">
                                 {profile ? "Edit profile" : "Create profile"}
@@ -126,45 +126,32 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                         <form className="space-y-4" onSubmit={submit}>
                             <div className="space-y-1">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Name</label>
-                                <input
-                                    {...register("name")}
-                                    className="h-11 w-full rounded-2xl border border-border-soft bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
-                                    placeholder="Example: Insight Architect"
-                                />
+                                <input {...register("name")} className="feature-input" placeholder="Example: Insight Architect" />
                                 {errors.name ? <p className="text-[12px] text-danger">{errors.name.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Description</label>
-                                <textarea
-                                    {...register("description")}
-                                    rows={2}
-                                    className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
-                                    placeholder="What kind of perspective does this profile bring?"
-                                />
+                                <textarea {...register("description")} rows={2} className="feature-textarea" placeholder="What kind of perspective does this profile bring?" />
                                 {errors.description ? <p className="text-[12px] text-danger">{errors.description.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Tone</label>
-                                <input
-                                    {...register("tone")}
-                                    className="h-11 w-full rounded-2xl border border-border-soft bg-white px-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30"
-                                    placeholder="Confident, practical, concise"
-                                />
+                                <input {...register("tone")} className="feature-input" placeholder="Confident, practical, concise" />
                                 {errors.tone ? <p className="text-[12px] text-danger">{errors.tone.message}</p> : null}
                             </div>
 
-                            <div className="rounded-3xl border border-border-soft bg-white/70 p-4">
+                            <div className="feature-soft-card bg-white/70">
                                 <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Example comments</label>
                                 <p className="mt-1 text-[13px] text-slate-600">Use three short examples that feel ready to post, not abstract instructions.</p>
 
                                 <div className="mt-3 grid gap-3">
-                                    <textarea {...register("example1")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #1" />
+                                    <textarea {...register("example1")} rows={2} className="feature-textarea" placeholder="Example #1" />
                                     {errors.example1 ? <p className="-mt-1 text-[12px] text-danger">{errors.example1.message}</p> : null}
-                                    <textarea {...register("example2")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #2" />
+                                    <textarea {...register("example2")} rows={2} className="feature-textarea" placeholder="Example #2" />
                                     {errors.example2 ? <p className="-mt-1 text-[12px] text-danger">{errors.example2.message}</p> : null}
-                                    <textarea {...register("example3")} rows={2} className="w-full rounded-2xl border border-border-soft bg-white px-3 py-3 text-[14px] outline-none focus:ring-2 focus:ring-accent-purple/30" placeholder="Example #3" />
+                                    <textarea {...register("example3")} rows={2} className="feature-textarea" placeholder="Example #3" />
                                     {errors.example3 ? <p className="-mt-1 text-[12px] text-danger">{errors.example3.message}</p> : null}
                                 </div>
                             </div>

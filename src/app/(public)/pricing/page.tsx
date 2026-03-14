@@ -67,9 +67,9 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.15, ease: "easeOut" }}
-                        className="neo-shell relative flex flex-col border border-white/70 p-10 shadow-premium-md transform md:-translate-y-4"
+                        className="neo-shell relative flex flex-col border border-border-soft bg-white/88 p-10 shadow-premium-md transform md:-translate-y-4"
                     >
-                        <div className="absolute top-0 right-10 -translate-y-1/2 rounded-full bg-[#171B2D] px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-premium-sm">
+                        <div className="absolute top-0 right-10 -translate-y-1/2 rounded-full bg-brand-dark px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-premium-sm">
                             {t.pricing.popular}
                         </div>
                         <div className="mb-6">
