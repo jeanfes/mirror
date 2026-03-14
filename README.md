@@ -5,22 +5,25 @@ Next.js app for the Mirror product web experience.
 ## What Is Included
 
 - Public landing inspired by the extension visual style.
-- Real authentication flow with Auth.js (NextAuth credentials provider).
-- Private workspace routes with middleware protection.
+- Supabase SSR authentication flow.
+- Private workspace routes protected with `proxy.ts` and private layout guard.
 - Product modules in English:
-	- Home
-	- Assistant
-	- Planner
-	- Team
-	- Personas
+	- Profiles
 	- History
-	- Analytics
 	- Settings
 	- Account
 	- Plans
 	- Trash
-- API routes for auth and workspace seed data.
 - UI system adapted from extension conventions (neo-shell, neo-card, buttons, toggles, select, Lucide icons).
+
+## MVP Stack Configured
+
+- Tailwind CSS v4 + custom neo design tokens.
+- Radix Primitives (Dialog, Dropdown Menu, Tabs) wrapped in custom components.
+- TanStack Query for server-state and caching.
+- React Hook Form + Zod for form handling and validation.
+- Sonner for toast notifications.
+- date-fns for date formatting utilities.
 
 ## Requirements
 
@@ -38,7 +41,10 @@ pnpm install
 2. Create environment file:
 
 ```bash
-cp .env.example .env.local
+# Create or edit .env.local with:
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+AUTH_ENABLED=false
 ```
 
 3. Start dev server:
@@ -47,24 +53,13 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-## Demo User
-
-- Email: demo@mirror.app
-- Password: Mirror123!
-
 ## Auth Notes
 
-- Current implementation uses NextAuth credentials plus in-memory user store for MVP speed.
-- Registration endpoint creates users in-memory while the server is running.
-- For production, replace `features/auth/lib/user-store.ts` with persistent storage (Postgres, Supabase, or Prisma).
+- Auth is handled with Supabase clients (`@supabase/ssr` + `@supabase/supabase-js`).
+- `AUTH_ENABLED=false` enables a local dev bypass for protected routes.
+- `AUTH_ENABLED=true` enables real session checks against Supabase.
 
 ## API Routes
 
-- `GET /api/auth/me`
-- `POST /api/auth/register`
-- `GET /api/workspace/overview`
-- `GET /api/workspace/personas`
-- `GET /api/workspace/history`
-- `GET /api/workspace/account`
-- `GET /api/workspace/plans`
-- `GET /api/workspace/trash`
+- API routes are being introduced per module as MVP features move from mock data to persisted data.
+- Current private pages still use placeholder/mock content while core CRUD and generation flows are implemented.

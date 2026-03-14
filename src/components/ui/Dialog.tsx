@@ -1,0 +1,52 @@
+"use client"
+
+import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { X } from "lucide-react"
+import { cn } from "@/lib/utils"
+
+export const Dialog = DialogPrimitive.Root
+export const DialogTrigger = DialogPrimitive.Trigger
+export const DialogClose = DialogPrimitive.Close
+
+export function DialogPortal({ children }: { children: React.ReactNode }) {
+    return <DialogPrimitive.Portal>{children}</DialogPrimitive.Portal>
+}
+
+export const DialogTitle = DialogPrimitive.Title
+export const DialogDescription = DialogPrimitive.Description
+
+export function DialogContent({
+    className,
+    children,
+    ...props
+}: React.ComponentProps<typeof DialogPrimitive.Content>) {
+    return (
+        <DialogPortal>
+            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/35 backdrop-blur-[2px]" />
+            <DialogPrimitive.Content
+                className={cn(
+                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(92vw,620px)] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-[#E8ECF4] p-5 shadow-premium-lg outline-none",
+                    className
+                )}
+                {...props}
+            >
+                {children}
+                <DialogPrimitive.Close
+                    className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-slate-800"
+                    aria-label="Close"
+                >
+                    <X className="h-4 w-4" />
+                </DialogPrimitive.Close>
+            </DialogPrimitive.Content>
+        </DialogPortal>
+    )
+}
+
+export function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+    return <div className={cn("mb-4 space-y-1", className)} {...props} />
+}
+
+export function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+    return <div className={cn("mt-5 flex justify-end gap-2", className)} {...props} />
+}

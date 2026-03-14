@@ -26,7 +26,7 @@ export interface HistoryItem {
 }
 
 export interface AccountStatus {
-  plan: "Free" | "Pro"
+  plan: "Free" | "Pro" | "Elite"
   creditsRemaining: number
   renewalDate: string
 }
