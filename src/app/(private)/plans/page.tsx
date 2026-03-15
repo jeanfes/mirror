@@ -4,7 +4,7 @@ import { format } from "date-fns"
 import { Crown, Gauge, Layers3, Star, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
-import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
@@ -27,7 +27,7 @@ export default function PlansPage() {
     }
 
     if (showLoading) {
-        return <LoadingPage />
+        return <LoadingOverlay show={true} />
     }
 
     if (isError || !account) {

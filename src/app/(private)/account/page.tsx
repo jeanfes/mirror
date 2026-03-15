@@ -3,7 +3,7 @@
 import { format, formatDistanceToNow } from "date-fns"
 import { BarChart3, CreditCard, Layers3 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
-import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
@@ -21,7 +21,7 @@ export default function AccountPage() {
     const showLoading = useLoadingDelay(isAccountLoading || !account)
 
     if (showLoading) {
-        return <LoadingPage />
+        return <LoadingOverlay show={true} />
     }
 
     if (isError || !account) {

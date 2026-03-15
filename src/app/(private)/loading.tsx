@@ -1,5 +1,5 @@
-import { LoadingPage } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 
 export default function PrivateLoading() {
-    return <LoadingPage />
+    return <LoadingOverlay show={true} />
 }

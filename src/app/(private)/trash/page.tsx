@@ -6,7 +6,7 @@ import { ArchiveRestore, Trash2, Undo2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useTrash } from "@/features/history/hooks/useTrash"
 import type { TrashItem } from "@/features/history/services/trash.local.service"
@@ -59,7 +59,7 @@ export default function TrashPage() {
     }
 
     if (showLoading) {
-        return <LoadingPage />
+        return <LoadingOverlay show={true} />
     }
 
     if (isError) {

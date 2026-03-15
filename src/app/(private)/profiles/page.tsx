@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Card } from "@/components/ui/Card"
-import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
@@ -85,7 +85,7 @@ export default function ProfilesPage() {
     }
 
     if (showLoading) {
-        return <LoadingPage />
+        return <LoadingOverlay show={true} />
     }
 
     if (isError) {

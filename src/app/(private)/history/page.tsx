@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import { Archive, CheckCircle2, Clock3, WandSparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
-import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { HistoryFilters } from "@/features/history/components/HistoryFilters"
 import { HistoryItemCard } from "@/features/history/components/HistoryItemCard"
@@ -97,7 +97,7 @@ export default function HistoryPage() {
     }
 
     if (showLoading) {
-        return <LoadingPage />
+        return <LoadingOverlay show={true} />
     }
 
     if (isError) {

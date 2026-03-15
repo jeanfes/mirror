@@ -54,6 +54,10 @@
   --color-brand-dark: var(--brand-dark);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 * {
   box-sizing: border-box;
 }

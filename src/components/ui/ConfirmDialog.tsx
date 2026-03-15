@@ -29,9 +29,20 @@ export function ConfirmDialog({
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onCancel() : undefined)}>
             <DialogContent
+                layer="priority"
                 hideCloseButton
                 aria-busy={isPending}
-                className="w-[min(94vw,400px)] rounded-3xl border border-border-light bg-white/88 p-6 backdrop-blur-sm [--panel-bg:rgba(255,255,255,0.88)] [--panel-border-color:var(--border-light)]"
+                onEscapeKeyDown={(event) => {
+                    if (isPending) {
+                        event.preventDefault()
+                    }
+                }}
+                onInteractOutside={(event) => {
+                    if (isPending) {
+                        event.preventDefault()
+                    }
+                }}
+                className="w-[min(94vw,420px)] rounded-[28px] border border-white/65 bg-white/94 p-6 shadow-[0_28px_80px_-28px_rgba(15,23,42,0.65)] [--panel-bg:rgba(255,255,255,0.94)] [--panel-border-color:rgba(255,255,255,0.65)]"
             >
                 <motion.div
                     initial={{ opacity: 0, scale: 0.96, y: 6 }}
@@ -43,7 +54,7 @@ export function ConfirmDialog({
                         initial={{ scale: 0.92 }}
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.25, ease: "easeOut", delay: 0.05 }}
-                        className="flex h-12 w-12 items-center justify-center rounded-full border shadow-premium-sm"
+                        className="mt-4 flex h-12 w-12 items-center justify-center rounded-full border shadow-premium-sm"
                         style={{ background: "var(--danger-soft-bg)", borderColor: "var(--danger-soft-border)" }}
                     >
                         <AlertTriangle className="h-5 w-5 text-danger" />

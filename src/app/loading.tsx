@@ -1,5 +1,5 @@
-import { LoadingPage } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 
 export default function Loading() {
-    return <LoadingPage fullScreen />
+    return <LoadingOverlay show={true} />
 }

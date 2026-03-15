@@ -15,18 +15,35 @@ export function DialogPortal({ children }: { children: React.ReactNode }) {
 export const DialogTitle = DialogPrimitive.Title
 export const DialogDescription = DialogPrimitive.Description
 
+type DialogLayer = "base" | "priority"
+
+const dialogLayerStyles: Record<DialogLayer, { overlay: string; content: string }> = {
+    base: {
+        overlay: "z-40 bg-black/55 backdrop-blur-md",
+        content: "z-50"
+    },
+    priority: {
+        overlay: "z-70 bg-slate-950/62 backdrop-blur-lg",
+        content: "z-80"
+    }
+}
+
 export function DialogContent({
     className,
     children,
     hideCloseButton = false,
+    layer = "base",
     ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & { hideCloseButton?: boolean }) {
+}: React.ComponentProps<typeof DialogPrimitive.Content> & { hideCloseButton?: boolean; layer?: DialogLayer }) {
+    const layerStyles = dialogLayerStyles[layer]
+
     return (
         <DialogPortal>
-            <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/55 backdrop-blur-md animate-in fade-in duration-300" />
+            <DialogPrimitive.Overlay className={cn("fixed inset-0 animate-in fade-in duration-300", layerStyles.overlay)} />
             <DialogPrimitive.Content
                 className={cn(
-                    "neo-panel fixed left-1/2 top-1/2 z-50 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
+                    "neo-panel fixed left-1/2 top-1/2 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
+                    layerStyles.content,
                     className
                 )}
                 {...props}
