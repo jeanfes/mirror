@@ -4,11 +4,18 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import { createMockUserFromRegisterInput, getMockCredentialsHelpText, setMockSession } from "@/lib/mock-auth"
 import { Button } from "@/components/ui/Button"
+import { useLoadingDelay } from "@/components/ui/Loading"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { motion } from "motion/react"
 
-export function RegisterForm() {
+interface RegisterFormProps {
+    authEnabled: boolean
+}
+
+export function RegisterForm({ authEnabled }: RegisterFormProps) {
     const router = useRouter()
     const { t } = useLanguageStore()
     const [name, setName] = useState("")
@@ -16,6 +23,8 @@ export function RegisterForm() {
     const [password, setPassword] = useState("")
     const [error, setError] = useState<string | null>(null)
     const [isPending, setIsPending] = useState(false)
+    const isMockMode = !authEnabled
+    const showPending = useLoadingDelay(isPending)
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -23,6 +32,15 @@ export function RegisterForm() {
         setError(null)
 
         try {
+            if (isMockMode) {
+                const user = createMockUserFromRegisterInput(email, name)
+                setMockSession(user)
+                setIsPending(false)
+                router.push(DEFAULT_AUTHENTICATED_ROUTE)
+                router.refresh()
+                return
+            }
+
             const supabase = createClient()
             const { error: authError } = await supabase.auth.signUp({
                 email,
@@ -37,7 +55,7 @@ export function RegisterForm() {
                 return
             }
 
-            router.push("/profiles")
+            router.push(DEFAULT_AUTHENTICATED_ROUTE)
             router.refresh()
         } catch {
             setIsPending(false)
@@ -47,15 +65,21 @@ export function RegisterForm() {
     }
 
     return (
-        <form className="space-y-4" onSubmit={onSubmit}>
+        <form className="space-y-4" onSubmit={onSubmit} aria-busy={showPending}>
             <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all hover:bg-slate-50 focus:ring-4 focus:ring-accent-purple/10"
+                className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all hover:bg-slate-50 focus:ring-4 focus:ring-accent-purple/10 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={isMockMode || showPending}
                 onClick={() => {
+                    if (isMockMode) {
+                        setError("Google OAuth esta deshabilitado en modo mock.")
+                        return
+                    }
+
                     const supabase = createClient()
-                    supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/auth/callback` } })
+                    supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}${ROUTES.auth.callback}` } })
                 }}
             >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
@@ -80,6 +104,8 @@ export function RegisterForm() {
                 {t.auth.googleBtn}
             </motion.button>
 
+            {isMockMode ? <p className="text-[12px] font-medium text-secondary-text">{getMockCredentialsHelpText()}</p> : null}
+
             <div className="relative flex items-center py-2">
                 <div className="grow border-t border-border-soft"></div>
                 <span className="shrink-0 px-4 text-[12px] font-medium text-muted-text">{t.auth.orEmail}</span>
@@ -93,6 +119,7 @@ export function RegisterForm() {
                     value={name}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
                     type="text"
+                    disabled={showPending}
                     minLength={2}
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
@@ -106,6 +133,7 @@ export function RegisterForm() {
                     value={email}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                     type="email"
+                    disabled={showPending}
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
                     placeholder={t.auth.emailPlaceholder}
@@ -118,6 +146,7 @@ export function RegisterForm() {
                     value={password}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                     type="password"
+                    disabled={showPending}
                     minLength={8}
                     required
                     className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
@@ -126,12 +155,17 @@ export function RegisterForm() {
             </div>
             {error ? <p className="text-[13px] font-medium text-danger">{error}</p> : null}
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2" type="submit" disabled={isPending}>
-                    {isPending ? t.auth.loading : t.auth.registerBtn}
+                <Button
+                    className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2"
+                    type="submit"
+                    loading={showPending}
+                    loadingLabel={isMockMode ? t.app.creatingAccount : t.auth.loading}
+                >
+                    {t.auth.registerBtn}
                 </Button>
             </motion.div>
             <p className="text-center text-[14px] text-secondary-text pt-4">
-                {t.auth.hasAccount} <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href="/login">{t.auth.loginLink}</Link>
+                {t.auth.hasAccount} <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href={ROUTES.auth.login}>{t.auth.loginLink}</Link>
             </p>
         </form>
     )

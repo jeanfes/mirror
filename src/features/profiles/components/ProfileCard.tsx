@@ -1,7 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
-import { MessageSquareQuote, MoreHorizontal, Pencil, Power, WandSparkles, Trash2 } from "lucide-react"
+import { Eye, EyeOff, MessageSquareQuote, MoreHorizontal, Pencil, WandSparkles, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import {
@@ -47,7 +47,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                                 Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onToggle(profile.id)}>
-                                <Power className="mr-2 h-4 w-4" />
+                                {profile.enabled ? <EyeOff className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
                                 {profile.enabled ? "Disable" : "Enable"}
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600" onClick={() => onDelete(profile.id)}>

@@ -4,13 +4,18 @@ import { format } from "date-fns"
 import { Crown, Gauge, Layers3, Star, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
+import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { planDefinitions } from "@/features/billing/services/billing.local.service"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function PlansPage() {
-    const { data: account, setPlan, isUpdatingPlan, isLoading } = useAccount()
+    const { data: account, setPlan, isMutating, isLoading, isError } = useAccount()
+    const { t } = useLanguageStore()
+    const showLoading = useLoadingDelay(isLoading || !account)
 
     const handleSelectPlan = async (planName: "Free" | "Pro" | "Elite") => {
         try {
@@ -21,17 +26,25 @@ export default function PlansPage() {
         }
     }
 
-    if (isLoading || !account) {
+    if (showLoading) {
+        return <LoadingPage />
+    }
+
+    if (isError || !account) {
         return (
-            <Card className="p-5">
-                <p className="text-[14px] text-slate-500">Loading plans...</p>
-            </Card>
+            <StatePanel
+                tone="error"
+                title={t.app.plansErrorTitle}
+                description={t.app.plansErrorDesc}
+            />
         )
     }
 
-    const currentPlanDefinition = planDefinitions.find((plan) => plan.name === account.plan)
+    const resolvedAccount = account!
+
+    const currentPlanDefinition = planDefinitions.find((plan) => plan.name === resolvedAccount.plan)
     const monthlyUsagePercent = currentPlanDefinition
-        ? Math.max(0, Math.min(100, Math.round((account.creditsRemaining / currentPlanDefinition.credits) * 100)))
+        ? Math.max(0, Math.min(100, Math.round((resolvedAccount.creditsRemaining / currentPlanDefinition.credits) * 100)))
         : 0
 
     return (
@@ -71,17 +84,17 @@ export default function PlansPage() {
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">Current subscription</p>
-                                <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{account.plan}</p>
+                                <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{resolvedAccount.plan}</p>
                             </div>
                             <div className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/85 ring-1 ring-white/10">
-                                Renews {format(new Date(account.renewalDate), "MMM d")}
+                                Renews {format(new Date(resolvedAccount.renewalDate), "MMM d")}
                             </div>
                         </div>
 
                         <div className="mt-6 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">Credits left</p>
-                                <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{account.creditsRemaining}</p>
+                                <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{resolvedAccount.creditsRemaining}</p>
                             </div>
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">Remaining capacity</p>
@@ -143,8 +156,8 @@ export default function PlansPage() {
                         <PlanCard
                             key={plan.name}
                             plan={plan}
-                            currentPlan={account.plan}
-                            isUpdating={isUpdatingPlan}
+                            currentPlan={resolvedAccount.plan}
+                            isUpdating={isMutating}
                             onSelect={handleSelectPlan}
                         />
                     ))}

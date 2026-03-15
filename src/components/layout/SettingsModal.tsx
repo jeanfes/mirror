@@ -2,10 +2,12 @@
 
 import {
     Bell,
+    Check,
     Download,
     Globe,
     LogOut,
     Monitor,
+    Palette,
     Shield,
     Trash2,
     User,
@@ -19,12 +21,19 @@ import {
 import { motion, AnimatePresence } from "motion/react"
 import { toast } from "sonner"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
+import { isClientMockAuthMode } from "@/lib/auth-config"
+import { clearMockSession } from "@/lib/mock-auth"
+import { ROUTES } from "@/lib/routes"
 import {
     Dialog,
     DialogContent,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/Dialog"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { useLoadingDelay } from "@/components/ui/Loading"
 import {
     Tabs,
     TabsContent,
@@ -48,12 +57,56 @@ interface SettingsModalProps {
     }
 }
 
-export function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
+export default function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
     const [lang, setLang] = useState("en")
     const [activeTheme, setActiveTheme] = useState<"light" | "dark" | "system">("light")
+    const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
+    const [isLogoutPending, setIsLogoutPending] = useState(false)
+    const router = useRouter()
+    const isMockMode = isClientMockAuthMode()
+    const showLogoutPending = useLoadingDelay(isLogoutPending)
+
+    const handleLogout = async () => {
+        setIsLogoutPending(true)
+
+        try {
+            if (isMockMode) {
+                clearMockSession()
+                toast.success("Session closed")
+                setIsLogoutConfirmOpen(false)
+                onOpenChange?.(false)
+                router.replace(ROUTES.auth.login)
+                router.refresh()
+                return
+            }
+
+            const supabase = createClient()
+            const { error } = await supabase.auth.signOut()
+
+            if (error) {
+                toast.error("Could not close your session")
+                return
+            }
+
+            toast.success("Session closed")
+            setIsLogoutConfirmOpen(false)
+            onOpenChange?.(false)
+            router.replace(ROUTES.auth.login)
+            router.refresh()
+        } catch {
+            toast.error("Could not close your session")
+        } finally {
+            setIsLogoutPending(false)
+        }
+    }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <>
+        <Dialog open={open} onOpenChange={(nextOpen) => {
+            if (!showLogoutPending) {
+                onOpenChange?.(nextOpen)
+            }
+        }}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
@@ -79,7 +132,7 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                                     General
                                 </TabsTrigger>
                                 <TabsTrigger value="appearance" className="settings-nav-trigger">
-                                    <Laptop className="h-4.5 w-4.5" />
+                                    <Palette className="h-4.5 w-4.5" />
                                     Appearance
                                 </TabsTrigger>
                                 <TabsTrigger value="security" className="settings-nav-trigger">
@@ -100,9 +153,9 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                                 </TabsTrigger>
 
                                 <div className="pt-8 mt-auto space-y-2">
-                                    <Button type="button" variant="dangerSoft" className="w-full justify-start">
+                                    <Button type="button" variant="dangerSoft" className="w-full justify-start" onClick={() => setIsLogoutConfirmOpen(true)} disabled={showLogoutPending}>
                                         <LogOut className="h-4 w-4 shrink-0 stroke-[2.2]" />
-                                        <span>Log out</span>
+                                        <span>{showLogoutPending ? "Logging out..." : "Log out"}</span>
                                     </Button>
                                     <div className="px-4 py-2 opacity-50">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Version 1.0.4</p>
@@ -213,7 +266,7 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                                                     </div>
                                                     <div className="flex items-center justify-between px-1">
                                                         <span className="text-[13px] font-bold text-slate-900">Light</span>
-                                                        {activeTheme === "light" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><BadgeCheck className="h-3 w-3 text-white" /></div>}
+                                                        {activeTheme === "light" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><Check className="h-3 w-3 text-white" /></div>}
                                                     </div>
                                                 </button>
 
@@ -230,7 +283,7 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                                                     </div>
                                                     <div className="flex items-center justify-between px-1">
                                                         <span className="text-[13px] font-bold text-slate-900">Dark</span>
-                                                        {activeTheme === "dark" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><BadgeCheck className="h-3 w-3 text-white" /></div>}
+                                                        {activeTheme === "dark" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><Check className="h-3 w-3 text-white" /></div>}
                                                     </div>
                                                 </button>
 
@@ -246,7 +299,7 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                                                     </div>
                                                     <div className="flex items-center justify-between px-1">
                                                         <span className="text-[13px] font-bold text-slate-900">System</span>
-                                                        {activeTheme === "system" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><BadgeCheck className="h-3 w-3 text-white" /></div>}
+                                                        {activeTheme === "system" && <div className="h-4 w-4 rounded-full bg-brand-dark flex items-center justify-center"><Check className="h-3 w-3 text-white" /></div>}
                                                     </div>
                                                 </button>
                                             </div>
@@ -447,5 +500,21 @@ export function SettingsModal({ children, open, onOpenChange, user = { name: "Us
                 </div>
             </DialogContent>
         </Dialog>
+
+        <ConfirmDialog
+            open={isLogoutConfirmOpen}
+            title="Close your session?"
+            description="You will leave the private workspace and will need to sign in again to continue."
+            confirmLabel="Log out"
+            confirmPendingLabel="Logging out..."
+            isPending={showLogoutPending}
+            onConfirm={handleLogout}
+            onCancel={() => {
+                if (!showLogoutPending) {
+                    setIsLogoutConfirmOpen(false)
+                }
+            }}
+        />
+        </>
     )
 }

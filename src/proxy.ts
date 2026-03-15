@@ -1,9 +1,27 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
-import { isAuthEnabled, isAuthPath, isPrivatePath } from "@/lib/auth-config"
+import {
+  DEFAULT_AUTHENTICATED_ROUTE,
+  ROUTES,
+  isAuthPath,
+  isPrivatePath
+} from "@/lib/routes"
+import { isAuthEnabled } from "@/lib/auth-config"
+import { MOCK_AUTH_COOKIE, parseMockSessionCookie } from "@/lib/mock-auth"
 
 export async function proxy(request: NextRequest) {
   if (!isAuthEnabled()) {
+    const pathname = request.nextUrl.pathname
+    const mockUser = parseMockSessionCookie(request.cookies.get(MOCK_AUTH_COOKIE)?.value)
+
+    if (mockUser && (pathname === ROUTES.public.home || isAuthPath(pathname))) {
+      return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
+    }
+
+    if (isPrivatePath(pathname) && !mockUser) {
+      return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
+    }
+
     return NextResponse.next({ request })
   }
 
@@ -21,6 +39,7 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
+
           response = NextResponse.next({ request })
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
@@ -30,17 +49,18 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
   const pathname = request.nextUrl.pathname
 
-  if (user && (pathname === "/" || isAuthPath(pathname))) {
-    return NextResponse.redirect(new URL("/profiles", request.url))
+  if (user && (pathname === ROUTES.public.home || isAuthPath(pathname))) {
+    return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
   }
 
-  const isPrivate = isPrivatePath(pathname)
-
-  if (isPrivate && !user) {
-    return NextResponse.redirect(new URL("/login", request.url))
+  if (isPrivatePath(pathname) && !user) {
+    return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
   }
 
   return response

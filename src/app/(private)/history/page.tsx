@@ -1,14 +1,17 @@
 "use client"
 
 import { useMemo } from "react"
-import { Archive, CheckCircle2, Clock3, Wand2 } from "lucide-react"
+import { Archive, CheckCircle2, Clock3, WandSparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
+import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { StatePanel } from "@/components/ui/StatePanel"
 import { HistoryFilters } from "@/features/history/components/HistoryFilters"
 import { HistoryItemCard } from "@/features/history/components/HistoryItemCard"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useHistoryUIStore } from "@/store/useHistoryUIStore"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function HistoryPage() {
     const { data: history, isLoading, isError, toggleHistoryApplied, reuseHistoryItem } = useHistory()
@@ -22,6 +25,8 @@ export default function HistoryPage() {
         setSearch,
         resetFilters
     } = useHistoryUIStore()
+    const { t } = useLanguageStore()
+    const showLoading = useLoadingDelay(isLoading)
 
     const profileMap = useMemo(() => {
         return new Map((profiles ?? []).map((profile) => [profile.id, profile.name]))
@@ -91,19 +96,17 @@ export default function HistoryPage() {
         }
     }
 
-    if (isLoading) {
-        return (
-            <Card className="rounded-[28px] p-6">
-                <p className="text-[14px] text-slate-500">Loading history...</p>
-            </Card>
-        )
+    if (showLoading) {
+        return <LoadingPage />
     }
 
     if (isError) {
         return (
-            <Card className="rounded-[28px] p-6">
-                <p className="text-[14px] text-red-600">Could not load history.</p>
-            </Card>
+            <StatePanel
+                tone="error"
+                title={t.app.historyErrorTitle}
+                description={t.app.historyErrorDesc}
+            />
         )
     }
 
@@ -130,27 +133,27 @@ export default function HistoryPage() {
                     </div>
 
                     <Card className="dashboard-dark-panel">
-                    <h2 className="text-[24px] font-black tracking-[-0.04em] text-white">Your archive at a glance</h2>
-                    <p className="mt-2 text-[14px] leading-6 text-white/82">A quick read on how much of the comment library is already production-ready versus still waiting for a decision.</p>
+                        <h2 className="text-[24px] font-black tracking-[-0.04em] text-white">Your archive at a glance</h2>
+                        <p className="mt-2 text-[14px] leading-6 text-white/82">A quick read on how much of the comment library is already production-ready versus still waiting for a decision.</p>
 
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Archived</p>
-                            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
+                        <div className="mt-6 grid grid-cols-2 gap-3">
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Archived</p>
+                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Applied</p>
+                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.applied}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Pending</p>
+                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.pending}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Reused</p>
+                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.reused}</p>
+                            </div>
                         </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Applied</p>
-                            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.applied}</p>
-                        </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Pending</p>
-                            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.pending}</p>
-                        </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Reused</p>
-                            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.reused}</p>
-                        </div>
-                    </div>
                     </Card>
                 </div>
             </section>
@@ -158,7 +161,7 @@ export default function HistoryPage() {
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-purple">
-                        <Wand2 className="h-5 w-5" />
+                        <WandSparkles className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Review angle</h2>
                     <p className="mt-2 body-muted">Compare the original post against the generated comment without losing the tone or goal that produced it.</p>
@@ -205,13 +208,13 @@ export default function HistoryPage() {
             </section>
 
             {filteredHistory.length === 0 ? (
-                <Card className="dashboard-empty-state">
-                    <div className="mx-auto icon-box-lg icon-bg-purple">
-                        <Archive className="h-6 w-6" />
-                    </div>
-                    <h3 className="mt-5 text-[22px] font-semibold tracking-[-0.03em] text-[#141824]">No comments match this view.</h3>
-                    <p className="mx-auto mt-2 max-w-xl body-muted">Try widening the search, switching the profile filter or resetting the current status selection to see more of the archive.</p>
-                </Card>
+                <StatePanel
+                    icon={<Archive className="h-6 w-6 text-[#141824]" />}
+                    title={t.app.historyEmptyTitle}
+                    description={t.app.historyEmptyDesc}
+                    actionLabel={t.app.historyEmptyAction}
+                    onAction={resetFilters}
+                />
             ) : (
                 <div className="space-y-4">
                     {filteredHistory.map((item) => (

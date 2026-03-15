@@ -1,69 +1,75 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { ArchiveRestore, Trash2, Undo2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-
-interface TrashItem {
-    id: string
-    title: string
-    kind: "profile" | "comment" | "draft"
-    deletedAt: number
-    summary: string
-}
-
-const initialTrash: TrashItem[] = [
-    {
-        id: "trash_profile_1",
-        title: "Event Operator",
-        kind: "profile",
-        deletedAt: Date.now() - 1000 * 60 * 45,
-        summary: "A more energetic voice profile that leaned too promotional for the current brand tone."
-    },
-    {
-        id: "trash_comment_1",
-        title: "Comment draft for Elena Torres",
-        kind: "comment",
-        deletedAt: Date.now() - 1000 * 60 * 60 * 7,
-        summary: "A saved comment variation that was replaced by a sharper, more concise version."
-    }
-]
+import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { StatePanel } from "@/components/ui/StatePanel"
+import { useTrash } from "@/features/history/hooks/useTrash"
+import type { TrashItem } from "@/features/history/services/trash.local.service"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function TrashPage() {
-    const [items, setItems] = useState<TrashItem[]>(initialTrash)
+    const { data, isLoading, isError, restore, deleteForever: deleteItem, isMutating } = useTrash()
+    const { t } = useLanguageStore()
+    const showLoading = useLoadingDelay(isLoading)
+    const items = useMemo<TrashItem[]>(() => data ?? [], [data])
 
     const summary = useMemo(() => {
+        const list = items ?? []
         return {
-            total: items.length,
-            profiles: items.filter((item) => item.kind === "profile").length,
-            comments: items.filter((item) => item.kind === "comment").length,
-            drafts: items.filter((item) => item.kind === "draft").length
+            total: list.length,
+            profiles: list.filter((item) => item.kind === "profile").length,
+            comments: list.filter((item) => item.kind === "comment").length,
+            drafts: list.filter((item) => item.kind === "draft").length
         }
     }, [items])
 
-    const restoreItem = (id: string) => {
-        const item = items.find((entry) => entry.id === id)
-        if (!item) return
-
-        setItems((current) => current.filter((entry) => entry.id !== id))
-        toast.success(`${item.title} restored`)
+    const restoreItem = async (id: string) => {
+        try {
+            await restore(id)
+            toast.success("Item restored")
+        } catch {
+            toast.error("Could not restore item")
+        }
     }
 
-    const deleteForever = (id: string) => {
-        const item = items.find((entry) => entry.id === id)
-        if (!item) return
-
-        setItems((current) => current.filter((entry) => entry.id !== id))
-        toast.success(`${item.title} removed permanently`)
+    const deleteForever = async (id: string) => {
+        try {
+            await deleteItem(id)
+            toast.success("Item permanently deleted")
+        } catch {
+            toast.error("Could not delete item")
+        }
     }
 
-    const restoreAll = () => {
+    const restoreAll = async () => {
         if (items.length === 0) return
-        setItems([])
-        toast.success("All trash items restored")
+        try {
+            for (const item of items) {
+                await restore(item.id)
+            }
+            toast.success("All trash items restored")
+        } catch {
+            toast.error("Could not restore all items")
+        }
+    }
+
+    if (showLoading) {
+        return <LoadingPage />
+    }
+
+    if (isError) {
+        return (
+            <StatePanel
+                tone="error"
+                title={t.app.trashErrorTitle}
+                description={t.app.trashErrorDesc}
+            />
+        )
     }
 
     return (
@@ -107,13 +113,11 @@ export default function TrashPage() {
             </section>
 
             {items.length === 0 ? (
-                <Card className="dashboard-empty-state">
-                    <div className="mx-auto icon-box-lg icon-bg-purple">
-                        <ArchiveRestore className="h-6 w-6" />
-                    </div>
-                    <h2 className="mt-5 section-heading">Trash is clear</h2>
-                    <p className="mx-auto mt-2 max-w-xl body-muted">Nothing is waiting for recovery right now. Deleted items that appear here can be restored or removed permanently after review.</p>
-                </Card>
+                <StatePanel
+                    icon={<ArchiveRestore className="h-6 w-6 text-[#141824]" />}
+                    title={t.app.trashEmptyTitle}
+                    description={t.app.trashEmptyDesc}
+                />
             ) : (
                 <>
                     <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -121,7 +125,7 @@ export default function TrashPage() {
                             <h2 className="section-heading">Recently deleted</h2>
                             <p className="body-muted">Review what was removed before deciding whether to restore it or clear it permanently.</p>
                         </div>
-                        <Button type="button" variant="secondary" onClick={restoreAll}>
+                        <Button type="button" variant="secondary" onClick={restoreAll} loading={isMutating}>
                             <Undo2 className="h-4 w-4" />
                             Restore all
                         </Button>
@@ -141,11 +145,11 @@ export default function TrashPage() {
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
-                                        <Button type="button" variant="secondary" onClick={() => restoreItem(item.id)}>
+                                        <Button type="button" variant="secondary" onClick={() => restoreItem(item.id)} loading={isMutating}>
                                             <ArchiveRestore className="h-4 w-4" />
                                             Restore
                                         </Button>
-                                        <Button type="button" onClick={() => deleteForever(item.id)}>
+                                        <Button type="button" onClick={() => deleteForever(item.id)} loading={isMutating}>
                                             <Trash2 className="h-4 w-4" />
                                             Delete forever
                                         </Button>

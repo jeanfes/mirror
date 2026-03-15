@@ -1,6 +1,7 @@
 "use client"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { LoadingInline } from "@/components/ui/Loading"
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "dangerSoft"
 type ButtonSize = "md" | "lg"
@@ -11,6 +12,8 @@ import type { HTMLMotionProps } from "motion/react"
 interface ButtonProps extends HTMLMotionProps<"button"> {
     variant?: ButtonVariant
     size?: ButtonSize
+    loading?: boolean
+    loadingLabel?: string
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -28,14 +31,22 @@ const sizeClasses: Record<ButtonSize, string> = {
 export function Button({
     variant = "primary",
     size = "md",
+    loading = false,
+    loadingLabel = "Working...",
     className,
     children,
+    disabled,
+    "aria-busy": ariaBusy,
     ...props
 }: ButtonProps) {
+    const isDisabled = disabled || loading
+
     return (
         <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
+            disabled={isDisabled}
+            aria-busy={ariaBusy ?? loading}
             className={twMerge(
                 clsx(
                     "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",
@@ -46,7 +57,7 @@ export function Button({
             )}
             {...props}
         >
-            {children}
+            {loading ? <LoadingInline label={loadingLabel} /> : children}
         </motion.button>
     )
 }

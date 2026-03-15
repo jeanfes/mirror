@@ -4,7 +4,7 @@ import { formatDistanceToNow } from "date-fns"
 import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, WandSparkles } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { Tooltip } from "@/components/ui/tooltip"
+import { Tooltip } from "@/components/ui/Tooltip"
 import type { HistoryItem } from "@/types/dashboard"
 
 interface HistoryItemCardProps {

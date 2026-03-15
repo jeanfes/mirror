@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap, UserCircle, PenTool, Brain } from "lucide-react";
+import { Zap, Users, PenTool, Brain } from "lucide-react";
 import { motion } from "motion/react";
 
 import { useLanguageStore } from "@/store/useLanguageStore";
@@ -52,7 +52,7 @@ export default function FeaturesPage() {
 
                     <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.4 }} className="neo-card rounded-[28px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
                         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">
-                            <UserCircle className="h-8 w-8 text-primary-dark" />
+                            <Users className="h-8 w-8 text-primary-dark" />
                         </div>
                         <h2 className="text-2xl font-black text-primary-dark">{t.featuresPage.f3Title}</h2>
                         <p className="text-secondary-text text-[1.05rem] leading-relaxed font-medium">

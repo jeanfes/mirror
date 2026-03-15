@@ -6,11 +6,14 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Card } from "@/components/ui/Card"
+import { LoadingPage, useLoadingDelay } from "@/components/ui/Loading"
+import { StatePanel } from "@/components/ui/StatePanel"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
 import { useProfilesUIStore } from "@/store/useProfilesUIStore"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function ProfilesPage() {
     const {
@@ -27,6 +30,8 @@ export default function ProfilesPage() {
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
 
     const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
+    const { t } = useLanguageStore()
+    const showLoading = useLoadingDelay(isLoading)
 
     const deleteTarget = useMemo(
         () => (profiles ? (profiles.find((p) => p.id === deleteTargetId) ?? null) : null),
@@ -79,19 +84,17 @@ export default function ProfilesPage() {
         }
     }
 
-    if (isLoading) {
-        return (
-            <Card className="p-5">
-                <p className="text-[14px] text-slate-500">Loading profiles...</p>
-            </Card>
-        )
+    if (showLoading) {
+        return <LoadingPage />
     }
 
     if (isError) {
         return (
-            <Card className="p-5">
-                <p className="text-[14px] text-red-600">Could not load profiles.</p>
-            </Card>
+            <StatePanel
+                tone="error"
+                title={t.app.profilesErrorTitle}
+                description={t.app.profilesErrorDesc}
+            />
         )
     }
 
@@ -179,19 +182,13 @@ export default function ProfilesPage() {
             </section>
 
             {list.length === 0 ? (
-                <Card className="rounded-4xl p-8 text-center">
-                    <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(139,92,246,0.16),rgba(117,206,243,0.18))]">
-                        <WandSparkles className="h-6 w-6 text-[#141824]" />
-                    </div>
-                    <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-[#141824]">No profiles yet</h2>
-                    <p className="mx-auto mt-3 max-w-xl text-[14px] leading-7 text-slate-600">
-                        Start with one default voice that sounds like your best professional self. You can add more nuanced profiles once the workflow feels natural.
-                    </p>
-                    <Button className="mt-5" onClick={openCreateDialog}>
-                        <Plus className="h-4 w-4" />
-                        Create your first profile
-                    </Button>
-                </Card>
+                <StatePanel
+                    icon={<WandSparkles className="h-6 w-6 text-[#141824]" />}
+                    title={t.app.profilesEmptyTitle}
+                    description={t.app.profilesEmptyDesc}
+                    actionLabel={t.app.profilesEmptyAction}
+                    onAction={openCreateDialog}
+                />
             ) : (
                 <section className="space-y-3">
                     <div className="flex items-end justify-between gap-3">

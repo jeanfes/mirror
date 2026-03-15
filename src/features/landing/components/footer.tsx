@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { ROUTES } from "@/lib/routes";
 
 export function LandingFooter() {
     const { t } = useLanguageStore();
@@ -24,9 +25,9 @@ export function LandingFooter() {
                 <div className="space-y-4">
                     <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">{t.footer.product}</h4>
                     <ul className="space-y-3">
-                        <li><Link href="/features" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.features}</Link></li>
-                        <li><Link href="/pricing" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.pricing}</Link></li>
-                        <li><Link href="/faq" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.faq}</Link></li>
+                        <li><Link href={ROUTES.public.features} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.features}</Link></li>
+                        <li><Link href={ROUTES.public.pricing} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.pricing}</Link></li>
+                        <li><Link href={ROUTES.public.faq} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.header.faq}</Link></li>
                     </ul>
                 </div>
 

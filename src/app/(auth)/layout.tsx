@@ -1,5 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { ROUTES } from "@/lib/routes";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -8,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 <div className="mx-auto flex max-w-6xl items-center justify-between">
                     <div className="flex flex-1">
                         <Link
-                            href="/"
+                            href={ROUTES.public.home}
                             className="pointer-events-auto cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/50 text-secondary-text shadow-sm backdrop-blur-md hover:bg-white hover:text-primary-dark hover:shadow-premium-sm transition-all"
                             aria-label="Volver a inicio"
                         >

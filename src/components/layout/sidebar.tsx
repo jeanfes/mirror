@@ -1,28 +1,16 @@
 "use client"
 
 import { useEffect } from "react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
-import {
-    Crown,
-    CreditCard,
-    History,
-    Settings,
-    Trash2,
-    Users
-} from "lucide-react"
 import { motion } from "motion/react"
-import { UserMenu } from "./UserMenu"
+import { navItems } from "./nav-items"
 
-export const navItems = [
-    { href: "/profiles", label: "Profiles", icon: Users },
-    { href: "/history", label: "History", icon: History },
-    { href: "/settings", label: "Settings", icon: Settings },
-    { href: "/account", label: "Account", icon: CreditCard },
-    { href: "/plans", label: "Plans", icon: Crown },
-    { href: "/trash", label: "Trash", icon: Trash2 }
-]
+const SettingsModal = dynamic(() => import("./SettingsModal"), {
+    ssr: false
+})
 
 export function Sidebar() {
     const pathname = usePathname()
@@ -35,7 +23,7 @@ export function Sidebar() {
     }, [router])
 
     return (
-        <aside className="hidden md:flex w-min p-5 h-screen flex-col items-center justify-between py-5 overflow-y-auto custom-scrollbar">
+        <aside className="hidden md:flex w-min p-4.5 h-screen flex-col items-center justify-between pt-5 overflow-y-auto custom-scrollbar">
             <div className="space-y-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -71,7 +59,15 @@ export function Sidebar() {
                 })}
             </div>
             <div className="mt-auto">
-                <UserMenu />
+                <SettingsModal user={{ name: "User Name", email: "user@example.com" }}>
+                    <button
+                        className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-brand-dark text-[14px] font-bold text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+                        aria-label="User menu"
+                    >
+                        U
+                        <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-accent-green" />
+                    </button>
+                </SettingsModal>
             </div>
         </aside>
     )

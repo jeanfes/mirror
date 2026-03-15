@@ -9,9 +9,9 @@ import { Menu, X } from "lucide-react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "motion/react"
 import { createPortal } from "react-dom"
-import { navItems } from "./sidebar"
+import { navItems } from "./nav-items"
 
-const SettingsModal = dynamic(() => import("./SettingsModal").then((mod) => mod.SettingsModal), {
+const SettingsModal = dynamic(() => import("./SettingsModal"), {
     ssr: false
 })
 
@@ -47,7 +47,7 @@ export function MobileSidebar() {
     const sidebarOverlay = (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-200 flex">
+                <div className="fixed inset-0 z-40 flex">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}

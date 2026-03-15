@@ -153,6 +153,28 @@ export const dictionaries = {
       "s2Desc": "Define tus perfiles. \u00bfQuieres sonar anal\u00edtico, casual o experto interrumpiendo el debate?",
       "s3Title": "3. Comenta al Instante",
       "s3Desc": "Abre cualquier post, usa tus atajos de teclado y la IA har\u00e1 el trabajo pesado por ti."
+    },
+    "app": {
+      "accountErrorTitle": "No se pudo cargar la cuenta",
+      "accountErrorDesc": "No pudimos obtener el resumen de tu plan y uso. Por favor recarga e int\u00e9ntalo de nuevo.",
+      "plansErrorTitle": "No se pudieron cargar los planes",
+      "plansErrorDesc": "Los datos del plan no est\u00e1n disponibles por el momento. Por favor int\u00e9ntalo de nuevo en un momento.",
+      "historyErrorTitle": "No se pudo cargar el historial",
+      "historyErrorDesc": "No pudimos cargar tu archivo en este momento. Por favor recarga e int\u00e9ntalo de nuevo.",
+      "historyEmptyTitle": "Ning\u00fan comentario coincide con esta vista",
+      "historyEmptyDesc": "Intenta ampliar la b\u00fasqueda, cambiar el filtro de perfil o reiniciar la selecci\u00f3n de estado actual para ver m\u00e1s del archivo.",
+      "historyEmptyAction": "Reiniciar filtros",
+      "profilesErrorTitle": "No se pudieron cargar los perfiles",
+      "profilesErrorDesc": "Tu biblioteca de perfiles no est\u00e1 disponible temporalmente. Por favor recarga e int\u00e9ntalo de nuevo.",
+      "profilesEmptyTitle": "A\u00fan no hay perfiles",
+      "profilesEmptyDesc": "Empieza con una voz predeterminada que suene como tu mejor yo profesional. Puedes a\u00f1adir perfiles m\u00e1s matizados cuando el flujo se sienta natural.",
+      "profilesEmptyAction": "Crear tu primer perfil",
+      "trashErrorTitle": "No se pudo cargar la papelera",
+      "trashErrorDesc": "Los elementos eliminados no están disponibles temporalmente. Por favor recarga e inténtalo de nuevo.",
+      "trashEmptyTitle": "La papelera est\u00e1 vac\u00eda",
+      "trashEmptyDesc": "No hay nada esperando ser recuperado ahora mismo. Los elementos eliminados pueden restaurarse o eliminarse permanentemente tras su revisi\u00f3n.",
+      "signingIn": "Iniciando sesi\u00f3n...",
+      "creatingAccount": "Creando cuenta..."
     }
   },
   "en": {
@@ -309,6 +331,28 @@ export const dictionaries = {
       "s2Desc": "Define your profiles. Want to sound analytical, casual, or like an expert entering the debate?",
       "s3Title": "3. Comment Instantly",
       "s3Desc": "Open any post, use your keyboard shortcuts and the AI will do the heavy lifting for you."
+    },
+    "app": {
+      "accountErrorTitle": "Could not load account",
+      "accountErrorDesc": "We could not fetch your plan and usage summary. Please refresh and try again.",
+      "plansErrorTitle": "Could not load plans",
+      "plansErrorDesc": "Plan data is temporarily unavailable. Please refresh and try again in a moment.",
+      "historyErrorTitle": "Could not load history",
+      "historyErrorDesc": "We could not load your archive right now. Please refresh and try again.",
+      "historyEmptyTitle": "No comments match this view",
+      "historyEmptyDesc": "Try widening the search, switching the profile filter, or resetting the current status selection to see more of the archive.",
+      "historyEmptyAction": "Reset filters",
+      "profilesErrorTitle": "Could not load profiles",
+      "profilesErrorDesc": "Your profile library is temporarily unavailable. Please refresh and try again.",
+      "profilesEmptyTitle": "No profiles yet",
+      "profilesEmptyDesc": "Start with one default voice that sounds like your best professional self. You can add more nuanced profiles once the workflow feels natural.",
+      "profilesEmptyAction": "Create your first profile",
+      "trashErrorTitle": "Could not load trash",
+      "trashErrorDesc": "Deleted items are temporarily unavailable. Please refresh and try again.",
+      "trashEmptyTitle": "Trash is clear",
+      "trashEmptyDesc": "Nothing is waiting for recovery right now. Deleted items that appear here can be restored or removed permanently after review.",
+      "signingIn": "Signing in...",
+      "creatingAccount": "Creating account..."
     }
   },
   "pt": {
@@ -465,6 +509,28 @@ export const dictionaries = {
       "s2Desc": "Configure o seu tom de voz.",
       "s3Title": "3. Comente",
       "s3Desc": "Abra um post e deixe a IA te ajudar."
+    },
+    "app": {
+      "accountErrorTitle": "Conta não carregada",
+      "accountErrorDesc": "Não foi possível carregar o resumo do plano e uso. Por favor, recarregue a página.",
+      "plansErrorTitle": "Planos não carregados",
+      "plansErrorDesc": "Os dados do plano estão temporariamente indisponíveis. Tente novamente em instantes.",
+      "historyErrorTitle": "Histórico não carregado",
+      "historyErrorDesc": "Seu arquivo não pôde ser carregado agora. Por favor, recarregue a página.",
+      "historyEmptyTitle": "Nenhum comentário encontrado",
+      "historyEmptyDesc": "Amplie a busca, mude o filtro de perfil ou redefina a seleção de status para ver mais do arquivo.",
+      "historyEmptyAction": "Redefinir filtros",
+      "profilesErrorTitle": "Perfis não carregados",
+      "profilesErrorDesc": "Sua biblioteca de perfis está temporariamente indisponível. Por favor, recarregue a página.",
+      "profilesEmptyTitle": "Nenhum perfil ainda",
+      "profilesEmptyDesc": "Comece com uma voz padrão que soe como seu melhor eu profissional.",
+      "profilesEmptyAction": "Criar seu primeiro perfil",
+      "trashErrorTitle": "Lixeira não carregada",
+      "trashErrorDesc": "Os itens excluídos estão temporariamente indisponíveis. Por favor, recarregue a página.",
+      "trashEmptyTitle": "Lixeira vazia",
+      "trashEmptyDesc": "Nada aguarda recuperação agora. Itens excluídos podem ser restaurados ou removidos permanentemente.",
+      "signingIn": "Entrando...",
+      "creatingAccount": "Criando conta..."
     }
   },
   "fr": {
@@ -619,6 +685,28 @@ export const dictionaries = {
       "s2Desc": "D\u00e9finissez votre style.",
       "s3Title": "3. Commentez",
       "s3Desc": "L'IA vous assiste."
+    },
+    "app": {
+      "accountErrorTitle": "Compte introuvable",
+      "accountErrorDesc": "Impossible de charger le résumé du plan et de l'utilisation. Veuillez rafraîchir la page.",
+      "plansErrorTitle": "Plans introuvables",
+      "plansErrorDesc": "Les données du plan sont temporairement indisponibles. Veuillez réessayer dans un instant.",
+      "historyErrorTitle": "Historique introuvable",
+      "historyErrorDesc": "Votre archive n'a pas pu être chargée. Veuillez rafraîchir la page.",
+      "historyEmptyTitle": "Aucun commentaire trouvé",
+      "historyEmptyDesc": "Élargissez la recherche, changez le filtre de profil ou réinitialisez le filtre de statut pour voir plus d'archives.",
+      "historyEmptyAction": "Réinitialiser les filtres",
+      "profilesErrorTitle": "Profils introuvables",
+      "profilesErrorDesc": "Votre bibliothèque de profils est temporairement indisponible. Veuillez rafraîchir la page.",
+      "profilesEmptyTitle": "Aucun profil",
+      "profilesEmptyDesc": "Commencez avec une voix par défaut qui ressemble à votre meilleur moi professionnel.",
+      "profilesEmptyAction": "Créer votre premier profil",
+      "trashErrorTitle": "Corbeille introuvable",
+      "trashErrorDesc": "Les éléments supprimés sont temporairement indisponibles. Veuillez rafraîchir la page.",
+      "trashEmptyTitle": "La corbeille est vide",
+      "trashEmptyDesc": "Rien n'attend d'être récupéré pour l'instant. Les éléments supprimés peuvent être restaurés ou supprimés définitivement.",
+      "signingIn": "Connexion...",
+      "creatingAccount": "Création du compte..."
     }
   },
   "de": {
@@ -773,6 +861,28 @@ export const dictionaries = {
       "s2Desc": "Ihren Tonfall definieren.",
       "s3Title": "3. Kommentieren",
       "s3Desc": "KI-Unterst\u00fctzung nutzen."
+    },
+    "app": {
+      "accountErrorTitle": "Konto nicht ladbar",
+      "accountErrorDesc": "Plan und Nutzungsübersicht konnten nicht geladen werden. Bitte laden Sie die Seite neu.",
+      "plansErrorTitle": "Pläne nicht ladbar",
+      "plansErrorDesc": "Plandaten sind vorübergehend nicht verfügbar. Bitte versuchen Sie es gleich erneut.",
+      "historyErrorTitle": "Verlauf nicht ladbar",
+      "historyErrorDesc": "Ihr Archiv konnte gerade nicht geladen werden. Bitte laden Sie die Seite neu.",
+      "historyEmptyTitle": "Keine Kommentare gefunden",
+      "historyEmptyDesc": "Suche erweitern, Profilfilter ändern oder aktuelle Statusauswahl zurücksetzen, um mehr des Archivs zu sehen.",
+      "historyEmptyAction": "Filter zurücksetzen",
+      "profilesErrorTitle": "Profile nicht ladbar",
+      "profilesErrorDesc": "Ihre Profilbibliothek ist vorübergehend nicht verfügbar. Bitte laden Sie die Seite neu.",
+      "profilesEmptyTitle": "Noch keine Profile",
+      "profilesEmptyDesc": "Beginnen Sie mit einer Standardstimme, die wie Ihr bestes professionelles Ich klingt.",
+      "profilesEmptyAction": "Erstes Profil erstellen",
+      "trashErrorTitle": "Papierkorb nicht ladbar",
+      "trashErrorDesc": "Gelöschte Elemente sind vorübergehend nicht verfügbar. Bitte laden Sie die Seite neu.",
+      "trashEmptyTitle": "Papierkorb ist leer",
+      "trashEmptyDesc": "Derzeit wartet nichts auf Wiederherstellung. Gelöschte Elemente können hier wiederhergestellt oder endgültig entfernt werden.",
+      "signingIn": "Anmelden...",
+      "creatingAccount": "Konto erstellen..."
     }
   }
 };

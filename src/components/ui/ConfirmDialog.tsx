@@ -10,6 +10,7 @@ interface ConfirmDialogProps {
     title: string
     description?: string
     confirmLabel?: string
+    confirmPendingLabel?: string
     isPending?: boolean
     onConfirm: () => void
     onCancel: () => void
@@ -20,6 +21,7 @@ export function ConfirmDialog({
     title,
     description,
     confirmLabel = "Delete",
+    confirmPendingLabel = "Working...",
     isPending = false,
     onConfirm,
     onCancel,
@@ -28,6 +30,7 @@ export function ConfirmDialog({
         <Dialog open={open} onOpenChange={(next) => (!next ? onCancel() : undefined)}>
             <DialogContent
                 hideCloseButton
+                aria-busy={isPending}
                 className="w-[min(94vw,400px)] rounded-3xl border border-border-light bg-white/88 p-6 backdrop-blur-sm [--panel-bg:rgba(255,255,255,0.88)] [--panel-border-color:var(--border-light)]"
             >
                 <motion.div
@@ -66,16 +69,15 @@ export function ConfirmDialog({
                         >
                             Cancel
                         </Button>
-                        <motion.button
+                        <Button
                             type="button"
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.98 }}
-                            disabled={isPending}
+                            loading={isPending}
+                            loadingLabel={confirmPendingLabel}
                             onClick={onConfirm}
-                            className="flex-1 inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-danger bg-danger px-3.5 text-[13px] font-semibold text-white transition-all duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                            className="flex-1 border-danger bg-danger text-white hover:opacity-90"
                         >
-                            {isPending ? "Deleting…" : confirmLabel}
-                        </motion.button>
+                            {confirmLabel}
+                        </Button>
                     </div>
                 </motion.div>
             </DialogContent>

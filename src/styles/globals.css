@@ -68,6 +68,21 @@ body {
       rgba(255, 255, 255, 0.7);
 }
 
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 h1,
 h2,
 h3,
@@ -95,6 +110,28 @@ h6 {
   background: var(--panel-bg, rgba(255, 255, 255, 0.72));
   border: 1px solid var(--panel-border-color, var(--border-soft));
   backdrop-filter: blur(20px);
+}
+
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(236, 241, 245, 0.92));
+}
+
+.loading-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  animation: shimmer-slide 1.35s ease-in-out infinite;
+}
+
+.loading-spinner {
+  display: inline-block;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.28);
+  border-top-color: var(--brand-dark);
+  animation: spinner-rotate 0.75s linear infinite;
 }
 
 .workspace-hero-panel {

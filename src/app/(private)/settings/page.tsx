@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Globe2, ShieldCheck, Workflow } from "lucide-react"
+import { Globe, ShieldCheck, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -54,27 +54,27 @@ export default function SettingsPage() {
                     </div>
 
                     <Card className="dashboard-dark-panel">
-                    <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">Current setup snapshot</h2>
-                    <p className="mt-2 text-[14px] leading-6 text-white/82">A quick summary of how strict, automated and localized the current workspace configuration is.</p>
+                        <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">Current setup snapshot</h2>
+                        <p className="mt-2 text-[14px] leading-6 text-white/82">A quick summary of how strict, automated and localized the current workspace configuration is.</p>
 
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Active toggles</p>
-                            <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.enabledCount}</p>
+                        <div className="mt-6 grid grid-cols-2 gap-3">
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Active toggles</p>
+                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.enabledCount}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Mode</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{summary.automationState}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Language</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{summary.languageLabel}</p>
+                            </div>
+                            <div className="dashboard-dark-stat">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Default voice</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{defaultProfile === "adaptive" ? "Adaptive" : defaultProfile === "insight" ? "Insight Architect" : "Warm Connector"}</p>
+                            </div>
                         </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Mode</p>
-                            <p className="mt-2 text-[15px] font-semibold text-white">{summary.automationState}</p>
-                        </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Language</p>
-                            <p className="mt-2 text-[15px] font-semibold text-white">{summary.languageLabel}</p>
-                        </div>
-                        <div className="dashboard-dark-stat">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Default voice</p>
-                            <p className="mt-2 text-[15px] font-semibold text-white">{defaultProfile === "adaptive" ? "Adaptive" : defaultProfile === "insight" ? "Insight Architect" : "Warm Connector"}</p>
-                        </div>
-                    </div>
                     </Card>
                 </div>
             </section>
@@ -82,7 +82,7 @@ export default function SettingsPage() {
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-purple">
-                        <Workflow className="h-5 w-5" />
+                        <SlidersHorizontal className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Workflow control</h2>
                     <p className="mt-2 body-muted">Decide whether Mirror assists the final insertion flow or waits for explicit review on every generation.</p>
@@ -98,7 +98,7 @@ export default function SettingsPage() {
 
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-amber">
-                        <Globe2 className="h-5 w-5" />
+                        <Globe className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Localization defaults</h2>
                     <p className="mt-2 body-muted">Set the default language and baseline profile so the first suggestion already starts near the right voice.</p>

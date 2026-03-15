@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation"
 import { getServerSession } from "@/lib/auth"
-import { Navbar } from "@/components/layout/navbar"
-import { Sidebar } from "@/components/layout/sidebar"
+import { Navbar } from "@/components/layout/Navbar"
+import { Sidebar } from "@/components/layout/Sidebar"
 import { AppProviders } from "@/components/providers/AppProviders"
+import { ROUTES } from "@/lib/routes"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
     const user = await getServerSession()
-    if (!user) redirect("/login")
+    if (!user) redirect(ROUTES.auth.login)
 
 
     return (

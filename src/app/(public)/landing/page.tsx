@@ -4,6 +4,7 @@ import { ArrowRight, WandSparkles, Fingerprint, Layers, Rocket, Bot, Download, S
 import { useLanguageStore } from "@/store/useLanguageStore";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { ROUTES } from "@/lib/routes";
 
 export default function LandingPage() {
     const { t } = useLanguageStore();
@@ -71,7 +72,7 @@ export default function LandingPage() {
                     >
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <Link
-                                href="/register"
+                                href={ROUTES.auth.register}
                                 className="neo-btn-primary group flex h-14 items-center gap-2 px-9 text-[1.05rem] font-bold shadow-premium-md"
                             >
                                 {t.hero.ctaPrimary}
@@ -80,7 +81,7 @@ export default function LandingPage() {
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <Link
-                                href="/login"
+                                href={ROUTES.auth.login}
                                 className="neo-btn-muted flex h-14 items-center px-9 text-[1.05rem] font-bold shadow-premium-sm"
                             >
                                 {t.hero.ctaSecondary}
@@ -214,7 +215,7 @@ export default function LandingPage() {
                         </p>
                         <div className="pt-4 flex justify-center">
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link href="/register" className="neo-btn-primary inline-flex h-14 items-center px-10 text-[1.05rem] font-bold shadow-premium-md transition-transform hover:scale-105 active:scale-95">
+                                <Link href={ROUTES.auth.register} className="neo-btn-primary inline-flex h-14 items-center px-10 text-[1.05rem] font-bold shadow-premium-md transition-transform hover:scale-105 active:scale-95">
                                     {t.cta.button}
                                 </Link>
                             </motion.div>

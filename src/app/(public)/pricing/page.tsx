@@ -4,6 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { motion } from "motion/react";
+import { ROUTES } from "@/lib/routes";
 
 export default function PricingPage() {
     const { t } = useLanguageStore();
@@ -56,7 +57,7 @@ export default function PricingPage() {
                             ))}
                         </ul>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Link href="/register" className="neo-btn-muted inline-block text-center py-4 text-[1.05rem] font-bold w-full transition-all">
+                            <Link href={ROUTES.auth.register} className="neo-btn-muted inline-block text-center py-4 text-[1.05rem] font-bold w-full transition-all">
                                 {t.pricing.freeBtn}
                             </Link>
                         </motion.div>
@@ -89,7 +90,7 @@ export default function PricingPage() {
                             ))}
                         </ul>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Link href="/register" className="neo-btn-primary inline-block text-center py-4 text-[1.05rem] font-bold w-full">
+                            <Link href={ROUTES.auth.register} className="neo-btn-primary inline-block text-center py-4 text-[1.05rem] font-bold w-full">
                                 {t.pricing.proBtn}
                             </Link>
                         </motion.div>

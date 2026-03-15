@@ -1,22 +1,44 @@
-export const PRIVATE_PATHS = [
-  "/profiles",
-  "/history",
-  "/settings",
-  "/account",
-  "/plans",
-  "/trash"
-]
+import {
+  AUTH_PATHS,
+  PRIVATE_PATHS,
+  isAuthPath,
+  isPrivatePath
+} from "@/lib/routes"
 
-export const AUTH_PATHS = ["/login", "/register"]
+export { AUTH_PATHS, PRIVATE_PATHS, isAuthPath, isPrivatePath }
+
+function isExplicitlyDisabled(value: string | undefined) {
+  return value === "false"
+}
+
+function hasPlaceholderSupabaseConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+
+  return (
+    !url ||
+    !key ||
+    url.includes("YOUR_PROJECT_ID") ||
+    key.includes("YOUR_ANON_KEY")
+  )
+}
 
 export function isAuthEnabled() {
-  return process.env.AUTH_ENABLED !== "false"
+  if (isExplicitlyDisabled(process.env.AUTH_ENABLED)) {
+    return false
+  }
+
+  if (isExplicitlyDisabled(process.env.NEXT_PUBLIC_AUTH_ENABLED)) {
+    return false
+  }
+
+  return true
 }
 
-export function isPrivatePath(pathname: string) {
-  return PRIVATE_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
-}
+export function isClientMockAuthMode() {
+  if (isExplicitlyDisabled(process.env.NEXT_PUBLIC_AUTH_ENABLED)) {
+    return true
+  }
 
-export function isAuthPath(pathname: string) {
-  return AUTH_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
+  return hasPlaceholderSupabaseConfig()
 }
