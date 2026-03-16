@@ -80,10 +80,10 @@ export default function TrashPage() {
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             Deleted work should feel recoverable, not lost in a dead-end bin.
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
                             Trash is where profiles, drafts and comments wait for a final decision. It should make restoration easy and permanent deletion explicit.
                         </p>
                     </div>
@@ -114,7 +114,7 @@ export default function TrashPage() {
 
             {items.length === 0 ? (
                 <StatePanel
-                    icon={<ArchiveRestore className="h-6 w-6 text-[#141824]" />}
+                    icon={<ArchiveRestore className="h-6 w-6 text-primary-text" />}
                     title={t.app.trashEmptyTitle}
                     description={t.app.trashEmptyDesc}
                 />
@@ -137,11 +137,11 @@ export default function TrashPage() {
                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                     <div>
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#141824]">{item.title}</h3>
-                                            <span className="rounded-full border border-[#E6EAF2] bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 capitalize">{item.kind}</span>
+                                            <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-primary-text">{item.title}</h3>
+                                            <span className="rounded-full border border-border-soft bg-surface-base px-2.5 py-1 text-[11px] font-semibold text-secondary-text capitalize">{item.kind}</span>
                                         </div>
                                         <p className="mt-2 max-w-2xl body-muted">{item.summary}</p>
-                                        <p className="mt-3 text-[12px] font-medium text-slate-500">Deleted {formatDistanceToNow(item.deletedAt, { addSuffix: true })}</p>
+                                        <p className="mt-3 text-[12px] font-medium text-secondary-text">Deleted {formatDistanceToNow(item.deletedAt, { addSuffix: true })}</p>
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
@@ -163,3 +163,4 @@ export default function TrashPage() {
         </div>
     )
 }
+

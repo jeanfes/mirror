@@ -38,7 +38,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.1, ease: "easeOut" }}
-                        className="neo-card h-full rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 flex flex-col shadow-premium-sm"
+                        className="neo-card h-full rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 flex flex-col shadow-premium-sm"
                     >
                         <div className="mb-6">
                             <h2 className="text-2xl font-black text-primary-dark">{t.pricing.freePlan}</h2>
@@ -68,7 +68,7 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.15, ease: "easeOut" }}
-                        className="neo-shell relative flex flex-col border border-border-soft bg-white/88 p-10 shadow-premium-md transform md:-translate-y-4"
+                        className="neo-shell relative flex flex-col border border-border-soft bg-surface-overlay p-10 shadow-premium-md transform md:-translate-y-4"
                     >
                         <div className="absolute top-0 right-10 -translate-y-1/2 rounded-full bg-brand-dark px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-premium-sm">
                             {t.pricing.popular}

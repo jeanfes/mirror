@@ -57,10 +57,10 @@ export default function AccountPage() {
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             A cleaner view of plan, capacity and how the extension is actually being used.
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
                             Account should feel like an operating summary: how much room you have left, what plan you are on and whether the workflow is converting into real outputs.
                         </p>
 
@@ -87,7 +87,7 @@ export default function AccountPage() {
                         </div>
                         <ProgressBar
                             className="mt-3"
-                            trackClassName="bg-white/10"
+                            trackClassName="bg-surface-base/10"
                             fillClassName="bg-[linear-gradient(90deg,#8B5CF6,#75CEF3)]"
                             value={creditUsage}
                         />
@@ -124,7 +124,7 @@ export default function AccountPage() {
                                 <CreditCard className="h-5 w-5" />
                             </div>
                             <p className="dashboard-overline mt-4">Current plan</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{resolvedAccount.plan}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.plan}</p>
                             <p className="mt-2 body-muted">Renews on {format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy")}</p>
                         </Card>
 
@@ -133,7 +133,7 @@ export default function AccountPage() {
                                 <BarChart3 className="h-5 w-5" />
                             </div>
                             <p className="dashboard-overline mt-4">Credits remaining</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{resolvedAccount.creditsRemaining}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.creditsRemaining}</p>
                             <p className="mt-2 body-muted">Available for new generations in the current billing cycle.</p>
                         </Card>
 
@@ -142,7 +142,7 @@ export default function AccountPage() {
                                 <Layers3 className="h-5 w-5" />
                             </div>
                             <p className="dashboard-overline mt-4">Active profiles</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{activeProfiles}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{activeProfiles}</p>
                             <p className="mt-2 body-muted">Profiles currently available to the extension.</p>
                         </Card>
                     </div>
@@ -153,7 +153,7 @@ export default function AccountPage() {
                             <h3 className="mt-3 section-heading">{currentPlan?.summary ?? "Your current plan is active."}</h3>
                             <div className="mt-5 grid gap-3 sm:grid-cols-3">
                                 {(currentPlan?.features ?? []).map((feature) => (
-                                    <div key={feature} className="rounded-3xl border border-[#E8ECF4] bg-white/75 p-4 text-[14px] font-medium text-slate-700">
+                                    <div key={feature} className="rounded-3xl border border-border-soft bg-surface-card p-4 text-[14px] font-medium text-secondary-text">
                                         {feature}
                                     </div>
                                 ))}
@@ -167,7 +167,7 @@ export default function AccountPage() {
 
                             <ProgressBar
                                 className="mt-5"
-                                trackClassName="bg-[#E8ECF4]"
+                                trackClassName="bg-surface-subtle"
                                 fillClassName="bg-[linear-gradient(90deg,#8B5CF6,#75CEF3)]"
                                 minFillPercent={6}
                                 value={100 - creditUsage}
@@ -180,19 +180,19 @@ export default function AccountPage() {
                     <div className="grid gap-4 md:grid-cols-3">
                         <Card className="dashboard-card-lg">
                             <p className="dashboard-overline">Generated this month</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{generatedThisMonth}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{generatedThisMonth}</p>
                             <p className="mt-2 body-muted">All generated comments stored in your local MVP workspace.</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
                             <p className="dashboard-overline">Applied comments</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{appliedCount}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{appliedCount}</p>
                             <p className="mt-2 body-muted">Comments already marked as posted or used.</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
                             <p className="dashboard-overline">Reused comments</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#141824]">{reusableCount}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{reusableCount}</p>
                             <p className="mt-2 body-muted">History items duplicated from previous high-performing outputs.</p>
                         </Card>
                     </div>
@@ -215,4 +215,5 @@ export default function AccountPage() {
         </div>
     )
 }
+
 

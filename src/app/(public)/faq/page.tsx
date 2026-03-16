@@ -20,7 +20,7 @@ export default function FAQPage() {
     return (
         <main className="relative flex w-full flex-col items-center overflow-x-hidden pt-10 pb-20">
             <section className="w-full max-w-4xl px-6 pt-20 pb-16 text-center z-10">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft text-primary-dark mb-8">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft text-primary-dark mb-8">
                     <HelpCircle className="h-10 w-10 text-primary-dark" strokeWidth={2} />
                 </div>
                 <motion.h1 {...fadeInUp} className="text-5xl font-black tracking-tighter text-primary-dark sm:text-6xl md:text-[4.5rem] leading-[1.1] mb-6">
@@ -36,7 +36,7 @@ export default function FAQPage() {
                         return (
                             <div
                                 key={i}
-                                className={`neo-card rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm shadow-premium-sm transition-all duration-300 ${isOpen ? 'shadow-premium-md scale-[1.02]' : 'hover:shadow-premium-sm'}`}
+                                className={`neo-card rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm shadow-premium-sm transition-all duration-300 ${isOpen ? 'shadow-premium-md scale-[1.02]' : 'hover:shadow-premium-sm'}`}
                             >
                                 <button
                                     onClick={() => setOpenIndex(isOpen ? null : i)}

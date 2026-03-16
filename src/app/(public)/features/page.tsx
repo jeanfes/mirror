@@ -30,8 +30,8 @@ export default function FeaturesPage() {
                 <div className="grid gap-12 sm:grid-cols-2">
 
                     {/* Feature Card Detailed */}
-                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.2 }} className="neo-card rounded-[28px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
-                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">
+                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.2 }} className="neo-card rounded-[28px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
+                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft">
                             <Zap className="h-8 w-8 text-primary-dark" />
                         </div>
                         <h2 className="text-2xl font-black text-primary-dark">{t.featuresPage.f1Title}</h2>
@@ -40,8 +40,8 @@ export default function FeaturesPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.3 }} className="neo-card rounded-[28px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
-                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">
+                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.3 }} className="neo-card rounded-[28px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
+                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft">
                             <Brain className="h-8 w-8 text-primary-dark" />
                         </div>
                         <h2 className="text-2xl font-black text-primary-dark">{t.featuresPage.f2Title}</h2>
@@ -50,8 +50,8 @@ export default function FeaturesPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.4 }} className="neo-card rounded-[28px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
-                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">
+                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.4 }} className="neo-card rounded-[28px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
+                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft">
                             <Users className="h-8 w-8 text-primary-dark" />
                         </div>
                         <h2 className="text-2xl font-black text-primary-dark">{t.featuresPage.f3Title}</h2>
@@ -60,8 +60,8 @@ export default function FeaturesPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.5 }} className="neo-card rounded-[28px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
-                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-premium-sm ring-1 ring-border-soft">
+                    <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.5 }} className="neo-card rounded-[28px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
+                        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft">
                             <PenTool className="h-8 w-8 text-primary-dark" />
                         </div>
                         <h2 className="text-2xl font-black text-primary-dark">{t.featuresPage.f4Title}</h2>

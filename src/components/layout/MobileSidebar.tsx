@@ -64,16 +64,16 @@ export function MobileSidebar() {
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
                         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                        className="relative z-10 flex h-dvh w-[min(82vw,320px)] flex-col overflow-y-auto border-r border-border-soft bg-white/80 p-5 py-5 shadow-premium-md backdrop-blur-xl custom-scrollbar"
+                        className="relative z-10 flex h-dvh w-[min(82vw,320px)] flex-col overflow-y-auto border-r border-border-soft bg-surface-overlay-strong p-5 py-5 shadow-premium-md backdrop-blur-xl custom-scrollbar"
                     >
                         <div className="mb-4 flex items-center justify-between">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-light bg-white/80">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-light bg-surface-card">
                                 <Image src="/icon.png" alt="Mirror logo" width={22} height={22} priority />
                             </div>
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setIsOpen(false)}
-                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-soft bg-white/90 text-slate-600 shadow-premium-sm"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-soft bg-surface-elevated text-secondary-text shadow-premium-sm"
                                 aria-label="Close menu"
                             >
                                 <X className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function MobileSidebar() {
                                         onTouchStart={() => router.prefetch(item.href)}
                                         className={clsx(
                                             "relative flex h-11 w-full items-center gap-3 rounded-2xl px-3 text-[13px] font-semibold transition-colors",
-                                            isActive ? "text-white" : "text-slate-500 hover:bg-white/70 hover:text-slate-800"
+                                            isActive ? "text-white" : "text-secondary-text hover:bg-surface-hover hover:text-primary-dark"
                                         )}
                                     >
                                         {isActive && (
@@ -144,7 +144,7 @@ export function MobileSidebar() {
             <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(true)}
-                className="flex items-center justify-center rounded-md p-2 text-slate-600 hover:bg-slate-100"
+                className="flex items-center justify-center rounded-md p-2 text-secondary-text hover:bg-surface-hover"
                 aria-label="Open menu"
             >
                 <Menu className="h-5 w-5" />

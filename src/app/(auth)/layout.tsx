@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                     <div className="flex flex-1">
                         <Link
                             href={ROUTES.public.home}
-                            className="pointer-events-auto cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/50 text-secondary-text shadow-sm backdrop-blur-md hover:bg-white hover:text-primary-dark hover:shadow-premium-sm transition-all"
+                            className="pointer-events-auto cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-soft bg-surface-overlay text-secondary-text shadow-sm backdrop-blur-md hover:bg-surface-hover hover:text-primary-dark hover:shadow-premium-sm transition-all"
                             aria-label="Volver a inicio"
                         >
                             <ChevronLeft className="h-5 w-5" />

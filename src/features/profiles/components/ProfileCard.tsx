@@ -21,23 +21,23 @@ interface ProfileCardProps {
 
 export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCardProps) {
     return (
-        <Card className="relative overflow-hidden rounded-[28px] border border-[#E8ECF4] p-0 shadow-premium-md">
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-white/65 to-transparent" />
+        <Card className="relative overflow-hidden rounded-[28px] border border-border-soft p-0 shadow-premium-md">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-surface-elevated to-transparent" />
 
             <div className="relative p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div className="max-w-[80%]">
-                        <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E6EAF2] bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-slate-700 shadow-premium-sm">
-                            <WandSparkles className="h-3.5 w-3.5 text-slate-500" />
+                        <div className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text shadow-premium-sm">
+                            <WandSparkles className="h-3.5 w-3.5 text-secondary-text" />
                             Voice profile
                         </div>
-                        <h2 className="mt-4 text-2xl font-black tracking-[-0.04em] text-[#141824]">{profile.name}</h2>
+                        <h2 className="mt-4 text-2xl font-black tracking-[-0.04em] text-primary-text">{profile.name}</h2>
                         <p className="mt-3 body-muted">{profile.description}</p>
                     </div>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button type="button" variant="ghost" className="h-10 w-10 rounded-full border border-[#E8ECF4] bg-white/90 p-0" aria-label="Open profile actions">
+                            <Button type="button" variant="ghost" className="h-10 w-10 rounded-full border border-border-soft bg-surface-elevated p-0" aria-label="Open profile actions">
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -59,32 +59,32 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                 </div>
 
                 <div className="mt-5 flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-[#E6EAF2] bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                    <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
                         {profile.enabled ? "Enabled" : "Disabled"}
                     </span>
-                    <span className="rounded-full border border-[#E6EAF2] bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+                    <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
                         {profile.allowEmojis ? "Emoji ready" : "No emojis"}
                     </span>
-                    <span className="text-[12px] font-medium text-slate-500">Updated {formatDistanceToNow(profile.updatedAt, { addSuffix: true })}</span>
+                    <span className="text-[12px] font-medium text-secondary-text">Updated {formatDistanceToNow(profile.updatedAt, { addSuffix: true })}</span>
                 </div>
 
-                <div className="mt-5 rounded-3xl border border-[#E8ECF4] bg-white/75 p-4">
+                <div className="mt-5 rounded-3xl border border-border-soft bg-surface-card p-4">
                     <div className="flex items-center justify-between gap-3">
                         <div>
                             <p className="dashboard-overline">Tone map</p>
-                            <p className="mt-1 text-[15px] font-semibold text-[#141824]">{profile.tone}</p>
+                            <p className="mt-1 text-[15px] font-semibold text-primary-text">{profile.tone}</p>
                         </div>
-                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#E8ECF4] bg-white/90">
-                            <MessageSquareQuote className="h-4 w-4 text-[#141824]" />
+                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-soft bg-surface-elevated">
+                            <MessageSquareQuote className="h-4 w-4 text-primary-text" />
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-4 space-y-2.5">
                     {profile.examples.map((example, index) => (
-                        <div key={`${profile.id}_example_${index}`} className="rounded-2xl border border-[#E6EAF2] bg-white/80 px-3.5 py-3">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">Example {index + 1}</p>
-                            <p className="mt-2 text-[13px] leading-6 text-slate-700">{example}</p>
+                        <div key={`${profile.id}_example_${index}`} className="rounded-2xl border border-border-soft bg-surface-card px-3.5 py-3">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-text">Example {index + 1}</p>
+                            <p className="mt-2 text-[13px] leading-6 text-secondary-text">{example}</p>
                         </div>
                     ))}
                 </div>

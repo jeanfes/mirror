@@ -19,7 +19,7 @@ interface StatePanelProps {
 }
 
 const toneClasses: Record<StatePanelTone, string> = {
-    neutral: "border-[#E8ECF4] bg-white/72 text-[#141824]",
+    neutral: "border-border-soft bg-surface-base text-primary-text",
     error: "border-[#fecaca] bg-[#fff7f7] text-[#7f1d1d]"
 }
 
@@ -46,7 +46,7 @@ export function StatePanel({
             </div>
 
             <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">{title}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-[14px] leading-7 text-slate-600">{description}</p>
+            <p className="mx-auto mt-3 max-w-xl text-[14px] leading-7 text-secondary-text">{description}</p>
 
             {actionLabel && onAction ? (
                 <Button className="mt-5" onClick={onAction} variant={tone === "error" ? "dangerSoft" : "primary"}>

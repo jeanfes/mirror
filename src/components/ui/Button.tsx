@@ -18,7 +18,7 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 const variantClasses: Record<ButtonVariant, string> = {
     primary: "neo-btn-primary",
     secondary: "neo-btn-muted",
-    ghost: "bg-transparent text-slate-600 hover:bg-white/80 hover:text-slate-900",
+    ghost: "bg-transparent text-secondary-text hover:bg-surface-hover hover:text-primary-dark",
     dangerSoft: "neo-btn-danger-soft"
 }
 
@@ -31,6 +31,7 @@ export function Button({
     variant = "primary",
     size = "md",
     loading = false,
+    loadingLabel,
     className,
     children,
     disabled,
@@ -45,6 +46,7 @@ export function Button({
             whileTap={{ scale: 0.98 }}
             disabled={isDisabled}
             aria-busy={ariaBusy ?? loading}
+            aria-label={loading ? (loadingLabel || "Working...") : undefined}
             className={twMerge(
                 clsx(
                     "relative overflow-hidden inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",

@@ -92,7 +92,7 @@ export default function LandingPage() {
             </section>
 
             {/* How It Works Section [NEW] */}
-            <section className="w-full py-20 bg-white/50 border-y border-border-soft relative z-10 backdrop-blur-sm">
+            <section className="w-full py-20 bg-surface-base border-y border-border-soft relative z-10 backdrop-blur-sm">
                 <div className="mx-auto max-w-6xl px-6">
                     <motion.div {...fadeInUp} className="text-center mb-16">
                         <h2 className="text-3xl font-black tracking-tight text-primary-dark sm:text-4xl">{t.howItWorks.title}</h2>
@@ -161,9 +161,9 @@ export default function LandingPage() {
                         className="grid grid-cols-1 gap-8 md:grid-cols-3"
                     >
                         {/* Feature 1 */}
-                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
+                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Bot className="h-7 w-7" strokeWidth={2} />
                             </div>
                             <h3 className="mb-3 text-[1.35rem] font-black tracking-tight text-primary-dark">{t.features.f1Title}</h3>
@@ -173,9 +173,9 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 2 */}
-                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
+                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Layers className="h-7 w-7" strokeWidth={2} />
                             </div>
                             <h3 className="mb-3 text-[1.35rem] font-black tracking-tight text-primary-dark">{t.features.f2Title}</h3>
@@ -185,9 +185,9 @@ export default function LandingPage() {
                         </motion.div>
 
                         {/* Feature 3 */}
-                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
+                        <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
+                            <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
                                 <Fingerprint className="h-7 w-7" strokeWidth={2} />
                             </div>
                             <h3 className="mb-3 text-[1.35rem] font-black tracking-tight text-primary-dark">{t.features.f3Title}</h3>
@@ -201,10 +201,10 @@ export default function LandingPage() {
 
             {/* CTA Section */}
             <section className="w-full max-w-5xl px-6 pb-40 relative z-10">
-                <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-shell relative overflow-hidden rounded-[2.5rem] p-12 text-center shadow-premium-md sm:p-20 border-white/40 group hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500">
-                    <div className="absolute inset-0 bg-linear-to-br from-white/90 via-white/50 to-white/20 transition-opacity group-hover:opacity-80" />
+                <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-shell relative overflow-hidden rounded-[2.5rem] p-12 text-center shadow-premium-md sm:p-20 border-border-soft group hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500">
+                    <div className="absolute inset-0 bg-linear-to-br from-(--hero-surface-start) via-(--hero-surface-mid) to-(--hero-surface-end) transition-opacity group-hover:opacity-80" />
                     <div className="relative z-10 space-y-8">
-                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.25rem] bg-white text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform hover:scale-110 duration-300">
+                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.25rem] bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform hover:scale-110 duration-300">
                             <Rocket className="h-10 w-10 text-primary-dark" strokeWidth={2} />
                         </div>
                         <h2 className="text-4xl font-black tracking-tight text-primary-dark sm:text-5xl text-balance">

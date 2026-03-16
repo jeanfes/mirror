@@ -21,7 +21,7 @@ export function DropdownMenuContent({
             <DropdownMenuPrimitive.Content
                 sideOffset={sideOffset}
                 className={cn(
-                    "neo-card z-50 min-w-44 rounded-[14px] border border-[#E8ECF4] bg-white/85 backdrop-blur-sm p-1.5 shadow-premium-md",
+                    "neo-card z-50 min-w-44 rounded-[14px] border border-border-soft bg-surface-overlay-strong backdrop-blur-sm p-1.5 shadow-premium-md",
                     className
                 )}
                 {...props}
@@ -38,7 +38,7 @@ export function DropdownMenuItem({
     return (
         <DropdownMenuPrimitive.Item
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-[13px] text-slate-700 outline-none transition-colors hover:bg-white focus:bg-white data-disabled:pointer-events-none data-disabled:opacity-40",
+                "relative flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-[13px] text-primary-text outline-none transition-colors hover:bg-surface-hover focus:bg-surface-hover data-disabled:pointer-events-none data-disabled:opacity-40",
                 inset && "pl-8",
                 className
             )}
@@ -57,7 +57,7 @@ export function DropdownMenuCheckboxItem({
         <DropdownMenuPrimitive.CheckboxItem
             checked={checked}
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2.5 text-[13px] text-slate-700 outline-none transition-colors hover:bg-white focus:bg-white data-disabled:pointer-events-none data-disabled:opacity-40",
+                "relative flex cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2.5 text-[13px] text-primary-text outline-none transition-colors hover:bg-surface-hover focus:bg-surface-hover data-disabled:pointer-events-none data-disabled:opacity-40",
                 className
             )}
             {...props}
@@ -86,7 +86,7 @@ export function DropdownMenuSubTrigger({
     return (
         <DropdownMenuPrimitive.SubTrigger
             className={cn(
-                "flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-[13px] outline-none focus:bg-white data-[state=open]:bg-white",
+                "flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-[13px] outline-none focus:bg-surface-hover data-[state=open]:bg-surface-hover",
                 inset && "pl-8",
                 className
             )}
@@ -105,7 +105,7 @@ export function DropdownMenuSubContent({
     return (
         <DropdownMenuPrimitive.SubContent
             className={cn(
-                "neo-card z-50 min-w-44 overflow-hidden rounded-[14px] border border-[#E8ECF4] bg-white/85 backdrop-blur-sm p-1 shadow-premium-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                "neo-card z-50 min-w-44 overflow-hidden rounded-[14px] border border-border-soft bg-surface-overlay-strong backdrop-blur-sm p-1 shadow-premium-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
                 className
             )}
             {...props}

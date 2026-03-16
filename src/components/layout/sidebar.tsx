@@ -23,7 +23,7 @@ export function Sidebar() {
     }, [router])
 
     return (
-        <aside className="hidden md:flex w-min p-4.5 h-screen flex-col items-center justify-between pt-5 overflow-y-auto custom-scrollbar">
+        <aside className="hidden md:flex h-screen w-min flex-col items-center justify-between overflow-y-auto pt-5 p-4.5 custom-scrollbar">
             <div className="space-y-2">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -39,7 +39,7 @@ export function Sidebar() {
                             onFocus={() => router.prefetch(item.href)}
                             className={clsx(
                                 "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors",
-                                isActive ? "text-white" : "text-slate-400 hover:text-slate-700"
+                                isActive ? "text-white" : "text-secondary-text hover:text-primary-dark"
                             )}
                         >
                             {isActive && (

@@ -18,7 +18,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             )
           } catch {
-            // setAll called from a Server Component — puede ignorarse si hay middleware
+            // noop - cookies can only be set during request handling, so this will fail if attempted during static generation
           }
         }
       }

@@ -70,7 +70,7 @@ export function RegisterForm({ authEnabled }: RegisterFormProps) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all hover:bg-slate-50 focus:ring-4 focus:ring-accent-purple/10 disabled:cursor-not-allowed disabled:opacity-60"
+                className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all focus:ring-4 focus:ring-accent-purple/10 disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isMockMode || showPending}
                 onClick={() => {
                     if (isMockMode) {
@@ -122,7 +122,7 @@ export function RegisterForm({ authEnabled }: RegisterFormProps) {
                     disabled={showPending}
                     minLength={2}
                     required
-                    className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
+                    className="h-11 w-full rounded-xl border border-border-soft bg-surface-elevated px-4 text-[14px] text-primary-text outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
                     placeholder={t.auth.namePlaceholder}
                 />
             </div>
@@ -135,7 +135,7 @@ export function RegisterForm({ authEnabled }: RegisterFormProps) {
                     type="email"
                     disabled={showPending}
                     required
-                    className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
+                    className="h-11 w-full rounded-xl border border-border-soft bg-surface-elevated px-4 text-[14px] text-primary-text outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
                     placeholder={t.auth.emailPlaceholder}
                 />
             </div>
@@ -149,7 +149,7 @@ export function RegisterForm({ authEnabled }: RegisterFormProps) {
                     disabled={showPending}
                     minLength={8}
                     required
-                    className="h-11 w-full rounded-xl border border-border-soft bg-white px-4 text-[14px] outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
+                    className="h-11 w-full rounded-xl border border-border-soft bg-surface-elevated px-4 text-[14px] text-primary-text outline-none transition-all placeholder:text-muted-text focus:border-accent-purple focus:ring-4 focus:ring-accent-purple/10"
                     placeholder={t.auth.passwordPlaceholder}
                 />
             </div>

@@ -9,7 +9,7 @@ import type { Persona } from "@/types/dashboard"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
 import { Button } from "@/components/ui/Button"
 import { Toggle } from "@/components/ui/Toggle"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 
 const profileSchema = z.object({
     name: z.string().min(2, "Name is required"),
@@ -82,7 +82,10 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
 
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
-            <DialogContent className="w-[min(94vw,760px)] rounded-[28px] border border-border-soft bg-white/96 p-0 overflow-hidden">
+            <DialogContent className="w-[min(94vw,760px)] rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden" style={{
+                border: "none"
+            }}>
+                <DialogDescription className="sr-only">Form to create or edit a voice profile</DialogDescription>
                 <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
                     <div className="overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
@@ -115,36 +118,36 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                         </div>
                     </div>
 
-                    <div className="bg-white p-5 md:p-6">
+                    <div className="bg-surface-elevated p-5 md:p-6">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-semibold text-primary-text">
                                 {profile ? "Edit profile" : "Create profile"}
                             </DialogTitle>
-                            <p className="text-[13px] leading-6 text-slate-600">Define voice, tone and three sample comments for consistent generation.</p>
+                            <p className="text-[13px] leading-6 text-secondary-text">Define voice, tone and three sample comments for consistent generation.</p>
                         </DialogHeader>
 
                         <form className="space-y-4" onSubmit={submit}>
                             <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Name</label>
+                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Name</label>
                                 <input {...register("name")} className="feature-input" placeholder="Example: Insight Architect" />
                                 {errors.name ? <p className="text-[12px] text-danger">{errors.name.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Description</label>
+                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Description</label>
                                 <textarea {...register("description")} rows={2} className="feature-textarea" placeholder="What kind of perspective does this profile bring?" />
                                 {errors.description ? <p className="text-[12px] text-danger">{errors.description.message}</p> : null}
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Tone</label>
+                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Tone</label>
                                 <input {...register("tone")} className="feature-input" placeholder="Confident, practical, concise" />
                                 {errors.tone ? <p className="text-[12px] text-danger">{errors.tone.message}</p> : null}
                             </div>
 
-                            <div className="feature-soft-card bg-white/70">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Example comments</label>
-                                <p className="mt-1 text-[13px] text-slate-600">Use three short examples that feel ready to post, not abstract instructions.</p>
+                            <div className="feature-soft-card">
+                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Example comments</label>
+                                <p className="mt-1 text-[13px] text-secondary-text">Use three short examples that feel ready to post, not abstract instructions.</p>
 
                                 <div className="mt-3 grid gap-3">
                                     <textarea {...register("example1")} rows={2} className="feature-textarea" placeholder="Example #1" />

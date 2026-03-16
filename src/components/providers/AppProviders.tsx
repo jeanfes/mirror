@@ -1,10 +1,18 @@
 "use client"
 
-import { useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ResolvedTheme, ThemePreference } from "@/lib/theme" 
+import { ThemeProvider } from "./ThemeProvider"
+import { useState } from "react"
 import { Toaster } from "sonner"
 
-export function AppProviders({ children }: { children: React.ReactNode }) {
+interface AppProvidersProps {
+    children: React.ReactNode
+    initialThemePreference: ThemePreference
+    initialResolvedTheme: ResolvedTheme
+}
+
+export function AppProviders({ children, initialThemePreference, initialResolvedTheme }: AppProvidersProps) {
     const [queryClient] = useState(
         () =>
             new QueryClient({
@@ -22,22 +30,24 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     )
 
     return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-            <Toaster
-                position="top-right"
-                gap={8}
-                toastOptions={{
-                    duration: 2000,
-                    classNames: {
-                        toast: "toast-surface",
-                        title: "toast-title",
-                        description: "toast-description",
-                        success: "toast-success",
-                        error: "toast-error",
-                    },
-                }}
-            />
-        </QueryClientProvider>
+        <ThemeProvider initialThemePreference={initialThemePreference} initialResolvedTheme={initialResolvedTheme}>
+            <QueryClientProvider client={queryClient}>
+                {children}
+                <Toaster
+                    position="top-right"
+                    gap={8}
+                    toastOptions={{
+                        duration: 2000,
+                        classNames: {
+                            toast: "toast-surface",
+                            title: "toast-title",
+                            description: "toast-description",
+                            success: "toast-success",
+                            error: "toast-error",
+                        },
+                    }}
+                />
+            </QueryClientProvider>
+        </ThemeProvider>
     )
 }

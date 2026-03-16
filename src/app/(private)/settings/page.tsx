@@ -39,10 +39,10 @@ export default function SettingsPage() {
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             Tune how Mirror behaves before a comment ever reaches the extension.
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
                             Settings should feel operational, not buried. This screen controls language, automation and quality guardrails so the workflow matches your posting habits.
                         </p>
 
@@ -84,7 +84,7 @@ export default function SettingsPage() {
                     <div className="icon-box icon-bg-purple">
                         <SlidersHorizontal className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Workflow control</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Workflow control</h2>
                     <p className="mt-2 body-muted">Decide whether Mirror assists the final insertion flow or waits for explicit review on every generation.</p>
                 </Card>
 
@@ -92,7 +92,7 @@ export default function SettingsPage() {
                     <div className="icon-box icon-bg-green">
                         <ShieldCheck className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Quality guardrails</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Quality guardrails</h2>
                     <p className="mt-2 body-muted">Keep tone alignment and confidence hints visible so the extension feels reliable instead of loose.</p>
                 </Card>
 
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                     <div className="icon-box icon-bg-amber">
                         <Globe className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Localization defaults</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Localization defaults</h2>
                     <p className="mt-2 body-muted">Set the default language and baseline profile so the first suggestion already starts near the right voice.</p>
                 </Card>
             </section>
@@ -110,7 +110,7 @@ export default function SettingsPage() {
                     <div className="flex items-start justify-between gap-4">
                         <div>
                             <p className="dashboard-overline">Behavior</p>
-                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-[#141824]">How the workspace should behave day to day</h2>
+                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">How the workspace should behave day to day</h2>
                             <p className="mt-2 max-w-2xl body-muted">These controls affect review friction, archive coverage and how strict the assistant stays with the selected voice.</p>
                         </div>
                         <Button type="button" onClick={handleSave}>Save preferences</Button>
@@ -155,8 +155,8 @@ export default function SettingsPage() {
                         />
                     </div>
 
-                    <div className="mt-5 rounded-3xl border border-[#E8ECF4] bg-white/70 p-4">
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Why this matters</p>
+                    <div className="mt-5 rounded-3xl border border-border-soft bg-surface-base p-4">
+                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Why this matters</p>
                         <p className="mt-2 body-muted">A good default setup reduces correction work later. The goal is not zero control, but a better first draft every time.</p>
                     </div>
                 </Card>
@@ -164,3 +164,4 @@ export default function SettingsPage() {
         </div>
     )
 }
+

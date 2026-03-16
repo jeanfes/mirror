@@ -110,36 +110,36 @@ export default function ProfilesPage() {
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             Build the voices your extension comments with.
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
                             Profiles are the identity layer of Mirror. Each one defines tone, posture and sample phrasing so your comment suggestions feel consistent instead of generic.
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
                             <div className="workspace-hero-chip">
-                                <MessageSquareQuote className="h-4 w-4 text-[#141824]" />
+                                <MessageSquareQuote className="h-4 w-4 text-primary-text" />
                                 Tone-led comments
                             </div>
                             <div className="workspace-hero-chip">
-                                <Layers3 className="h-4 w-4 text-[#141824]" />
+                                <Layers3 className="h-4 w-4 text-primary-text" />
                                 Multiple posting angles
                             </div>
                             <div className="workspace-hero-chip">
-                                <Star className="h-4 w-4 text-[#141824]" />
+                                <Star className="h-4 w-4 text-primary-text" />
                                 Reusable brand voices
                             </div>
                         </div>
                     </div>
 
-                    <div className="rounded-[28px] border border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 text-white shadow-[0_18px_50px_rgba(15,19,32,0.16)]">
+                    <div className="rounded-[28px] border border-border-soft bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 text-white shadow-[0_18px_50px_rgba(15,19,32,0.16)]">
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">Profile coverage</p>
                                 <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{list.length}</p>
                             </div>
-                            <Button onClick={openCreateDialog} className="bg-white text-[#141824] hover:bg-white/92">
+                            <Button onClick={openCreateDialog} className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft">
                                 <Plus className="h-4 w-4" />
                                 New profile
                             </Button>
@@ -166,24 +166,24 @@ export default function ProfilesPage() {
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="rounded-3xl p-5">
                     <p className="dashboard-overline">Role</p>
-                    <p className="mt-2 text-lg font-bold text-[#141824]">Identity system</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">Identity system</p>
                     <p className="mt-2 body-muted">Profiles make the extension feel opinionated and consistent instead of random on every generation.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
                     <p className="dashboard-overline">Best practice</p>
-                    <p className="mt-2 text-lg font-bold text-[#141824]">Three clear examples</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">Three clear examples</p>
                     <p className="mt-2 body-muted">A good profile gives enough sample phrasing to guide tone without overfitting every response.</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
                     <p className="dashboard-overline">Outcome</p>
-                    <p className="mt-2 text-lg font-bold text-[#141824]">Faster daily use</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">Faster daily use</p>
                     <p className="mt-2 body-muted">When the voices are strong, choosing a comment direction becomes much faster inside the extension.</p>
                 </Card>
             </section>
 
             {list.length === 0 ? (
                 <StatePanel
-                    icon={<WandSparkles className="h-6 w-6 text-[#141824]" />}
+                    icon={<WandSparkles className="h-6 w-6 text-primary-text" />}
                     title={t.app.profilesEmptyTitle}
                     description={t.app.profilesEmptyDesc}
                     actionLabel={t.app.profilesEmptyAction}
@@ -193,11 +193,11 @@ export default function ProfilesPage() {
                 <section className="space-y-3">
                     <div className="flex items-end justify-between gap-3">
                         <div>
-                            <h2 className="text-2xl font-bold tracking-[-0.03em] text-[#141824]">Your voice library</h2>
-                            <p className="mt-1 text-[14px] text-slate-600">Each card should feel like a distinct commenting posture you can deploy on demand.</p>
+                            <h2 className="text-2xl font-bold tracking-[-0.03em] text-primary-text">Your voice library</h2>
+                            <p className="mt-1 text-[14px] text-secondary-text">Each card should feel like a distinct commenting posture you can deploy on demand.</p>
                         </div>
-                        <div className="hidden rounded-full border border-[#E8ECF4] bg-white/70 px-3 py-1.5 text-[12px] font-semibold text-slate-600 md:inline-flex md:items-center md:gap-1.5">
-                            <Star className="h-3.5 w-3.5 text-[#8B5CF6]" />
+                        <div className="hidden rounded-full border border-border-soft bg-surface-base px-3 py-1.5 text-[12px] font-semibold text-secondary-text md:inline-flex md:items-center md:gap-1.5">
+                            <Star className="h-3.5 w-3.5 text-accent-purple" />
                             Stronger profiles create better generations
                         </div>
                     </div>

@@ -39,15 +39,15 @@ export function HistoryFilters({
         <div className="feature-glass-panel">
             <div className="flex flex-col gap-4 border-b border-border-soft pb-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                    <span className="feature-pill bg-white/90 px-3 uppercase tracking-[0.12em] text-slate-600">
+                    <span className="feature-pill px-3 uppercase tracking-[0.12em]">
                         <SlidersHorizontal className="h-3.5 w-3.5" />
                         Workbench filters
                     </span>
-                    <h2 className="mt-3 text-[20px] font-semibold tracking-[-0.03em] text-slate-900">Review outputs with context, not noise.</h2>
+                    <h2 className="mt-3 text-[20px] font-semibold tracking-[-0.03em] text-primary-text">Review outputs with context, not noise.</h2>
                     <p className="mt-1 max-w-2xl body-muted">Search by author, inspect the exact source post and keep only the comments worth reusing in your workflow.</p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 text-[12px] font-semibold text-slate-600">
+                <div className="flex flex-wrap items-center gap-2 text-[12px] font-semibold text-secondary-text">
                     <span className="feature-pill px-3 py-1.5">
                         Showing {resultsCount} of {totalCount}
                     </span>
@@ -61,12 +61,12 @@ export function HistoryFilters({
                 <div className="space-y-2">
                     <label className="dashboard-overline">Search</label>
                     <div className="relative">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-text" />
                         <input
                             value={searchValue}
                             onChange={(event) => onSearchChange(event.target.value)}
                             placeholder="Search author, snippet or generated comment"
-                            className="feature-input feature-input-with-icon h-12 bg-white/95 pr-3 text-primary-text"
+                            className="feature-input feature-input-with-icon h-12 bg-surface-elevated pr-3 text-primary-text"
                         />
                     </div>
                 </div>
@@ -95,7 +95,7 @@ export function HistoryFilters({
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border-soft pt-4">
-                <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-600">Active filters</span>
+                <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Active filters</span>
 
                 {hasSearch ? (
                     <button
@@ -131,7 +131,7 @@ export function HistoryFilters({
                 ) : null}
 
                 {!hasActiveFilters ? (
-                    <span className="rounded-full border border-dashed border-[#DCE3EF] bg-white/85 px-3 py-1 text-[12px] font-medium text-slate-600">
+                    <span className="rounded-full border border-dashed border-border-soft bg-surface-elevated px-3 py-1 text-[12px] font-medium text-secondary-text">
                         No filters active
                     </span>
                 ) : null}

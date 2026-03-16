@@ -1,8 +1,7 @@
 "use client"
 
 import { AlertTriangle } from "lucide-react"
-import { motion } from "motion/react"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/Dialog"
 import { Button } from "@/components/ui/Button"
 
 interface ConfirmDialogProps {
@@ -42,32 +41,24 @@ export function ConfirmDialog({
                         event.preventDefault()
                     }
                 }}
-                className="w-[min(94vw,420px)] rounded-[28px] border border-white/65 bg-white/94 p-6 shadow-[0_28px_80px_-28px_rgba(15,23,42,0.65)] [--panel-bg:rgba(255,255,255,0.94)] [--panel-border-color:rgba(255,255,255,0.65)]"
+                className="w-[min(94vw,420px)] rounded-[28px] border border-border-light p-6 shadow-[0_28px_80px_-28px_rgba(15,23,42,0.65)] [--panel-bg:var(--surface-overlay-strong)] [--panel-border-color:var(--border-light)]"
             >
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.96, y: 6 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="flex flex-col items-center text-center"
-                >
-                    <motion.div
-                        initial={{ scale: 0.92 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.25, ease: "easeOut", delay: 0.05 }}
+                <div className="flex flex-col items-center text-center">
+                    <div
                         className="mt-4 flex h-12 w-12 items-center justify-center rounded-full border shadow-premium-sm"
                         style={{ background: "var(--danger-soft-bg)", borderColor: "var(--danger-soft-border)" }}
                     >
                         <AlertTriangle className="h-5 w-5 text-danger" />
-                    </motion.div>
+                    </div>
 
                     <DialogTitle className="mt-4 text-[15px] font-bold tracking-[-0.02em] text-primary-text">
                         {title}
                     </DialogTitle>
 
                     {description && (
-                        <p className="mt-1.5 text-[13px] leading-[1.6] text-slate-600">
+                        <DialogDescription className="mt-1.5 text-[13px] leading-[1.6] text-secondary-text">
                             {description}
-                        </p>
+                        </DialogDescription>
                     )}
 
                     <div className="mt-6 flex w-full gap-2">
@@ -90,7 +81,7 @@ export function ConfirmDialog({
                             {confirmLabel}
                         </Button>
                     </div>
-                </motion.div>
+                </div>
             </DialogContent>
         </Dialog>
     )

@@ -118,10 +118,10 @@ export default function HistoryPage() {
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-[#141824] md:text-5xl">
+                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             Keep the best outputs close and the weak ones out of your way.
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-slate-600">
+                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
                             History should work like a review desk: quick to scan, honest about what was applied, and useful when you need a proven angle again.
                         </p>
 
@@ -163,7 +163,7 @@ export default function HistoryPage() {
                     <div className="icon-box icon-bg-purple">
                         <WandSparkles className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Review angle</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Review angle</h2>
                     <p className="mt-2 body-muted">Compare the original post against the generated comment without losing the tone or goal that produced it.</p>
                 </Card>
 
@@ -171,7 +171,7 @@ export default function HistoryPage() {
                     <div className="icon-box icon-bg-green">
                         <CheckCircle2 className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Execution truth</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Execution truth</h2>
                     <p className="mt-2 body-muted">Keep the archive honest by marking what was actually used and what still needs a decision.</p>
                 </Card>
 
@@ -179,7 +179,7 @@ export default function HistoryPage() {
                     <div className="icon-box icon-bg-amber">
                         <Clock3 className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-[#141824]">Fast retrieval</h2>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Fast retrieval</h2>
                     <p className="mt-2 body-muted">Find a strong previous angle in seconds when you need to comment quickly without starting from zero.</p>
                 </Card>
             </section>
@@ -203,13 +203,13 @@ export default function HistoryPage() {
                         <h2 className="section-heading">Recent outputs</h2>
                         <p className="body-muted">Each card keeps the source, the generated reply and the decision controls in one place.</p>
                     </div>
-                    <p className="text-[13px] font-medium text-slate-500">{filteredHistory.length} result{filteredHistory.length === 1 ? "" : "s"}</p>
+                    <p className="text-[13px] font-medium text-secondary-text">{filteredHistory.length} result{filteredHistory.length === 1 ? "" : "s"}</p>
                 </div>
             </section>
 
             {filteredHistory.length === 0 ? (
                 <StatePanel
-                    icon={<Archive className="h-6 w-6 text-[#141824]" />}
+                    icon={<Archive className="h-6 w-6 text-primary-text" />}
                     title={t.app.historyEmptyTitle}
                     description={t.app.historyEmptyDesc}
                     actionLabel={t.app.historyEmptyAction}
@@ -232,4 +232,5 @@ export default function HistoryPage() {
         </div>
     )
 }
+
 

@@ -11,7 +11,7 @@ export function Card({ elevated = false, className, children, ...props }: CardPr
         <div
             className={twMerge(
                 clsx(
-                    "neo-card overflow-hidden rounded-[18px] border border-border-light bg-white/75 backdrop-blur-sm p-4",
+                    "neo-card overflow-hidden rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-4",
                     elevated ? "shadow-premium-md" : "shadow-premium-sm",
                     className
                 )

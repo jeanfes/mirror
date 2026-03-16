@@ -51,7 +51,7 @@ export function DialogContent({
                 {children}
                 {!hideCloseButton && (
                     <DialogPrimitive.Close
-                        className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white/90 hover:text-slate-800"
+                        className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-secondary-text transition-colors hover:bg-surface-hover hover:text-primary-dark"
                         aria-label="Close"
                     >
                         <X className="h-4 w-4" />
