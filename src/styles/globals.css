@@ -42,6 +42,14 @@ html[data-theme="light"] {
   --shell-glow-start: rgba(214, 210, 240, 0.78);
   --shell-glow-end: rgba(219, 234, 254, 0.78);
   --page-overlay: rgba(255, 255, 255, 0.7);
+  --dialog-overlay-base: rgba(8, 12, 20, 0.46);
+  --dialog-overlay-priority: rgba(7, 10, 17, 0.6);
+  --nav-active-bg: #171b2d;
+  --hero-orb-purple: radial-gradient(circle, rgba(139, 92, 246, 0.24), transparent 72%);
+  --hero-orb-cyan: radial-gradient(circle, rgba(117, 206, 243, 0.28), transparent 74%);
+  --dark-panel-border: #e8ecf4;
+  --dark-panel-grad: linear-gradient(180deg, rgba(23, 27, 45, 0.98), rgba(23, 27, 45, 0.92));
+  --dark-panel-shadow: 0 18px 50px rgba(15, 19, 32, 0.16);
   --hero-surface-start: rgba(255, 255, 255, 0.9);
   --hero-surface-mid: rgba(214, 210, 240, 0.35);
   --hero-surface-end: rgba(117, 206, 243, 0.2);
@@ -143,6 +151,14 @@ html[data-theme="dark"] {
   --button-danger-soft-border: rgba(240, 141, 141, 0.32);
   --button-danger-soft-hover-bg: rgba(109, 42, 42, 0.24);
   --button-danger-soft-text: #f3b7b7;
+  --dialog-overlay-base: rgba(6, 10, 16, 0.68);
+  --dialog-overlay-priority: rgba(4, 8, 13, 0.78);
+  --nav-active-bg: rgba(34, 50, 76, 0.96);
+  --hero-orb-purple: radial-gradient(circle, rgba(146, 122, 188, 0.28), transparent 72%);
+  --hero-orb-cyan: radial-gradient(circle, rgba(94, 182, 207, 0.26), transparent 74%);
+  --dark-panel-border: rgba(118, 140, 170, 0.24);
+  --dark-panel-grad: linear-gradient(180deg, rgba(19, 29, 46, 0.98), rgba(14, 23, 37, 0.96));
+  --dark-panel-shadow: 0 24px 52px rgba(1, 6, 12, 0.42);
 }
 
 :root,
@@ -187,6 +203,28 @@ html[data-theme="dark"] {
 
 html {
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--secondary-text) 42%, transparent) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--secondary-text) 42%, transparent);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--secondary-text) 64%, transparent);
 }
 
 * {
@@ -400,13 +438,21 @@ h6 {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
+.workspace-hero-orb-purple {
+  background: var(--hero-orb-purple);
+}
+
+.workspace-hero-orb-cyan {
+  background: var(--hero-orb-cyan);
+}
+
 .dashboard-dark-panel {
-  border: 1px solid #E8ECF4;
+  border: 1px solid var(--dark-panel-border);
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(23,27,45,0.98), rgba(23,27,45,0.92));
+  background: var(--dark-panel-grad);
   padding: 1.25rem;
   color: #fff;
-  box-shadow: 0 18px 50px rgba(15,19,32,0.16);
+  box-shadow: var(--dark-panel-shadow);
 }
 
 .dashboard-dark-stat {
@@ -519,9 +565,9 @@ h6 {
 
 .plan-card-surface-recommended {
   border-color: var(--primary-dark);
-  background: linear-gradient(180deg, rgba(23,27,45,0.98), rgba(23,27,45,0.92));
+  background: var(--dark-panel-grad);
   color: #fff;
-  box-shadow: 0 18px 50px rgba(15,19,32,0.18);
+  box-shadow: var(--dark-panel-shadow);
 }
 
 .plan-card-badge {

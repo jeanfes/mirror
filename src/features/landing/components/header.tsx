@@ -14,7 +14,7 @@ export function LandingHeader() {
         <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
             <header className="flex h-16 w-full max-w-5xl items-center justify-between rounded-full border border-border-soft bg-surface-overlay px-3 sm:px-5 lg:px-6 backdrop-blur-md shadow-premium-md">
                 <div className="flex min-w-0 items-center gap-4 lg:gap-7">
-                    <Link href={ROUTES.public.home} className="flex shrink-0 items-center gap-2 text-[1.15rem] font-black tracking-tighter text-primary-dark">
+                    <Link href={ROUTES.public.index} className="flex shrink-0 items-center gap-2 text-[1.15rem] font-black tracking-tighter text-primary-dark">
                         <Image src="/icon.png" alt="Mirror Logo" width={24} height={24} className="rounded-md" />
                     </Link>
 

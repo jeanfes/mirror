@@ -1,7 +1,6 @@
-import { createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
 
 function sanitizeNextPath(value: string | null) {
   if (!value) return DEFAULT_AUTHENTICATED_ROUTE
@@ -21,26 +20,16 @@ export async function GET(request: NextRequest) {
   }
 
   if (code) {
-    const cookieStore = await cookies()
+    try {
+      const supabase = await createSupabaseServerClient()
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          }
-        }
+      if (exchangeError) {
+        return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_exchange_failed`, request.url))
       }
-    )
-
-    await supabase.auth.exchangeCodeForSession(code)
+    } catch {
+      return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=supabase_config_missing`, request.url))
+    }
   }
 
   return NextResponse.redirect(new URL(nextPath, request.url))

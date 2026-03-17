@@ -105,8 +105,8 @@ export default function ProfilesPage() {
     return (
         <div className="space-y-6">
             <section className="workspace-hero-shell">
-                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.24),transparent_72%)]" />
-                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.28),transparent_74%)]" />
+                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full workspace-hero-orb-purple" />
+                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full workspace-hero-orb-cyan" />
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
@@ -133,7 +133,7 @@ export default function ProfilesPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-[28px] border border-border-soft bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 text-white shadow-[0_18px_50px_rgba(15,19,32,0.16)]">
+                    <div className="dashboard-dark-panel p-5">
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">Profile coverage</p>

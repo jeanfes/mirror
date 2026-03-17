@@ -1,3 +1,3 @@
 export default function AuthLoading() {
-    return null;
+    return null
 }

@@ -6,30 +6,25 @@ import {
   isAuthPath,
   isPrivatePath
 } from "@/lib/routes"
-import { isAuthEnabled } from "@/lib/auth-config"
-import { MOCK_AUTH_COOKIE, parseMockSessionCookie } from "@/lib/mock-auth"
+import { getSupabasePublicEnv } from "@/lib/supabase/env"
 
 export async function proxy(request: NextRequest) {
-  if (!isAuthEnabled()) {
+  let response = NextResponse.next({ request })
+
+  const supabaseEnv = getSupabasePublicEnv()
+  if (!supabaseEnv) {
     const pathname = request.nextUrl.pathname
-    const mockUser = parseMockSessionCookie(request.cookies.get(MOCK_AUTH_COOKIE)?.value)
 
-    if (mockUser && (pathname === ROUTES.public.home || isAuthPath(pathname))) {
-      return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
-    }
-
-    if (isPrivatePath(pathname) && !mockUser) {
+    if (isPrivatePath(pathname)) {
       return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
     }
 
-    return NextResponse.next({ request })
+    return response
   }
 
-  let response = NextResponse.next({ request })
-
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseEnv.url,
+    supabaseEnv.key,
     {
       cookies: {
         getAll() {
@@ -55,7 +50,7 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
-  if (user && (pathname === ROUTES.public.home || isAuthPath(pathname))) {
+  if (user && (pathname === ROUTES.public.index || isAuthPath(pathname))) {
     return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
   }
 

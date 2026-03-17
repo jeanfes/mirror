@@ -53,7 +53,7 @@ export function MobileSidebar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-0 bg-black/50 backdrop-blur-sm"
+                        className="fixed inset-0 z-0 bg-(--dialog-overlay-base) backdrop-blur-sm"
                         onClick={() => setIsOpen(false)}
                         aria-hidden="true"
                     />
@@ -102,7 +102,7 @@ export function MobileSidebar() {
                                         {isActive && (
                                             <motion.div
                                                 layoutId="activeIndicatorMobile"
-                                                className="absolute inset-0 rounded-2xl bg-brand-dark shadow-premium-sm"
+                                                className="absolute inset-0 rounded-2xl bg-(--nav-active-bg) shadow-premium-sm"
                                                 transition={{
                                                     type: "spring",
                                                     stiffness: 450,

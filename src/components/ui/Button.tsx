@@ -49,7 +49,7 @@ export function Button({
             aria-label={loading ? (loadingLabel || "Working...") : undefined}
             className={twMerge(
                 clsx(
-                    "relative overflow-hidden inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",
+                    "cursor-pointer relative overflow-hidden inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40 [&_svg]:shrink-0 [&_svg]:stroke-[2.2]",
                     variantClasses[variant],
                     sizeClasses[size],
                     className

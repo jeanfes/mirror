@@ -72,6 +72,29 @@ export function DropdownMenuCheckboxItem({
     )
 }
 
+export function DropdownMenuRadioItem({
+    className,
+    children,
+    ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>) {
+    return (
+        <DropdownMenuPrimitive.RadioItem
+            className={cn(
+                "relative flex cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2.5 text-[13px] text-primary-text outline-none transition-colors hover:bg-surface-hover focus:bg-surface-hover data-disabled:pointer-events-none data-disabled:opacity-40",
+                className
+            )}
+            {...props}
+        >
+            <span className="absolute left-2 inline-flex h-4 w-4 items-center justify-center">
+                <DropdownMenuPrimitive.ItemIndicator>
+                    <Check className="h-3.5 w-3.5" />
+                </DropdownMenuPrimitive.ItemIndicator>
+            </span>
+            {children}
+        </DropdownMenuPrimitive.RadioItem>
+    )
+}
+
 export const DropdownMenuLabel = DropdownMenuPrimitive.Label
 export const DropdownMenuSeparator = DropdownMenuPrimitive.Separator
 

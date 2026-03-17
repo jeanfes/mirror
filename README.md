@@ -43,9 +43,8 @@ pnpm install
 ```bash
 # Create or edit .env.local with:
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
-AUTH_ENABLED=false
-NEXT_PUBLIC_AUTH_ENABLED=false
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=YOUR_PUBLISHABLE_KEY
+# Legacy compatibility: NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
 
 3. Start dev server:
@@ -57,11 +56,8 @@ pnpm dev
 ## Auth Notes
 
 - Auth is handled with Supabase clients (`@supabase/ssr` + `@supabase/supabase-js`).
-- `AUTH_ENABLED=false` enables a local dev bypass for protected routes.
-- `AUTH_ENABLED=true` enables real session checks against Supabase.
-- In mock mode (`AUTH_ENABLED=false`), you can test end-to-end auth UI with demo credentials:
-	- `test@local / test12345`
-	- `demo@local / demo12345`
+- Protected routes are always validated with real Supabase sessions.
+- Login, register, OAuth, and logout flows run exclusively against Supabase.
 
 ## API Routes
 

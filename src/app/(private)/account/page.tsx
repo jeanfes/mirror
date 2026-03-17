@@ -52,8 +52,8 @@ export default function AccountPage() {
     return (
         <div className="space-y-6">
             <section className="workspace-hero-shell">
-                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.24),transparent_72%)]" />
-                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(117,206,243,0.28),transparent_74%)]" />
+                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full workspace-hero-orb-purple" />
+                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full workspace-hero-orb-cyan" />
 
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
@@ -72,41 +72,41 @@ export default function AccountPage() {
                     </div>
 
                     <Card className="dashboard-dark-panel">
-                    <div className="flex items-end justify-between gap-4">
-                        <div>
-                            <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{resolvedAccount.plan}</h2>
-                            <p className="mt-2 text-[14px] leading-6 text-white/72">{currentPlan?.summary ?? "Your active plan for the current workspace."}</p>
+                        <div className="flex items-end justify-between gap-4">
+                            <div>
+                                <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{resolvedAccount.plan}</h2>
+                                <p className="mt-2 text-[14px] leading-6 text-white/72">{currentPlan?.summary ?? "Your active plan for the current workspace."}</p>
+                            </div>
+                            <p className="text-[28px] font-semibold tracking-[-0.04em] text-white">{currentPlan?.price ?? "$0"}</p>
                         </div>
-                        <p className="text-[28px] font-semibold tracking-[-0.04em] text-white">{currentPlan?.price ?? "$0"}</p>
-                    </div>
 
-                    <div className="dashboard-dark-stat-muted mt-6">
-                        <div className="flex items-center justify-between gap-3 text-[12px] font-semibold uppercase tracking-widest text-white/58">
-                            <span>Credits used</span>
-                            <span>{Math.round(creditUsage)}%</span>
+                        <div className="dashboard-dark-stat-muted mt-6">
+                            <div className="flex items-center justify-between gap-3 text-[12px] font-semibold uppercase tracking-widest text-white/58">
+                                <span>Credits used</span>
+                                <span>{Math.round(creditUsage)}%</span>
+                            </div>
+                            <ProgressBar
+                                className="mt-3"
+                                trackClassName="bg-surface-base/10"
+                                fillClassName="bg-[linear-gradient(90deg,#8B5CF6,#75CEF3)]"
+                                value={creditUsage}
+                            />
+                            <div className="mt-3 flex items-center justify-between gap-3 text-[13px] text-white/72">
+                                <span>{usedCredits} used</span>
+                                <span>{resolvedAccount.creditsRemaining} remaining</span>
+                            </div>
                         </div>
-                        <ProgressBar
-                            className="mt-3"
-                            trackClassName="bg-surface-base/10"
-                            fillClassName="bg-[linear-gradient(90deg,#8B5CF6,#75CEF3)]"
-                            value={creditUsage}
-                        />
-                        <div className="mt-3 flex items-center justify-between gap-3 text-[13px] text-white/72">
-                            <span>{usedCredits} used</span>
-                            <span>{resolvedAccount.creditsRemaining} remaining</span>
-                        </div>
-                    </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                        <div className="dashboard-dark-stat-muted">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Renewal</p>
-                            <p className="mt-2 text-[15px] font-semibold text-white">{format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy")}</p>
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                            <div className="dashboard-dark-stat-muted">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Renewal</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy")}</p>
+                            </div>
+                            <div className="dashboard-dark-stat-muted">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Latest output</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.timestamp, { addSuffix: true }) : "No activity"}</p>
+                            </div>
                         </div>
-                        <div className="dashboard-dark-stat-muted">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Latest output</p>
-                            <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.timestamp, { addSuffix: true }) : "No activity"}</p>
-                        </div>
-                    </div>
                     </Card>
                 </div>
             </section>

@@ -85,6 +85,21 @@ export const dictionaries = {
       "loginLink": "Inicia sesi\u00f3n",
       "googleBtn": "Continuar con Google",
       "orEmail": "O con correo electr\u00f3nico"
+    ,
+      "errors": {
+        "emailRequired": "El correo es requerido.",
+        "emailInvalid": "Correo electrónico inválido.",
+        "passwordRequired": "La contraseña es requerida.",
+        "passwordMin": "Mínimo 8 caracteres.",
+        "nameMin": "Nombre demasiado corto.",
+        "invalidCredentials": "Email o contraseña incorrectos.",
+        "connectionError": "Error de conexión. Intenta de nuevo.",
+        "emailTaken": "Este correo ya está registrado.",
+        "registerError": "No se pudo crear la cuenta.",
+        "strengthWeak": "Débil",
+        "strengthMedium": "Media",
+        "strengthStrong": "Fuerte"
+      }
     },
     "faqPage": {
       "title1": "Resolvemos tus",
@@ -263,6 +278,21 @@ export const dictionaries = {
       "loginLink": "Sign in",
       "googleBtn": "Continue with Google",
       "orEmail": "Or with email"
+    ,
+      "errors": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Invalid email address.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Minimum 8 characters.",
+        "nameMin": "Name is too short.",
+        "invalidCredentials": "Incorrect email or password.",
+        "connectionError": "Connection error. Please try again.",
+        "emailTaken": "This email is already registered.",
+        "registerError": "Could not create the account.",
+        "strengthWeak": "Weak",
+        "strengthMedium": "Medium",
+        "strengthStrong": "Strong"
+      }
     },
     "faqPage": {
       "title1": "Solving your",
@@ -441,6 +471,21 @@ export const dictionaries = {
       "loginLink": "Entrar",
       "googleBtn": "Continuar com o Google",
       "orEmail": "Ou com e-mail"
+    ,
+      "errors": {
+        "emailRequired": "E-mail é obrigatório.",
+        "emailInvalid": "E-mail inválido.",
+        "passwordRequired": "Senha é obrigatória.",
+        "passwordMin": "Mínimo 8 caracteres.",
+        "nameMin": "Nome muito curto.",
+        "invalidCredentials": "Email ou senha incorretos.",
+        "connectionError": "Erro de conexão. Tente novamente.",
+        "emailTaken": "Este e-mail já está cadastrado.",
+        "registerError": "Não foi possível criar a conta.",
+        "strengthWeak": "Fraca",
+        "strengthMedium": "Média",
+        "strengthStrong": "Forte"
+      }
     },
     "faqPage": {
       "title1": "Tirando suas",
@@ -617,6 +662,21 @@ export const dictionaries = {
       "loginLink": "Se connecter",
       "googleBtn": "Continuer avec Google",
       "orEmail": "Ou avec un e-mail"
+    ,
+      "errors": {
+        "emailRequired": "L'e-mail est requis.",
+        "emailInvalid": "Adresse e-mail invalide.",
+        "passwordRequired": "Mot de passe requis.",
+        "passwordMin": "8 caractères minimum.",
+        "nameMin": "Nom trop court.",
+        "invalidCredentials": "Email ou mot de passe incorrect.",
+        "connectionError": "Erreur de connexion. Réessayez.",
+        "emailTaken": "Cet e-mail est déjà enregistré.",
+        "registerError": "Impossible de créer le compte.",
+        "strengthWeak": "Faible",
+        "strengthMedium": "Moyenne",
+        "strengthStrong": "Fort"
+      }
     },
     "faqPage": {
       "title1": "Vos",
@@ -793,6 +853,21 @@ export const dictionaries = {
       "loginLink": "Anmelden",
       "googleBtn": "Mit Google fortfahren",
       "orEmail": "Oder mit E-Mail"
+    ,
+      "errors": {
+        "emailRequired": "E-Mail ist erforderlich.",
+        "emailInvalid": "Ungültige E-Mail-Adresse.",
+        "passwordRequired": "Passwort ist erforderlich.",
+        "passwordMin": "Mindestens 8 Zeichen.",
+        "nameMin": "Name zu kurz.",
+        "invalidCredentials": "E-Mail oder Passwort falsch.",
+        "connectionError": "Verbindungsfehler. Versuchen Sie es erneut.",
+        "emailTaken": "Diese E-Mail ist bereits registriert.",
+        "registerError": "Konto konnte nicht erstellt werden.",
+        "strengthWeak": "Schwach",
+        "strengthMedium": "Mittel",
+        "strengthStrong": "Stark"
+      }
     },
     "faqPage": {
       "title1": "Ihre",

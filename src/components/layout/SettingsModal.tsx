@@ -20,11 +20,6 @@ import {
 import { motion, AnimatePresence } from "motion/react"
 import { toast } from "sonner"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { isClientMockAuthMode } from "@/lib/auth-config"
-import { clearMockSession } from "@/lib/mock-auth"
-import { ROUTES } from "@/lib/routes"
 import {
     Dialog,
     DialogContent,
@@ -33,7 +28,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/Dialog"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
-import { useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import {
     Tabs,
     TabsContent,
@@ -46,6 +41,7 @@ import { useTheme } from "@/components/providers/ThemeProvider"
 import { Select } from "@/components/ui/Select"
 import { Card } from "@/components/ui/Card"
 import { useState } from "react"
+import { useLogout } from "@/features/auth/hooks/useAuth"
 
 interface SettingsModalProps {
     children: React.ReactNode
@@ -61,52 +57,20 @@ interface SettingsModalProps {
 export default function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
     const [lang, setLang] = useState("en")
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
-    const [isLogoutPending, setIsLogoutPending] = useState(false)
-    const router = useRouter()
-    const isMockMode = isClientMockAuthMode()
-    const showLogoutPending = useLoadingDelay(isLogoutPending)
+    const { logout, isPending: isLogoutPending } = useLogout()
     const { themePreference, resolvedTheme } = useTheme()
     const systemThemeLabel = resolvedTheme === "dark" ? "Dark" : "Light"
 
     const handleLogout = async () => {
-        setIsLogoutPending(true)
-        await new Promise(r => setTimeout(r, 0))
-
-        try {
-            if (isMockMode) {
-                clearMockSession()
-                toast.success("Session closed")
-                setIsLogoutConfirmOpen(false)
-                onOpenChange?.(false)
-                router.replace(ROUTES.auth.login)
-                router.refresh()
-                return
-            }
-
-            const supabase = createClient()
-            const { error } = await supabase.auth.signOut()
-
-            if (error) {
-                toast.error("Could not close your session")
-                return
-            }
-
-            toast.success("Session closed")
-            setIsLogoutConfirmOpen(false)
-            onOpenChange?.(false)
-            router.replace(ROUTES.auth.login)
-            router.refresh()
-        } catch {
-            toast.error("Could not close your session")
-        } finally {
-            setIsLogoutPending(false)
-        }
+        setIsLogoutConfirmOpen(false)
+        onOpenChange?.(false)
+        await logout()
     }
 
     return (
         <>
             <Dialog open={open} onOpenChange={(nextOpen) => {
-                if (!showLogoutPending) {
+                if (!isLogoutPending) {
                     onOpenChange?.(nextOpen)
                 }
             }}>
@@ -157,9 +121,9 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                     </TabsTrigger>
 
                                     <div className="pt-8 mt-auto space-y-2">
-                                        <Button type="button" variant="dangerSoft" className="w-full justify-start" onClick={() => setIsLogoutConfirmOpen(true)} disabled={showLogoutPending}>
+                                        <Button type="button" variant="dangerSoft" className="w-full justify-start" onClick={() => setIsLogoutConfirmOpen(true)} disabled={isLogoutPending}>
                                             <LogOut className="h-4 w-4 shrink-0 stroke-[2.2]" />
-                                            <span>{showLogoutPending ? "Logging out..." : "Log out"}</span>
+                                            <span>{isLogoutPending ? "Logging out..." : "Log out"}</span>
                                         </Button>
                                         <div className="px-4 py-2 opacity-50">
                                             <p className="text-[10px] font-bold text-secondary-text uppercase tracking-widest">Version 1.0.4</p>
@@ -475,14 +439,16 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                 description="You will leave the private workspace and will need to sign in again to continue."
                 confirmLabel="Log out"
                 confirmPendingLabel="Logging out..."
-                isPending={showLogoutPending}
+                isPending={isLogoutPending}
                 onConfirm={handleLogout}
                 onCancel={() => {
-                    if (!showLogoutPending) {
+                    if (!isLogoutPending) {
                         setIsLogoutConfirmOpen(false)
                     }
                 }}
             />
+
+            <LoadingOverlay show={isLogoutPending} label="Logging out..." />
         </>
     )
 }

@@ -45,7 +45,7 @@ export function Sidebar() {
                             {isActive && (
                                 <motion.div
                                     layoutId="activeIndicator"
-                                    className="absolute inset-0 bg-[#171b2d] rounded-full shadow-premium-sm"
+                                    className="absolute inset-0 bg-[var(--nav-active-bg)] rounded-full shadow-premium-sm"
                                     transition={{
                                         type: "spring",
                                         stiffness: 450,

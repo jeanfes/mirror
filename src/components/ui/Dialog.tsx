@@ -19,11 +19,11 @@ type DialogLayer = "base" | "priority"
 
 const dialogLayerStyles: Record<DialogLayer, { overlay: string; content: string }> = {
     base: {
-        overlay: "z-40 bg-black/55 backdrop-blur-md",
+        overlay: "z-40 bg-[var(--dialog-overlay-base)] backdrop-blur-md",
         content: "z-50"
     },
     priority: {
-        overlay: "z-70 bg-slate-950/62 backdrop-blur-lg",
+        overlay: "z-70 bg-[var(--dialog-overlay-priority)] backdrop-blur-lg",
         content: "z-80"
     }
 }

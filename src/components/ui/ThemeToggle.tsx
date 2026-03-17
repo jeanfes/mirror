@@ -1,8 +1,15 @@
 "use client"
 
-import { LaptopMinimal, MoonStar, SunMedium } from "lucide-react"
+import { ChevronDown, LaptopMinimal, MoonStar, SunMedium } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/components/providers/ThemeProvider"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger
+} from "@/components/ui/DropdownMenu"
 import type { ThemePreference } from "@/lib/theme"
 
 const themeOptions: Array<{
@@ -65,6 +72,53 @@ interface ThemeToggleProps {
     className?: string
 }
 
+export function ThemeDropdown({ className }: ThemeToggleProps) {
+    const { themePreference, setThemePreference } = useTheme()
+    const selectedOption = themeOptions.find((option) => option.value === themePreference) ?? themeOptions[0]
+    const SelectedIcon = selectedOption.icon
+
+    const handleValueChange = (value: string) => {
+        if (value === "light" || value === "dark" || value === "system") {
+            setThemePreference(value)
+        }
+    }
+
+    return (
+        <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+                <button
+                    type="button"
+                    className={cn(
+                        "inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border-soft bg-surface-subtle px-3 text-secondary-text transition-all duration-150 hover:bg-surface-hover hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/35",
+                        className
+                    )}
+                    aria-label="Theme preference"
+                >
+                    <SelectedIcon className="h-4 w-4" />
+                    <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-42">
+                <DropdownMenuRadioGroup value={themePreference} onValueChange={handleValueChange}>
+                    {themeOptions.map((option) => {
+                        const Icon = option.icon
+
+                        return (
+                            <DropdownMenuRadioItem key={option.value} value={option.value}>
+                                <div className="flex items-center gap-2">
+                                    <Icon className="h-4 w-4" />
+                                    <span className="font-medium">{option.label}</span>
+                                </div>
+                            </DropdownMenuRadioItem>
+                        )
+                    })}
+                </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
+
 export function ThemeToggle({ className }: ThemeToggleProps) {
-    return <ThemeSegmentedControl compact className={className} />
+    return <ThemeDropdown className={className} />
 }

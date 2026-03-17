@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 <div className="mx-auto flex max-w-6xl items-center justify-between">
                     <div className="flex flex-1">
                         <Link
-                            href={ROUTES.public.home}
+                            href={ROUTES.public.index}
                             className="pointer-events-auto cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-soft bg-surface-overlay text-secondary-text shadow-sm backdrop-blur-md hover:bg-surface-hover hover:text-primary-dark hover:shadow-premium-sm transition-all"
                             aria-label="Volver a inicio"
                         >
@@ -19,9 +19,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 </div>
             </header>
             <div className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-4 py-8 md:px-6 relative z-10">
-                <div className="neo-panel w-full max-w-md rounded-3xl p-8 sm:p-10 shadow-premium-md relative z-20">
-                    {children}
-                </div>
+                {children}
             </div>
         </div>
     )
