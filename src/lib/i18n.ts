@@ -84,7 +84,10 @@ export const dictionaries = {
       "registerLink": "Reg\u00edstrate aqu\u00ed",
       "loginLink": "Inicia sesi\u00f3n",
       "googleBtn": "Continuar con Google",
-      "orEmail": "O con correo electr\u00f3nico"
+      "orEmail": "O con correo electr\u00f3nico",
+      "showPassword": "Mostrar contrase\u00f1a",
+      "hidePassword": "Ocultar contrase\u00f1a",
+      "registerSuccess": "Cuenta creada correctamente"
     ,
       "errors": {
         "emailRequired": "El correo es requerido.",
@@ -277,7 +280,10 @@ export const dictionaries = {
       "registerLink": "Sign up here",
       "loginLink": "Sign in",
       "googleBtn": "Continue with Google",
-      "orEmail": "Or with email"
+      "orEmail": "Or with email",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "registerSuccess": "Account created successfully"
     ,
       "errors": {
         "emailRequired": "Email is required.",

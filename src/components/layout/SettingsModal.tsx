@@ -41,7 +41,7 @@ import { useTheme } from "@/components/providers/ThemeProvider"
 import { Select } from "@/components/ui/Select"
 import { Card } from "@/components/ui/Card"
 import { useState } from "react"
-import { useLogout } from "@/features/auth/hooks/useAuth"
+import { useLogout } from "@/features/auth/hooks/useLogout"
 
 interface SettingsModalProps {
     children: React.ReactNode
