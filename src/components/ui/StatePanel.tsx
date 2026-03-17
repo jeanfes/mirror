@@ -36,7 +36,7 @@ export function StatePanel({
 
     return (
         <Card
-            className={cn("rounded-[28px] p-6 text-center", toneClasses[tone], className)}
+            className={cn("rounded-[28px] p-24 text-center", toneClasses[tone], className)}
             role={tone === "error" ? "alert" : "status"}
             aria-live="polite"
         >

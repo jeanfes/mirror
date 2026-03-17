@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <Sidebar user={{ name: user.user_metadata?.name ?? "", email: user.email ?? "", avatar: user.user_metadata?.avatar_url ?? user.user_metadata?.picture ?? "" }} />
             <main className="neo-panel flex h-full flex-col overflow-hidden rounded-none p-3 sm:p-4 md:rounded-l-[45px] md:p-5 lg:p-6">
                 <Navbar />
-                <div className="custom-scrollbar pt-4 min-h-0 flex-1 overflow-y-auto pb-8">{children}</div>
+                <div className="custom-scrollbar pt-4 min-h-0 flex-1 overflow-y-auto pb-4">{children}</div>
             </main>
         </div>
     )

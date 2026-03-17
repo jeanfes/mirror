@@ -2,6 +2,7 @@ import { Space_Grotesk } from "next/font/google"
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { AppProviders } from "@/components/providers/AppProviders"
+import { getServerSession } from "@/lib/auth"
 import {
     buildThemeInitScript,
     DEFAULT_RESOLVED_THEME,
@@ -21,27 +22,31 @@ const spaceGrotesk = Space_Grotesk({
     subsets: ["latin"]
 })
 
-export const metadata: Metadata = {
-    metadataBase: new URL(siteUrl),
-    title: {
-        default: "Mirror | Landing",
-        template: "%s | Mirror"
-    },
-    description: "Digital voice workspace for Mirror",
-    icons: {
-        icon: "/icon.png"
-    },
-    openGraph: {
-        title: "Mirror",
+export async function generateMetadata(): Promise<Metadata> {
+    const user = await getServerSession()
+
+    return {
+        metadataBase: new URL(siteUrl),
+        title: {
+            default: user ? "Mirror | Dashboard" : "Mirror | Landing",
+            template: "%s | Mirror"
+        },
         description: "Digital voice workspace for Mirror",
-        url: "/",
-        siteName: "Mirror",
-        type: "website"
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Mirror",
-        description: "Digital voice workspace for Mirror"
+        icons: {
+            icon: "/icon.png"
+        },
+        openGraph: {
+            title: "Mirror",
+            description: "Digital voice workspace for Mirror",
+            url: "/",
+            siteName: "Mirror",
+            type: "website"
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: "Mirror",
+            description: "Digital voice workspace for Mirror"
+        }
     }
 }
 

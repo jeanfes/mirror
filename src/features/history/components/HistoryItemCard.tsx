@@ -1,7 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
-import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, WandSparkles } from "lucide-react"
+import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/Tooltip"

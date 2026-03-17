@@ -492,7 +492,11 @@ export const dictionaries = {
       "registerLink": "Registre-se aqui",
       "loginLink": "Entrar",
       "googleBtn": "Continuar com o Google",
-      "orEmail": "Ou com e-mail"
+      "orEmail": "Ou com e-mail",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
+      "passwordStrength": "Segurança",
+      "registerSuccess": "Enviamos um e-mail para confirmar sua conta"
     ,
       "errors": {
         "emailRequired": "E-mail é obrigatório.",
@@ -690,7 +694,11 @@ export const dictionaries = {
       "registerLink": "S'inscrire",
       "loginLink": "Se connecter",
       "googleBtn": "Continuer avec Google",
-      "orEmail": "Ou avec un e-mail"
+      "orEmail": "Ou avec un e-mail",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "passwordStrength": "Sécurité",
+      "registerSuccess": "Nous vous avons envoyé un e-mail pour confirmer votre compte"
     ,
       "errors": {
         "emailRequired": "L'e-mail est requis.",
@@ -888,7 +896,11 @@ export const dictionaries = {
       "registerLink": "Hier registrieren",
       "loginLink": "Anmelden",
       "googleBtn": "Mit Google fortfahren",
-      "orEmail": "Oder mit E-Mail"
+      "orEmail": "Oder mit E-Mail",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort ausblenden",
+      "passwordStrength": "Sicherheit",
+      "registerSuccess": "Wir haben Ihnen eine E-Mail gesendet, um Ihr Konto zu bestätigen"
     ,
       "errors": {
         "emailRequired": "E-Mail ist erforderlich.",
