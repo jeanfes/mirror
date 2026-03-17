@@ -15,6 +15,22 @@ export interface PlanDefinition {
   recommended?: boolean
 }
 
+export interface Invoice {
+  id: string
+  date: string
+  amount: string
+  status: "Paid" | "Pending"
+  downloadUrl: string
+}
+
+export interface PaymentMethod {
+  id: string
+  type: "visa" | "mastercard" | "amex"
+  last4: string
+  expiry: string
+  isDefault: boolean
+}
+
 export const planDefinitions: PlanDefinition[] = [
   {
     name: "Free",
@@ -78,4 +94,35 @@ export async function setPlan(planName: PlanName): Promise<AccountStatus> {
 
   writeAccount(next)
   return next
+}
+
+export async function getInvoices(): Promise<Invoice[]> {
+  return [
+    {
+      id: "INV-001",
+      date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      amount: "$19.00",
+      status: "Paid",
+      downloadUrl: "#"
+    },
+    {
+      id: "INV-002",
+      date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+      amount: "$19.00",
+      status: "Paid",
+      downloadUrl: "#"
+    }
+  ]
+}
+
+export async function getPaymentMethods(): Promise<PaymentMethod[]> {
+  return [
+    {
+      id: "pm-001",
+      type: "visa",
+      last4: "4242",
+      expiry: "12/26",
+      isDefault: true
+    }
+  ]
 }

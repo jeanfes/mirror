@@ -8,13 +8,17 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { useAccount } from "@/features/billing/hooks/useAccount"
+import { useBilling } from "@/features/billing/hooks/useBilling"
 import { planDefinitions } from "@/features/billing/services/billing.local.service"
+import { BillingHistory } from "@/features/billing/components/BillingHistory"
+import { PaymentMethods } from "@/features/billing/components/PaymentMethods"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function AccountPage() {
     const { data: account, isLoading: isAccountLoading, isError } = useAccount()
+    const { invoices, paymentMethods, isLoadingInvoices, isLoadingPaymentMethods } = useBilling()
     const { data: history } = useHistory()
     const { data: profiles } = useProfiles()
     const { t } = useLanguageStore()
@@ -115,6 +119,7 @@ export default function AccountPage() {
                 <TabsList>
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="usage">Usage</TabsTrigger>
+                    <TabsTrigger value="billing">{t.billing.title}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview">
@@ -209,6 +214,23 @@ export default function AccountPage() {
                             <p className="mt-3 section-heading">{latestHistoryItem ? latestHistoryItem.postAuthor : "No archived comments yet"}</p>
                             <p className="mt-2 body-muted">{latestHistoryItem ? `Latest generated comment was added ${formatDistanceToNow(latestHistoryItem.timestamp, { addSuffix: true })}.` : "Generate a few comments and this section will start showing momentum."}</p>
                         </Card>
+                    </div>
+                </TabsContent>
+                <TabsContent value="billing">
+                    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.7fr]">
+                        <div className="space-y-6">
+                            <div className="space-y-3 px-1">
+                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.billing.history}</h3>
+                                <BillingHistory invoices={invoices} />
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="space-y-3 px-1">
+                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.billing.paymentMethods}</h3>
+                                <PaymentMethods methods={paymentMethods} />
+                            </div>
+                        </div>
                     </div>
                 </TabsContent>
             </Tabs>

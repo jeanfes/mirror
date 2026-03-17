@@ -134,6 +134,24 @@ export const dictionaries = {
         "generic_error": "Ocurrió un error inesperado. Inténtalo de nuevo."
       }
     },
+    "billing": {
+      "title": "Facturación",
+      "history": "Historial de facturación",
+      "paymentMethods": "Métodos de pago",
+      "planSummary": "Resumen del plan",
+      "invoiceDate": "Fecha",
+      "invoiceAmount": "Monto",
+      "invoiceStatus": "Estado",
+      "invoiceDownload": "Descargar",
+      "statusPaid": "Pagado",
+      "statusPending": "Pendiente",
+      "noInvoices": "No hay facturas disponibles.",
+      "cardEndingIn": "Tarjeta terminada en",
+      "expires": "Expira",
+      "updateCard": "Actualizar",
+      "managePaymentMethod": "Gestionar método de pago",
+      "manageSubscription": "Gestionar suscripción"
+    },
     "faqPage": {
       "title1": "Resolvemos tus",
       "titleSpan": "Dudas",
@@ -359,6 +377,24 @@ export const dictionaries = {
         "passwordsDoNotMatch": "Passwords do not match.",
         "generic_error": "An unexpected error occurred. Please try again."
       }
+    },
+    "billing": {
+      "title": "Billing",
+      "history": "Billing history",
+      "paymentMethods": "Payment methods",
+      "planSummary": "Plan summary",
+      "invoiceDate": "Date",
+      "invoiceAmount": "Amount",
+      "invoiceStatus": "Status",
+      "invoiceDownload": "Download",
+      "statusPaid": "Paid",
+      "statusPending": "Pending",
+      "noInvoices": "No invoices available.",
+      "cardEndingIn": "Card ending in",
+      "expires": "Expires",
+      "updateCard": "Update",
+      "managePaymentMethod": "Manage payment method",
+      "manageSubscription": "Manage subscription"
     },
     "faqPage": {
       "title1": "Solving your",
@@ -586,6 +622,24 @@ export const dictionaries = {
         "generic_error": "Ocorreu un erro inesperado. Tente novamente."
       }
     },
+    "billing": {
+      "title": "Faturamento",
+      "history": "Histórico de faturamento",
+      "paymentMethods": "Métodos de pagamento",
+      "planSummary": "Resumo do plano",
+      "invoiceDate": "Data",
+      "invoiceAmount": "Valor",
+      "invoiceStatus": "Status",
+      "invoiceDownload": "Baixar",
+      "statusPaid": "Pago",
+      "statusPending": "Pendente",
+      "noInvoices": "Nenhuma fatura disponível.",
+      "cardEndingIn": "Cartão terminado em",
+      "expires": "Expira",
+      "updateCard": "Atualizar",
+      "managePaymentMethod": "Gerenciar método de pagamento",
+      "manageSubscription": "Gerenciar assinatura"
+    },
     "faqPage": {
       "title1": "Tirando suas",
       "titleSpan": "D\u00favidas",
@@ -810,6 +864,24 @@ export const dictionaries = {
         "generic_error": "Une erreur inattendue s'est produite. Veuillez réessayer."
       }
     },
+    "billing": {
+      "title": "Facturation",
+      "history": "Historique de facturation",
+      "paymentMethods": "Méthodes de paiement",
+      "planSummary": "Résumé du plan",
+      "invoiceDate": "Date",
+      "invoiceAmount": "Montant",
+      "invoiceStatus": "Statut",
+      "invoiceDownload": "Télécharger",
+      "statusPaid": "Payé",
+      "statusPending": "En attente",
+      "noInvoices": "Aucune facture disponible.",
+      "cardEndingIn": "Carte se terminant par",
+      "expires": "Expire",
+      "updateCard": "Mettre à jour",
+      "managePaymentMethod": "Gérer le mode de paiement",
+      "manageSubscription": "Gérer l'abonnement"
+    },
     "faqPage": {
       "title1": "Vos",
       "titleSpan": "Questions",
@@ -1033,6 +1105,24 @@ export const dictionaries = {
         "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
         "generic_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
       }
+    },
+    "billing": {
+      "title": "Abrechnung",
+      "history": "Zahlungsverlauf",
+      "paymentMethods": "Zahlungsmethoden",
+      "planSummary": "Plan-Übersicht",
+      "invoiceDate": "Datum",
+      "invoiceAmount": "Betrag",
+      "invoiceStatus": "Status",
+      "invoiceDownload": "Herunterladen",
+      "statusPaid": "Bezahlt",
+      "statusPending": "Ausstehend",
+      "noInvoices": "Keine Rechnungen verfügbar.",
+      "cardEndingIn": "Karte mit Endung",
+      "expires": "Läuft ab",
+      "updateCard": "Aktualisieren",
+      "managePaymentMethod": "Zahlungsmethode verwalten",
+      "manageSubscription": "Abonnement verwalten"
     },
     "faqPage": {
       "title1": "Ihre",
