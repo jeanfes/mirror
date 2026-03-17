@@ -9,13 +9,12 @@ import { ROUTES } from "@/lib/routes"
 import { Button } from "@/components/ui/Button"
 import { LoadingOverlay } from "@/components/ui/Loading"
 import { useLanguageStore } from "@/store/useLanguageStore"
-import { motion } from "motion/react"
-import { cn } from "@/lib/utils"
 import { createRegisterSchema, getPasswordStrength, type RegisterValues } from "../schemas"
 import { useRegister } from "../hooks/useRegister"
 import { useLogin } from "../hooks/useLogin"
 import { Input } from "@/components/ui/Input"
 import { IconGoogle } from "@/components/icons/IconGoogle"
+import { cn } from "@/lib/utils"
 
 const STRENGTH_STYLES: Record<1 | 2 | 3, { badge: string; fill: string; text: string }> = {
     1: {
