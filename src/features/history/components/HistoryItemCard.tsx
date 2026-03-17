@@ -89,11 +89,11 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                         <p className="mt-3 text-[15px] leading-7 text-secondary-text">{item.postSnippet}</p>
                     </div>
                     <div className="rounded-3xl border border-brand-dark bg-brand-dark p-4 text-white">
-                        <div className="flex items-center gap-2 text-white/70">
+                        <div className="flex items-center gap-2 text-white/80">
                             <MessageSquareQuote className="h-4 w-4" />
                             <p className="text-[11px] font-semibold uppercase tracking-widest">Generated comment</p>
                         </div>
-                        <p className="mt-3 text-[15px] leading-7 text-white/90">{item.generatedComment}</p>
+                        <p className="mt-3 text-[15px] leading-7 text-white/95">{item.generatedComment}</p>
                     </div>
                 </div>
 

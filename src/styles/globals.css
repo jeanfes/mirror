@@ -96,16 +96,16 @@ html[data-theme="dark"] {
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
+  --brand-dark: #121626;
   --focus-ring: rgba(139, 92, 246, 0.28);
-  --brand-dark: #ffffff;
-  --danger-soft-bg: rgba(239, 68, 68, 0.15);
-  --danger-soft-border: rgba(239, 68, 68, 0.3);
-  --success-soft-bg: rgba(16, 185, 129, 0.15);
-  --success-soft-border: rgba(16, 185, 129, 0.3);
-  --warning-soft-bg: rgba(245, 158, 11, 0.15);
-  --warning-soft-border: rgba(245, 158, 11, 0.3);
-  --accent-purple-soft-bg: rgba(167, 139, 250, 0.15);
-  --accent-purple-soft-border: rgba(167, 139, 250, 0.3);
+  --danger-soft-bg: rgba(239, 68, 68, 0.1);
+  --danger-soft-border: rgba(239, 68, 68, 0.2);
+  --success-soft-bg: rgba(16, 185, 129, 0.08);
+  --success-soft-border: rgba(16, 185, 129, 0.15);
+  --warning-soft-bg: rgba(245, 158, 11, 0.08);
+  --warning-soft-border: rgba(245, 158, 11, 0.15);
+  --accent-purple-soft-bg: rgba(167, 139, 250, 0.08);
+  --accent-purple-soft-border: rgba(167, 139, 250, 0.15);
   --surface-base: rgba(12, 12, 12, 0.65);
   --surface-card: rgba(18, 18, 18, 0.55);
   --surface-elevated: rgba(24, 24, 24, 0.65);
@@ -449,6 +449,18 @@ h6 {
   box-shadow: var(--dark-panel-shadow);
 }
 
+.dashboard-dark-panel-split {
+  border-radius: 28px 28px 0 0;
+  border-bottom-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .dashboard-dark-panel-split {
+    border-radius: 28px 0 0 28px;
+    border-bottom-width: 1px;
+  }
+}
+
 .dashboard-dark-stat {
   border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -737,7 +749,7 @@ h6 {
     270deg,
     #75cef3,
     #a8c8f8,
-    #3b82f6,
+    #8b5cf6,
     #75cef3
   );
   background-size: 400% 400%;
@@ -920,38 +932,6 @@ html[data-theme="dark"] .text-slate-600 {
 html[data-theme="dark"] .text-slate-500,
 html[data-theme="dark"] .text-slate-400 {
   color: var(--muted-text) !important;
-}
-
-html[data-theme="dark"] .bg-white {
-  background-color: var(--surface-elevated) !important;
-}
-
-html[data-theme="dark"] .bg-white\/95,
-html[data-theme="dark"] .bg-white\/90,
-html[data-theme="dark"] .bg-white\/85 {
-  background-color: var(--surface-elevated) !important;
-}
-
-html[data-theme="dark"] .bg-white\/80,
-html[data-theme="dark"] .bg-white\/75 {
-  background-color: var(--surface-card) !important;
-}
-
-html[data-theme="dark"] .bg-white\/72 {
-  background-color: var(--surface-card) !important;
-}
-
-html[data-theme="dark"] .bg-white\/70 {
-  background-color: var(--surface-base) !important;
-}
-
-html[data-theme="dark"] .bg-white\/60,
-html[data-theme="dark"] .bg-white\/50 {
-  background-color: var(--surface-base) !important;
-}
-
-html[data-theme="dark"] .bg-white\/88 {
-  background-color: var(--surface-overlay) !important;
 }
 
 html[data-theme="dark"] .bg-slate-50,

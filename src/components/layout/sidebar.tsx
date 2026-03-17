@@ -67,7 +67,7 @@ export function Sidebar({ user }: SidebarProps) {
             <div className="mt-auto">
                 <SettingsModal user={user}>
                     <button
-                        className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-surface-elevated border border-border-soft text-[14px] font-bold text-primary-text transition-transform hover:scale-105 active:scale-95 focus:outline-none overflow-hidden"
+                        className="cursor-pointer group relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-elevated border border-border-soft text-[14px] font-bold text-primary-text transition-transform hover:scale-105 active:scale-95 focus:outline-none overflow-hidden"
                         aria-label="User menu"
                     >
                         {user.avatar ? (

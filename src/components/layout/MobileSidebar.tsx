@@ -126,7 +126,7 @@ export function MobileSidebar() {
                             <button
                                 type="button"
                                 onClick={handleOpenSettingsFromSidebar}
-                                className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-brand-dark text-[14px] font-bold text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+                                className="cursor-pointer group relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-elevated border border-border-soft text-[14px] font-bold text-primary-text transition-transform hover:scale-105 active:scale-95 focus:outline-none"
                                 aria-label="Open user settings"
                             >
                                 U

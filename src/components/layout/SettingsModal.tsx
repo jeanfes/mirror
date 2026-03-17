@@ -1,25 +1,32 @@
-"use client"
-
-import {
-    Bell,
-    Download,
-    Globe,
-    LogOut,
-    Monitor,
-    Palette,
-    Shield,
-    Trash2,
-    User,
-    Laptop,
-    Lock,
-    Smartphone,
-    Settings,
-    ExternalLink,
-    BadgeCheck
-} from "lucide-react"
+import { useState } from "react"
+import Image from "next/image"
 import { motion, AnimatePresence } from "motion/react"
 import { toast } from "sonner"
-import Image from "next/image"
+import {
+    BadgeCheck,
+    Bell,
+    Download,
+    ExternalLink,
+    Laptop,
+    Lock,
+    LogOut,
+    Shield,
+    Smartphone,
+    Trash2,
+    Settings,
+    Palette,
+    User,
+    Monitor
+} from "lucide-react"
+
+import { Card } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Select } from "@/components/ui/Select"
+import { LoadingOverlay } from "@/components/ui/Loading"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs"
+import { Toggle } from "@/components/ui/Toggle"
+import { Input } from "@/components/ui/Input"
 import {
     Dialog,
     DialogContent,
@@ -27,21 +34,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/Dialog"
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
-import { LoadingOverlay } from "@/components/ui/Loading"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/Tabs"
-import { Button } from "@/components/ui/Button"
 import { ThemeSegmentedControl } from "@/components/ui/ThemeToggle"
-import { useTheme } from "@/components/providers/ThemeProvider"
-import { Select } from "@/components/ui/Select"
-import { Card } from "@/components/ui/Card"
-import { useState } from "react"
 import { useLogout } from "@/features/auth/hooks/useLogout"
+import { useTheme } from "../providers/ThemeProvider"
 
 interface SettingsModalProps {
     children: React.ReactNode
@@ -166,14 +161,16 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
 
                                                 <div className="grid gap-5">
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                        <div className="space-y-2">
-                                                            <label className="settings-field-label">Full Name</label>
-                                                            <input disabled className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.name} />
-                                                        </div>
-                                                        <div className="space-y-2">
-                                                            <label className="settings-field-label">Email Address</label>
-                                                            <input disabled className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.email} />
-                                                        </div>
+                                                        <Input
+                                                            disabled
+                                                            label="Full Name"
+                                                            defaultValue={user.name}
+                                                        />
+                                                        <Input
+                                                            disabled
+                                                            label="Email Address"
+                                                            defaultValue={user.email}
+                                                        />
                                                     </div>
 
                                                     <div className="pt-2">
@@ -328,33 +325,17 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             </div>
 
                                             <Card className="p-0 overflow-hidden divide-y divide-border-soft">
-                                                <div className="flex items-center justify-between p-5">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="h-10 w-10 rounded-xl bg-accent-orange/12 flex items-center justify-center text-accent-orange">
-                                                            <Globe className="h-5 w-5" />
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[14px] font-bold text-primary-text">Email Updates</p>
-                                                            <p className="text-xs text-secondary-text font-medium">Weekly digest and system alerts</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="h-6 w-11 rounded-full bg-brand-dark p-1 relative cursor-pointer shadow-inner">
-                                                        <div className="h-4 w-4 rounded-full bg-surface-elevated absolute right-1 shadow-premium-sm" />
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center justify-between p-5">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="h-10 w-10 rounded-xl bg-(--accent-purple-soft-bg) flex items-center justify-center text-accent-purple">
-                                                            <Bell className="h-5 w-5" />
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[14px] font-bold text-primary-text">Desktop Alerts</p>
-                                                            <p className="text-xs text-secondary-text font-medium">Real-time profile match notifications</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="h-6 w-11 rounded-full bg-surface-subtle p-1 relative cursor-pointer border border-border-soft">
-                                                        <div className="h-4 w-4 rounded-full bg-surface-elevated absolute left-1 shadow-premium-sm" />
-                                                    </div>
+                                                <div className="space-y-3">
+                                                    <Toggle
+                                                        label="Email Updates"
+                                                        checked={true}
+                                                        onChange={() => { }}
+                                                    />
+                                                    <Toggle
+                                                        label="Desktop Alerts"
+                                                        checked={false}
+                                                        onChange={() => { }}
+                                                    />
                                                 </div>
                                             </Card>
                                         </motion.div>

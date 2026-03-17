@@ -3,7 +3,9 @@
 import { Mail, Send, MessageSquare } from "lucide-react";
 import { motion } from "motion/react";
 import { useLanguageStore } from "@/store/useLanguageStore";
-
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
 
 export default function ContactPage() {
@@ -38,53 +40,42 @@ export default function ContactPage() {
                 <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid gap-6 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.nameLabel}</label>
-                                <motion.input
-                                    whileFocus={{ scale: 1.01 }}
-                                    type="text"
-                                    required
-                                    placeholder={t.contactPage.namePlaceholder}
-                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.emailLabel}</label>
-                                <motion.input
-                                    whileFocus={{ scale: 1.01 }}
-                                    type="email"
-                                    required
-                                    placeholder={t.contactPage.emailPlaceholder}
-                                    className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.subjectLabel}</label>
-                            <motion.input
-                                whileFocus={{ scale: 1.01 }}
-                                type="text"
+                            <Input
+                                label={t.contactPage.nameLabel}
                                 required
-                                placeholder={t.contactPage.subjectPlaceholder}
-                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow"
+                                placeholder={t.contactPage.namePlaceholder}
+                                className="h-12"
+                            />
+                            <Input
+                                label={t.contactPage.emailLabel}
+                                type="email"
+                                required
+                                placeholder={t.contactPage.emailPlaceholder}
+                                className="h-12"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-[14px] font-bold text-primary-dark">{t.contactPage.messageLabel}</label>
-                            <motion.textarea
-                                whileFocus={{ scale: 1.01 }}
-                                rows={5}
-                                required
-                                placeholder={t.contactPage.messagePlaceholder}
-                                className="neo-input w-full rounded-xl px-4 py-3 outline-none transition-shadow resize-none"
-                            />
-                        </div>
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-4">
-                            <button type="submit" className="neo-btn-primary w-full h-14 rounded-xl flex items-center justify-center gap-2 text-[1.05rem] font-bold shadow-premium-sm transition-transform">
+                        <Input
+                            label={t.contactPage.subjectLabel}
+                            required
+                            placeholder={t.contactPage.subjectPlaceholder}
+                            className="h-12"
+                        />
+                        <Textarea
+                            label={t.contactPage.messageLabel}
+                            rows={5}
+                            required
+                            placeholder={t.contactPage.messagePlaceholder}
+                        />
+                        <div className="pt-4">
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                className="w-full h-14 rounded-xl text-[1.05rem] shadow-premium-sm"
+                            >
                                 <Send className="h-5 w-5" />
                                 {t.contactPage.sendBtn}
-                            </button>
-                        </motion.div>
+                            </Button>
+                        </div>
                     </form>
                 </motion.div>
 

@@ -4,11 +4,13 @@ import { useEffect } from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Lightbulb, WandSparkles } from "lucide-react"
+import { Lightbulb } from "lucide-react"
 import type { Persona } from "@/types/dashboard"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
 import { Button } from "@/components/ui/Button"
 import { Toggle } from "@/components/ui/Toggle"
+import { Input } from "@/components/ui/Input"
+import { Textarea } from "@/components/ui/Textarea"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 
 const profileSchema = z.object({
@@ -87,12 +89,8 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
             }}>
                 <DialogDescription className="sr-only">Form to create or edit a voice profile</DialogDescription>
                 <div className="flex flex-col lg:grid lg:grid-cols-[0.92fr_1.08fr] overflow-hidden flex-1">
-                    <div className="shrink-0 overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 md:p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
-                            <WandSparkles className="h-3.5 w-3.5" />
-                            Voice editor
-                        </div>
-                        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">
+                    <div className="dashboard-dark-panel dashboard-dark-panel-split shrink-0 overflow-hidden md:p-6">
+                        <h2 className="text-3xl font-black tracking-[-0.04em]">
                             {profile ? "Refine this voice" : "Create a new voice"}
                         </h2>
                         <p className="mt-4 text-[14px] leading-7 text-white/85">
@@ -126,40 +124,58 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                             <p className="text-[13px] leading-6 text-secondary-text">Define voice, tone and three sample comments for consistent generation.</p>
                         </DialogHeader>
 
-                        <form className="space-y-4" onSubmit={submit}>
-                            <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Name</label>
-                                <input {...register("name")} className="feature-input" placeholder="Example: Insight Architect" />
-                                {errors.name ? <p className="text-[12px] text-danger">{errors.name.message}</p> : null}
-                            </div>
+                        <form onSubmit={submit}>
+                            <div className="grid gap-5">
+                                <Input
+                                    label="Name"
+                                    placeholder="Example: Insight Architect"
+                                    error={errors.name?.message}
+                                    {...register("name")}
+                                />
 
-                            <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Description</label>
-                                <textarea {...register("description")} rows={2} className="feature-textarea" placeholder="What kind of perspective does this profile bring?" />
-                                {errors.description ? <p className="text-[12px] text-danger">{errors.description.message}</p> : null}
-                            </div>
+                                <Textarea
+                                    label="Description"
+                                    placeholder="What kind of perspective does this profile bring?"
+                                    rows={2}
+                                    error={errors.description?.message}
+                                    {...register("description")}
+                                />
 
-                            <div className="space-y-1">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Tone</label>
-                                <input {...register("tone")} className="feature-input" placeholder="Confident, practical, concise" />
-                                {errors.tone ? <p className="text-[12px] text-danger">{errors.tone.message}</p> : null}
-                            </div>
+                                <Input
+                                    label="Tone"
+                                    placeholder="Confident, practical, concise"
+                                    error={errors.tone?.message}
+                                    {...register("tone")}
+                                />
 
-                            <div className="feature-soft-card">
-                                <label className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Example comments</label>
-                                <p className="mt-1 text-[13px] text-secondary-text">Use three short examples that feel ready to post, not abstract instructions.</p>
+                                <div className="space-y-3">
+                                    <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text">Example comments</p>
+                                    <p className="text-[13px] text-secondary-text">Use three short examples that feel ready to post, not abstract instructions.</p>
 
-                                <div className="mt-3 grid gap-3">
-                                    <textarea {...register("example1")} rows={2} className="feature-textarea" placeholder="Example #1" />
-                                    {errors.example1 ? <p className="-mt-1 text-[12px] text-danger">{errors.example1.message}</p> : null}
-                                    <textarea {...register("example2")} rows={2} className="feature-textarea" placeholder="Example #2" />
-                                    {errors.example2 ? <p className="-mt-1 text-[12px] text-danger">{errors.example2.message}</p> : null}
-                                    <textarea {...register("example3")} rows={2} className="feature-textarea" placeholder="Example #3" />
-                                    {errors.example3 ? <p className="-mt-1 text-[12px] text-danger">{errors.example3.message}</p> : null}
+                                    <div className="mt-3 grid gap-3">
+                                        <Textarea
+                                            placeholder="Example #1"
+                                            rows={2}
+                                            error={errors.example1?.message}
+                                            {...register("example1")}
+                                        />
+                                        <Textarea
+                                            placeholder="Example #2"
+                                            rows={2}
+                                            error={errors.example2?.message}
+                                            {...register("example2")}
+                                        />
+                                        <Textarea
+                                            placeholder="Example #3"
+                                            rows={2}
+                                            error={errors.example3?.message}
+                                            {...register("example3")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid gap-2 md:grid-cols-2">
+                            <div className="grid gap-2 md:grid-cols-2 mt-3">
                                 <Controller
                                     name="allowEmojis"
                                     control={control}

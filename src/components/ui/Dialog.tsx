@@ -42,7 +42,7 @@ export function DialogContent({
             <DialogPrimitive.Overlay className={cn("fixed inset-0 animate-in fade-in duration-300", layerStyles.overlay)} />
             <DialogPrimitive.Content
                 className={cn(
-                    "neo-panel fixed left-1/2 top-1/2 w-[min(94vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
+                    "neo-panel fixed left-1/2 top-1/2 w-[min(90vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
                     layerStyles.content,
                     className
                 )}

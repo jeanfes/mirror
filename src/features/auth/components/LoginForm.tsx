@@ -12,6 +12,7 @@ import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { createLoginSchema, type LoginValues } from "../schemas"
 import { useLogin } from "../hooks/useLogin"
+import { Input } from "@/components/ui/Input"
 import { IconGoogle } from "@/components/icons/IconGoogle"
 
 export function LoginForm() {
@@ -43,21 +44,14 @@ export function LoginForm() {
         }
     })
 
-    const inputClass = (hasError: boolean, className?: string) =>
-        cn(
-            "h-11 w-full rounded-xl border bg-surface-elevated px-4 text-[14px] text-primary-text outline-none transition-all placeholder:text-muted-text focus:ring-4 disabled:opacity-60 disabled:cursor-not-allowed",
-            hasError
-                ? "border-danger focus:border-danger focus:ring-danger/10"
-                : "border-border-soft focus:border-accent-purple focus:ring-accent-purple/10",
-            className
-        )
+
 
     return (
         <>
             <form className="space-y-4" onSubmit={onSubmit} noValidate aria-busy={isAnyLocked}>
                 <Button
-                    variant="primary"
-                    className="neo-btn-muted flex w-full h-11 items-center justify-center gap-2.5 text-[14px] font-semibold transition-all focus:ring-4 focus:ring-accent-purple/10 disabled:cursor-not-allowed disabled:opacity-60"
+                    variant="secondary"
+                    className="w-full h-11 border-border-soft"
                     type="button"
                     disabled={isAnyLocked}
                     loading={isPendingGoogle}
@@ -73,63 +67,46 @@ export function LoginForm() {
                     <div className="grow border-t border-border-soft" />
                 </div>
 
-                <div>
-                    <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">{t.auth.emailLabel}</label>
-                    <motion.input
-                        whileFocus={{ scale: 1.01 }}
-                        {...register("email")}
-                        type="email"
-                        autoComplete="email"
-                        disabled={isAnyLocked}
-                        className={inputClass(!!errors.email)}
-                        placeholder={t.auth.emailPlaceholder}
-                    />
-                    {errors.email && (
-                        <p className="mt-1.5 text-[12px] font-medium text-danger">{errors.email.message}</p>
-                    )}
-                </div>
+                <Input
+                    {...register("email")}
+                    label={t.auth.emailLabel}
+                    type="email"
+                    autoComplete="email"
+                    disabled={isAnyLocked}
+                    error={errors.email?.message}
+                    placeholder={t.auth.emailPlaceholder}
+                />
 
-                <div>
-                    <label className="mb-1.5 block text-[13px] font-semibold text-primary-text">{t.auth.passwordLabel}</label>
-                    <div className="relative">
-                        <motion.input
-                            whileFocus={{ scale: 1.01 }}
-                            {...register("password")}
-                            type={showPassword ? "text" : "password"}
-                            autoComplete="current-password"
-                            disabled={isAnyLocked}
-                            className={inputClass(!!errors.password || !!errors.root, "pr-12")}
-                            placeholder={t.auth.passwordPlaceholder}
-                        />
+                <Input
+                    {...register("password")}
+                    label={t.auth.passwordLabel}
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    disabled={isAnyLocked}
+                    error={errors.password?.message || errors.root?.message}
+                    placeholder={t.auth.passwordPlaceholder}
+                    suffix={
                         <button
                             type="button"
-                            className="absolute inset-y-0 right-3 inline-flex items-center justify-center text-muted-text transition-colors hover:text-primary-text focus:outline-none focus-visible:text-primary-text disabled:cursor-not-allowed disabled:opacity-50"
-                            aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
-                            onClick={() => setShowPassword((current) => !current)}
+                            className="flex items-center justify-center p-1 text-secondary-text hover:text-primary-text transition-colors"
+                            onClick={() => setShowPassword((prev) => !prev)}
                             disabled={isAnyLocked}
                         >
-                            {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
-                    </div>
-                    {errors.password && (
-                        <p className="mt-1.5 text-[12px] font-medium text-danger">{errors.password.message}</p>
-                    )}
-                    {errors.root && (
-                        <p className="mt-1.5 text-[12px] font-medium text-danger">{errors.root.message}</p>
-                    )}
-                </div>
+                    }
+                />
 
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button
-                        className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2"
-                        type="submit"
-                        disabled={isAnyLocked}
-                        loading={isPending || isNavigating}
-                        loadingLabel={t.app.signingIn}
-                    >
-                        {t.auth.loginBtn}
-                    </Button>
-                </motion.div>
+                <Button
+                    variant="primary"
+                    className="w-full h-11 text-[15px] mt-2 shadow-premium-sm"
+                    type="submit"
+                    disabled={isAnyLocked}
+                    loading={isPending || isNavigating}
+                    loadingLabel={t.app.signingIn}
+                >
+                    {t.auth.loginBtn}
+                </Button>
 
                 <p className="text-center text-[14px] text-secondary-text pt-4">
                     {t.auth.noAccount}{" "}

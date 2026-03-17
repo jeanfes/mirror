@@ -3,6 +3,7 @@
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Select } from "@/components/ui/Select"
+import { Input } from "@/components/ui/Input"
 
 interface HistoryFiltersProps {
     profileValue: string
@@ -58,18 +59,14 @@ export function HistoryFilters({
             </div>
 
             <div className="mt-5 grid gap-4 md:grid-cols-[minmax(0,1.25fr)_220px_220px] md:items-end">
-                <div className="space-y-2">
-                    <label className="dashboard-overline">Search</label>
-                    <div className="relative">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-text" />
-                        <input
-                            value={searchValue}
-                            onChange={(event) => onSearchChange(event.target.value)}
-                            placeholder="Search author, snippet or generated comment"
-                            className="feature-input feature-input-with-icon h-12 bg-surface-elevated pr-3 text-primary-text"
-                        />
-                    </div>
-                </div>
+                <Input
+                    label="Search"
+                    icon={<Search className="h-4 w-4" />}
+                    value={searchValue}
+                    onChange={(event) => onSearchChange(event.target.value)}
+                    placeholder="Search author, snippet or generated comment"
+                    className="h-12 bg-surface-elevated text-primary-text"
+                />
 
                 <Select
                     value={profileValue}

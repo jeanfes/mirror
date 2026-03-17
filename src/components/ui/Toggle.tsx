@@ -25,13 +25,13 @@ export function Toggle({ checked, onChange, label, className }: ToggleProps) {
                 aria-checked={checked}
                 onClick={() => onChange(!checked)}
                 className={clsx(
-                    "relative shrink-0 w-10 h-[1.6rem] rounded-full overflow-hidden transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40",
-                    checked ? "bg-brand-dark border-brand-dark" : "bg-surface-subtle border-border-soft"
+                    "relative shrink-0 w-10 h-6 rounded-full transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/40",
+                    checked ? "bg-accent-purple border-accent-purple" : "bg-surface-subtle border-border-soft"
                 )}
             >
                 <span
                     className={clsx(
-                        "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-premium-sm transition-transform duration-200",
+                        "absolute top-0.5 left-0.5 h-4.5 w-4.5 rounded-full bg-white shadow-premium-sm transition-transform duration-200",
                         checked ? "translate-x-4" : "translate-x-0"
                     )}
                 />
