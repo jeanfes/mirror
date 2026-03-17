@@ -78,7 +78,7 @@ export default function TrashPage() {
                 <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full workspace-hero-orb-purple" />
                 <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full workspace-hero-orb-cyan" />
 
-                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+                <div className={`relative grid gap-6 ${summary.total === 0 ? "lg:grid-cols-1" : "lg:grid-cols-[1.15fr_0.85fr]"} lg:items-start`}>
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
                             Deleted work should feel recoverable, not lost in a dead-end bin.
@@ -88,27 +88,29 @@ export default function TrashPage() {
                         </p>
                     </div>
 
-                    <Card className="dashboard-dark-panel">
-                        <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">What is waiting for a decision</h2>
-                        <div className="mt-6 grid grid-cols-2 gap-3">
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Total</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
+                    {summary.total > 0 ? (
+                        <Card className="dashboard-dark-panel">
+                            <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">What is waiting for a decision</h2>
+                            <div className="mt-6 grid grid-cols-2 gap-3">
+                                <div className="dashboard-dark-stat">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Total</p>
+                                    <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
+                                </div>
+                                <div className="dashboard-dark-stat">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Profiles</p>
+                                    <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.profiles}</p>
+                                </div>
+                                <div className="dashboard-dark-stat">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Comments</p>
+                                    <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.comments}</p>
+                                </div>
+                                <div className="dashboard-dark-stat">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Drafts</p>
+                                    <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.drafts}</p>
+                                </div>
                             </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Profiles</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.profiles}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Comments</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.comments}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Drafts</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.drafts}</p>
-                            </div>
-                        </div>
-                    </Card>
+                        </Card>
+                    ) : null}
                 </div>
             </section>
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
-import { Crown, Gauge, Layers3, Star, Zap } from "lucide-react"
+import { Crown, Gauge, Layers3, Zap } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
@@ -121,33 +121,11 @@ export default function PlansPage() {
                 </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-3">
-                <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Best for</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Different growth stages</p>
-                    <p className="mt-2 body-muted">From testing one voice to running several posting angles at the same time.</p>
-                </Card>
-                <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Upgrade logic</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Capacity before friction</p>
-                    <p className="mt-2 body-muted">Move up when you want more monthly attempts, more profiles and less hesitation in daily use.</p>
-                </Card>
-                <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Visual principle</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Pricing as product surface</p>
-                    <p className="mt-2 body-muted">This should feel like part of the workspace, not a detached billing screen.</p>
-                </Card>
-            </section>
-
             <section className="space-y-3">
                 <div className="flex items-end justify-between gap-3">
                     <div>
                         <h2 className="text-2xl font-bold tracking-[-0.03em] text-primary-text">Choose your plan</h2>
                         <p className="mt-1 text-[14px] text-secondary-text">All tiers keep the same product language. What changes is how far you can push it.</p>
-                    </div>
-                    <div className="hidden rounded-full border border-border-soft bg-surface-base px-3 py-1.5 text-[12px] font-semibold text-secondary-text md:inline-flex md:items-center md:gap-1.5">
-                        <Star className="h-3.5 w-3.5 text-accent-purple" />
-                        Pro is tuned as the default sweet spot
                     </div>
                 </div>
 

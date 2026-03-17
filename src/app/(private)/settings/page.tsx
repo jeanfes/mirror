@@ -1,7 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Globe, ShieldCheck, SlidersHorizontal } from "lucide-react"
+import { useState } from "react"
+import { Globe, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -16,17 +16,6 @@ export default function SettingsPage() {
     const [showConfidenceHints, setShowConfidenceHints] = useState(true)
     const [defaultProfile, setDefaultProfile] = useState("adaptive")
 
-    const summary = useMemo(() => {
-        const enabledCount = [autoInsert, saveHistory, strictToneMatch, showConfidenceHints].filter(Boolean).length
-
-        return {
-            enabledCount,
-            automationState: autoInsert ? "Semi-automatic" : "Manual review",
-            languageLabel:
-                language === "en" ? "English" : language === "es" ? "Spanish" : "Portuguese"
-        }
-    }, [autoInsert, saveHistory, strictToneMatch, showConfidenceHints, language])
-
     const handleSave = () => {
         toast.success("Preferences updated")
     }
@@ -37,71 +26,33 @@ export default function SettingsPage() {
                 <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full workspace-hero-orb-purple" />
                 <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full workspace-hero-orb-cyan" />
 
-                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+                <div className="relative">
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            Tune how Mirror behaves before a comment ever reaches the extension.
+                            Configure Mirror in one place, without jumping between sections.
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            Settings should feel operational, not buried. This screen controls language, automation and quality guardrails so the workflow matches your posting habits.
+                            Keep only what matters: automation behavior, output quality defaults, language and a default voice profile.
                         </p>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="workspace-hero-chip">Behavior controls</div>
-                            <div className="workspace-hero-chip">Output safeguards</div>
-                            <div className="workspace-hero-chip">Language defaults</div>
-                        </div>
                     </div>
-
-                    <Card className="dashboard-dark-panel">
-                        <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">Current setup snapshot</h2>
-                        <p className="mt-2 text-[14px] leading-6 text-white/82">A quick summary of how strict, automated and localized the current workspace configuration is.</p>
-
-                        <div className="mt-6 grid grid-cols-2 gap-3">
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Active toggles</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.enabledCount}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Mode</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{summary.automationState}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Language</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{summary.languageLabel}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Default voice</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{defaultProfile === "adaptive" ? "Adaptive" : defaultProfile === "insight" ? "Insight Architect" : "Warm Connector"}</p>
-                            </div>
-                        </div>
-                    </Card>
                 </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-3">
+            <section className="grid gap-4 md:grid-cols-2">
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-purple">
                         <SlidersHorizontal className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Workflow control</h2>
-                    <p className="mt-2 body-muted">Decide whether Mirror assists the final insertion flow or waits for explicit review on every generation.</p>
-                </Card>
-
-                <Card className="dashboard-card-lg">
-                    <div className="icon-box icon-bg-green">
-                        <ShieldCheck className="h-5 w-5" />
-                    </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Quality guardrails</h2>
-                    <p className="mt-2 body-muted">Keep tone alignment and confidence hints visible so the extension feels reliable instead of loose.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Behavior and safeguards</h2>
+                    <p className="mt-2 body-muted">Define review friction and tone strictness in one section.</p>
                 </Card>
 
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-amber">
                         <Globe className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Localization defaults</h2>
-                    <p className="mt-2 body-muted">Set the default language and baseline profile so the first suggestion already starts near the right voice.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Language and default profile</h2>
+                    <p className="mt-2 body-muted">Set startup defaults so every generation starts close to your voice.</p>
                 </Card>
             </section>
 
@@ -109,9 +60,9 @@ export default function SettingsPage() {
                 <Card className="dashboard-card-xl">
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <p className="dashboard-overline">Behavior</p>
-                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">How the workspace should behave day to day</h2>
-                            <p className="mt-2 max-w-2xl body-muted">These controls affect review friction, archive coverage and how strict the assistant stays with the selected voice.</p>
+                            <p className="dashboard-overline">Controls</p>
+                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">Behavior and output quality</h2>
+                            <p className="mt-2 max-w-2xl body-muted">Use these toggles to control automation, history capture and tone strictness.</p>
                         </div>
                         <Button type="button" onClick={handleSave}>Save preferences</Button>
                     </div>
@@ -127,7 +78,7 @@ export default function SettingsPage() {
                 <Card className="dashboard-card-xl">
                     <p className="dashboard-overline">Defaults</p>
                     <h2 className="mt-3 section-heading">Language and profile baseline</h2>
-                    <p className="mt-2 body-muted">These choices define how Mirror initializes before you refine a specific generation.</p>
+                    <p className="mt-2 body-muted">These choices define how Mirror initializes before each generation.</p>
 
                     <div className="mt-5 space-y-4">
                         <Select
@@ -157,7 +108,7 @@ export default function SettingsPage() {
 
                     <div className="mt-5 rounded-3xl border border-border-soft bg-surface-base p-4">
                         <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Why this matters</p>
-                        <p className="mt-2 body-muted">A good default setup reduces correction work later. The goal is not zero control, but a better first draft every time.</p>
+                        <p className="mt-2 body-muted">Good defaults reduce manual cleanup and keep results consistent with your normal writing style.</p>
                     </div>
                 </Card>
             </section>

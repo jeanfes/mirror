@@ -29,18 +29,7 @@ const sourceLabels: Record<NonNullable<HistoryItem["source"]>, string> = {
     manual_edit: "Manual edit"
 }
 
-function getWordCount(text: string) {
-    return text
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean).length
-}
-
 export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleApplied }: HistoryItemCardProps) {
-    const commentWordCount = getWordCount(item.generatedComment)
-    const snippetWordCount = getWordCount(item.postSnippet)
-    const intensityLabel = commentWordCount <= 18 ? "Concise" : commentWordCount <= 32 ? "Balanced" : "Detailed"
-
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
             <div className="border-b border-border-soft bg-surface-elevated px-5 py-5 backdrop-blur-sm">
@@ -71,18 +60,11 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                     <div className="feature-soft-card-strong px-3 py-2 text-right shadow-premium-sm">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary-text">Generated</p>
                         <p className="mt-1 text-[13px] font-medium text-secondary-text">{formatDistanceToNow(item.timestamp, { addSuffix: true })}</p>
-                        <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary-text">{intensityLabel}</p>
                     </div>
                 </div>
             </div>
 
             <div className="p-5">
-                <div className="mb-4 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-secondary-text">
-                    <span className="feature-pill">Source {snippetWordCount} words</span>
-                    <span className="feature-pill">Comment {commentWordCount} words</span>
-                    <span className="feature-pill">{intensityLabel} response</span>
-                </div>
-
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="feature-soft-card-strong">
                         <p className="text-[11px] font-semibold uppercase tracking-widest text-secondary-text">Source post</p>
@@ -97,9 +79,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                     </div>
                 </div>
 
-                <div className="feature-soft-card mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <p className="max-w-2xl text-[13px] leading-6 text-secondary-text">Use reuse when the angle is still strong, or mark it applied to keep the archive honest and easier to scan later.</p>
-
+                <div className="feature-soft-card mt-4 flex flex-wrap items-center justify-end gap-3">
                     <div className="flex flex-wrap gap-2">
                         <Tooltip text="Copy this generated comment to clipboard">
                             <Button type="button" variant="secondary" onClick={() => onCopy(item.generatedComment)}>

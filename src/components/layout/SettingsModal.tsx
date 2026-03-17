@@ -16,7 +16,6 @@ import {
     Settings,
     Palette,
     User,
-    Monitor
 } from "lucide-react"
 
 import { Card } from "@/components/ui/Card"
@@ -52,11 +51,16 @@ interface SettingsModalProps {
 export default function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
     const [lang, setLang] = useState("en")
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
+    const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
     const { logout, isPending: isLogoutPending } = useLogout()
     const { themePreference } = useTheme()
 
     const handleLogout = async () => {
         await logout()
+    }
+
+    const handleDeleteAccountConfirm = async () => {
+        setIsDeleteAccountConfirmOpen(false)
     }
 
     return (
@@ -98,10 +102,6 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                     <TabsTrigger value="security" className="settings-nav-trigger">
                                         <Shield className="h-4.5 w-4.5" />
                                         Security
-                                    </TabsTrigger>
-                                    <TabsTrigger value="devices" className="settings-nav-trigger">
-                                        <Monitor className="h-4.5 w-4.5" />
-                                        Sessions
                                     </TabsTrigger>
                                     <TabsTrigger value="notifications" className="settings-nav-trigger">
                                         <Bell className="h-4.5 w-4.5" />
@@ -251,19 +251,6 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     </div>
                                                     <Button variant="secondary" className="font-bold h-9" onClick={() => toast.success("Password change requested. Check your email.")}>Update</Button>
                                                 </Card>
-
-                                                <Card className="settings-card-row">
-                                                    <div className="flex items-center gap-5">
-                                                        <div className="h-12 w-12 rounded-2xl bg-(--accent-purple-soft-bg) flex items-center justify-center text-accent-purple">
-                                                            <Shield className="h-5.5 w-5.5" />
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[15px] font-bold text-primary-text">2-Factor Auth (2FA)</p>
-                                                            <p className="text-xs text-secondary-text font-medium">Add an extra layer of security</p>
-                                                        </div>
-                                                    </div>
-                                                    <Button variant="primary" className="font-bold h-9" onClick={() => toast.success("2FA setup initiated")}>Enable</Button>
-                                                </Card>
                                             </div>
                                         </motion.div>
                                     </TabsContent>
@@ -324,7 +311,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                 <p className="settings-section-description">Decide how and when you want to be notified.</p>
                                             </div>
 
-                                            <Card className="p-0 overflow-hidden divide-y divide-border-soft">
+                                            <Card className="p-0 overflow-hidden divide-y divide-border-soft border-0 shadow-none!">
                                                 <div className="space-y-3">
                                                     <Toggle
                                                         label="Email Updates"
@@ -375,7 +362,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                         <p className="text-[15px] font-bold text-danger">Danger Zone</p>
                                                     </div>
                                                     <p className="text-xs leading-5 text-danger/70 font-medium">Deleting your account is permanent. All profiles, history and plans will be lost immediately.</p>
-                                                    <Button variant="dangerSoft" className="w-full font-bold h-10 mt-2" onClick={() => toast.error("Are you sure? This cannot be undone.", { action: { label: "Confirm", onClick: () => toast.success("Account deleted.") } })}>Delete Account</Button>
+                                                    <Button variant="dangerSoft" className="w-full font-bold h-10 mt-2" onClick={() => setIsDeleteAccountConfirmOpen(true)}>Delete Account</Button>
                                                 </Card>
                                             </div>
                                         </motion.div>
@@ -415,6 +402,15 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                         setIsLogoutConfirmOpen(false)
                     }
                 }}
+            />
+
+            <ConfirmDialog
+                open={isDeleteAccountConfirmOpen}
+                title="Delete your account?"
+                description="This action is permanent and will remove all your profiles, history and plans."
+                confirmLabel="Delete account"
+                onConfirm={handleDeleteAccountConfirm}
+                onCancel={() => setIsDeleteAccountConfirmOpen(false)}
             />
 
             <LoadingOverlay show={isLogoutPending} label="Logging out..." />

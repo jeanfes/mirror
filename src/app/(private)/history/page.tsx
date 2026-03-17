@@ -221,7 +221,7 @@ export default function HistoryPage() {
                         <HistoryItemCard
                             key={item.id}
                             item={item}
-                            profileName={profileMap.get(item.personaId) ?? "Unknown profile"}
+                            profileName={profileMap.get(item.personaId) ?? "Sin perfil"}
                             onCopy={handleCopy}
                             onReuse={handleReuse}
                             onToggleApplied={handleToggleApplied}
