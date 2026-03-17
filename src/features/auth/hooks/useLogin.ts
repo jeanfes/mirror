@@ -5,15 +5,16 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import { useLanguageStore } from "@/store/useLanguageStore"
 import type { LoginValues } from "../schemas"
-
-export type LoginError = "invalid_credentials" | "connection_error"
+import { mapLoginError, mapOAuthStartError, type LoginError } from "../errors"
 
 export const useLogin = () => {
     const [isPending, setIsPending] = useState(false)
     const [isPendingGoogle, setIsPendingGoogle] = useState(false)
     const [isNavigating, setIsNavigating] = useState(false)
     const router = useRouter()
+    const authErrors = useLanguageStore((state) => state.t.auth.errors)
 
     const login = useCallback(async (data: LoginValues): Promise<LoginError | null> => {
         setIsPending(true)
@@ -26,7 +27,7 @@ export const useLogin = () => {
 
             if (error) {
                 setIsPending(false)
-                return "invalid_credentials"
+                return mapLoginError(error)
             }
 
             setIsPending(false)
@@ -44,15 +45,28 @@ export const useLogin = () => {
         setIsPendingGoogle(true)
         try {
             const supabase = createClient()
-            await supabase.auth.signInWithOAuth({
+            const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
                 options: { redirectTo: `${window.location.origin}${ROUTES.auth.callback}` },
             })
+
+            if (error) {
+                const mappedError = mapOAuthStartError(error)
+                if (mappedError === "rate_limit") {
+                    toast.error(authErrors.authRateLimit)
+                } else if (mappedError === "auth_unavailable") {
+                    toast.error(authErrors.authUnavailable)
+                } else {
+                    toast.error(authErrors.oauthStartError)
+                }
+
+                setIsPendingGoogle(false)
+            }
         } catch {
-            toast.error("Could not start Google sign-in")
+            toast.error(authErrors.connectionError)
             setIsPendingGoogle(false)
         }
-    }, [])
+    }, [authErrors])
 
     return { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating }
 }

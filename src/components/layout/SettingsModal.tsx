@@ -58,12 +58,9 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
     const [lang, setLang] = useState("en")
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
     const { logout, isPending: isLogoutPending } = useLogout()
-    const { themePreference, resolvedTheme } = useTheme()
-    const systemThemeLabel = resolvedTheme === "dark" ? "Dark" : "Light"
+    const { themePreference } = useTheme()
 
     const handleLogout = async () => {
-        setIsLogoutConfirmOpen(false)
-        onOpenChange?.(false)
         await logout()
     }
 
@@ -81,11 +78,11 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                     <DialogTitle className="sr-only">Settings</DialogTitle>
                     <DialogDescription className="sr-only">Manage your account settings and preferences</DialogDescription>
                     <Tabs defaultValue="general" className="flex-1 flex flex-col overflow-hidden">
-                        <div className="flex flex-1 overflow-hidden">
+                        <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
                             {/* Sidebar Tabs */}
-                            <div className="w-70 shrink-0 border-r border-border-soft bg-surface-overlay p-5 backdrop-blur-sm flex flex-col">
-                                <div className="flex items-center gap-3 px-2 mb-8 mt-2">
-                                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-dark text-white shadow-premium-sm">
+                            <div className="w-full sm:w-70 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 backdrop-blur-sm flex flex-col z-10">
+                                <div className="hidden sm:flex items-center gap-3 px-2 mb-8 mt-2">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-premium-sm">
                                         <Settings className="h-5 w-5" />
                                     </div>
                                     <div>
@@ -94,8 +91,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                     </div>
                                 </div>
 
-                                <TabsList className="flex-1 flex flex-col h-auto items-stretch justify-start rounded-none border-0 bg-transparent p-0 space-y-1.5 focus:outline-none">
-                                    <TabsTrigger value="general" className="settings-nav-trigger">
+                                <TabsList className="flex-row sm:flex-col h-auto items-center sm:items-stretch justify-start rounded-none border-0 bg-transparent p-0 sm:space-y-1.5 focus:outline-none overflow-x-auto overflow-y-hidden sm:overflow-visible custom-scrollbar pb-2 sm:pb-0 gap-2 sm:gap-0">
+                                    <TabsTrigger value="general" className="settings-nav-trigger shrink-0">
                                         <User className="h-4.5 w-4.5" />
                                         General
                                     </TabsTrigger>
@@ -115,12 +112,12 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         <Bell className="h-4.5 w-4.5" />
                                         Alerts
                                     </TabsTrigger>
-                                    <TabsTrigger value="data" className="settings-nav-trigger">
+                                    <TabsTrigger value="data" className="settings-nav-trigger shrink-0">
                                         <Download className="h-4.5 w-4.5" />
                                         Export
                                     </TabsTrigger>
 
-                                    <div className="pt-8 mt-auto space-y-2">
+                                    <div className="hidden sm:block pt-8 mt-auto space-y-2">
                                         <Button type="button" variant="dangerSoft" className="w-full justify-start" onClick={() => setIsLogoutConfirmOpen(true)} disabled={isLogoutPending}>
                                             <LogOut className="h-4 w-4 shrink-0 stroke-[2.2]" />
                                             <span>{isLogoutPending ? "Logging out..." : "Log out"}</span>
@@ -133,7 +130,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                             </div>
 
                             {/* Content Area */}
-                            <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base px-10 py-10 backdrop-blur-sm">
+                            <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10 backdrop-blur-sm">
                                 <AnimatePresence>
                                     {/* GENERAL */}
                                     <TabsContent value="general" key="general" asChild>
@@ -141,7 +138,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -164,27 +161,18 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     <div className="space-y-1">
                                                         <h4 className="font-bold text-primary-text">{user.name}</h4>
                                                         <p className="text-xs text-secondary-text font-medium">{user.email}</p>
-                                                        <Button variant="ghost" className="h-8 px-0 text-accent-purple text-xs font-bold hover:bg-transparent hover:underline">Change profile photo</Button>
                                                     </div>
                                                 </div>
 
                                                 <div className="grid gap-5">
-                                                    <div className="grid grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                         <div className="space-y-2">
                                                             <label className="settings-field-label">Full Name</label>
-                                                            <input className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.name} />
+                                                            <input disabled className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.name} />
                                                         </div>
                                                         <div className="space-y-2">
                                                             <label className="settings-field-label">Email Address</label>
-                                                            <input className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.email} />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="space-y-2">
-                                                        <label className="settings-field-label">Workspace ID</label>
-                                                        <div className="flex items-center gap-2 neo-input h-11 rounded-2xl px-4 bg-surface-subtle">
-                                                            <span className="text-[13px] font-mono text-secondary-text">mirror_workspace_0892</span>
-                                                            <Button variant="ghost" size="md" className="ml-auto h-7 px-2 text-[10px] font-bold uppercase" onClick={() => { navigator.clipboard.writeText("mirror_workspace_0892"); toast.success("Copied to clipboard") }}>Copy</Button>
+                                                            <input disabled className="neo-input h-11 w-full rounded-2xl px-4 text-[13px] font-medium" defaultValue={user.email} />
                                                         </div>
                                                     </div>
 
@@ -211,7 +199,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -225,7 +213,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-secondary-text">Active theme</p>
                                                         <p className="mt-1 text-[14px] font-semibold text-primary-text">
                                                             {themePreference === "system"
-                                                                ? `System • currently ${systemThemeLabel}`
+                                                                ? `System`
                                                                 : `${themePreference === "dark" ? "Dark" : "Light"} mode`}
                                                         </p>
                                                     </div>
@@ -245,7 +233,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -289,7 +277,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -331,7 +319,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -378,7 +366,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
+                                            transition={{ duration: 0.1 }}
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
@@ -386,7 +374,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                 <p className="settings-section-description">Take control of your data and backup your history.</p>
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <Card className="p-6 space-y-4">
                                                     <div className="flex items-center gap-3">
                                                         <div className="h-9 w-9 rounded-xl bg-accent-blue/12 flex items-center justify-center text-accent-blue">
@@ -416,8 +404,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                         </div>
                     </Tabs>
 
-                    <div className="relative z-10 flex h-14 shrink-0 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 backdrop-blur-sm">
-                        <div className="flex items-center gap-5">
+                    <div className="relative z-10 flex flex-col sm:flex-row h-auto min-h-14 py-3 sm:py-0 shrink-0 items-center justify-between gap-3 sm:gap-0 border-t border-border-soft bg-surface-overlay px-4 sm:px-8 backdrop-blur-sm">
+                        <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-5">
                             <button className="settings-footer-link">Status <ExternalLink className="h-2.5 w-2.5" /></button>
                             <button className="settings-footer-link">Docs <ExternalLink className="h-2.5 w-2.5" /></button>
                             <button className="settings-footer-link">Changelog <ExternalLink className="h-2.5 w-2.5" /></button>

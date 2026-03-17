@@ -7,9 +7,9 @@ export default function PrivateTemplate({ children }: { children: React.ReactNod
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
-            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.15, ease: "easeOut" }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.05, ease: "easeOut" }}
         >
             {children}
         </motion.div>

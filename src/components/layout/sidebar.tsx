@@ -6,13 +6,19 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import { motion } from "motion/react"
+import Image from "next/image"
 import { navItems } from "./nav-items"
 
 const SettingsModal = dynamic(() => import("./SettingsModal"), {
     ssr: false
 })
 
-export function Sidebar() {
+interface SidebarProps {
+    user: { name: string; email: string; avatar?: string }
+}
+
+export function Sidebar({ user }: SidebarProps) {
+    const initial = (user.name?.[0] ?? user.email?.[0] ?? "U").toUpperCase()
     const pathname = usePathname()
     const router = useRouter()
 
@@ -45,7 +51,7 @@ export function Sidebar() {
                             {isActive && (
                                 <motion.div
                                     layoutId="activeIndicator"
-                                    className="absolute inset-0 bg-[var(--nav-active-bg)] rounded-full shadow-premium-sm"
+                                    className="absolute inset-0 bg-(--nav-active-bg) rounded-full shadow-premium-sm"
                                     transition={{
                                         type: "spring",
                                         stiffness: 450,
@@ -59,13 +65,22 @@ export function Sidebar() {
                 })}
             </div>
             <div className="mt-auto">
-                <SettingsModal user={{ name: "User Name", email: "user@example.com" }}>
+                <SettingsModal user={user}>
                     <button
-                        className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-brand-dark text-[14px] font-bold text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+                        className="cursor-pointer group relative flex h-12 w-12 items-center justify-center rounded-full bg-surface-elevated border border-border-soft text-[14px] font-bold text-primary-text transition-transform hover:scale-105 active:scale-95 focus:outline-none overflow-hidden"
                         aria-label="User menu"
                     >
-                        U
-                        <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-accent-green" />
+                        {user.avatar ? (
+                            <Image
+                                src={user.avatar}
+                                alt={user.name || user.email}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                            />
+                        ) : (
+                            initial
+                        )}
                     </button>
                 </SettingsModal>
             </div>

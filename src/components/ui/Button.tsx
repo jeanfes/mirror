@@ -42,7 +42,6 @@ export function Button({
 
     return (
         <motion.button
-            whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             disabled={isDisabled}
             aria-busy={ariaBusy ?? loading}

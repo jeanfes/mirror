@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { ROUTES } from "@/lib/routes"
 import { Button } from "@/components/ui/Button"
-import { LoadingOverlay } from "@/components/ui/Loading"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
@@ -33,6 +32,12 @@ export function LoginForm() {
         const err = await login(data)
         if (err === "invalid_credentials") {
             setError("root", { message: t.auth.errors.invalidCredentials })
+        } else if (err === "email_not_confirmed") {
+            setError("root", { message: t.auth.errors.emailNotConfirmed })
+        } else if (err === "rate_limit") {
+            setError("root", { message: t.auth.errors.authRateLimit })
+        } else if (err === "auth_unavailable") {
+            setError("root", { message: t.auth.errors.authUnavailable })
         } else if (err === "connection_error") {
             setError("root", { message: t.auth.errors.connectionError })
         }
@@ -49,7 +54,6 @@ export function LoginForm() {
 
     return (
         <>
-            <LoadingOverlay show={isNavigating} label={t.app.signingIn} />
             <form className="space-y-4" onSubmit={onSubmit} noValidate aria-busy={isAnyLocked}>
                 <Button
                     variant="primary"
@@ -120,7 +124,7 @@ export function LoginForm() {
                         className="neo-btn-primary w-full h-11 text-[15px] font-semibold shadow-premium-sm mt-2"
                         type="submit"
                         disabled={isAnyLocked}
-                        loading={isPending}
+                        loading={isPending || isNavigating}
                         loadingLabel={t.app.signingIn}
                     >
                         {t.auth.loginBtn}

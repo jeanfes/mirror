@@ -82,12 +82,12 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
 
     return (
         <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
-            <DialogContent className="w-[min(94vw,760px)] rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden" style={{
+            <DialogContent className="w-[min(94vw,760px)] max-h-[90vh] flex flex-col rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden" style={{
                 border: "none"
             }}>
                 <DialogDescription className="sr-only">Form to create or edit a voice profile</DialogDescription>
-                <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
-                    <div className="overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
+                <div className="flex flex-col lg:grid lg:grid-cols-[0.92fr_1.08fr] overflow-hidden flex-1">
+                    <div className="shrink-0 overflow-hidden rounded-t-[28px] border-b border-[#E8ECF4] bg-[linear-gradient(180deg,rgba(23,27,45,0.98),rgba(23,27,45,0.92))] p-5 md:p-6 text-white lg:rounded-t-none lg:rounded-l-[28px] lg:border-b-0 lg:border-r">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/84 ring-1 ring-white/10">
                             <WandSparkles className="h-3.5 w-3.5" />
                             Voice editor
@@ -99,7 +99,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                             Good profiles are specific enough to guide tone and flexible enough to work across different LinkedIn posts.
                         </p>
 
-                        <div className="mt-6 rounded-[22px] border border-white/20 bg-white/12 p-4 backdrop-blur-sm">
+                        <div className="hidden sm:block mt-6 rounded-[22px] border border-white/20 bg-white/12 p-4 backdrop-blur-sm">
                             <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/85">What makes a strong profile</p>
                             <ul className="mt-3 space-y-3 text-[13px] leading-6 text-white/90">
                                 <li>Choose one clear posture, not three mixed personalities.</li>
@@ -118,7 +118,7 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                         </div>
                     </div>
 
-                    <div className="bg-surface-elevated p-5 md:p-6">
+                    <div className="bg-surface-elevated p-5 md:p-6 overflow-y-auto custom-scrollbar flex-1 lg:max-h-[80vh]">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-semibold text-primary-text">
                                 {profile ? "Edit profile" : "Create profile"}

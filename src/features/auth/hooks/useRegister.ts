@@ -7,8 +7,7 @@ import { createClient } from "@/lib/supabase/client"
 import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { RegisterValues } from "../schemas"
-
-export type RegisterError = "email_taken" | "register_error" | "connection_error"
+import { mapRegisterError, type RegisterError } from "../errors"
 
 export const useRegister = () => {
     const [isPending, setIsPending] = useState(false)
@@ -28,8 +27,7 @@ export const useRegister = () => {
 
             if (error) {
                 setIsPending(false)
-                if (error.message === "User already registered") return "email_taken"
-                return "register_error"
+                return mapRegisterError(error)
             }
 
             setIsPending(false)

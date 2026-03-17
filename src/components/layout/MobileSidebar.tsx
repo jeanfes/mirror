@@ -41,7 +41,7 @@ export function MobileSidebar() {
 
     const handleOpenSettingsFromSidebar = () => {
         setIsOpen(false)
-        window.setTimeout(() => setIsSettingsOpen(true), 160)
+        setIsSettingsOpen(true)
     }
 
     const sidebarOverlay = (
@@ -120,7 +120,7 @@ export function MobileSidebar() {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
+                            transition={{ delay: 0.1, duration: 0.2 }}
                             className="mt-4 border-t border-border-soft pt-4"
                         >
                             <button
@@ -130,7 +130,6 @@ export function MobileSidebar() {
                                 aria-label="Open user settings"
                             >
                                 U
-                                <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-accent-green" />
                             </button>
                         </motion.div>
                     </motion.aside>

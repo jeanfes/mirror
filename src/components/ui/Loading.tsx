@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 
-const LOADING_MIN_DISPLAY_MS = 400
+const LOADING_MIN_DISPLAY_MS = 150
 
 export function useLoadingDelay(active: boolean, delayMs = LOADING_MIN_DISPLAY_MS) {
     const [visible, setVisible] = useState(active)
