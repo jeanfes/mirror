@@ -4,25 +4,36 @@ import { twMerge } from "tailwind-merge"
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
+  labelRight?: React.ReactNode
   error?: string
   icon?: React.ReactNode
   suffix?: React.ReactNode
+  bottomRight?: React.ReactNode
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, error, icon, suffix, id, ...props }, ref) => {
+  ({ className, type, label, labelRight, error, icon, suffix, bottomRight, id, ...props }, ref) => {
     const generatedId = React.useId()
     const inputId = id || generatedId
 
     return (
       <div className="w-full space-y-2 group">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text transition-colors group-focus-within:text-accent-purple"
-          >
-            {label}
-          </label>
+        {(label || labelRight) && (
+          <div className="flex items-center justify-between">
+            {label && (
+              <label
+                htmlFor={inputId}
+                className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text transition-colors group-focus-within:text-accent-purple"
+              >
+                {label}
+              </label>
+            )}
+            {labelRight && (
+              <div className="text-[12px] font-medium transition-colors">
+                {labelRight}
+              </div>
+            )}
+          </div>
         )}
         <div className="relative flex items-center">
           {icon && (
@@ -49,10 +60,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {error && (
-          <p className="text-[11px] font-medium text-danger animate-in fade-in slide-in-from-top-1">
-            {error}
-          </p>
+        {(error || bottomRight) && (
+          <div className="flex items-center justify-between gap-2 min-h-4">
+            {error ? (
+              <p className="text-[11px] font-medium text-danger animate-in fade-in slide-in-from-top-1">
+                {error}
+              </p>
+            ) : (
+              <div />
+            )}
+            {bottomRight && (
+              <div className="shrink-0 animate-in fade-in slide-in-from-top-1">
+                {bottomRight}
+              </div>
+            )}
+          </div>
         )}
       </div>
     )

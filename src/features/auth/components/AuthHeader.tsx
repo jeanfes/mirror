@@ -3,11 +3,22 @@
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { motion } from "motion/react";
 
-export function AuthHeader({ type }: { type: "login" | "register" }) {
+export function AuthHeader({ type }: { type: "login" | "register" | "forgot" | "reset" }) {
     const { t } = useLanguageStore();
 
-    const title = type === "login" ? t.auth.loginTitle : t.auth.registerTitle;
-    const subtitle = type === "login" ? t.auth.loginSubtitle : t.auth.registerSubtitle;
+    const title = {
+        login: t.auth.loginTitle,
+        register: t.auth.registerTitle,
+        forgot: t.auth.forgotPasswordTitle,
+        reset: t.auth.resetPasswordTitle
+    }[type];
+
+    const subtitle = {
+        login: t.auth.loginSubtitle,
+        register: t.auth.registerSubtitle,
+        forgot: t.auth.forgotPasswordSubtitle,
+        reset: t.auth.resetPasswordSubtitle
+    }[type];
 
     return (
         <motion.div 

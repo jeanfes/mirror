@@ -21,6 +21,20 @@ export type RegisterError =
     | "register_error"
     | "connection_error"
 
+export type RecoveryError =
+    | "email_rate_limit"
+    | "rate_limit"
+    | "auth_unavailable"
+    | "connection_error"
+    | "generic_error"
+
+export type ResetPasswordError =
+    | "weak_password"
+    | "rate_limit"
+    | "auth_unavailable"
+    | "connection_error"
+    | "generic_error"
+
 export type OAuthStartError =
     | "oauth_unavailable"
     | "rate_limit"
@@ -136,4 +150,39 @@ export function mapOAuthStartError(error: SupabaseAuthErrorLike | null | undefin
     }
 
     return "oauth_unavailable"
+}
+
+export function mapRecoveryError(error: SupabaseAuthErrorLike | null | undefined): RecoveryError {
+    const normalized = normalizeError(error)
+
+    if (isAuthUnavailable(error)) return "auth_unavailable"
+    if (isRateLimit(error)) return "rate_limit"
+
+    if (
+        normalized.code === "over_email_send_rate_limit" ||
+        normalized.message.includes("email rate limit") ||
+        normalized.message.includes("confirmation email")
+    ) {
+        return "email_rate_limit"
+    }
+
+    return "generic_error"
+}
+
+export function mapResetPasswordError(error: SupabaseAuthErrorLike | null | undefined): ResetPasswordError {
+    const normalized = normalizeError(error)
+
+    if (isAuthUnavailable(error)) return "auth_unavailable"
+    if (isRateLimit(error)) return "rate_limit"
+
+    if (
+        normalized.code === "weak_password" ||
+        normalized.message.includes("weak password") ||
+        normalized.message.includes("password should be at least") ||
+        normalized.message.includes("password is too weak")
+    ) {
+        return "weak_password"
+    }
+
+    return "generic_error"
 }

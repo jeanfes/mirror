@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Globe, SlidersHorizontal } from "lucide-react"
+import { Globe, SlidersHorizontal, Lock, ArrowRight } from "lucide-react"
+import Link from "next/link"
 import { toast } from "sonner"
+import { ROUTES } from "@/lib/routes"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
@@ -38,7 +40,7 @@ export default function SettingsPage() {
                 </div>
             </section>
 
-            <section className="grid gap-4 md:grid-cols-2">
+            <section className="grid gap-4 md:grid-cols-3">
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-purple">
                         <SlidersHorizontal className="h-5 w-5" />
@@ -54,6 +56,19 @@ export default function SettingsPage() {
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Language and default profile</h2>
                     <p className="mt-2 body-muted">Set startup defaults so every generation starts close to your voice.</p>
                 </Card>
+
+                <Link href={`${ROUTES.private.settings}/security`} className="block group">
+                    <Card className="dashboard-card-lg h-full transition-all group-hover:border-accent-purple/30 group-hover:bg-surface-elevated/50">
+                        <div className="icon-box icon-bg-blue">
+                            <Lock className="h-5 w-5" />
+                        </div>
+                        <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text group-hover:text-accent-purple transition-colors flex items-center gap-2">
+                            Security and Password
+                            <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                        </h2>
+                        <p className="mt-2 body-muted">Manage your account authentication and keep your access secure.</p>
+                    </Card>
+                </Link>
             </section>
 
             <section className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_420px]">

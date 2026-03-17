@@ -6,6 +6,8 @@ type AuthErrors = {
     passwordRequired: string
     passwordMin: string
     nameMin: string
+    passwordsDoNotMatch: string
+    generic_error: string
 }
 
 export function createLoginSchema(errors: AuthErrors) {
@@ -35,8 +37,36 @@ export function createRegisterSchema(errors: AuthErrors) {
     })
 }
 
+export function createForgotPasswordSchema(errors: AuthErrors) {
+    return z.object({
+        email: z
+            .string({ error: errors.emailRequired })
+            .min(1, errors.emailRequired)
+            .email({ error: errors.emailInvalid }),
+    })
+}
+
+export function createResetPasswordSchema(errors: AuthErrors) {
+    return z.object({
+        currentPassword: z
+            .string({ error: errors.passwordRequired })
+            .min(1, errors.passwordRequired),
+        password: z
+            .string({ error: errors.passwordRequired })
+            .min(8, errors.passwordMin),
+        confirmPassword: z
+            .string({ error: errors.passwordRequired })
+            .min(8, errors.passwordMin),
+    }).refine((data) => data.password === data.confirmPassword, {
+        message: errors.passwordsDoNotMatch,
+        path: ["confirmPassword"],
+    })
+}
+
 export type LoginValues = z.infer<ReturnType<typeof createLoginSchema>>
 export type RegisterValues = z.infer<ReturnType<typeof createRegisterSchema>>
+export type ForgotPasswordValues = z.infer<ReturnType<typeof createForgotPasswordSchema>>
+export type ResetPasswordValues = z.infer<ReturnType<typeof createResetPasswordSchema>>
 
 export function getPasswordStrength(password: string): 0 | 1 | 2 | 3 {
     if (!password) return 0

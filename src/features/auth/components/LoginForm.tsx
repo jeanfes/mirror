@@ -93,6 +93,14 @@ export function LoginForm() {
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                     }
+                    bottomRight={
+                        <Link 
+                            href={ROUTES.auth.forgotPassword}
+                            className="text-[13px] font-medium text-secondary-text hover:text-accent-blue transition-colors"
+                        >
+                            {t.auth.forgotPasswordLink}
+                        </Link>
+                    }
                 />
 
                 <Button

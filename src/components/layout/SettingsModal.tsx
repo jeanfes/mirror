@@ -7,15 +7,13 @@ import {
     Bell,
     Download,
     ExternalLink,
-    Laptop,
-    Lock,
     LogOut,
     Shield,
-    Smartphone,
     Trash2,
     Settings,
     Palette,
     User,
+    ChevronLeft,
 } from "lucide-react"
 
 import { Card } from "@/components/ui/Card"
@@ -36,6 +34,7 @@ import {
 import { ThemeSegmentedControl } from "@/components/ui/ThemeToggle"
 import { useLogout } from "@/features/auth/hooks/useLogout"
 import { useTheme } from "../providers/ThemeProvider"
+import { ChangePasswordModal } from "@/features/auth/components/ChangePasswordModal"
 
 interface SettingsModalProps {
     children: React.ReactNode
@@ -62,6 +61,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
     const handleDeleteAccountConfirm = async () => {
         setIsDeleteAccountConfirmOpen(false)
     }
+
+    const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
 
     return (
         <>
@@ -242,57 +243,35 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                 <Card className="settings-card-row">
                                                     <div className="flex items-center gap-5">
                                                         <div className="h-12 w-12 rounded-2xl bg-accent-blue/12 flex items-center justify-center text-accent-blue">
-                                                            <Lock className="h-5.5 w-5.5" />
+                                                            <Shield className="h-5.5 w-5.5" />
                                                         </div>
                                                         <div>
                                                             <p className="text-[15px] font-bold text-primary-text">Master Password</p>
                                                             <p className="text-xs text-secondary-text font-medium">Last updated March 2026</p>
                                                         </div>
                                                     </div>
-                                                    <Button variant="secondary" className="font-bold h-9" onClick={() => toast.success("Password change requested. Check your email.")}>Update</Button>
-                                                </Card>
-                                            </div>
-                                        </motion.div>
-                                    </TabsContent>
-
-                                    {/* DEVICES */}
-                                    <TabsContent value="devices" key="devices" asChild>
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.1 }}
-                                            className="mt-0 space-y-8 outline-none"
-                                        >
-                                            <div className="space-y-1">
-                                                <h3 className="settings-section-title">Active Sessions</h3>
-                                                <p className="settings-section-description">Manage and sign out of your remote active sessions.</p>
-                                            </div>
-
-                                            <div className="space-y-4">
-                                                <Card className="flex items-center gap-5 border-border-soft bg-surface-card p-5">
-                                                    <div className="h-12 w-12 rounded-2xl bg-surface-elevated flex items-center justify-center text-brand-dark shadow-premium-sm">
-                                                        <Laptop className="h-5.5 w-5.5" />
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <div className="flex items-center gap-2">
-                                                            <p className="text-[15px] font-bold text-primary-text">Windows PC • Chrome</p>
-                                                            <span className="settings-session-badge">Active</span>
-                                                        </div>
-                                                        <p className="text-xs text-secondary-text font-medium">Medellin, Colombia • IP: 181.12.XXX.XX</p>
-                                                    </div>
+                                                    <Button 
+                                                        variant="secondary" 
+                                                        className="font-bold h-9 px-5" 
+                                                        onClick={() => setIsChangePasswordOpen(true)}
+                                                    >
+                                                        Update
+                                                    </Button>
                                                 </Card>
 
-                                                <Card className="flex items-center gap-5 p-5">
-                                                    <div className="h-12 w-12 rounded-2xl bg-surface-subtle flex items-center justify-center text-secondary-text">
-                                                        <Smartphone className="h-5.5 w-5.5" />
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <p className="text-[15px] font-bold text-primary-text">iPhone 15 Pro • App</p>
-                                                        <p className="text-xs text-secondary-text font-medium">Miami, USA • 2 days ago</p>
-                                                    </div>
-                                                    <Button variant="ghost" className="text-danger hover:bg-(--danger-soft-bg) text-xs font-bold" onClick={() => toast.success("Session revoked successfully")}>Revoke</Button>
-                                                </Card>
+                                                <div className="rounded-2xl border border-border-soft bg-surface-base/50 p-5 mt-2">
+                                                    <h4 className="text-[13px] font-bold text-primary-text mb-3 uppercase tracking-wider">Security Best Practices</h4>
+                                                    <ul className="space-y-2.5 text-[13px] text-secondary-text">
+                                                        <li className="flex items-start gap-3">
+                                                            <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
+                                                            <span>Use a complex password with at least 8 characters.</span>
+                                                        </li>
+                                                        <li className="flex items-start gap-3">
+                                                            <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
+                                                            <span>Change your password regularly to keep your account safe.</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </motion.div>
                                     </TabsContent>
@@ -411,6 +390,11 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                 confirmLabel="Delete account"
                 onConfirm={handleDeleteAccountConfirm}
                 onCancel={() => setIsDeleteAccountConfirmOpen(false)}
+            />
+
+            <ChangePasswordModal 
+                open={isChangePasswordOpen} 
+                onOpenChange={setIsChangePasswordOpen} 
             />
 
             <LoadingOverlay show={isLogoutPending} label="Logging out..." />

@@ -3,7 +3,6 @@
 import { format } from "date-fns"
 import { Crown, Gauge, Layers3, Zap } from "lucide-react"
 import { toast } from "sonner"
-import { Card } from "@/components/ui/Card"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"

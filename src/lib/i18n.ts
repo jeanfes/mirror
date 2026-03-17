@@ -88,7 +88,27 @@ export const dictionaries = {
       "showPassword": "Mostrar contrase\u00f1a",
       "hidePassword": "Ocultar contrase\u00f1a",
       "passwordStrength": "Seguridad",
-      "registerSuccess": "Te enviamos un correo para confirmar tu cuenta"
+      "registerSuccess": "Te enviamos un correo para confirmar tu cuenta",
+      "forgotPasswordTitle": "Recuperar contraseña",
+      "forgotPasswordSubtitle": "Introduce tu email para recibir un enlace de recuperación.",
+      "forgotPasswordBtn": "Enviar enlace",
+      "forgotPasswordLink": "¿Olvidaste tu contraseña?",
+      "resetPasswordTitle": "Nueva contraseña",
+      "resetPasswordSubtitle": "Crea una contraseña segura para tu cuenta.",
+      "resetPasswordBtn": "Actualizar contraseña",
+      "recoveryEmailSent": "Si el correo está registrado, recibirás un enlace en unos minutos.",
+      "checkEmailTitle": "Revisa tu correo",
+      "checkEmailSubtitle": "Hemos enviado instrucciones para recuperar tu contraseña.",
+      "passwordChangedTitle": "Contraseña actualizada",
+      "passwordChangedSubtitle": "Tu contraseña ha sido cambiada con éxito.",
+      "backToLogin": "Volver al inicio de sesión",
+      "back": "Volver",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "changePasswordTitle": "Cambiar contraseña",
+      "changePasswordSubtitle": "Actualiza tu contraseña para mantener tu cuenta segura.",
+      "changePasswordBtn": "Cambiar contraseña",
+      "currentPasswordLabel": "Contraseña actual"
     ,
       "errors": {
         "emailRequired": "El correo es requerido.",
@@ -109,7 +129,9 @@ export const dictionaries = {
         "registerError": "No se pudo crear la cuenta.",
         "strengthWeak": "Débil",
         "strengthMedium": "Media",
-        "strengthStrong": "Fuerte"
+        "strengthStrong": "Fuerte",
+        "passwordsDoNotMatch": "Las contraseñas no coinciden.",
+        "generic_error": "Ocurrió un error inesperado. Inténtalo de nuevo."
       }
     },
     "faqPage": {
@@ -292,7 +314,27 @@ export const dictionaries = {
       "showPassword": "Show password",
       "hidePassword": "Hide password",
       "passwordStrength": "Strength",
-      "registerSuccess": "We sent you an email to confirm your account"
+      "registerSuccess": "We sent you an email to confirm your account",
+      "forgotPasswordTitle": "Recover password",
+      "forgotPasswordSubtitle": "Enter your email to receive a recovery link.",
+      "forgotPasswordBtn": "Send link",
+      "forgotPasswordLink": "Forgot password?",
+      "resetPasswordTitle": "New password",
+      "resetPasswordSubtitle": "Create a secure password for your account.",
+      "resetPasswordBtn": "Update password",
+      "recoveryEmailSent": "If the email is registered, you will receive a link in a few minutes.",
+      "checkEmailTitle": "Check your email",
+      "checkEmailSubtitle": "We have sent instructions to recover your password.",
+      "passwordChangedTitle": "Password updated",
+      "passwordChangedSubtitle": "Your password has been changed successfully.",
+      "backToLogin": "Back to login",
+      "back": "Back",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm password",
+      "changePasswordTitle": "Change password",
+      "changePasswordSubtitle": "Update your password to keep your account secure.",
+      "changePasswordBtn": "Change password",
+      "currentPasswordLabel": "Current password"
     ,
       "errors": {
         "emailRequired": "Email is required.",
@@ -313,7 +355,9 @@ export const dictionaries = {
         "registerError": "Could not create the account.",
         "strengthWeak": "Weak",
         "strengthMedium": "Medium",
-        "strengthStrong": "Strong"
+        "strengthStrong": "Strong",
+        "passwordsDoNotMatch": "Passwords do not match.",
+        "generic_error": "An unexpected error occurred. Please try again."
       }
     },
     "faqPage": {
@@ -496,7 +540,27 @@ export const dictionaries = {
       "showPassword": "Mostrar senha",
       "hidePassword": "Ocultar senha",
       "passwordStrength": "Segurança",
-      "registerSuccess": "Enviamos um e-mail para confirmar sua conta"
+      "registerSuccess": "Enviamos um e-mail para confirmar sua conta",
+      "forgotPasswordTitle": "Recuperar senha",
+      "forgotPasswordSubtitle": "Digite seu e-mail para receber um link de recuperação.",
+      "forgotPasswordBtn": "Enviar link",
+      "forgotPasswordLink": "Esqueceu sua senha?",
+      "resetPasswordTitle": "Nova senha",
+      "resetPasswordSubtitle": "Crie uma senha segura para sua conta.",
+      "resetPasswordBtn": "Atualizar senha",
+      "recoveryEmailSent": "Se o e-mail estiver cadastrado, você receberá um link em alguns minutos.",
+      "checkEmailTitle": "Verifique seu e-mail",
+      "checkEmailSubtitle": "Enviamos instruções para recuperar sua senha.",
+      "passwordChangedTitle": "Senha atualizada",
+      "passwordChangedSubtitle": "Sua senha foi alterada com sucesso.",
+      "backToLogin": "Voltar ao login",
+      "back": "Voltar",
+      "newPasswordLabel": "Nova senha",
+      "confirmPasswordLabel": "Confirmar senha",
+      "changePasswordTitle": "Alterar senha",
+      "changePasswordSubtitle": "Atualize sua senha para manter sua conta segura.",
+      "changePasswordBtn": "Alterar senha",
+      "currentPasswordLabel": "Senha atual"
     ,
       "errors": {
         "emailRequired": "E-mail é obrigatório.",
@@ -517,7 +581,9 @@ export const dictionaries = {
         "registerError": "Não foi possível criar a conta.",
         "strengthWeak": "Fraca",
         "strengthMedium": "Média",
-        "strengthStrong": "Forte"
+        "strengthStrong": "Forte",
+        "passwordsDoNotMatch": "As senhas não coincidem.",
+        "generic_error": "Ocorreu un erro inesperado. Tente novamente."
       }
     },
     "faqPage": {
@@ -698,7 +764,27 @@ export const dictionaries = {
       "showPassword": "Afficher le mot de passe",
       "hidePassword": "Masquer le mot de passe",
       "passwordStrength": "Sécurité",
-      "registerSuccess": "Nous vous avons envoyé un e-mail pour confirmer votre compte"
+      "registerSuccess": "Nous vous avons envoyé un e-mail pour confirmer votre compte",
+      "forgotPasswordTitle": "Récupérer le mot de passe",
+      "forgotPasswordSubtitle": "Entrez votre e-mail pour recevoir un lien de récupération.",
+      "forgotPasswordBtn": "Envoyer le lien",
+      "forgotPasswordLink": "Mot de passe oublié ?",
+      "resetPasswordTitle": "Nouveau mot de passe",
+      "resetPasswordSubtitle": "Créez un mot de passe sécurisé pour votre compte.",
+      "resetPasswordBtn": "Mettre à jour le mot de passe",
+      "recoveryEmailSent": "Si l'e-mail est enregistré, vous recevrez un lien dans quelques minutes.",
+      "checkEmailTitle": "Vérifiez vos e-mails",
+      "checkEmailSubtitle": "Nous avons envoyé des instructions pour récupérer votre mot de passe.",
+      "passwordChangedTitle": "Mot de passe mis à jour",
+      "passwordChangedSubtitle": "Votre mot de passe a été modifié avec succès.",
+      "backToLogin": "Retour à la connexion",
+      "back": "Retour",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "changePasswordTitle": "Changer le mot de passe",
+      "changePasswordSubtitle": "Mettez à jour votre mot de passe pour sécuriser votre compte.",
+      "changePasswordBtn": "Changer le mot de passe",
+      "currentPasswordLabel": "Mot de passe actuel"
     ,
       "errors": {
         "emailRequired": "L'e-mail est requis.",
@@ -719,7 +805,9 @@ export const dictionaries = {
         "registerError": "Impossible de créer le compte.",
         "strengthWeak": "Faible",
         "strengthMedium": "Moyenne",
-        "strengthStrong": "Fort"
+        "strengthStrong": "Fort",
+        "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+        "generic_error": "Une erreur inattendue s'est produite. Veuillez réessayer."
       }
     },
     "faqPage": {
@@ -900,7 +988,27 @@ export const dictionaries = {
       "showPassword": "Passwort anzeigen",
       "hidePassword": "Passwort ausblenden",
       "passwordStrength": "Sicherheit",
-      "registerSuccess": "Wir haben Ihnen eine E-Mail gesendet, um Ihr Konto zu bestätigen"
+      "registerSuccess": "Wir haben Ihnen eine E-Mail gesendet, um Ihr Konto zu bestätigen",
+      "forgotPasswordTitle": "Passwort wiederherstellen",
+      "forgotPasswordSubtitle": "Geben Sie Ihre E-Mail-Adresse ein, um einen Link zur Wiederherstellung zu erhalten.",
+      "forgotPasswordBtn": "Link senden",
+      "forgotPasswordLink": "Passwort vergessen?",
+      "resetPasswordTitle": "Neues Passwort",
+      "resetPasswordSubtitle": "Erstellen Sie ein sicheres Passwort für Ihr Konto.",
+      "resetPasswordBtn": "Passwort aktualisieren",
+      "recoveryEmailSent": "Wenn die E-Mail registriert ist, erhalten Sie in wenigen Minuten einen Link.",
+      "checkEmailTitle": "E-Mails prüfen",
+      "checkEmailSubtitle": "Wir haben Anweisungen zur Wiederherstellung Ihres Passworts gesendet.",
+      "passwordChangedTitle": "Passwort aktualisiert",
+      "passwordChangedSubtitle": "Ihr Passwort wurde erfolgreich geändert.",
+      "backToLogin": "Zurück zum Login",
+      "back": "Zurück",
+      "newPasswordLabel": "Neues Passwort",
+      "confirmPasswordLabel": "Passwort bestätigen",
+      "changePasswordTitle": "Passwort ändern",
+      "changePasswordSubtitle": "Aktualisieren Sie Ihr Passwort, um Ihr Konto sicher zu halten.",
+      "changePasswordBtn": "Passwort ändern",
+      "currentPasswordLabel": "Aktuelles Passwort"
     ,
       "errors": {
         "emailRequired": "E-Mail ist erforderlich.",
@@ -921,7 +1029,9 @@ export const dictionaries = {
         "registerError": "Konto konnte nicht erstellt werden.",
         "strengthWeak": "Schwach",
         "strengthMedium": "Mittel",
-        "strengthStrong": "Stark"
+        "strengthStrong": "Stark",
+        "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
+        "generic_error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
       }
     },
     "faqPage": {

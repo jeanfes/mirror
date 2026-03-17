@@ -10,6 +10,8 @@ export const ROUTES = {
   auth: {
     login: "/auth/login",
     register: "/auth/register",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
     callback: "/auth/callback"
   },
   private: {
@@ -26,7 +28,7 @@ export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.private.profiles
 export const DEFAULT_UNAUTHENTICATED_ROUTE = ROUTES.public.index
 
 export const PRIVATE_PATHS = Object.values(ROUTES.private)
-export const AUTH_PATHS = [ROUTES.auth.login, ROUTES.auth.register]
+export const AUTH_PATHS = [ROUTES.auth.login, ROUTES.auth.register, ROUTES.auth.forgotPassword, ROUTES.auth.resetPassword]
 export const KNOWN_APP_PATHS = [
   ROUTES.public.index,
   ...Object.values(ROUTES.public),
