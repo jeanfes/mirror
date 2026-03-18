@@ -4,14 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import {
   createProfile,
-  deleteProfile,
+  moveToTrash,
   listProfiles,
   toggleProfile,
   updateProfile,
   type CreateProfileInput,
   type UpdateProfileInput
 } from "@/features/profiles/services/profiles.service"
-import type { Profile } from "@/types/dashboard"
+import type { VoiceProfile } from "@/types/database.types"
 
 export function useProfiles() {
   const queryClient = useQueryClient()
@@ -30,14 +30,14 @@ export function useProfiles() {
   const createMutation = useMutation({
     mutationFn: (input: CreateProfileInput) => createProfile(input),
     onSuccess: (created) => {
-      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) => [created, ...(prev ?? [])])
+      queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) => [created, ...(prev ?? [])])
     }
   })
 
   const updateMutation = useMutation({
     mutationFn: (input: UpdateProfileInput) => updateProfile(input),
     onSuccess: (updated) => {
-      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+      queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
         (prev ?? []).map((p) => p.id === updated.id ? updated : p)
       )
     }
@@ -46,16 +46,16 @@ export function useProfiles() {
   const toggleMutation = useMutation({
     mutationFn: (id: string) => toggleProfile(id),
     onSuccess: (toggled) => {
-      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+      queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
         (prev ?? []).map((p) => p.id === toggled.id ? toggled : p)
       )
     }
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteProfile(id),
+    mutationFn: (id: string) => moveToTrash(id),
     onSuccess: (result) => {
-      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+      queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
         (prev ?? []).filter((p) => p.id !== result.id)
       )
     }

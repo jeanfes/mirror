@@ -2,12 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
-import { getInvoices, getPaymentMethods } from "@/features/billing/services/billing.service"
+import { getInvoices, getBillingInfo } from "@/features/billing/services/billing.service"
 
 export function useBilling() {
   const userId = useUserId()
   const invoicesKey = userId ? makeQueryKey("invoices", userId) : ["invoices"]
-  const paymentMethodsKey = userId ? makeQueryKey("paymentMethods", userId) : ["paymentMethods"]
+  const billingInfoKey = userId ? makeQueryKey("billingInfo", userId) : ["billingInfo"]
 
   const invoicesQuery = useQuery({
     queryKey: invoicesKey,
@@ -18,9 +18,9 @@ export function useBilling() {
     enabled: !!userId
   })
 
-  const paymentMethodsQuery = useQuery({
-    queryKey: paymentMethodsKey,
-    queryFn: getPaymentMethods,
+  const billingInfoQuery = useQuery({
+    queryKey: billingInfoKey,
+    queryFn: getBillingInfo,
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
@@ -31,10 +31,11 @@ export function useBilling() {
     invoices: invoicesQuery.data ?? [],
     isLoadingInvoices: invoicesQuery.isLoading,
     isErrorInvoices: invoicesQuery.isError,
-    paymentMethods: paymentMethodsQuery.data ?? [],
-    isLoadingPaymentMethods: paymentMethodsQuery.isLoading,
-    isErrorPaymentMethods: paymentMethodsQuery.isError,
+    paymentMethods: billingInfoQuery.data?.paymentMethod ? [billingInfoQuery.data.paymentMethod] : [],
+    billingInfo: billingInfoQuery.data,
+    isLoadingSettings: billingInfoQuery.isLoading,
+    isErrorSettings: billingInfoQuery.isError,
     refetchInvoices: invoicesQuery.refetch,
-    refetchPaymentMethods: paymentMethodsQuery.refetch
+    refetchBillingInfo: billingInfoQuery.refetch
   }
 }

@@ -48,7 +48,7 @@ export function MobileSidebar() {
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-40 flex">
-                    {/* Backdrop */}
+                    
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -58,7 +58,7 @@ export function MobileSidebar() {
                         aria-hidden="true"
                     />
 
-                    {/* Sidebar panel */}
+                    
                     <motion.aside
                         initial={{ x: "-100%" }}
                         animate={{ x: 0 }}
@@ -161,3 +161,4 @@ export function MobileSidebar() {
         </div>
     )
 }
+

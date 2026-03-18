@@ -17,7 +17,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
   return (
     <div className="bg-surface-base min-h-screen pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Breadcrumb / Back */}
+        
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -34,7 +34,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
           </Link>
         </motion.div>
 
-        {/* Header */}
+        
         <header className="mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -57,7 +57,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
           </motion.div>
         </header>
 
-        {/* Content */}
+        
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -76,3 +76,4 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
     </div>
   )
 }
+

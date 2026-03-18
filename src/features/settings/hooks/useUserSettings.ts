@@ -4,10 +4,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import {
   getUserSettings,
-  updateUserSettings,
-  type UpdateUserSettingsInput,
-  type UserSettings
+  updateUserSettings
 } from "@/features/settings/services/user-settings.service"
+import type { UserSettings } from "@/types/database.types"
 
 export function useUserSettings() {
   const queryClient = useQueryClient()
@@ -24,7 +23,7 @@ export function useUserSettings() {
   })
 
   const mutation = useMutation({
-    mutationFn: (input: UpdateUserSettingsInput) => updateUserSettings(input),
+    mutationFn: (input: Partial<UserSettings>) => updateUserSettings(input),
     onSuccess: (next) => {
       queryClient.setQueryData<UserSettings>(settingsKey, next)
     }

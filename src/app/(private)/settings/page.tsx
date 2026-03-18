@@ -14,7 +14,9 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { useLanguageStore } from "@/store/useLanguageStore"
-import type { UpdateUserSettingsInput } from "@/features/settings/services/user-settings.service"
+import type { UserSettings } from "@/types/database.types"
+
+type UpdateUserSettingsInput = Omit<UserSettings, "theme">
 
 const defaultDraft: UpdateUserSettingsInput = {
     language: "en",
@@ -24,7 +26,8 @@ const defaultDraft: UpdateUserSettingsInput = {
     requireStrictTone: true,
     showConfidenceHints: true,
     desktopAlertsEnabled: false,
-    notificationsEnabled: true
+    notificationsEnabled: true,
+    onboardingCompleted: false
 }
 
 export default function SettingsPage() {
@@ -46,7 +49,8 @@ export default function SettingsPage() {
             requireStrictTone: settings.requireStrictTone,
             showConfidenceHints: settings.showConfidenceHints,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
-            notificationsEnabled: settings.notificationsEnabled
+            notificationsEnabled: settings.notificationsEnabled,
+            onboardingCompleted: settings.onboardingCompleted
         }
     }, [draft, settings])
 
@@ -54,7 +58,7 @@ export default function SettingsPage() {
         key: K,
         value: UpdateUserSettingsInput[K]
     ) => {
-        setDraft((current) => ({
+        setDraft((current: UpdateUserSettingsInput | null) => ({
             ...(current ?? resolvedSettings),
             [key]: value
         }))
@@ -183,7 +187,7 @@ export default function SettingsPage() {
                         />
 
                         <Select
-                            value={resolvedSettings.defaultProfileId}
+                            value={resolvedSettings.defaultProfileId ?? ""}
                             onChange={(value) => updateDraft("defaultProfileId", value)}
                             label="Default profile"
                             triggerClassName="h-11 rounded-2xl"

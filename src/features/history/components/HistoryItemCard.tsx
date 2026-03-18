@@ -5,24 +5,24 @@ import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/Tooltip"
-import type { HistoryItem } from "@/types/dashboard"
+import type { GenerationHistory } from "@/types/database.types"
 
 interface HistoryItemCardProps {
-    item: HistoryItem
+    item: GenerationHistory
     profileName: string
     onCopy: (comment: string) => void
     onReuse: (id: string) => void
     onToggleApplied: (id: string) => void
 }
 
-const goalLabels: Record<NonNullable<HistoryItem["goal"]>, string> = {
+const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
     add_value: "Add value",
     challenge: "Challenge",
     networking: "Networking",
     question: "Question"
 }
 
-const sourceLabels: Record<NonNullable<HistoryItem["source"]>, string> = {
+const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
     alternative: "Alternative",
     generated: "Generated",
     history_reuse: "Reused",
@@ -30,6 +30,8 @@ const sourceLabels: Record<NonNullable<HistoryItem["source"]>, string> = {
 }
 
 export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleApplied }: HistoryItemCardProps) {
+    const isApplied = item.status === "applied"
+
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
             <div className="border-b border-border-soft bg-surface-elevated px-5 py-5 backdrop-blur-sm">
@@ -40,8 +42,8 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                             <span className="feature-pill">
                                 {profileName}
                             </span>
-                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${item.applied ? "badge-success" : "badge-warning"}`}>
-                                {item.applied ? "Applied" : "Pending"}
+                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${isApplied ? "badge-success" : "badge-warning"}`}>
+                                {isApplied ? "Applied" : "Pending"}
                             </span>
                             {item.source ? (
                                 <span className="feature-pill">
@@ -96,7 +98,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                         <Tooltip text="Toggle whether this comment was already used">
                             <Button type="button" onClick={() => onToggleApplied(item.id)}>
                                 <CheckCircle2 className="h-4 w-4" />
-                                {item.applied ? "Mark pending" : "Mark applied"}
+                                {isApplied ? "Mark pending" : "Mark applied"}
                             </Button>
                         </Tooltip>
                     </div>

@@ -44,8 +44,9 @@ export default function HistoryPage() {
 
         return (history ?? []).filter((item) => {
             if (selectedProfileId !== "all" && item.profileId !== selectedProfileId) return false
-            if (appliedFilter === "applied" && !item.applied) return false
-            if (appliedFilter === "pending" && item.applied) return false
+            const isApplied = item.status === "applied"
+            if (appliedFilter === "applied" && !isApplied) return false
+            if (appliedFilter === "pending" && isApplied) return false
 
             if (!normalizedSearch) return true
 
@@ -63,8 +64,8 @@ export default function HistoryPage() {
 
         return {
             total: items.length,
-            applied: items.filter((item) => item.applied).length,
-            pending: items.filter((item) => !item.applied).length,
+            applied: items.filter((item) => item.status === "applied").length,
+            pending: items.filter((item) => item.status !== "applied").length,
             reused: items.filter((item) => item.source === "history_reuse").length
         }
     }, [history])
@@ -221,7 +222,7 @@ export default function HistoryPage() {
                         <HistoryItemCard
                             key={item.id}
                             item={item}
-                            profileName={profileMap.get(item.profileId) ?? t.app.unknownProfile}
+                            profileName={item.profileId ? (profileMap.get(item.profileId) ?? t.app.unknownProfile) : t.app.unknownProfile}
                             onCopy={handleCopy}
                             onReuse={handleReuse}
                             onToggleApplied={handleToggleApplied}
@@ -232,5 +233,4 @@ export default function HistoryPage() {
         </div>
     )
 }
-
 

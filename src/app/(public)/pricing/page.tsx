@@ -33,7 +33,7 @@ export default function PricingPage() {
             <section className="w-full max-w-6xl px-6 py-12">
                 <div className="grid gap-8 md:grid-cols-3 lg:gap-8 items-stretch mx-auto">
 
-                    {/* Free Plan */}
+                    
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export default function PricingPage() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Pro Plan */}
+                    
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ export default function PricingPage() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Elite Plan */}
+                    
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -131,3 +131,4 @@ export default function PricingPage() {
         </main>
     )
 }
+

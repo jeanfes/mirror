@@ -29,7 +29,7 @@ export default function FeaturesPage() {
             <section className="w-full max-w-5xl px-6 py-12">
                 <div className="grid gap-12 sm:grid-cols-2">
 
-                    {/* Feature Card Detailed */}
+                    
                     <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.2 }} className="neo-card rounded-[28px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm flex flex-col items-start gap-4">
                         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated shadow-premium-sm ring-1 ring-border-soft">
                             <Zap className="h-8 w-8 text-primary-dark" />
@@ -75,3 +75,4 @@ export default function FeaturesPage() {
         </main>
     )
 }
+

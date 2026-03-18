@@ -13,7 +13,7 @@ export default async function NotFound() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-bg-main px-4 selection:bg-primary-main/20">
             <div className="relative w-full max-w-lg">
-                {/* Decorative background elements */}
+                
                 <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary-main/5 blur-3xl" />
                 <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-primary-main/10 blur-3xl" />
                 
@@ -59,3 +59,4 @@ export default async function NotFound() {
         </div>
     )
 }
+

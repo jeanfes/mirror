@@ -6,8 +6,8 @@ import {
     listTrash,
     restoreTrashItem,
     deleteTrashItem,
-    type TrashItem,
-} from "@/features/history/services/trash.service"
+    type TrashItem
+} from "@/features/trash/services/trash.service"
 
 export function useTrash() {
     const queryClient = useQueryClient()

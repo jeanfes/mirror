@@ -33,7 +33,7 @@ export default function LandingPage() {
 
     return (
         <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden pt-10">
-            {/* Hero Section */}
+            
             <section className="relative w-full max-w-6xl px-6 pt-24 pb-20 text-center md:pt-40 md:pb-32 z-10">
                 <motion.div {...float} className="absolute top-24 left-10 hidden lg:block md:block">
                     <div className="neo-shell flex h-18 w-18 items-center justify-center rounded-2xl shadow-premium-md">
@@ -91,7 +91,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* How It Works Section [NEW] */}
+            
             <section className="w-full py-20 bg-surface-base border-y border-border-soft relative z-10 backdrop-blur-sm">
                 <div className="mx-auto max-w-6xl px-6">
                     <motion.div {...fadeInUp} className="text-center mb-16">
@@ -106,10 +106,10 @@ export default function LandingPage() {
                         viewport={{ once: true }}
                         className="grid md:grid-cols-3 gap-8 relative"
                     >
-                        {/* Connecting Line */}
+                        
                         <div className="hidden md:block absolute top-13 left-[15%] right-[15%] h-0.5 bg-linear-to-r from-transparent via-border-soft to-transparent -z-10" />
 
-                        {/* Step 1 */}
+                        
                         <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <Download className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
@@ -120,7 +120,7 @@ export default function LandingPage() {
                             </p>
                         </motion.div>
 
-                        {/* Step 2 */}
+                        
                         <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <SlidersHorizontal className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
@@ -131,7 +131,7 @@ export default function LandingPage() {
                             </p>
                         </motion.div>
 
-                        {/* Step 3 */}
+                        
                         <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
                             <div className="w-24 h-24 mb-6 rounded-4xl bg-bg-main shadow-inner flex items-center justify-center ring-1 ring-border-soft">
                                 <Keyboard className="h-10 w-10 text-primary-dark" strokeWidth={1.5} />
@@ -145,7 +145,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Features Section */}
+            
             <section id="features" className="w-full py-24 pb-32 relative z-10">
                 <div className="mx-auto max-w-6xl px-6">
                     <motion.div {...fadeInUp} className="mb-16 text-center space-y-4">
@@ -160,7 +160,7 @@ export default function LandingPage() {
                         viewport={{ once: true }}
                         className="grid grid-cols-1 gap-8 md:grid-cols-3"
                     >
-                        {/* Feature 1 */}
+                        
                         <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
@@ -172,7 +172,7 @@ export default function LandingPage() {
                             </p>
                         </motion.div>
 
-                        {/* Feature 2 */}
+                        
                         <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
@@ -184,7 +184,7 @@ export default function LandingPage() {
                             </p>
                         </motion.div>
 
-                        {/* Feature 3 */}
+                        
                         <motion.div variants={fadeInUp} className="neo-card relative overflow-visible rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 shadow-premium-sm group transition-all duration-300 hover:-translate-y-2 hover:shadow-premium-md">
                             <div className="absolute -inset-0.5 bg-linear-to-br from-border-soft to-transparent rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform duration-300 group-hover:scale-110">
@@ -199,7 +199,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
+            
             <section className="w-full max-w-5xl px-6 pb-40 relative z-10">
                 <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-shell relative overflow-hidden rounded-[2.5rem] p-12 text-center shadow-premium-md sm:p-20 border-border-soft group hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500">
                     <div className="absolute inset-0 bg-linear-to-br from-(--hero-surface-start) via-(--hero-surface-mid) to-(--hero-surface-end) transition-opacity group-hover:opacity-80" />
@@ -226,3 +226,4 @@ export default function LandingPage() {
         </main>
     );
 }
+

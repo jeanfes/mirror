@@ -1,17 +1,17 @@
 "use client"
 
+import { listHistory, moveToTrash, reuseHistoryItem, updateHistoryStatus, type ListHistoryFilters } from "@/features/history/services/history.service"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
-import { listHistory, reuseHistoryItem, toggleHistoryApplied } from "@/features/history/services/history.service"
 
-export function useHistory() {
+export function useHistory(filters?: ListHistoryFilters) {
   const queryClient = useQueryClient()
   const userId = useUserId()
-  const historyKey = userId ? makeQueryKey("history", userId) : ["history"]
+  const historyKey = userId ? [...makeQueryKey("history", userId), ...Object.values(filters ?? {})] : ["history", ...Object.values(filters ?? {})]
 
   const query = useQuery({
     queryKey: historyKey,
-    queryFn: listHistory,
+    queryFn: () => listHistory(filters),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
@@ -19,16 +19,23 @@ export function useHistory() {
   })
 
   const toggleMutation = useMutation({
-    mutationFn: (id: string) => toggleHistoryApplied(id),
-    onSuccess: (next) => {
-      queryClient.setQueryData(historyKey, next)
+    mutationFn: (id: string) => updateHistoryStatus(id, "applied"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
     }
   })
 
   const reuseMutation = useMutation({
     mutationFn: (id: string) => reuseHistoryItem(id),
-    onSuccess: (next) => {
-      queryClient.setQueryData(historyKey, next)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
+    }
+  })
+
+  const trashMutation = useMutation({
+    mutationFn: (id: string) => moveToTrash(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
     }
   })
 
@@ -36,6 +43,8 @@ export function useHistory() {
     ...query,
     toggleHistoryApplied: toggleMutation.mutateAsync,
     reuseHistoryItem: reuseMutation.mutateAsync,
-    isMutating: toggleMutation.isPending || reuseMutation.isPending
+    moveToTrash: trashMutation.mutateAsync,
+    isMutating: toggleMutation.isPending || reuseMutation.isPending || trashMutation.isPending
   }
 }
+

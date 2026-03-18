@@ -43,7 +43,7 @@ export default function AccountPage() {
     const historyItems = history ?? []
     const profileItems = profiles ?? []
     const activeProfiles = profileItems.filter((profile) => profile.enabled).length
-    const appliedCount = historyItems.filter((item) => item.applied).length
+    const appliedCount = historyItems.filter((item) => item.status === "applied").length
     const reusableCount = historyItems.filter((item) => item.source === "history_reuse").length
     const currentMonth = new Date().getMonth()
     const generatedThisMonth = historyItems.filter((item) => new Date(item.createdAt).getMonth() === currentMonth).length
@@ -104,7 +104,7 @@ export default function AccountPage() {
                         <div className="mt-4 grid grid-cols-2 gap-3">
                             <div className="dashboard-dark-stat-muted">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Renewal</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy")}</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : "N/A"}</p>
                             </div>
                             <div className="dashboard-dark-stat-muted">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Latest output</p>
@@ -130,7 +130,7 @@ export default function AccountPage() {
                             </div>
                             <p className="dashboard-overline mt-4">Current plan</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.plan}</p>
-                            <p className="mt-2 body-muted">Renews on {format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy")}</p>
+                            <p className="mt-2 body-muted">Renews on {resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : "N/A"}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
@@ -237,5 +237,4 @@ export default function AccountPage() {
         </div>
     )
 }
-
 

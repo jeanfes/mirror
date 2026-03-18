@@ -10,10 +10,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/DropdownMenu"
-import type { Profile } from "@/types/dashboard"
+import type { VoiceProfile } from "@/types/database.types"
 
 interface ProfileCardProps {
-    profile: Profile
+    profile: VoiceProfile
     onEdit: (id: string) => void
     onToggle: (id: string) => void
     onDelete: (id: string) => void
@@ -81,7 +81,7 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                 </div>
 
                 <div className="mt-4 space-y-2.5">
-                    {profile.examples.map((example, index) => (
+                    {(profile.examples ?? []).map((example: string, index: number) => (
                         <div key={`${profile.id}_example_${index}`} className="rounded-2xl border border-border-soft bg-surface-card px-3.5 py-3">
                             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-text">Example {index + 1}</p>
                             <p className="mt-2 text-[13px] leading-6 text-secondary-text">{example}</p>

@@ -5,7 +5,7 @@ import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Lightbulb } from "lucide-react"
-import type { Profile } from "@/types/dashboard"
+import type { VoiceProfile } from "@/types/database.types"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { Button } from "@/components/ui/Button"
 import { Toggle } from "@/components/ui/Toggle"
@@ -28,7 +28,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 
 interface ProfileFormDialogProps {
     open: boolean
-    profile: Profile | null
+    profile: VoiceProfile | null
     isPending: boolean
     onClose: () => void
     onSubmit: (values: CreateProfileInput, profileId?: string) => Promise<void>
@@ -65,9 +65,9 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
                 name: profile.name,
                 description: profile.description,
                 tone: profile.tone,
-                example1: profile.examples[0],
-                example2: profile.examples[1],
-                example3: profile.examples[2],
+                example1: profile.examples[0] ?? "",
+                example2: profile.examples[1] ?? "",
+                example3: profile.examples[2] ?? "",
                 allowEmojis: profile.allowEmojis,
                 enabled: profile.enabled
             })

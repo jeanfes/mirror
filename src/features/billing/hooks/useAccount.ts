@@ -29,7 +29,7 @@ export function useAccount() {
     ...query,
     setPlan: mutation.mutateAsync,
     isMutating: mutation.isPending,
-    // Backward-compatible alias while pages migrate to isMutating.
     isUpdatingPlan: mutation.isPending
   }
 }
+

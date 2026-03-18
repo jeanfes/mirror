@@ -78,7 +78,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                     <DialogDescription className="sr-only">Manage your account settings and preferences</DialogDescription>
                     <Tabs defaultValue="general" className="flex-1 flex flex-col overflow-hidden">
                         <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
-                            {/* Sidebar Tabs */}
+                            
                             <div className="w-full sm:w-70 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 backdrop-blur-sm flex flex-col z-10">
                                 <div className="hidden sm:flex items-center gap-3 px-2 mb-8 mt-2">
                                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-premium-sm">
@@ -124,10 +124,10 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                 </TabsList>
                             </div>
 
-                            {/* Content Area */}
+                            
                             <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10 backdrop-blur-sm">
                                 <AnimatePresence>
-                                    {/* GENERAL */}
+                                    
                                     <TabsContent value="general" key="general" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -190,7 +190,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    {/* APPEARANCE */}
+                                    
                                     <TabsContent value="appearance" key="appearance" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -224,7 +224,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    {/* SECURITY */}
+                                    
                                     <TabsContent value="security" key="security" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -275,7 +275,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    {/* NOTIFICATIONS */}
+                                    
                                     <TabsContent value="notifications" key="notifications" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -306,7 +306,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    {/* DATA */}
+                                    
                                     <TabsContent value="data" key="data" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -400,3 +400,4 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
         </>
     )
 }
+

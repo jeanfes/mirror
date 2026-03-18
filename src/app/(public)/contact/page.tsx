@@ -13,7 +13,6 @@ export default function ContactPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate sending
         toast.success("Mensaje enviado correctamente. Nos pondremos en contacto pronto.");
     };
 
@@ -95,3 +94,4 @@ export default function ContactPage() {
         </main>
     )
 }
+

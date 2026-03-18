@@ -1,240 +1,256 @@
 import { addDays } from "date-fns"
 import { getAuthContext } from "@/lib/supabase/auth-context"
-import type { AccountStatus } from "@/types/dashboard"
+import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow, PlanQuotasRow } from "@/types/database.types"
 
-export type PlanName = AccountStatus["plan"]
+export type { Invoice, PaymentMethod, UserAccount }
+
+export type PlanName = "Free" | "Pro" | "Elite"
 
 export interface PlanDefinition {
-	name: PlanName
-	credits: number
-	price: string
-	summary: string
-	features: string[]
-	recommended?: boolean
-}
-
-export interface Invoice {
-	id: string
-	date: string
-	amount: string
-	status: "paid" | "pending" | "failed" | "refunded" | "void" | "unknown"
-	downloadUrl: string
-}
-
-export interface PaymentMethod {
-	id: string
-	type: "visa" | "mastercard" | "amex"
-	last4: string
-	expiry: string
-	isDefault: boolean
+  name: PlanName
+  price: string
+  credits: number
+  summary: string
+  features: string[]
+  recommended?: boolean
 }
 
 export const planDefinitions: PlanDefinition[] = [
-	{
-		name: "Free",
-		credits: 120,
-		price: "$0",
-		summary: "Best for testing the extension workflow with a single active profile.",
-		features: ["1 active profile", "Basic history", "Community support"]
-	},
-	{
-		name: "Pro",
-		credits: 1200,
-		price: "$19",
-		summary: "Best for daily usage, multiple voices and a consistent posting rhythm.",
-		features: ["10 profiles", "Advanced history", "Priority support"],
-		recommended: true
-	},
-	{
-		name: "Elite",
-		credits: 4000,
-		price: "$59",
-		summary: "Best for power users running multiple brand voices or heavy weekly output.",
-		features: ["Unlimited profiles", "Advanced analytics", "Team collaboration"]
-	}
+  {
+    name: "Free",
+    price: "$0",
+    credits: 50,
+    summary: "Basic generation access for occasional posting without advanced tuning.",
+    features: [
+      "50 monthly generations",
+      "1 basic voice profile",
+      "Standard tone matching",
+      "Community support"
+    ]
+  },
+  {
+    name: "Pro",
+    price: "$19",
+    credits: 250,
+    summary: "For professionals building a regular cadence and refining their own voice.",
+    recommended: true,
+    features: [
+      "250 monthly generations",
+      "3 dynamic voice profiles",
+      "Tone strictness controls",
+      "Basic history archive"
+    ]
+  },
+  {
+    name: "Elite",
+    price: "$49",
+    credits: 1000,
+    summary: "High volume output and multi-persona testing for advanced users.",
+    features: [
+      "1,000 monthly generations",
+      "Unlimited voice profiles",
+      "Unlimited history archive",
+      "Priority API processing"
+    ]
+  }
 ]
 
-interface UserAccountRow {
-	plan: PlanName
-	credits_remaining: number
-	renewal_date: string | null
+export async function setPlan(planName: PlanName) {
+  const { supabase, userId } = await getAuthContext()
+  const { data, error } = await supabase
+    .from("user_account")
+    .update({ plan: planName })
+    .eq("user_id", userId)
+    .select("*")
+    .single()
+  
+  if (error) throw error
+  return mapRowToAccountStatus(data as UserAccountRow)
 }
 
-interface InvoiceRow {
-	id: string
-	amount_paid: number
-	currency: string
-	status: string
-	created_at: string
-	invoice_url: string | null
+function mapRowToAccountStatus(row: UserAccountRow): UserAccount {
+  return {
+    plan: row.plan,
+    creditsRemaining: row.credits_remaining,
+    creditsUsedThisMonth: row.credits_used_this_month ?? 0,
+    renewalDate: row.renewal_date ?? addDays(new Date(), 30).toISOString(),
+    subscriptionStatus: row.subscription_status,
+    lastGenerationAt: row.last_generation_at
+  }
 }
 
-interface BillingInfoMethod {
-	id?: string
-	brand?: string
-	last4?: string
-	exp_month?: number
-	exp_year?: number
-	is_default?: boolean
-}
+function formatAmount(currency: string, amountPaidInCents: number) {
+  const normalizedCurrency = currency.toUpperCase()
+  const amount = amountPaidInCents / 100
 
-interface BillingInfoResponse {
-	paymentMethods?: BillingInfoMethod[]
-}
-
-function mapRowToAccountStatus(row: UserAccountRow): AccountStatus {
-	return {
-		plan: row.plan,
-		creditsRemaining: row.credits_remaining,
-		renewalDate: row.renewal_date ?? addDays(new Date(), 30).toISOString()
-	}
-}
-
-function formatAmount(currency: string, amountPaid: number) {
-	const normalizedCurrency = currency.toUpperCase()
-	const amount = amountPaid / 100
-
-	try {
-		return new Intl.NumberFormat("en-US", {
-			style: "currency",
-			currency: normalizedCurrency,
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2
-		}).format(amount)
-	} catch {
-		return `$${amount.toFixed(2)}`
-	}
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: normalizedCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount)
+  } catch {
+    return `$${amount.toFixed(2)}`
+  }
 }
 
 function mapInvoiceStatus(rawStatus: string): Invoice["status"] {
-	const normalized = rawStatus.trim().toLowerCase()
-
-	if (normalized === "paid") return "paid"
-	if (normalized === "pending") return "pending"
-	if (normalized === "failed") return "failed"
-	if (normalized === "refunded") return "refunded"
-	if (normalized === "void") return "void"
-
-	return "unknown"
+  const normalized = rawStatus.trim().toLowerCase()
+  if (["paid", "pending", "failed", "refunded", "void"].includes(normalized)) {
+    return normalized as Invoice["status"]
+  }
+  return "unknown"
 }
 
-export async function getAccount(): Promise<AccountStatus> {
-	const { supabase, userId } = await getAuthContext()
+export async function getAccount(): Promise<UserAccount> {
+  const { supabase, userId } = await getAuthContext()
 
-	const { data, error } = await supabase
-		.from("user_account")
-		.select("plan, credits_remaining, renewal_date")
-		.eq("user_id", userId)
-		.maybeSingle()
+  const { data, error } = await supabase
+    .from("user_account")
+    .select("*")
+    .eq("user_id", userId)
+    .maybeSingle()
 
-	if (error) {
-		throw error
-	}
+  if (error) throw error
 
-	if (!data) {
-		const { data: created, error: createError } = await supabase
-			.from("user_account")
-			.insert({ user_id: userId })
-			.select("plan, credits_remaining, renewal_date")
-			.single()
+  if (!data) {
+    const { data: created, error: createError } = await supabase
+      .from("user_account")
+      .insert({ user_id: userId, plan: "Free" })
+      .select("*")
+      .single()
 
-		if (createError) {
-			throw createError
-		}
+    if (createError) throw createError
+    return mapRowToAccountStatus(created as UserAccountRow)
+  }
 
-		return mapRowToAccountStatus(created as UserAccountRow)
-	}
-
-	return mapRowToAccountStatus(data as UserAccountRow)
+  return mapRowToAccountStatus(data as UserAccountRow)
 }
 
-export async function setPlan(planName: PlanName): Promise<AccountStatus> {
-	const { supabase, userId } = await getAuthContext()
-	const selected = planDefinitions.find((plan) => plan.name === planName)
+export async function getPlanQuotas(planName: PlanQuotasRow["plan"]) {
+  const { supabase } = await getAuthContext()
+  const { data, error } = await supabase
+    .from("plan_quotas")
+    .select("*")
+    .eq("plan", planName)
+    .single()
 
-	const { data: quotaData } = await supabase
-		.from("plan_quotas")
-		.select("monthly_generations")
-		.eq("plan", planName)
-		.maybeSingle()
+  if (error) throw error
 
-	const nextCredits = quotaData?.monthly_generations ?? selected?.credits ?? 120
-	const renewalDate = addDays(new Date(), 30).toISOString()
-
-	const { data, error } = await supabase
-		.from("user_account")
-		.upsert({
-			user_id: userId,
-			plan: planName,
-			credits_remaining: nextCredits,
-			renewal_date: renewalDate,
-			updated_at: new Date().toISOString()
-		}, { onConflict: "user_id" })
-		.select("plan, credits_remaining, renewal_date")
-		.single()
-
-	if (error) {
-		throw error
-	}
-
-	await supabase.from("plan_change_history").insert({
-		user_id: userId,
-		to_plan: planName,
-		reason: "Changed from dashboard"
-	})
-
-	return mapRowToAccountStatus(data as UserAccountRow)
+  return data as PlanQuotasRow
 }
 
 export async function getInvoices(): Promise<Invoice[]> {
-	const { supabase, userId } = await getAuthContext()
+  const { supabase, userId } = await getAuthContext()
 
-	const { data, error } = await supabase
-		.from("invoices")
-		.select("id, amount_paid, currency, status, created_at, invoice_url")
-		.eq("user_id", userId)
-		.order("created_at", { ascending: false })
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
 
-	if (error) {
-		throw error
-	}
+  if (error) throw error
 
-	return ((data ?? []) as InvoiceRow[]).map((invoice) => ({
-		id: invoice.id,
-		date: invoice.created_at,
-		amount: formatAmount(invoice.currency, invoice.amount_paid),
-		status: mapInvoiceStatus(invoice.status),
-		downloadUrl: invoice.invoice_url ?? "#"
-	}))
+  return ((data ?? []) as InvoiceRow[]).map((invoice) => ({
+    id: invoice.id,
+    date: invoice.created_at,
+    amount: formatAmount(invoice.currency, invoice.amount_paid),
+    status: mapInvoiceStatus(invoice.status),
+    downloadUrl: invoice.invoice_url ?? "#"
+  }))
 }
 
-export async function getPaymentMethods(): Promise<PaymentMethod[]> {
-	const { supabase } = await getAuthContext()
+interface BillingInfoResponse {
+  payment_method?: { id: string; brand: string; last4: string; exp_month: number; exp_year: number }
+  subscription?: { update_payment_method_url: string }
+  portal_url?: string
+}
 
-	const { data, error } = await supabase.functions.invoke("billing-info")
-	if (error || !data) {
-		return []
-	}
 
-	const payload = data as BillingInfoResponse
-	const methods = payload.paymentMethods ?? []
+export async function getBillingInfo() {
+  const { supabase } = await getAuthContext()
+  const { data, error } = await supabase.functions.invoke("billing-info", { body: {} })
+  
+  if (error || !data) {
+    return { paymentMethod: null, updateUrl: null, portalUrl: null }
+  }
 
-	return methods.map((method, index) => {
-		const brand = (method.brand ?? "visa").toLowerCase()
-		const mappedType: PaymentMethod["type"] =
-			brand.includes("master") ? "mastercard" :
-			brand.includes("amex") ? "amex" :
-			"visa"
+  const payload = data as BillingInfoResponse
+  let pm: PaymentMethod | null = null
 
-		const month = method.exp_month ? String(method.exp_month).padStart(2, "0") : "01"
-		const year = method.exp_year ? String(method.exp_year).slice(-2) : "00"
+  if (payload.payment_method) {
+    const brand = (payload.payment_method.brand ?? "visa").toLowerCase()
+    const mappedType: PaymentMethod["brand"] =
+      brand.includes("master") ? "mastercard" :
+      brand.includes("amex") ? "amex" :
+      "visa"
 
-		return {
-			id: method.id ?? `pm-${index}`,
-			type: mappedType,
-			last4: method.last4 ?? "0000",
-			expiry: `${month}/${year}`,
-			isDefault: !!method.is_default
-		}
-	})
+    const month = String(payload.payment_method.exp_month).padStart(2, "0")
+    const year = String(payload.payment_method.exp_year).slice(-2)
+
+    pm = {
+      id: payload.payment_method.id,
+      brand: mappedType,
+      last4: payload.payment_method.last4 ?? "0000",
+      expiry: `${month}/${year}`,
+      isDefault: true
+    }
+  }
+
+  return {
+    paymentMethod: pm,
+    updateUrl: payload.subscription?.update_payment_method_url ?? null,
+    portalUrl: payload.portal_url ?? null
+  }
+}
+
+export async function getUsageStats() {
+  const { supabase, userId } = await getAuthContext()
+
+  const startOfMonth = new Date()
+  startOfMonth.setDate(1)
+  startOfMonth.setHours(0, 0, 0, 0)
+
+  const { data: monthHistory, error } = await supabase
+    .from("generation_history")
+    .select("status, source, post_author, created_at")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+    .gte("created_at", startOfMonth.toISOString())
+    .order("created_at", { ascending: false })
+
+  if (error) throw error
+
+  const items = monthHistory ?? []
+  const generatedThisMonth = items.length
+  const appliedComments = items.filter(h => h.status === "applied").length
+  const reusedComments = items.filter(h => h.source === "history_reuse").length
+  const adoptionRate = generatedThisMonth > 0 ? Math.round((appliedComments / generatedThisMonth) * 100) : 0
+  const lastActivity = items[0]?.post_author ?? null
+
+  return {
+    generatedThisMonth,
+    appliedComments,
+    reusedComments,
+    adoptionRate,
+    lastActivity
+  }
+}
+
+export async function createCheckout(plan: "Pro" | "Elite") {
+  const { supabase } = await getAuthContext()
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://tudominio.com"
+
+  const { data, error } = await supabase.functions.invoke("create-checkout", {
+    body: {
+      plan,
+      success_url: `${origin}/account?upgraded=true`,
+      cancel_url: `${origin}/plans`
+    }
+  })
+
+  if (error) throw error
+  return data as { checkout_url: string }
 }

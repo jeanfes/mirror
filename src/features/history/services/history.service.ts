@@ -1,127 +1,159 @@
 import { getAuthContext } from "@/lib/supabase/auth-context"
-import type { HistoryItem } from "@/types/dashboard"
+import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
-interface GenerationHistoryRow {
-	id: string
-	profile_id: string | null
-	post_author: string | null
-	post_headline: string | null
-	post_snippet: string | null
-	generated_text: string
-	goal: string | null
-	source: "generated" | "alternative" | "manual_edit" | "history_reuse"
-	status: string
-	output_meta: { applied?: boolean } | null
-	created_at: string
-	kind: string
+function mapRowToHistoryItem(row: GenerationHistoryRow & { profileName?: string }): GenerationHistory {
+  return {
+    id: row.id,
+    profileId: row.profile_id,
+    profileName: row.profileName,
+    kind: row.kind,
+    source: row.source,
+    status: row.status,
+    postAuthor: row.post_author ?? "Unknown author",
+    postHeadline: row.post_headline ?? undefined,
+    postSnippet: row.post_snippet ?? "",
+    generatedText: row.generated_text,
+    goal: row.goal ?? undefined,
+    origin: row.origin ?? "web",
+    createdAt: Date.parse(row.created_at)
+  }
 }
 
-function mapRowToHistoryItem(row: GenerationHistoryRow): HistoryItem {
-	return {
-		id: row.id,
-		profileId: row.profile_id ?? "",
-		postAuthor: row.post_author ?? "Unknown author",
-		postHeadline: row.post_headline ?? undefined,
-		postSnippet: row.post_snippet ?? "",
-		generatedText: row.generated_text,
-		goal: (row.goal ?? undefined) as HistoryItem["goal"],
-		source: row.source,
-		applied: row.output_meta?.applied ?? row.status === "applied",
-		createdAt: Date.parse(row.created_at)
-	}
+export interface ListHistoryFilters {
+  profileId?: string
+  status?: "all" | "pending" | "applied" | "dismissed"
+  search?: string
 }
 
-export async function listHistory(): Promise<HistoryItem[]> {
-	const { supabase, userId } = await getAuthContext()
+export async function listHistory(filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
+  const { supabase, userId } = await getAuthContext()
 
-	const { data, error } = await supabase
-		.from("generation_history")
-		.select("id, profile_id, post_author, post_headline, post_snippet, generated_text, goal, source, status, output_meta, created_at, kind")
-		.eq("user_id", userId)
-		.is("deleted_at", null)
-		.order("created_at", { ascending: false })
+  let query = supabase
+    .from("generation_history")
+    .select("*, voice_profiles!fk_profile_id(name)")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
 
-	if (error) {
-		throw error
-	}
+  if (filters?.profileId && filters.profileId !== "all") {
+    query = query.eq("profile_id", filters.profileId)
+  }
 
-	return ((data ?? []) as GenerationHistoryRow[]).map(mapRowToHistoryItem)
+  if (filters?.status && filters.status !== "all") {
+    query = query.eq("status", filters.status)
+  }
+
+  if (filters?.search) {
+    const term = `%${filters.search}%`
+    query = query.or(`post_author.ilike.${term},post_snippet.ilike.${term},generated_text.ilike.${term}`)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    throw error
+  }
+
+  const rows = (data ?? []) as Array<GenerationHistoryRow & { voice_profiles?: { name?: string } | null }>
+  return rows.map((row) => mapRowToHistoryItem({ ...row, profileName: row.voice_profiles?.name }))
 }
 
-export async function toggleHistoryApplied(id: string): Promise<HistoryItem[]> {
-	const { supabase, userId } = await getAuthContext()
+export async function updateHistoryStatus(
+  id: string,
+  newStatus: "pending" | "applied" | "dismissed"
+): Promise<void> {
+  const { supabase, userId } = await getAuthContext()
 
-	const { data: current, error: currentError } = await supabase
-		.from("generation_history")
-		.select("output_meta")
-		.eq("id", id)
-		.eq("user_id", userId)
-		.single()
+  const { error } = await supabase
+    .from("generation_history")
+    .update({ status: newStatus, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("user_id", userId)
 
-	if (currentError) {
-		throw currentError
-	}
-
-	const currentApplied = !!(current.output_meta as { applied?: boolean } | null)?.applied
-	const nextOutputMeta = {
-		...((current.output_meta as Record<string, unknown> | null) ?? {}),
-		applied: !currentApplied
-	}
-
-	const { error: updateError } = await supabase
-		.from("generation_history")
-		.update({
-			output_meta: nextOutputMeta,
-			updated_at: new Date().toISOString()
-		})
-		.eq("id", id)
-		.eq("user_id", userId)
-
-	if (updateError) {
-		throw updateError
-	}
-
-	return listHistory()
+  if (error) {
+    throw error
+  }
 }
 
-export async function reuseHistoryItem(id: string): Promise<HistoryItem[]> {
-	const { supabase, userId } = await getAuthContext()
+export async function reuseHistoryItem(id: string): Promise<string> {
+  const { supabase } = await getAuthContext()
 
-	const { data: source, error: sourceError } = await supabase
-		.from("generation_history")
-		.select("profile_id, kind, post_author, post_headline, post_snippet, generated_text, goal, input_context, output_meta")
-		.eq("id", id)
-		.eq("user_id", userId)
-		.single()
+  const { data: newId, error } = await supabase.rpc("reuse_generation", { p_history_id: id })
 
-	if (sourceError) {
-		throw sourceError
-	}
+  if (error) {
+    throw error
+  }
 
-	const { error: insertError } = await supabase
-		.from("generation_history")
-		.insert({
-			user_id: userId,
-			profile_id: source.profile_id,
-			kind: source.kind,
-			source: "history_reuse",
-			post_author: source.post_author,
-			post_headline: source.post_headline,
-			post_snippet: source.post_snippet,
-			generated_text: source.generated_text,
-			goal: source.goal,
-			input_context: source.input_context,
-			output_meta: {
-				...((source.output_meta as Record<string, unknown> | null) ?? {}),
-				applied: false,
-				reused_from_id: id
-			},
-			status: "pending"
-		})
+  return String(newId)
+}
 
-	if (insertError) {
-		throw insertError
-	}
+export async function moveToTrash(id: string): Promise<void> {
+  const { supabase, userId } = await getAuthContext()
 
-	return listHistory()
+  const { error } = await supabase
+    .from("generation_history")
+    .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("user_id", userId)
+
+  if (error) {
+    throw error
+  }
+}
+
+export async function getHistoryStats() {
+  const { supabase, userId } = await getAuthContext()
+
+  const { data: counts, error } = await supabase
+    .from("generation_history")
+    .select("status, source")
+    .eq("user_id", userId)
+    .is("deleted_at", null)
+
+  if (error) {
+    throw error
+  }
+
+  const items = counts ?? []
+
+  return {
+    archived: items.length,
+    applied: items.filter((item) => item.status === "applied").length,
+    pending: items.filter((item) => item.status === "pending").length,
+    reused: items.filter((item) => item.source === "history_reuse").length
+  }
+}
+
+export interface GenerateInput {
+  profile_id: string
+  kind: "comment" | "post" | "rewrite"
+  post_snippet?: string
+  post_author?: string
+  post_headline?: string
+  draft_text?: string
+  goal?: string
+  origin?: "web" | "extension"
+}
+
+export async function generateContent(input: GenerateInput) {
+  const { supabase } = await getAuthContext()
+
+  const { data, error } = await supabase.functions.invoke("generate", {
+    body: {
+      profile_id: input.profile_id,
+      kind: input.kind,
+      post_snippet: input.post_snippet,
+      post_author: input.post_author,
+      post_headline: input.post_headline,
+      draft_text: input.draft_text,
+      goal: input.goal ?? "networking",
+      origin: input.origin ?? "web"
+    }
+  })
+
+  if (error) {
+    throw error
+  }
+
+  return data
 }

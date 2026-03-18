@@ -12,7 +12,7 @@ interface PaymentMethodsProps {
 
 export function PaymentMethods({ methods }: PaymentMethodsProps) {
   const { t } = useLanguageStore()
-  const method = methods[0] // Only one card supported
+  const method = methods[0] 
 
   if (!method) return null
 
@@ -58,3 +58,4 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
     </div>
   )
 }
+
