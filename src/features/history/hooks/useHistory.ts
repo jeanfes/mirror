@@ -1,19 +1,21 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import { listHistory, reuseHistoryItem, toggleHistoryApplied } from "@/features/history/services/history.service"
-
-const historyKey = ["history"]
 
 export function useHistory() {
   const queryClient = useQueryClient()
+  const userId = useUserId()
+  const historyKey = userId ? makeQueryKey("history", userId) : ["history"]
 
   const query = useQuery({
     queryKey: historyKey,
     queryFn: listHistory,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!userId
   })
 
   const toggleMutation = useMutation({

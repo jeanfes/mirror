@@ -30,34 +30,34 @@ export default function PricingPage() {
                 </motion.p>
             </section>
 
-            <section className="w-full max-w-5xl px-6 py-12">
-                <div className="grid gap-8 md:grid-cols-2 lg:gap-12 items-center max-w-4xl mx-auto">
+            <section className="w-full max-w-6xl px-6 py-12">
+                <div className="grid gap-8 md:grid-cols-3 lg:gap-8 items-stretch mx-auto">
 
                     {/* Free Plan */}
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.1, ease: "easeOut" }}
-                        className="neo-card h-full rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm p-10 flex flex-col shadow-premium-sm"
+                        className="neo-card flex flex-col rounded-[22px] border border-border-light bg-surface-card backdrop-blur-sm p-8 shadow-premium-sm"
                     >
                         <div className="mb-6">
-                            <h2 className="text-2xl font-black text-primary-dark">{t.pricing.freePlan}</h2>
-                            <p className="text-secondary-text font-medium mt-2">{t.pricing.freeDesc}</p>
+                            <h2 className="text-xl font-black text-primary-dark uppercase tracking-tight">{t.pricing.freePlan}</h2>
+                            <p className="text-secondary-text text-sm font-medium mt-1.5">{t.pricing.freeDesc}</p>
                         </div>
-                        <div className="mb-8 flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-primary-dark">$0</span>
-                            <span className="text-secondary-text font-medium">{t.pricing.perMonth}</span>
+                        <div className="mb-8 flex items-baseline gap-1.5">
+                            <span className="text-4xl font-black text-primary-dark">$0</span>
+                            <span className="text-secondary-text text-sm font-bold uppercase tracking-wider">{t.pricing.perMonth}</span>
                         </div>
                         <ul className="space-y-4 mb-10 flex-1">
                             {t.pricing.freeFeatures.map((feature, i) => (
-                                <li key={i} className="flex items-center gap-3 text-[1.05rem] text-primary-dark font-medium">
-                                    <CheckCircle2 className="h-5 w-5 text-primary-light" />
+                                <li key={i} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
+                                    <CheckCircle2 className="h-4.5 w-4.5 text-primary-light shrink-0 mt-0.5" />
                                     {feature}
                                 </li>
                             ))}
                         </ul>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Link href={ROUTES.auth.register} className="neo-btn-muted inline-block text-center py-4 text-[1.05rem] font-bold w-full transition-all">
+                            <Link href={ROUTES.auth.register} className="neo-btn-muted inline-block text-center py-3.5 text-[0.95rem] font-bold w-full transition-all rounded-xl">
                                 {t.pricing.freeBtn}
                             </Link>
                         </motion.div>
@@ -68,30 +68,60 @@ export default function PricingPage() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.25, delay: 0.15, ease: "easeOut" }}
-                        className="neo-shell relative flex flex-col border border-border-soft bg-surface-overlay p-10 shadow-premium-md transform md:-translate-y-4"
+                        className="neo-shell relative flex flex-col border border-border-soft bg-surface-overlay p-8 shadow-premium-md md:scale-105 z-20 rounded-[22px]"
                     >
-                        <div className="absolute top-0 right-10 -translate-y-1/2 rounded-full bg-brand-dark px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-premium-sm">
+                        <div className="absolute top-0 right-8 -translate-y-1/2 rounded-full bg-brand-dark px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-premium-sm">
                             {t.pricing.popular}
                         </div>
                         <div className="mb-6">
-                            <h2 className="text-2xl font-black text-primary-dark">{t.pricing.proPlan}</h2>
-                            <p className="text-primary-dark/70 font-medium mt-2">{t.pricing.proDesc}</p>
+                            <h2 className="text-xl font-black text-primary-dark uppercase tracking-tight">{t.pricing.proPlan}</h2>
+                            <p className="text-primary-dark/70 text-sm font-medium mt-1.5">{t.pricing.proDesc}</p>
                         </div>
-                        <div className="mb-8 flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-primary-dark">$15</span>
-                            <span className="text-primary-dark/70 font-medium">{t.pricing.perMonth}</span>
+                        <div className="mb-8 flex items-baseline gap-1.5">
+                            <span className="text-4xl font-black text-primary-dark">$19</span>
+                            <span className="text-primary-dark/70 text-sm font-bold uppercase tracking-wider">{t.pricing.perMonth}</span>
                         </div>
                         <ul className="space-y-4 mb-10 flex-1">
                             {t.pricing.proFeatures.map((feature, i) => (
-                                <li key={i} className="flex items-center gap-3 text-[1.05rem] text-primary-dark font-medium">
-                                    <CheckCircle2 className="h-5 w-5 text-primary-light" />
+                                <li key={i} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
+                                    <CheckCircle2 className="h-4.5 w-4.5 text-accent-blue shrink-0 mt-0.5" />
                                     {feature}
                                 </li>
                             ))}
                         </ul>
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Link href={ROUTES.auth.register} className="neo-btn-primary inline-block text-center py-4 text-[1.05rem] font-bold w-full">
+                            <Link href={ROUTES.auth.register} className="neo-btn-primary inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl shadow-premium-sm">
                                 {t.pricing.proBtn}
+                            </Link>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Elite Plan */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.25, delay: 0.2, ease: "easeOut" }}
+                        className="neo-card flex flex-col rounded-[22px] border border-border-light bg-surface-card backdrop-blur-sm p-8 shadow-premium-sm"
+                    >
+                        <div className="mb-6">
+                            <h2 className="text-xl font-black text-primary-dark uppercase tracking-tight">{t.pricing.elitePlan}</h2>
+                            <p className="text-secondary-text text-sm font-medium mt-1.5">{t.pricing.eliteDesc}</p>
+                        </div>
+                        <div className="mb-8 flex items-baseline gap-1.5">
+                            <span className="text-4xl font-black text-primary-dark">$59</span>
+                            <span className="text-secondary-text text-sm font-bold uppercase tracking-wider">{t.pricing.perMonth}</span>
+                        </div>
+                        <ul className="space-y-4 mb-10 flex-1">
+                            {t.pricing.eliteFeatures.map((feature, i) => (
+                                <li key={i} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
+                                    <CheckCircle2 className="h-4.5 w-4.5 text-primary-light shrink-0 mt-0.5" />
+                                    {feature}
+                                </li>
+                            ))}
+                        </ul>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Link href={ROUTES.auth.register} className="neo-btn-muted inline-block text-center py-3.5 text-[0.95rem] font-bold w-full transition-all rounded-xl">
+                                {t.pricing.eliteBtn}
                             </Link>
                         </motion.div>
                     </motion.div>

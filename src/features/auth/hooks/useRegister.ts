@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
 import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
+import { signUpWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { RegisterValues } from "../schemas"
 import { mapRegisterError, type RegisterError } from "../errors"
@@ -18,11 +18,10 @@ export const useRegister = () => {
     const register = useCallback(async (data: RegisterValues): Promise<RegisterError | null> => {
         setIsPending(true)
         try {
-            const supabase = createClient()
-            const { error } = await supabase.auth.signUp({
+            const { error } = await signUpWithPassword({
                 email: data.email,
                 password: data.password,
-                options: { data: { name: data.name } },
+                name: data.name
             })
 
             if (error) {

@@ -18,7 +18,7 @@ export const useLanguageStore = create<LanguageState>()(
       setLanguage: (lang: Language) =>
         set(() => ({
           language: lang,
-          t: dictionaries[lang],
+          t: dictionaries[lang] as Dictionary,
         })),
     }),
     {
@@ -30,7 +30,7 @@ export const useLanguageStore = create<LanguageState>()(
         return {
           ...currentState,
           language: lang,
-          t: dictionaries[lang] || currentState.t,
+          t: (dictionaries[lang] as Dictionary) || currentState.t,
         };
       },
     }

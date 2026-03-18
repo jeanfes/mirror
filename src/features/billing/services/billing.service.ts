@@ -1,5 +1,5 @@
 import { addDays } from "date-fns"
-import { createClient } from "@/lib/supabase/client"
+import { getAuthContext } from "@/lib/supabase/auth-context"
 import type { AccountStatus } from "@/types/dashboard"
 
 export type PlanName = AccountStatus["plan"]
@@ -80,20 +80,6 @@ interface BillingInfoMethod {
 
 interface BillingInfoResponse {
 	paymentMethods?: BillingInfoMethod[]
-}
-
-async function getAuthContext() {
-	const supabase = createClient()
-	const { data, error } = await supabase.auth.getUser()
-
-	if (error || !data.user) {
-		throw new Error("Could not resolve authenticated user")
-	}
-
-	return {
-		supabase,
-		userId: data.user.id
-	}
 }
 
 function mapRowToAccountStatus(row: UserAccountRow): AccountStatus {

@@ -1,18 +1,21 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
+import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import { getInvoices, getPaymentMethods } from "@/features/billing/services/billing.service"
 
-const invoicesKey = ["invoices"]
-const paymentMethodsKey = ["paymentMethods"]
-
 export function useBilling() {
+  const userId = useUserId()
+  const invoicesKey = userId ? makeQueryKey("invoices", userId) : ["invoices"]
+  const paymentMethodsKey = userId ? makeQueryKey("paymentMethods", userId) : ["paymentMethods"]
+
   const invoicesQuery = useQuery({
     queryKey: invoicesKey,
     queryFn: getInvoices,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!userId
   })
 
   const paymentMethodsQuery = useQuery({
@@ -20,7 +23,8 @@ export function useBilling() {
     queryFn: getPaymentMethods,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!userId
   })
 
   return {

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/client"
+import { getAuthContext } from "@/lib/supabase/auth-context"
 import type { HistoryItem } from "@/types/dashboard"
 
 interface GenerationHistoryRow {
@@ -14,20 +14,6 @@ interface GenerationHistoryRow {
 	output_meta: { applied?: boolean } | null
 	created_at: string
 	kind: string
-}
-
-async function getAuthContext() {
-	const supabase = createClient()
-	const { data, error } = await supabase.auth.getUser()
-
-	if (error || !data.user) {
-		throw new Error("Could not resolve authenticated user")
-	}
-
-	return {
-		supabase,
-		userId: data.user.id
-	}
 }
 
 function mapRowToHistoryItem(row: GenerationHistoryRow): HistoryItem {

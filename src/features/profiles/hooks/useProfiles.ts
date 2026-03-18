@@ -1,6 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import {
   createProfile,
   deleteProfile,
@@ -10,45 +11,53 @@ import {
   type CreateProfileInput,
   type UpdateProfileInput
 } from "@/features/profiles/services/profiles.service"
-
-const profilesKey = ["profiles"]
+import type { Profile } from "@/types/dashboard"
 
 export function useProfiles() {
   const queryClient = useQueryClient()
+  const userId = useUserId()
+  const profilesKey = userId ? makeQueryKey("profiles", userId) : ["profiles"]
 
   const query = useQuery({
     queryKey: profilesKey,
     queryFn: listProfiles,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!userId
   })
 
   const createMutation = useMutation({
     mutationFn: (input: CreateProfileInput) => createProfile(input),
-    onSuccess: (next) => {
-      queryClient.setQueryData(profilesKey, next)
+    onSuccess: (created) => {
+      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) => [created, ...(prev ?? [])])
     }
   })
 
   const updateMutation = useMutation({
     mutationFn: (input: UpdateProfileInput) => updateProfile(input),
-    onSuccess: (next) => {
-      queryClient.setQueryData(profilesKey, next)
+    onSuccess: (updated) => {
+      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+        (prev ?? []).map((p) => p.id === updated.id ? updated : p)
+      )
     }
   })
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => toggleProfile(id),
-    onSuccess: (next) => {
-      queryClient.setQueryData(profilesKey, next)
+    onSuccess: (toggled) => {
+      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+        (prev ?? []).map((p) => p.id === toggled.id ? toggled : p)
+      )
     }
   })
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteProfile(id),
-    onSuccess: (next) => {
-      queryClient.setQueryData(profilesKey, next)
+    onSuccess: (result) => {
+      queryClient.setQueryData(profilesKey, (prev: Profile[] | undefined) =>
+        (prev ?? []).filter((p) => p.id !== result.id)
+      )
     }
   })
 

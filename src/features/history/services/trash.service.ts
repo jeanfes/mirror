@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/client"
+import { getAuthContext } from "@/lib/supabase/auth-context"
 
 export interface TrashItem {
 	id: string
@@ -23,18 +23,46 @@ interface DeletedHistoryRow {
 	deleted_at: string
 }
 
-async function getAuthContext() {
-	const supabase = createClient()
-	const { data, error } = await supabase.auth.getUser()
+/**
+ * Identify whether a deleted item belongs to voice_profiles or generation_history
+ * @returns "profile" | "comment" | null if not found in either table
+ */
+async function identifyTrashItemType(
+	supabase: NonNullable<Awaited<ReturnType<typeof import("@/lib/supabase/auth-context").getAuthContext>>["supabase"]>,
+	userId: string,
+	id: string
+): Promise<"profile" | "comment" | null> {
+	// Check voice_profiles first
+	const { data: profile, error: profileError } = await supabase
+		.from("voice_profiles")
+		.select("id")
+		.eq("id", id)
+		.eq("user_id", userId)
+		.not("deleted_at", "is", null)
+		.maybeSingle()
 
-	if (error || !data.user) {
-		throw new Error("Could not resolve authenticated user")
+	if (profileError) {
+		throw profileError
 	}
 
-	return {
-		supabase,
-		userId: data.user.id
+	if (profile) {
+		return "profile"
 	}
+
+	// Check generation_history if not found in profiles
+	const { data: history, error: historyError } = await supabase
+		.from("generation_history")
+		.select("id")
+		.eq("id", id)
+		.eq("user_id", userId)
+		.not("deleted_at", "is", null)
+		.maybeSingle()
+
+	if (historyError) {
+		throw historyError
+	}
+
+	return history ? "comment" : null
 }
 
 export async function listTrash(): Promise<TrashItem[]> {
@@ -80,64 +108,76 @@ export async function listTrash(): Promise<TrashItem[]> {
 	return [...profileItems, ...historyItems].sort((a, b) => b.deletedAt - a.deletedAt)
 }
 
-export async function restoreTrashItem(id: string): Promise<TrashItem[]> {
+export async function restoreTrashItem(id: string): Promise<{ id: string; kind: "profile" | "comment" }> {
 	const { supabase, userId } = await getAuthContext()
 
-	const { data: restoredProfile, error: profileError } = await supabase
-		.from("voice_profiles")
-		.update({ deleted_at: null, updated_at: new Date().toISOString() })
-		.eq("id", id)
-		.eq("user_id", userId)
-		.not("deleted_at", "is", null)
-		.select("id")
+	// Identify which table contains this item
+	const kind = await identifyTrashItemType(supabase, userId, id)
 
-	if (profileError) {
-		throw profileError
+	if (!kind) {
+		throw new Error(`Item with id ${id} not found in trash`)
 	}
 
-	if (!restoredProfile || restoredProfile.length === 0) {
-		const { error: historyError } = await supabase
+	if (kind === "profile") {
+		const { error } = await supabase
+			.from("voice_profiles")
+			.update({ deleted_at: null, updated_at: new Date().toISOString() })
+			.eq("id", id)
+			.eq("user_id", userId)
+			.not("deleted_at", "is", null)
+
+		if (error) {
+			throw error
+		}
+	} else {
+		const { error } = await supabase
 			.from("generation_history")
 			.update({ deleted_at: null, updated_at: new Date().toISOString() })
 			.eq("id", id)
 			.eq("user_id", userId)
 			.not("deleted_at", "is", null)
 
-		if (historyError) {
-			throw historyError
+		if (error) {
+			throw error
 		}
 	}
 
-	return listTrash()
+	return { id, kind }
 }
 
-export async function deleteTrashItem(id: string): Promise<TrashItem[]> {
+export async function deleteTrashItem(id: string): Promise<{ id: string; kind: "profile" | "comment" }> {
 	const { supabase, userId } = await getAuthContext()
 
-	const { data: deletedProfile, error: profileError } = await supabase
-		.from("voice_profiles")
-		.delete()
-		.eq("id", id)
-		.eq("user_id", userId)
-		.not("deleted_at", "is", null)
-		.select("id")
+	// Identify which table contains this item
+	const kind = await identifyTrashItemType(supabase, userId, id)
 
-	if (profileError) {
-		throw profileError
+	if (!kind) {
+		throw new Error(`Item with id ${id} not found in trash`)
 	}
 
-	if (!deletedProfile || deletedProfile.length === 0) {
-		const { error: historyError } = await supabase
+	if (kind === "profile") {
+		const { error } = await supabase
+			.from("voice_profiles")
+			.delete()
+			.eq("id", id)
+			.eq("user_id", userId)
+			.not("deleted_at", "is", null)
+
+		if (error) {
+			throw error
+		}
+	} else {
+		const { error } = await supabase
 			.from("generation_history")
 			.delete()
 			.eq("id", id)
 			.eq("user_id", userId)
 			.not("deleted_at", "is", null)
 
-		if (historyError) {
-			throw historyError
+		if (error) {
+			throw error
 		}
 	}
 
-	return listTrash()
+	return { id, kind }
 }

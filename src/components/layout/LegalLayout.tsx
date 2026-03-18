@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react"
 import { motion } from "motion/react"
-import { ArrowLeft } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { ROUTES } from "@/lib/routes"
 
@@ -15,20 +15,20 @@ interface LegalLayoutProps {
 
 export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLayoutProps) {
   return (
-    <div className="bg-surface-base min-h-screen pt-24 pb-20 px-6">
+    <div className="bg-surface-base min-h-screen pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb / Back */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           className="mb-8"
         >
-          <Link 
+          <Link
             href={ROUTES.public.index}
             className="inline-flex items-center gap-2 text-[14px] font-bold text-secondary-text hover:text-primary-dark transition-colors group"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-subtle group-hover:bg-surface-elevated transition-colors">
-              <ArrowLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
             </div>
             Volver al inicio
           </Link>

@@ -12,22 +12,22 @@ export default function TermsPage() {
       <section>
         <h2 className="text-2xl font-black tracking-tight text-primary-dark mb-4">PREÁMBULO</h2>
         <p>
-          Los presentes Términos y Condiciones de Uso (en adelante "los Términos") constituyen un contrato legalmente vinculante entre usted (en adelante "el Usuario") y el propietario y operador de Mirror (en adelante "Mirror", "nosotros" o "el Proveedor"), con domicilio en la República de Colombia.
+          Los presentes Términos y Condiciones de Uso (en adelante &quot;los Términos&quot;) constituyen un contrato legalmente vinculante entre usted (en adelante &quot;el Usuario&quot;) y el propietario y operador de Mirror (en adelante &quot;Mirror&quot;, &quot;nosotros&quot; o &quot;el Proveedor&quot;), con domicilio en la República de Colombia.
         </p>
         <p>
-          Al acceder, registrarse o utilizar la plataforma web de Mirror, su extensión de navegador o cualquier servicio relacionado (en adelante colectivamente "el Servicio"), usted declara haber leído, comprendido y aceptado íntegramente estos Términos. Si no está de acuerdo con alguna disposición, debe abstenerse de usar el Servicio.
+          Al acceder, registrarse o utilizar la plataforma web de Mirror, su extensión de navegador o cualquier servicio relacionado (en adelante colectivamente &quot;el Servicio&quot;), usted declara haber leído, comprendido y aceptado íntegramente estos Términos. Si no está de acuerdo con alguna disposición, debe abstenerse de usar el Servicio.
         </p>
       </section>
 
       <section>
         <h2 className="text-2xl font-black tracking-tight text-primary-dark mb-4">ARTÍCULO 1 — DEFINICIONES</h2>
         <ul className="space-y-3 list-none pl-0">
-          <li><strong>"Servicio":</strong> La plataforma web Mirror, su extensión de navegador para Chrome, las interfaces de programación (API) asociadas y cualquier funcionalidad ofrecida por Mirror.</li>
-          <li><strong>"Usuario":</strong> Toda persona natural mayor de dieciocho (18) años que cree una cuenta y use el Servicio.</li>
-          <li><strong>"Perfil de Voz":</strong> Configuración personalizada creada por el Usuario que contiene parámetros de tono, estilo de escritura y ejemplos para guiar la generación de contenido.</li>
-          <li><strong>"Contenido Generado":</strong> Textos, comentarios o publicaciones producidos por el Servicio mediante inteligencia artificial con base en las instrucciones del Usuario.</li>
-          <li><strong>"Créditos":</strong> Unidades de uso asignadas mensualmente según el plan contratado, que se consumen con cada generación de contenido.</li>
-          <li><strong>"Datos Personales":</strong> Toda información que permita identificar o hacer identificable al Usuario, conforme a la Ley 1581 de 2012 y normativa aplicable.</li>
+          <li><strong>&quot;Servicio&quot;:</strong> La plataforma web Mirror, su extensión de navegador para Chrome, las interfaces de programación (API) asociadas y cualquier funcionalidad ofrecida por Mirror.</li>
+          <li><strong>&quot;Usuario&quot;:</strong> Toda persona natural mayor de dieciocho (18) años que cree una cuenta y use el Servicio.</li>
+          <li><strong>&quot;Perfil de Voz&quot;:</strong> Configuración personalizada creada por el Usuario que contiene parámetros de tono, estilo de escritura y ejemplos para guiar la generación de contenido.</li>
+          <li><strong>&quot;Contenido Generado&quot;:</strong> Textos, comentarios o publicaciones producidos por el Servicio mediante inteligencia artificial con base en las instrucciones del Usuario.</li>
+          <li><strong>&quot;Créditos&quot;:</strong> Unidades de uso asignadas mensualmente según el plan contratado, que se consumen con cada generación de contenido.</li>
+          <li><strong>&quot;Datos Personales&quot;:</strong> Toda información que permita identificar o hacer identificable al Usuario, conforme a la Ley 1581 de 2012 y normativa aplicable.</li>
         </ul>
       </section>
 

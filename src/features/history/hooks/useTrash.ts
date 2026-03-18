@@ -1,6 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import {
     listTrash,
     restoreTrashItem,
@@ -8,30 +9,35 @@ import {
     type TrashItem,
 } from "@/features/history/services/trash.service"
 
-const trashKey = ["trash"] as const
-
 export function useTrash() {
     const queryClient = useQueryClient()
+    const userId = useUserId()
+    const trashKey = userId ? makeQueryKey("trash", userId) : ["trash"]
 
     const query = useQuery<TrashItem[]>({
         queryKey: trashKey,
         queryFn: listTrash,
         staleTime: 120_000,
         gcTime: 900_000,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        enabled: !!userId
     })
 
-    const restoreMutation = useMutation<TrashItem[], Error, string>({
+    const restoreMutation = useMutation<{ id: string; kind: "profile" | "comment" }, Error, string>({
         mutationFn: (id: string) => restoreTrashItem(id),
-        onSuccess: (next) => {
-            queryClient.setQueryData<TrashItem[]>(trashKey, next)
+        onSuccess: (result) => {
+            queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
+                prev?.filter((item) => item.id !== result.id) ?? []
+            )
         }
     })
 
-    const deleteMutation = useMutation<TrashItem[], Error, string>({
+    const deleteMutation = useMutation<{ id: string; kind: "profile" | "comment" }, Error, string>({
         mutationFn: (id: string) => deleteTrashItem(id),
-        onSuccess: (next) => {
-            queryClient.setQueryData<TrashItem[]>(trashKey, next)
+        onSuccess: (result) => {
+            queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
+                prev?.filter((item) => item.id !== result.id) ?? []
+            )
         }
     })
 

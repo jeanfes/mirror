@@ -1,6 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import {
   getUserSettings,
   updateUserSettings,
@@ -8,17 +9,18 @@ import {
   type UserSettings
 } from "@/features/settings/services/user-settings.service"
 
-const settingsKey = ["user-settings"]
-
 export function useUserSettings() {
   const queryClient = useQueryClient()
+  const userId = useUserId()
+  const settingsKey = userId ? makeQueryKey("user-settings", userId) : ["user-settings"]
 
   const query = useQuery({
     queryKey: settingsKey,
     queryFn: getUserSettings,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!userId
   })
 
   const mutation = useMutation({

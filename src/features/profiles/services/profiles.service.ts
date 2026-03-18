@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/client"
+import { getAuthContext } from "@/lib/supabase/auth-context"
 import type { Profile } from "@/types/dashboard"
 
 export interface CreateProfileInput {
@@ -34,20 +34,6 @@ interface StyleTrainingRow {
 	display_order: number
 }
 
-async function getAuthContext() {
-	const supabase = createClient()
-	const { data, error } = await supabase.auth.getUser()
-
-	if (error || !data.user) {
-		throw new Error("Could not resolve authenticated user")
-	}
-
-	return {
-		supabase,
-		userId: data.user.id
-	}
-}
-
 function mapRowToProfile(row: VoiceProfileRow, examples: string[]): Profile {
 	return {
 		id: row.id,
@@ -60,6 +46,43 @@ function mapRowToProfile(row: VoiceProfileRow, examples: string[]): Profile {
 		createdAt: Date.parse(row.created_at),
 		updatedAt: Date.parse(row.updated_at)
 	}
+}
+
+/**
+ * Helper to fetch a single profile by ID with its examples (style_training)
+ * Private - used internally by mutations
+ */
+async function getProfileById(
+	supabase: NonNullable<Awaited<ReturnType<typeof import("@/lib/supabase/auth-context").getAuthContext>>["supabase"]>,
+	userId: string,
+	profileId: string
+): Promise<Profile> {
+	const { data: profileData, error: profileError } = await supabase
+		.from("voice_profiles")
+		.select("id, user_id, name, description, tone, allow_emojis, enabled, created_at, updated_at")
+		.eq("id", profileId)
+		.eq("user_id", userId)
+		.single()
+
+	if (profileError) {
+		throw profileError
+	}
+
+	const { data: trainingData, error: trainingError } = await supabase
+		.from("style_training")
+		.select("profile_id, content, display_order")
+		.eq("profile_id", profileId)
+		.order("display_order", { ascending: true })
+
+	if (trainingError) {
+		throw trainingError
+	}
+
+	const examples = (trainingData ?? [])
+		.filter((row: StyleTrainingRow) => row.content)
+		.map((row: StyleTrainingRow) => row.content as string)
+
+	return mapRowToProfile(profileData as VoiceProfileRow, examples)
 }
 
 export async function listProfiles(): Promise<Profile[]> {
@@ -104,7 +127,7 @@ export async function listProfiles(): Promise<Profile[]> {
 	return profileRows.map((row) => mapRowToProfile(row, examplesByProfileId.get(row.id) ?? []))
 }
 
-export async function createProfile(input: CreateProfileInput): Promise<Profile[]> {
+export async function createProfile(input: CreateProfileInput): Promise<Profile> {
 	const { supabase, userId } = await getAuthContext()
 
 	const { data: createdProfile, error: createError } = await supabase
@@ -141,10 +164,11 @@ export async function createProfile(input: CreateProfileInput): Promise<Profile[
 		}
 	}
 
-	return listProfiles()
+	// Fetch and return the complete profile with examples
+	return getProfileById(supabase, userId, createdProfile.id)
 }
 
-export async function updateProfile(input: UpdateProfileInput): Promise<Profile[]> {
+export async function updateProfile(input: UpdateProfileInput): Promise<Profile> {
 	const { supabase, userId } = await getAuthContext()
 
 	const { error: updateError } = await supabase
@@ -190,10 +214,11 @@ export async function updateProfile(input: UpdateProfileInput): Promise<Profile[
 		}
 	}
 
-	return listProfiles()
+	// Fetch and return the complete updated profile
+	return getProfileById(supabase, userId, input.id)
 }
 
-export async function deleteProfile(id: string): Promise<Profile[]> {
+export async function deleteProfile(id: string): Promise<{ id: string }> {
 	const { supabase, userId } = await getAuthContext()
 
 	const { error } = await supabase
@@ -206,10 +231,10 @@ export async function deleteProfile(id: string): Promise<Profile[]> {
 		throw error
 	}
 
-	return listProfiles()
+	return { id }
 }
 
-export async function toggleProfile(id: string): Promise<Profile[]> {
+export async function toggleProfile(id: string): Promise<Profile> {
 	const { supabase, userId } = await getAuthContext()
 
 	const { data: current, error: currentError } = await supabase
@@ -236,5 +261,6 @@ export async function toggleProfile(id: string): Promise<Profile[]> {
 		throw updateError
 	}
 
-	return listProfiles()
+	// Fetch and return the complete toggled profile
+	return getProfileById(supabase, userId, id)
 }

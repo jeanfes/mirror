@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import { signInWithGoogle, signInWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { LoginValues } from "../schemas"
 import { mapLoginError, mapOAuthStartError, type LoginError } from "../errors"
@@ -19,8 +19,7 @@ export const useLogin = () => {
     const login = useCallback(async (data: LoginValues): Promise<LoginError | null> => {
         setIsPending(true)
         try {
-            const supabase = createClient()
-            const { error } = await supabase.auth.signInWithPassword({
+            const { error } = await signInWithPassword({
                 email: data.email,
                 password: data.password,
             })
@@ -44,11 +43,7 @@ export const useLogin = () => {
     const loginWithGoogle = useCallback(async () => {
         setIsPendingGoogle(true)
         try {
-            const supabase = createClient()
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: "google",
-                options: { redirectTo: `${window.location.origin}${ROUTES.auth.callback}` },
-            })
+            const { error } = await signInWithGoogle(`${window.location.origin}${ROUTES.auth.callback}`)
 
             if (error) {
                 const mappedError = mapOAuthStartError(error)

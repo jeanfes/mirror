@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, CheckCircle2, ChevronLeft } from "lucide-react"
+import { CheckCircle2, ChevronLeft } from "lucide-react"
 import { ROUTES } from "@/lib/routes"
 import { Button } from "@/components/ui/Button"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -59,7 +59,7 @@ export function ForgotPasswordForm() {
                 <div className="pt-4">
                     <Link href={ROUTES.auth.login}>
                         <Button variant="secondary" className="w-full h-11">
-                            <ArrowLeft size={16} className="mr-2" />
+                            <ChevronLeft size={16} className="mr-2" />
                             {t.auth.backToLogin}
                         </Button>
                     </Link>
@@ -91,7 +91,7 @@ export function ForgotPasswordForm() {
             </Button>
 
             <div className="pt-4 text-center">
-                <Link 
+                <Link
                     href={ROUTES.auth.login}
                     className="inline-flex items-center text-[14px] font-medium text-secondary-text hover:text-primary-dark transition-colors"
                 >
