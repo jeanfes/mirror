@@ -40,22 +40,31 @@ export const dictionaries = {
       "freeDesc": "Para usuarios ocasionales y testers",
       "perMonth": "/ mes",
       "freeFeatures": [
-        "50 autocompletados al mes",
-        "1 Perfil guardado",
-        "Configuraciones b\u00e1sicas",
+        "120 autocompletados al mes",
+        "1 Perfil de voz activo",
+        "Configuraciones básicas",
         "Soporte comunitario"
       ],
       "freeBtn": "Empieza Gratis",
-      "popular": "Popular",
-      "proPlan": "Plan Profesional",
-      "proDesc": "Para expertos en networking",
+      "popular": "Más Popular",
+      "proPlan": "Plan Pro",
+      "proDesc": "Para profesionales en crecimiento",
+      "proBtn": "Elegir Pro",
       "proFeatures": [
-        "Comentarios Ilimitados",
-        "Perfiles ilimitados",
+        "1.200 autocompletados al mes",
+        "10 Perfiles de voz activos",
         "Modos avanzados interactivos",
-        "Soporte prioritario 24/7"
+        "Soporte prioritario"
       ],
-      "proBtn": "Obtener Premium"
+      "elitePlan": "Plan Elite",
+      "eliteDesc": "Para líderes y agencias",
+      "eliteBtn": "Elegir Elite",
+      "eliteFeatures": [
+        "4.000 autocompletados al mes",
+        "Perfiles ilimitados",
+        "Acceso anticipado a funciones",
+        "Soporte VIP 24/7"
+      ]
     },
     "footer": {
       "description": "Tu asistente inteligente para dominar el networking en LinkedIn.",
@@ -145,6 +154,10 @@ export const dictionaries = {
       "invoiceDownload": "Descargar",
       "statusPaid": "Pagado",
       "statusPending": "Pendiente",
+      "statusFailed": "Fallida",
+      "statusRefunded": "Reembolsada",
+      "statusVoid": "Anulada",
+      "statusUnknown": "Desconocido",
       "noInvoices": "No hay facturas disponibles.",
       "cardEndingIn": "Tarjeta terminada en",
       "expires": "Expira",
@@ -195,6 +208,7 @@ export const dictionaries = {
       "messagePlaceholder": "Escribe tu mensaje aqu\u00ed...",
       "sendBtn": "Enviar Mensaje",
       "supportTitle": "Email de Soporte",
+      "supportEmail": "support@mirror.com",
       "socialTitle": "Redes Sociales"
     },
     "featuresPage": {
@@ -216,7 +230,7 @@ export const dictionaries = {
       "s1Title": "1. Instala la Extensi\u00f3n",
       "s1Desc": "A\u00f1ade Mirror a Chrome y ancla la extensi\u00f3n. No requiere contrase\u00f1as de LinkedIn.",
       "s2Title": "2. Crea tus Perfiles",
-      "s2Desc": "Define tus perfiles. \u00bfQuieres sonar anal\u00edtico, casual o experto interrumpiendo el debate?",
+      "s2Desc": "Define tus perfiles. \u00bfQuieres sonar anal\u00edtico, casual o como un experto interrumpiendo el debate?",
       "s3Title": "3. Comenta al Instante",
       "s3Desc": "Abre cualquier post, usa tus atajos de teclado y la IA har\u00e1 el trabajo pesado por ti."
     },
@@ -240,7 +254,8 @@ export const dictionaries = {
       "trashEmptyTitle": "La papelera est\u00e1 vac\u00eda",
       "trashEmptyDesc": "No hay nada esperando ser recuperado ahora mismo. Los elementos eliminados pueden restaurarse o eliminarse permanentemente tras su revisi\u00f3n.",
       "signingIn": "Iniciando sesi\u00f3n...",
-      "creatingAccount": "Creando cuenta..."
+      "creatingAccount": "Creando cuenta...",
+      "unknownProfile": "Perfil desconocido"
     }
   },
   "en": {
@@ -282,24 +297,32 @@ export const dictionaries = {
       "subtitle": "Plans designed for you. Start using Mirror for free today and scale when you need to.",
       "freePlan": "Basic Plan",
       "freeDesc": "For casual users and testers",
-      "perMonth": "/ month",
       "freeFeatures": [
-        "50 completions per month",
-        "1 Saved Profile",
+        "120 completions per month",
+        "1 Active Voice Profile",
         "Basic settings",
         "Community support"
       ],
       "freeBtn": "Start for Free",
-      "popular": "Popular",
-      "proPlan": "Professional Plan",
-      "proDesc": "For networking experts",
+      "popular": "Most Popular",
+      "proPlan": "Pro Plan",
+      "proDesc": "For growing professionals",
+      "proBtn": "Choose Pro",
       "proFeatures": [
-        "Unlimited Comments",
-        "Unlimited Profiles",
+        "1,200 completions per month",
+        "10 Active Voice Profiles",
         "Advanced interactive modes",
-        "24/7 Priority Support"
+        "Priority support"
       ],
-      "proBtn": "Get Premium"
+      "elitePlan": "Elite Plan",
+      "eliteDesc": "For leaders and agencies",
+      "eliteBtn": "Choose Elite",
+      "eliteFeatures": [
+        "4,000 completions per month",
+        "Unlimited profiles",
+        "Early access to features",
+        "24/7 VIP Support"
+      ]
     },
     "footer": {
       "description": "Your smart assistant to master networking on LinkedIn.",
@@ -389,6 +412,10 @@ export const dictionaries = {
       "invoiceDownload": "Download",
       "statusPaid": "Paid",
       "statusPending": "Pending",
+      "statusFailed": "Failed",
+      "statusRefunded": "Refunded",
+      "statusVoid": "Void",
+      "statusUnknown": "Unknown",
       "noInvoices": "No invoices available.",
       "cardEndingIn": "Card ending in",
       "expires": "Expires",
@@ -439,6 +466,7 @@ export const dictionaries = {
       "messagePlaceholder": "Write your message here...",
       "sendBtn": "Send Message",
       "supportTitle": "Support Email",
+      "supportEmail": "support@mirror.com",
       "socialTitle": "Social Media"
     },
     "featuresPage": {
@@ -484,7 +512,8 @@ export const dictionaries = {
       "trashEmptyTitle": "Trash is clear",
       "trashEmptyDesc": "Nothing is waiting for recovery right now. Deleted items that appear here can be restored or removed permanently after review.",
       "signingIn": "Signing in...",
-      "creatingAccount": "Creating account..."
+      "creatingAccount": "Creating account...",
+      "unknownProfile": "Unknown profile"
     }
   },
   "pt": {
@@ -528,22 +557,31 @@ export const dictionaries = {
       "freeDesc": "Para usu\u00e1rios ocasionais e testadores",
       "perMonth": "/ m\u00eas",
       "freeFeatures": [
-        "50 preenchimentos por m\u00eas",
-        "1 Perfil salvo",
-        "Configura\u00e7\u00f5es b\u00e1sicas",
+        "120 autocompletados por mês",
+        "1 Perfil de voz ativo",
+        "Configurações básicas",
         "Suporte da comunidade"
       ],
-      "freeBtn": "Comece gr\u00e1tis",
-      "popular": "Popular",
-      "proPlan": "Plano Profissional",
-      "proDesc": "Para especialistas em networking",
+      "freeBtn": "Comece Grátis",
+      "popular": "Mais Popular",
+      "proPlan": "Plano Pro",
+      "proDesc": "Para profissionais em crescimento",
+      "proBtn": "Elegir Pro",
       "proFeatures": [
-        "Coment\u00e1rios Ilimitados",
-        "Perfis ilimitados",
-        "Modos avan\u00e7ados",
-        "Suporte 24/7"
+        "1.200 autocompletados por mês",
+        "10 Perfis de voz ativos",
+        "Modos avançados interativos",
+        "Suporte prioritário"
       ],
-      "proBtn": "Obter Premium"
+      "elitePlan": "Plano Elite",
+      "eliteDesc": "Para líderes e agências",
+      "eliteBtn": "Elegir Elite",
+      "eliteFeatures": [
+        "4.000 autocompletados por mês",
+        "Perfis ilimitados",
+        "Acesso antecipado a funções",
+        "Suporte VIP 24/7"
+      ]
     },
     "footer": {
       "description": "Seu assistente inteligente para dominar o networking no LinkedIn.",
@@ -633,6 +671,10 @@ export const dictionaries = {
       "invoiceDownload": "Baixar",
       "statusPaid": "Pago",
       "statusPending": "Pendente",
+      "statusFailed": "Falhada",
+      "statusRefunded": "Reembolsada",
+      "statusVoid": "Anulada",
+      "statusUnknown": "Desconhecido",
       "noInvoices": "Nenhuma fatura disponível.",
       "cardEndingIn": "Cartão terminado em",
       "expires": "Expira",
@@ -728,7 +770,8 @@ export const dictionaries = {
       "trashEmptyTitle": "Lixeira vazia",
       "trashEmptyDesc": "Nada aguarda recuperação agora. Itens excluídos podem ser restaurados ou removidos permanentemente.",
       "signingIn": "Entrando...",
-      "creatingAccount": "Criando conta..."
+      "creatingAccount": "Criando conta...",
+      "unknownProfile": "Perfil desconhecido"
     }
   },
   "fr": {
@@ -772,20 +815,31 @@ export const dictionaries = {
       "freeDesc": "Pour tester",
       "perMonth": "/ mois",
       "freeFeatures": [
-        "50 compl\u00e9tions/mois",
-        "1 Profil",
+        "120 autocomplétions par mois",
+        "1 Profil de voix actif",
+        "Paramètres de base",
         "Support communautaire"
       ],
       "freeBtn": "Essayer gratuitement",
-      "popular": "Populaire",
+      "popular": "Le plus populaire",
       "proPlan": "Plan Pro",
-      "proDesc": "Pour les experts",
+      "proDesc": "Pour les professionnels",
+      "proBtn": "Choisir Pro",
       "proFeatures": [
-        "Illimit\u00e9",
-        "Profils illimit\u00e9s",
-        "Support 24/7"
+        "1 200 autocomplétions par mois",
+        "10 Profils de voix actifs",
+        "Modes interactifs avancés",
+        "Support prioritaire"
       ],
-      "proBtn": "Obtenir Premium"
+      "elitePlan": "Plan Elite",
+      "eliteDesc": "Pour leaders et agences",
+      "eliteBtn": "Choisir Elite",
+      "eliteFeatures": [
+        "4 000 autocomplétions par mois",
+        "Profils illimités",
+        "Accès anticipé aux fonctions",
+        "Support VIP 24/7"
+      ]
     },
     "footer": {
       "description": "Votre assistant intelligent pour LinkedIn.",
@@ -875,6 +929,10 @@ export const dictionaries = {
       "invoiceDownload": "Télécharger",
       "statusPaid": "Payé",
       "statusPending": "En attente",
+      "statusFailed": "Échouée",
+      "statusRefunded": "Remboursée",
+      "statusVoid": "Annulée",
+      "statusUnknown": "Inconnu",
       "noInvoices": "Aucune facture disponible.",
       "cardEndingIn": "Carte se terminant par",
       "expires": "Expire",
@@ -924,7 +982,8 @@ export const dictionaries = {
       "messageLabel": "Message",
       "messagePlaceholder": "Votre message...",
       "sendBtn": "Envoyer",
-      "supportTitle": "E-mail Support",
+      "supportTitle": "Email Support",
+      "supportEmail": "support@mirror.com",
       "socialTitle": "R\u00e9seaux Sociaux"
     },
     "featuresPage": {
@@ -970,7 +1029,8 @@ export const dictionaries = {
       "trashEmptyTitle": "La corbeille est vide",
       "trashEmptyDesc": "Rien n'attend d'être récupéré pour l'instant. Les éléments supprimés peuvent être restaurés ou supprimés définitivement.",
       "signingIn": "Connexion...",
-      "creatingAccount": "Création du compte..."
+      "creatingAccount": "Création du compte...",
+      "unknownProfile": "Profil inconnu"
     }
   },
   "de": {
@@ -1014,20 +1074,31 @@ export const dictionaries = {
       "freeDesc": "F\u00fcr Tester",
       "perMonth": "/ monat",
       "freeFeatures": [
-        "50 generierte Texte",
-        "1 Profil",
-        "Basis-Support"
+        "120 Generierungen pro Monat",
+        "1 Aktives Sprachprofil",
+        "Basiseinstellungen",
+        "Community-Support"
       ],
       "freeBtn": "Kostenlos starten",
-      "popular": "Beliebt",
-      "proPlan": "Pro",
-      "proDesc": "F\u00fcr Experten",
+      "popular": "Am beliebtesten",
+      "proPlan": "Pro Plan",
+      "proDesc": "Für wachsende Profis",
+      "proBtn": "Pro wählen",
       "proFeatures": [
-        "Unbegrenzt",
-        "Unbegrenzte Profile",
-        "24/7 Support"
+        "1.200 Generierungen pro Monat",
+        "10 Aktive Sprachprofile",
+        "Erweiterte Modi",
+        "Prioritäts-Support"
       ],
-      "proBtn": "Premium erhalten"
+      "elitePlan": "Elite Plan",
+      "eliteDesc": "Für Leader und Agenturen",
+      "eliteBtn": "Elite wählen",
+      "eliteFeatures": [
+        "4.000 Generierungen pro Monat",
+        "Unbegrenzte Profile",
+        "Früher Zugang zu Funktionen",
+        "24/7 VIP-Support"
+      ]
     },
     "footer": {
       "description": "Ihr smarter LinkedIn-Assistent.",
@@ -1117,6 +1188,10 @@ export const dictionaries = {
       "invoiceDownload": "Herunterladen",
       "statusPaid": "Bezahlt",
       "statusPending": "Ausstehend",
+      "statusFailed": "Fehlgeschlagen",
+      "statusRefunded": "Erstattet",
+      "statusVoid": "Storniert",
+      "statusUnknown": "Unbekannt",
       "noInvoices": "Keine Rechnungen verfügbar.",
       "cardEndingIn": "Karte mit Endung",
       "expires": "Läuft ab",
@@ -1166,7 +1241,8 @@ export const dictionaries = {
       "messageLabel": "Nachricht",
       "messagePlaceholder": "Ihre Nachricht...",
       "sendBtn": "Senden",
-      "supportTitle": "Support E-Mail",
+      "supportTitle": "Support-E-Mail",
+      "supportEmail": "support@mirror.com",
       "socialTitle": "Social Media"
     },
     "featuresPage": {
@@ -1212,7 +1288,8 @@ export const dictionaries = {
       "trashEmptyTitle": "Papierkorb ist leer",
       "trashEmptyDesc": "Derzeit wartet nichts auf Wiederherstellung. Gelöschte Elemente können hier wiederhergestellt oder endgültig entfernt werden.",
       "signingIn": "Anmelden...",
-      "creatingAccount": "Konto erstellen..."
+      "creatingAccount": "Konto erstellen...",
+      "unknownProfile": "Unbekanntes Profil"
     }
   }
 };

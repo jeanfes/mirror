@@ -11,7 +11,7 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
-import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
+import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { useProfilesUIStore } from "@/store/useProfilesUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
 

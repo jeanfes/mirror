@@ -4,7 +4,7 @@ import { ArrowRight, Check, WandSparkles, Star } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
-import type { PlanDefinition, PlanName } from "@/features/billing/services/billing.local.service"
+import type { PlanDefinition, PlanName } from "@/features/billing/services/billing.service"
 
 interface PlanCardProps {
     plan: PlanDefinition

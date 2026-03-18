@@ -13,7 +13,6 @@ import {
     Settings,
     Palette,
     User,
-    ChevronLeft,
 } from "lucide-react"
 
 import { Card } from "@/components/ui/Card"
@@ -250,9 +249,9 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                             <p className="text-xs text-secondary-text font-medium">Last updated March 2026</p>
                                                         </div>
                                                     </div>
-                                                    <Button 
-                                                        variant="secondary" 
-                                                        className="font-bold h-9 px-5" 
+                                                    <Button
+                                                        variant="secondary"
+                                                        className="font-bold h-9 px-5"
                                                         onClick={() => setIsChangePasswordOpen(true)}
                                                     >
                                                         Update
@@ -392,9 +391,9 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                 onCancel={() => setIsDeleteAccountConfirmOpen(false)}
             />
 
-            <ChangePasswordModal 
-                open={isChangePasswordOpen} 
-                onOpenChange={setIsChangePasswordOpen} 
+            <ChangePasswordModal
+                open={isChangePasswordOpen}
+                onOpenChange={setIsChangePasswordOpen}
             />
 
             <LoadingOverlay show={isLogoutPending} label="Logging out..." />

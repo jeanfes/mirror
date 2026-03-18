@@ -5,8 +5,8 @@ import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Lightbulb } from "lucide-react"
-import type { Persona } from "@/types/dashboard"
-import type { CreateProfileInput } from "@/features/profiles/services/profiles.local.service"
+import type { Profile } from "@/types/dashboard"
+import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { Button } from "@/components/ui/Button"
 import { Toggle } from "@/components/ui/Toggle"
 import { Input } from "@/components/ui/Input"
@@ -28,7 +28,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 
 interface ProfileFormDialogProps {
     open: boolean
-    profile: Persona | null
+    profile: Profile | null
     isPending: boolean
     onClose: () => void
     onSubmit: (values: CreateProfileInput, profileId?: string) => Promise<void>

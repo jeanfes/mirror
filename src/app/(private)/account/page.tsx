@@ -9,7 +9,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { useBilling } from "@/features/billing/hooks/useBilling"
-import { planDefinitions } from "@/features/billing/services/billing.local.service"
+import { planDefinitions } from "@/features/billing/services/billing.service"
 import { BillingHistory } from "@/features/billing/components/BillingHistory"
 import { PaymentMethods } from "@/features/billing/components/PaymentMethods"
 import { useHistory } from "@/features/history/hooks/useHistory"
@@ -18,7 +18,7 @@ import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function AccountPage() {
     const { data: account, isLoading: isAccountLoading, isError } = useAccount()
-    const { invoices, paymentMethods, isLoadingInvoices, isLoadingPaymentMethods } = useBilling()
+    const { invoices, paymentMethods } = useBilling()
     const { data: history } = useHistory()
     const { data: profiles } = useProfiles()
     const { t } = useLanguageStore()
@@ -46,7 +46,7 @@ export default function AccountPage() {
     const appliedCount = historyItems.filter((item) => item.applied).length
     const reusableCount = historyItems.filter((item) => item.source === "history_reuse").length
     const currentMonth = new Date().getMonth()
-    const generatedThisMonth = historyItems.filter((item) => new Date(item.timestamp).getMonth() === currentMonth).length
+    const generatedThisMonth = historyItems.filter((item) => new Date(item.createdAt).getMonth() === currentMonth).length
     const currentPlan = planDefinitions.find((plan) => plan.name === resolvedAccount.plan)
     const totalCredits = currentPlan?.credits ?? resolvedAccount.creditsRemaining
     const usedCredits = Math.max(totalCredits - resolvedAccount.creditsRemaining, 0)
@@ -108,7 +108,7 @@ export default function AccountPage() {
                             </div>
                             <div className="dashboard-dark-stat-muted">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Latest output</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.timestamp, { addSuffix: true }) : "No activity"}</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true }) : "No activity"}</p>
                             </div>
                         </div>
                     </Card>
@@ -212,7 +212,7 @@ export default function AccountPage() {
                         <Card className="dashboard-card-xl">
                             <p className="dashboard-overline">Recent activity</p>
                             <p className="mt-3 section-heading">{latestHistoryItem ? latestHistoryItem.postAuthor : "No archived comments yet"}</p>
-                            <p className="mt-2 body-muted">{latestHistoryItem ? `Latest generated comment was added ${formatDistanceToNow(latestHistoryItem.timestamp, { addSuffix: true })}.` : "Generate a few comments and this section will start showing momentum."}</p>
+                            <p className="mt-2 body-muted">{latestHistoryItem ? `Latest generated comment was added ${formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })}.` : "Generate a few comments and this section will start showing momentum."}</p>
                         </Card>
                     </div>
                 </TabsContent>

@@ -9,7 +9,7 @@ import {
   updateProfile,
   type CreateProfileInput,
   type UpdateProfileInput
-} from "@/features/profiles/services/profiles.local.service"
+} from "@/features/profiles/services/profiles.service"
 
 const profilesKey = ["profiles"]
 

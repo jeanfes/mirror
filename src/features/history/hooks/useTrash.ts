@@ -6,7 +6,7 @@ import {
     restoreTrashItem,
     deleteTrashItem,
     type TrashItem,
-} from "@/features/history/services/trash.local.service"
+} from "@/features/history/services/trash.service"
 
 const trashKey = ["trash"] as const
 

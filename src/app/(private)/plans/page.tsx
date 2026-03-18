@@ -8,7 +8,7 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
 import { useAccount } from "@/features/billing/hooks/useAccount"
-import { planDefinitions } from "@/features/billing/services/billing.local.service"
+import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function PlansPage() {

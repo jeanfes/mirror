@@ -34,9 +34,12 @@ export function LandingFooter() {
                 <div className="space-y-4">
                     <h4 className="text-[14px] font-bold text-primary-dark uppercase tracking-wider">{t.footer.contactTitle}</h4>
                     <ul className="space-y-3">
-                        <li><a href="mailto:soporte@mirror.com" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">soporte@mirror.com</a></li>
-                        <li><Link href="/help" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.helpCenter}</Link></li>
-                        <li><Link href="/legal" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.legal}</Link></li>
+                        <li><a href="mailto:support@mirror.com" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">support@mirror.com</a></li>
+                        <li><Link href={ROUTES.public.faq} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.helpCenter}</Link></li>
+                        <li className="flex flex-col gap-2 pt-1">
+                            <Link href={ROUTES.public.terms} className="text-[13px] font-bold text-secondary-text/80 hover:text-accent-blue transition-colors">Términos de Uso</Link>
+                            <Link href={ROUTES.public.privacy} className="text-[13px] font-bold text-secondary-text/80 hover:text-accent-blue transition-colors">Política de Privacidad</Link>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -1,6 +1,6 @@
-import { AccountStatus, HistoryItem, Persona } from "@/types/dashboard"
+import { AccountStatus, HistoryItem, Profile } from "@/types/dashboard"
 
-export const profiles: Persona[] = [
+export const profiles: Profile[] = [
   {
     id: "persona_1",
     name: "Insight Architect",
@@ -36,27 +36,27 @@ export const profiles: Persona[] = [
 export const history: HistoryItem[] = [
   {
     id: "hist_1",
-    personaId: "persona_1",
+    profileId: "persona_1",
     postAuthor: "Elena Torres",
     postHeadline: "VP Product at Nova",
     postSnippet: "We reduced customer churn by 18% in one quarter with one process change.",
-    generatedComment: "Excellent execution. The real win is converting feedback into a repeatable operating rhythm.",
+    generatedText: "Excellent execution. The real win is converting feedback into a repeatable operating rhythm.",
     goal: "add_value",
     source: "generated",
     applied: true,
-    timestamp: Date.now() - 1000 * 60 * 60 * 4
+    createdAt: Date.now() - 1000 * 60 * 60 * 4
   },
   {
     id: "hist_2",
-    personaId: "persona_2",
+    profileId: "persona_2",
     postAuthor: "Marcus Lee",
     postHeadline: "Founder",
     postSnippet: "Hiring your first PM is not about frameworks, it is about decision quality.",
-    generatedComment: "Great point. Decision quality compounds over time and shapes culture faster than any process chart.",
+    generatedText: "Great point. Decision quality compounds over time and shapes culture faster than any process chart.",
     goal: "networking",
     source: "alternative",
     applied: false,
-    timestamp: Date.now() - 1000 * 60 * 60 * 18
+    createdAt: Date.now() - 1000 * 60 * 60 * 18
   }
 ]
 

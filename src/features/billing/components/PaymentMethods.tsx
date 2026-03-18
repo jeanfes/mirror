@@ -2,7 +2,7 @@
 
 import { CreditCard, Edit2, Plus } from "lucide-react"
 import { useLanguageStore } from "@/store/useLanguageStore"
-import { type PaymentMethod } from "@/features/billing/services/billing.local.service"
+import { type PaymentMethod } from "@/features/billing/services/billing.service"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 
@@ -40,7 +40,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
               </p>
             </div>
           </div>
-          
+
           <Button variant="secondary" size="md" className="h-10 px-4 gap-2.5 font-bold shadow-sm whitespace-nowrap w-full sm:w-auto">
             <Edit2 className="h-3.5 w-3.5" />
             {t.billing.updateCard}
@@ -48,8 +48,8 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
         </div>
       </Card>
 
-      <Button 
-        variant="secondary" 
+      <Button
+        variant="secondary"
         className="w-full border-dashed border-2 py-6 bg-transparent hover:bg-surface-subtle transition-all gap-2 rounded-2xl"
       >
         <Plus className="h-4 w-4" />

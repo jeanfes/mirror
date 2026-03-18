@@ -43,13 +43,13 @@ export default function HistoryPage() {
         const normalizedSearch = search.trim().toLowerCase()
 
         return (history ?? []).filter((item) => {
-            if (selectedProfileId !== "all" && item.personaId !== selectedProfileId) return false
+            if (selectedProfileId !== "all" && item.profileId !== selectedProfileId) return false
             if (appliedFilter === "applied" && !item.applied) return false
             if (appliedFilter === "pending" && item.applied) return false
 
             if (!normalizedSearch) return true
 
-            const haystack = [item.postAuthor, item.postHeadline, item.postSnippet, item.generatedComment]
+            const haystack = [item.postAuthor, item.postHeadline, item.postSnippet, item.generatedText]
                 .filter(Boolean)
                 .join(" ")
                 .toLowerCase()
@@ -221,7 +221,7 @@ export default function HistoryPage() {
                         <HistoryItemCard
                             key={item.id}
                             item={item}
-                            profileName={profileMap.get(item.personaId) ?? "Sin perfil"}
+                            profileName={profileMap.get(item.profileId) ?? t.app.unknownProfile}
                             onCopy={handleCopy}
                             onReuse={handleReuse}
                             onToggleApplied={handleToggleApplied}

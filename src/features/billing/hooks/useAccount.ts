@@ -1,7 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { getAccount, setPlan, type PlanName } from "@/features/billing/services/billing.local.service"
+import { getAccount, setPlan, type PlanName } from "@/features/billing/services/billing.service"
 
 const accountKey = ["account"]
 

@@ -59,7 +59,7 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
 
                     <div className="feature-soft-card-strong px-3 py-2 text-right shadow-premium-sm">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary-text">Generated</p>
-                        <p className="mt-1 text-[13px] font-medium text-secondary-text">{formatDistanceToNow(item.timestamp, { addSuffix: true })}</p>
+                        <p className="mt-1 text-[13px] font-medium text-secondary-text">{formatDistanceToNow(item.createdAt, { addSuffix: true })}</p>
                     </div>
                 </div>
             </div>
@@ -75,14 +75,14 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                             <MessageSquareQuote className="h-4 w-4" />
                             <p className="text-[11px] font-semibold uppercase tracking-widest">Generated comment</p>
                         </div>
-                        <p className="mt-3 text-[15px] leading-7 text-white/95">{item.generatedComment}</p>
+                        <p className="mt-3 text-[15px] leading-7 text-white/95">{item.generatedText}</p>
                     </div>
                 </div>
 
                 <div className="feature-soft-card mt-4 flex flex-wrap items-center justify-end gap-3">
                     <div className="flex flex-wrap gap-2">
                         <Tooltip text="Copy this generated comment to clipboard">
-                            <Button type="button" variant="secondary" onClick={() => onCopy(item.generatedComment)}>
+                            <Button type="button" variant="secondary" onClick={() => onCopy(item.generatedText)}>
                                 <Copy className="h-4 w-4" />
                                 Copy
                             </Button>

@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/Card"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useTrash } from "@/features/history/hooks/useTrash"
-import type { TrashItem } from "@/features/history/services/trash.local.service"
+import type { TrashItem } from "@/features/history/services/trash.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function TrashPage() {

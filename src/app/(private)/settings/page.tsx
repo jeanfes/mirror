@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Globe, SlidersHorizontal, Lock, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -9,17 +9,89 @@ import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
 import { Toggle } from "@/components/ui/Toggle"
+import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { StatePanel } from "@/components/ui/StatePanel"
+import { useProfiles } from "@/features/profiles/hooks/useProfiles"
+import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { useLanguageStore } from "@/store/useLanguageStore"
+import type { UpdateUserSettingsInput } from "@/features/settings/services/user-settings.service"
+
+const defaultDraft: UpdateUserSettingsInput = {
+    language: "en",
+    defaultProfileId: "",
+    autoInsertComments: false,
+    autoSaveDrafts: true,
+    requireStrictTone: true,
+    showConfidenceHints: true,
+    desktopAlertsEnabled: false,
+    notificationsEnabled: true
+}
 
 export default function SettingsPage() {
-    const [autoInsert, setAutoInsert] = useState(false)
-    const [saveHistory, setSaveHistory] = useState(true)
-    const [language, setLanguage] = useState("en")
-    const [strictToneMatch, setStrictToneMatch] = useState(true)
-    const [showConfidenceHints, setShowConfidenceHints] = useState(true)
-    const [defaultProfile, setDefaultProfile] = useState("adaptive")
+    const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
+    const { data: profiles } = useProfiles()
+    const { setLanguage: setAppLanguage, t } = useLanguageStore()
+    const showLoading = useLoadingDelay(isLoading)
+    const [draft, setDraft] = useState<UpdateUserSettingsInput | null>(null)
 
-    const handleSave = () => {
-        toast.success("Preferences updated")
+    const resolvedSettings = useMemo<UpdateUserSettingsInput>(() => {
+        if (draft) return draft
+        if (!settings) return defaultDraft
+
+        return {
+            language: settings.language,
+            defaultProfileId: settings.defaultProfileId,
+            autoInsertComments: settings.autoInsertComments,
+            autoSaveDrafts: settings.autoSaveDrafts,
+            requireStrictTone: settings.requireStrictTone,
+            showConfidenceHints: settings.showConfidenceHints,
+            desktopAlertsEnabled: settings.desktopAlertsEnabled,
+            notificationsEnabled: settings.notificationsEnabled
+        }
+    }, [draft, settings])
+
+    const updateDraft = <K extends keyof UpdateUserSettingsInput>(
+        key: K,
+        value: UpdateUserSettingsInput[K]
+    ) => {
+        setDraft((current) => ({
+            ...(current ?? resolvedSettings),
+            [key]: value
+        }))
+    }
+
+    const profileOptions = useMemo(() => {
+        const baseOption = [{ label: "No default profile", value: "" }]
+        const profileItems = (profiles ?? []).map((profile) => ({
+            label: profile.name,
+            value: profile.id
+        }))
+        return [...baseOption, ...profileItems]
+    }, [profiles])
+
+    const handleSave = async () => {
+        try {
+            const saved = await updateSettings(resolvedSettings)
+            setDraft(null)
+            setAppLanguage(saved.language as "es" | "en" | "pt" | "fr" | "de")
+            toast.success("Preferences updated")
+        } catch {
+            toast.error("Could not save preferences")
+        }
+    }
+
+    if (showLoading) {
+        return <LoadingOverlay show={true} />
+    }
+
+    if (isError) {
+        return (
+            <StatePanel
+                tone="error"
+                title={t.app.accountErrorTitle}
+                description={t.app.accountErrorDesc}
+            />
+        )
     }
 
     return (
@@ -79,14 +151,14 @@ export default function SettingsPage() {
                             <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">Behavior and output quality</h2>
                             <p className="mt-2 max-w-2xl body-muted">Use these toggles to control automation, history capture and tone strictness.</p>
                         </div>
-                        <Button type="button" onClick={handleSave}>Save preferences</Button>
+                        <Button type="button" onClick={handleSave} loading={isMutating}>Save preferences</Button>
                     </div>
 
                     <div className="mt-6 grid gap-4 md:grid-cols-2">
-                        <Toggle checked={autoInsert} onChange={setAutoInsert} label="Auto-insert generated comments" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={saveHistory} onChange={setSaveHistory} label="Save generation history" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={strictToneMatch} onChange={setStrictToneMatch} label="Require stricter tone matching" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={showConfidenceHints} onChange={setShowConfidenceHints} label="Show confidence hints in the extension" className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.autoInsertComments} onChange={(value) => updateDraft("autoInsertComments", value)} label="Auto-insert generated comments" className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.autoSaveDrafts} onChange={(value) => updateDraft("autoSaveDrafts", value)} label="Save generation history" className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.requireStrictTone} onChange={(value) => updateDraft("requireStrictTone", value)} label="Require stricter tone matching" className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.showConfidenceHints} onChange={(value) => updateDraft("showConfidenceHints", value)} label="Show confidence hints in the extension" className="min-h-14 rounded-2xl px-4 text-[13px]" />
                     </div>
                 </Card>
 
@@ -97,27 +169,25 @@ export default function SettingsPage() {
 
                     <div className="mt-5 space-y-4">
                         <Select
-                            value={language}
-                            onChange={setLanguage}
+                            value={resolvedSettings.language}
+                            onChange={(value) => updateDraft("language", value as UpdateUserSettingsInput["language"])}
                             label="Language"
                             triggerClassName="h-11 rounded-2xl"
                             options={[
                                 { label: "English", value: "en" },
                                 { label: "Spanish", value: "es" },
-                                { label: "Portuguese", value: "pt" }
+                                { label: "Portuguese", value: "pt" },
+                                { label: "French", value: "fr" },
+                                { label: "German", value: "de" }
                             ]}
                         />
 
                         <Select
-                            value={defaultProfile}
-                            onChange={setDefaultProfile}
+                            value={resolvedSettings.defaultProfileId}
+                            onChange={(value) => updateDraft("defaultProfileId", value)}
                             label="Default profile"
                             triggerClassName="h-11 rounded-2xl"
-                            options={[
-                                { label: "Adaptive starter", value: "adaptive" },
-                                { label: "Insight Architect", value: "insight" },
-                                { label: "Warm Connector", value: "warm" }
-                            ]}
+                            options={profileOptions}
                         />
                     </div>
 

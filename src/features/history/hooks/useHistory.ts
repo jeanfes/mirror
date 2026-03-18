@@ -1,7 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { listHistory, reuseHistoryItem, toggleHistoryApplied } from "@/features/history/services/history.local.service"
+import { listHistory, reuseHistoryItem, toggleHistoryApplied } from "@/features/history/services/history.service"
 
 const historyKey = ["history"]
 

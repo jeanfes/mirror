@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { getInvoices, getPaymentMethods } from "@/features/billing/services/billing.local.service"
+import { getInvoices, getPaymentMethods } from "@/features/billing/services/billing.service"
 
 const invoicesKey = ["invoices"]
 const paymentMethodsKey = ["paymentMethods"]

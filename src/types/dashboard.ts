@@ -1,6 +1,6 @@
 export type GoalType = "add_value" | "challenge" | "question" | "networking"
 
-export interface Persona {
+export interface Profile {
   id: string
   name: string
   description: string
@@ -14,15 +14,15 @@ export interface Persona {
 
 export interface HistoryItem {
   id: string
-  personaId: string
+  profileId: string
   postAuthor: string
   postHeadline?: string
   postSnippet: string
-  generatedComment: string
+  generatedText: string
   goal?: GoalType
   source?: "generated" | "alternative" | "manual_edit" | "history_reuse"
   applied?: boolean
-  timestamp: number
+  createdAt: number
 }
 
 export interface AccountStatus {
@@ -39,7 +39,7 @@ export interface QuickStats {
 
 export interface DashboardSeed {
   account: AccountStatus
-  profiles: Persona[]
+  profiles: Profile[]
   history: HistoryItem[]
   stats: QuickStats
 }

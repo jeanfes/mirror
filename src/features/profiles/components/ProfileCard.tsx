@@ -10,10 +10,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/DropdownMenu"
-import type { Persona } from "@/types/dashboard"
+import type { Profile } from "@/types/dashboard"
 
 interface ProfileCardProps {
-    profile: Persona
+    profile: Profile
     onEdit: (id: string) => void
     onToggle: (id: string) => void
     onDelete: (id: string) => void
