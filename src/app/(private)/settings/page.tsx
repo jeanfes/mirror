@@ -65,22 +65,22 @@ export default function SettingsPage() {
     }
 
     const profileOptions = useMemo(() => {
-        const baseOption = [{ label: "No default profile", value: "" }]
+        const baseOption = [{ label: t.app.settings.noDefaultProfile, value: "" }]
         const profileItems = (profiles ?? []).map((profile) => ({
             label: profile.name,
             value: profile.id
         }))
         return [...baseOption, ...profileItems]
-    }, [profiles])
+    }, [profiles, t])
 
     const handleSave = async () => {
         try {
             const saved = await updateSettings(resolvedSettings)
             setDraft(null)
             setAppLanguage(saved.language as "es" | "en" | "pt" | "fr" | "de")
-            toast.success("Preferences updated")
+            toast.success(t.app.settings.preferencesUpdated)
         } catch {
-            toast.error("Could not save preferences")
+            toast.error(t.app.settings.preferencesError)
         }
     }
 
@@ -92,8 +92,8 @@ export default function SettingsPage() {
         return (
             <StatePanel
                 tone="error"
-                title={t.app.accountErrorTitle}
-                description={t.app.accountErrorDesc}
+                title={t.app.common.accountErrorTitle}
+                description={t.app.common.accountErrorDesc}
             />
         )
     }
@@ -107,10 +107,10 @@ export default function SettingsPage() {
                 <div className="relative">
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            Configure Mirror in one place, without jumping between sections.
+                            {t.app.settings.heroTitle}
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            Keep only what matters: automation behavior, output quality defaults, language and a default voice profile.
+                            {t.app.settings.heroDesc}
                         </p>
                     </div>
                 </div>
@@ -121,16 +121,16 @@ export default function SettingsPage() {
                     <div className="icon-box icon-bg-purple">
                         <SlidersHorizontal className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Behavior and safeguards</h2>
-                    <p className="mt-2 body-muted">Define review friction and tone strictness in one section.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.settings.behaviorTitle}</h2>
+                    <p className="mt-2 body-muted">{t.app.settings.behaviorDesc}</p>
                 </Card>
 
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-amber">
                         <Globe className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Language and default profile</h2>
-                    <p className="mt-2 body-muted">Set startup defaults so every generation starts close to your voice.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.settings.languageProfileTitle}</h2>
+                    <p className="mt-2 body-muted">{t.app.settings.languageProfileDesc}</p>
                 </Card>
 
                 <Link href={`${ROUTES.private.settings}/security`} className="block group">
@@ -139,10 +139,10 @@ export default function SettingsPage() {
                             <Lock className="h-5 w-5" />
                         </div>
                         <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text group-hover:text-accent-purple transition-colors flex items-center gap-2">
-                            Security and Password
+                            {t.app.settings.securityTitle}
                             <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </h2>
-                        <p className="mt-2 body-muted">Manage your account authentication and keep your access secure.</p>
+                        <p className="mt-2 body-muted">{t.app.settings.securityDesc}</p>
                     </Card>
                 </Link>
             </section>
@@ -151,18 +151,18 @@ export default function SettingsPage() {
                 <Card className="dashboard-card-xl">
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <p className="dashboard-overline">Controls</p>
-                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">Behavior and output quality</h2>
-                            <p className="mt-2 max-w-2xl body-muted">Use these toggles to control automation, history capture and tone strictness.</p>
+                            <p className="dashboard-overline">{t.app.settings.controlsLabel}</p>
+                            <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.settings.behaviorQualityTitle}</h2>
+                            <p className="mt-2 max-w-2xl body-muted">{t.app.settings.behaviorQualityDesc}</p>
                         </div>
-                        <Button type="button" onClick={handleSave} loading={isMutating}>Save preferences</Button>
+                        <Button type="button" onClick={handleSave} loading={isMutating}>{t.app.settings.savePreferences}</Button>
                     </div>
 
                     <div className="mt-6 grid gap-4 md:grid-cols-2">
-                        <Toggle checked={resolvedSettings.autoInsertComments} onChange={(value) => updateDraft("autoInsertComments", value)} label="Auto-insert generated comments" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.autoSaveDrafts} onChange={(value) => updateDraft("autoSaveDrafts", value)} label="Save generation history" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.requireStrictTone} onChange={(value) => updateDraft("requireStrictTone", value)} label="Require stricter tone matching" className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.showConfidenceHints} onChange={(value) => updateDraft("showConfidenceHints", value)} label="Show confidence hints in the extension" className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.autoInsertComments} onChange={(value) => updateDraft("autoInsertComments", value)} label={t.app.settings.autoInsertLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.autoSaveDrafts} onChange={(value) => updateDraft("autoSaveDrafts", value)} label={t.app.settings.autoSaveLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.requireStrictTone} onChange={(value) => updateDraft("requireStrictTone", value)} label={t.app.settings.requireStrictLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle checked={resolvedSettings.showConfidenceHints} onChange={(value) => updateDraft("showConfidenceHints", value)} label={t.app.settings.showConfidenceLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
                     </div>
                 </Card>
 
@@ -175,29 +175,29 @@ export default function SettingsPage() {
                         <Select
                             value={resolvedSettings.language}
                             onChange={(value) => updateDraft("language", value as UpdateUserSettingsInput["language"])}
-                            label="Language"
+                            label={t.app.settings.languageLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={[
                                 { label: "English", value: "en" },
-                                { label: "Spanish", value: "es" },
-                                { label: "Portuguese", value: "pt" },
-                                { label: "French", value: "fr" },
-                                { label: "German", value: "de" }
+                                { label: "Español", value: "es" },
+                                { label: "Português", value: "pt" },
+                                { label: "Français", value: "fr" },
+                                { label: "Deutsch", value: "de" }
                             ]}
                         />
 
                         <Select
                             value={resolvedSettings.defaultProfileId ?? ""}
                             onChange={(value) => updateDraft("defaultProfileId", value)}
-                            label="Default profile"
+                            label={t.app.settings.defaultProfileLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={profileOptions}
                         />
                     </div>
 
                     <div className="mt-5 rounded-3xl border border-border-soft bg-surface-base p-4">
-                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">Why this matters</p>
-                        <p className="mt-2 body-muted">Good defaults reduce manual cleanup and keep results consistent with your normal writing style.</p>
+                        <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">{t.app.settings.whyMattersTitle}</p>
+                        <p className="mt-2 body-muted">{t.app.settings.whyMattersDesc}</p>
                     </div>
                 </Card>
             </section>

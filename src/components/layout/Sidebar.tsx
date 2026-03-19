@@ -7,7 +7,8 @@ import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import { motion } from "motion/react"
 import Image from "next/image"
-import { navItems } from "./nav-items"
+import { getNavItems } from "./nav-items"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 const SettingsModal = dynamic(() => import("./SettingsModal"), {
     ssr: false
@@ -21,6 +22,8 @@ export function Sidebar({ user }: SidebarProps) {
     const initial = (user.name?.[0] ?? user.email?.[0] ?? "U").toUpperCase()
     const pathname = usePathname()
     const router = useRouter()
+    const { t } = useLanguageStore()
+    const navItems = getNavItems(t)
 
     useEffect(() => {
         navItems.forEach((item) => {

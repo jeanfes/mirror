@@ -22,13 +22,13 @@ function getStatusClassName(status: Invoice["status"]) {
 }
 
 function getStatusLabel(status: Invoice["status"], t: Dictionary) {
-  if (status === "paid") return t.billing.statusPaid
-  if (status === "pending") return t.billing.statusPending
-  if (status === "failed") return t.billing.statusFailed
-  if (status === "refunded") return t.billing.statusRefunded
-  if (status === "void") return t.billing.statusVoid
+  if (status === "paid") return t.app.billing.statusPaid
+  if (status === "pending") return t.app.billing.statusPending
+  if (status === "failed") return t.app.billing.statusFailed
+  if (status === "refunded") return t.app.billing.statusRefunded
+  if (status === "void") return t.app.billing.statusVoid
 
-  return t.billing.statusUnknown
+  return t.app.billing.statusUnknown
 }
 
 export function BillingHistory({ invoices }: BillingHistoryProps) {
@@ -40,7 +40,7 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-secondary-text mb-4">
           <FileText className="h-6 w-6" />
         </div>
-        <p className="text-[14px] font-medium text-secondary-text">{t.billing.noInvoices}</p>
+        <p className="text-[14px] font-medium text-secondary-text">{t.app.billing.noInvoices}</p>
       </div>
     )
   }
@@ -51,9 +51,9 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-border-soft bg-surface-subtle/50">
-              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.billing.invoiceDate}</th>
-              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.billing.invoiceAmount}</th>
-              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.billing.invoiceStatus}</th>
+              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.app.billing.invoiceDate}</th>
+              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.app.billing.invoiceAmount}</th>
+              <th className="px-6 py-4 text-[12px] font-bold uppercase tracking-wider text-secondary-text">{t.app.billing.invoiceStatus}</th>
               <th className="px-6 py-4 text-right text-[12px] font-bold uppercase tracking-wider text-secondary-text"></th>
             </tr>
           </thead>
@@ -77,7 +77,7 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
                 <td className="px-6 py-4 text-right">
                   <button
                     className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-secondary-text hover:bg-surface-elevated hover:text-primary-text transition-all active:scale-95"
-                    title={t.billing.invoiceDownload}
+                    title={t.app.billing.invoiceDownload}
                   >
                     <Download className="h-4 w-4" />
                   </button>

@@ -31,18 +31,18 @@ export default function TrashPage() {
     const restoreItem = async (id: string) => {
         try {
             await restore(id)
-            toast.success("Item restored")
+            toast.success(t.app.common.itemRestored)
         } catch {
-            toast.error("Could not restore item")
+            toast.error(t.app.common.itemRestoreError)
         }
     }
 
     const deleteForever = async (id: string) => {
         try {
             await deleteItem(id)
-            toast.success("Item permanently deleted")
+            toast.success(t.app.common.itemDeleted)
         } catch {
-            toast.error("Could not delete item")
+            toast.error(t.app.common.itemDeleteError)
         }
     }
 
@@ -52,9 +52,9 @@ export default function TrashPage() {
             for (const item of items) {
                 await restore(item.id)
             }
-            toast.success("All trash items restored")
+            toast.success(t.app.common.allRestored)
         } catch {
-            toast.error("Could not restore all items")
+            toast.error(t.app.common.allRestoreError)
         }
     }
 
@@ -66,8 +66,8 @@ export default function TrashPage() {
         return (
             <StatePanel
                 tone="error"
-                title={t.app.trashErrorTitle}
-                description={t.app.trashErrorDesc}
+                title={t.app.common.trashErrorTitle}
+                description={t.app.common.trashErrorDesc}
             />
         )
     }
@@ -81,31 +81,31 @@ export default function TrashPage() {
                 <div className={`relative grid gap-6 ${summary.total === 0 ? "lg:grid-cols-1" : "lg:grid-cols-[1.15fr_0.85fr]"} lg:items-start`}>
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            Deleted work should feel recoverable, not lost in a dead-end bin.
+                            {t.app.trash.heroTitle}
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            Trash is where profiles, drafts and comments wait for a final decision. It should make restoration easy and permanent deletion explicit.
+                            {t.app.trash.heroDesc}
                         </p>
                     </div>
 
                     {summary.total > 0 ? (
                         <Card className="dashboard-dark-panel">
-                            <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">What is waiting for a decision</h2>
+                            <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">{t.app.trash.waitingDecision}</h2>
                             <div className="mt-6 grid grid-cols-2 gap-3">
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Total</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.totalLabel}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Profiles</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.profilesLabel}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.profiles}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Comments</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.commentsLabel}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.comments}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Drafts</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.draftsLabel}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.drafts}</p>
                                 </div>
                             </div>
@@ -117,19 +117,19 @@ export default function TrashPage() {
             {items.length === 0 ? (
                 <StatePanel
                     icon={<ArchiveRestore className="h-6 w-6 text-primary-text" />}
-                    title={t.app.trashEmptyTitle}
-                    description={t.app.trashEmptyDesc}
+                    title={t.app.common.trashEmptyTitle}
+                    description={t.app.common.trashEmptyDesc}
                 />
             ) : (
                 <>
                     <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <h2 className="section-heading">Recently deleted</h2>
-                            <p className="body-muted">Review what was removed before deciding whether to restore it or clear it permanently.</p>
+                            <h2 className="section-heading">{t.app.trash.recentlyDeleted}</h2>
+                            <p className="body-muted">{t.app.trash.recentlyDeletedDesc}</p>
                         </div>
                         <Button type="button" variant="secondary" onClick={restoreAll} loading={isMutating}>
                             <Undo2 className="h-4 w-4" />
-                            Restore all
+                            {t.app.trash.restoreAll}
                         </Button>
                     </div>
 
@@ -143,17 +143,19 @@ export default function TrashPage() {
                                             <span className="rounded-full border border-border-soft bg-surface-base px-2.5 py-1 text-[11px] font-semibold text-secondary-text capitalize">{item.kind}</span>
                                         </div>
                                         <p className="mt-2 max-w-2xl body-muted">{item.summary}</p>
-                                        <p className="mt-3 text-[12px] font-medium text-secondary-text">Deleted {formatDistanceToNow(item.deletedAt, { addSuffix: true })}</p>
+                                        <p className="mt-3 text-[12px] font-medium text-secondary-text">
+                                            {t.app.trash.deletedAt.replace("{0}", formatDistanceToNow(item.deletedAt, { addSuffix: true }))}
+                                        </p>
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
                                         <Button type="button" variant="secondary" onClick={() => restoreItem(item.id)} loading={isMutating}>
                                             <ArchiveRestore className="h-4 w-4" />
-                                            Restore
+                                            {t.app.trash.restoreBtn}
                                         </Button>
                                         <Button type="button" onClick={() => deleteForever(item.id)} loading={isMutating}>
                                             <Trash2 className="h-4 w-4" />
-                                            Delete forever
+                                            {t.app.trash.deleteBtn}
                                         </Button>
                                     </div>
                                 </div>

@@ -87,7 +87,7 @@ export function RegisterForm() {
 
     return (
         <>
-            <LoadingOverlay show={isNavigating} label={t.app.creatingAccount} />
+            <LoadingOverlay show={isNavigating} label={t.app.common.creatingAccount} />
             <form className="space-y-4" onSubmit={onSubmit} noValidate aria-busy={isAnyLocked}>
                 <Button
                     variant="secondary"
@@ -191,7 +191,7 @@ export function RegisterForm() {
                     type="submit"
                     disabled={isAnyLocked}
                     loading={isPending}
-                    loadingLabel={t.app.creatingAccount}
+                    loadingLabel={t.app.common.creatingAccount}
                 >
                     {t.auth.registerBtn}
                 </Button>

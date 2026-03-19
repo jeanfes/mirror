@@ -92,8 +92,8 @@ export default function ProfilesPage() {
         return (
             <StatePanel
                 tone="error"
-                title={t.app.profilesErrorTitle}
-                description={t.app.profilesErrorDesc}
+                title={t.app.common.profilesErrorTitle}
+                description={t.app.common.profilesErrorDesc}
             />
         )
     }
@@ -184,9 +184,9 @@ export default function ProfilesPage() {
             {list.length === 0 ? (
                 <StatePanel
                     icon={<WandSparkles className="h-6 w-6 text-primary-text" />}
-                    title={t.app.profilesEmptyTitle}
-                    description={t.app.profilesEmptyDesc}
-                    actionLabel={t.app.profilesEmptyAction}
+                    title={t.app.common.profilesEmptyTitle}
+                    description={t.app.common.profilesEmptyDesc}
+                    actionLabel={t.app.common.profilesEmptyAction}
                     onAction={openCreateDialog}
                 />
             ) : (

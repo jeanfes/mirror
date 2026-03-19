@@ -30,7 +30,7 @@ export async function listHistory(filters?: ListHistoryFilters): Promise<Generat
 
   let query = supabase
     .from("generation_history")
-    .select("*, voice_profiles!fk_profile_id(name)")
+    .select("*, voice_profiles(name)")
     .eq("user_id", userId)
     .is("deleted_at", null)
     .order("created_at", { ascending: false })

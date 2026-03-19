@@ -115,14 +115,14 @@ export async function getAccount(): Promise<UserAccount> {
   if (error) throw error
 
   if (!data) {
-    const { data: created, error: createError } = await supabase
-      .from("user_account")
-      .insert({ user_id: userId, plan: "Free" })
-      .select("*")
-      .single()
-
-    if (createError) throw createError
-    return mapRowToAccountStatus(created as UserAccountRow)
+    return {
+      plan: "Free",
+      creditsRemaining: 0,
+      creditsUsedThisMonth: 0,
+      renewalDate: addDays(new Date(), 30).toISOString(),
+      subscriptionStatus: null,
+      lastGenerationAt: null
+    }
   }
 
   return mapRowToAccountStatus(data as UserAccountRow)
@@ -170,13 +170,38 @@ interface BillingInfoResponse {
 
 export async function getBillingInfo() {
   const { supabase } = await getAuthContext()
-  const { data, error } = await supabase.functions.invoke("billing-info", { body: {} })
-  
-  if (error || !data) {
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+
+  const accessToken = session?.access_token
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+
+  if (!accessToken || !supabaseUrl) {
     return { paymentMethod: null, updateUrl: null, portalUrl: null }
   }
 
-  const payload = data as BillingInfoResponse
+  let payload: BillingInfoResponse
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/billing-info`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    })
+
+    if (!response.ok) {
+      return { paymentMethod: null, updateUrl: null, portalUrl: null }
+    }
+
+    payload = (await response.json()) as BillingInfoResponse
+  } catch {
+    return { paymentMethod: null, updateUrl: null, portalUrl: null }
+  }
+
   let pm: PaymentMethod | null = null
 
   if (payload.payment_method) {

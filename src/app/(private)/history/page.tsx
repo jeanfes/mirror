@@ -34,10 +34,10 @@ export default function HistoryPage() {
 
     const profileOptions = useMemo(() => {
         return [
-            { label: "All profiles", value: "all" },
+            { label: t.app.history.filterAllProfiles, value: "all" },
             ...((profiles ?? []).map((profile) => ({ label: profile.name, value: profile.id })))
         ]
-    }, [profiles])
+    }, [profiles, t])
 
     const filteredHistory = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase()
@@ -73,27 +73,27 @@ export default function HistoryPage() {
     const handleCopy = async (comment: string) => {
         try {
             await navigator.clipboard.writeText(comment)
-            toast.success("Comment copied")
+            toast.success(t.app.common.commentCopied || "Comment copied")
         } catch {
-            toast.error("Could not copy comment")
+            toast.error(t.app.common.commentCopyError || "Could not copy comment")
         }
     }
 
     const handleReuse = async (id: string) => {
         try {
             await reuseHistoryItem(id)
-            toast.success("Comment duplicated in history")
+            toast.success(t.app.common.commentDuplicated || "Comment duplicated in history")
         } catch {
-            toast.error("Could not reuse comment")
+            toast.error(t.app.common.commentReuseError || "Could not reuse comment")
         }
     }
 
     const handleToggleApplied = async (id: string) => {
         try {
             await toggleHistoryApplied(id)
-            toast.success("History item updated")
+            toast.success(t.app.common.historyUpdated || "History item updated")
         } catch {
-            toast.error("Could not update history item")
+            toast.error(t.app.common.historyUpdateError || "Could not update history item")
         }
     }
 
@@ -105,8 +105,8 @@ export default function HistoryPage() {
         return (
             <StatePanel
                 tone="error"
-                title={t.app.historyErrorTitle}
-                description={t.app.historyErrorDesc}
+                title={t.app.common.historyErrorTitle}
+                description={t.app.common.historyErrorDesc}
             />
         )
     }
@@ -120,38 +120,38 @@ export default function HistoryPage() {
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            Keep the best outputs close and the weak ones out of your way.
+                            {t.app.history.heroTitle}
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            History should work like a review desk: quick to scan, honest about what was applied, and useful when you need a proven angle again.
+                            {t.app.history.heroDesc}
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="workspace-hero-chip">Reusable comment archive</div>
-                            <div className="workspace-hero-chip">Applied status tracking</div>
-                            <div className="workspace-hero-chip">Profile-aware review flow</div>
+                            <div className="workspace-hero-chip">{t.app.history.chip1}</div>
+                            <div className="workspace-hero-chip">{t.app.history.chip2}</div>
+                            <div className="workspace-hero-chip">{t.app.history.chip3}</div>
                         </div>
                     </div>
 
                     <Card className="dashboard-dark-panel">
-                        <h2 className="text-[24px] font-black tracking-[-0.04em] text-white">Your archive at a glance</h2>
-                        <p className="mt-2 text-[14px] leading-6 text-white/82">A quick read on how much of the comment library is already production-ready versus still waiting for a decision.</p>
+                        <h2 className="text-[24px] font-black tracking-[-0.04em] text-white">{t.app.history.archiveGlance}</h2>
+                        <p className="mt-2 text-[14px] leading-6 text-white/82">{t.app.history.archiveGlanceDesc}</p>
 
                         <div className="mt-6 grid grid-cols-2 gap-3">
                             <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Archived</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.archived}</p>
                                 <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
                             </div>
                             <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Applied</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.applied}</p>
                                 <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.applied}</p>
                             </div>
                             <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Pending</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.pending}</p>
                                 <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.pending}</p>
                             </div>
                             <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">Reused</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.reused}</p>
                                 <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.reused}</p>
                             </div>
                         </div>
@@ -164,24 +164,24 @@ export default function HistoryPage() {
                     <div className="icon-box icon-bg-purple">
                         <WandSparkles className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Review angle</h2>
-                    <p className="mt-2 body-muted">Compare the original post against the generated comment without losing the tone or goal that produced it.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.history.reviewAngle}</h2>
+                    <p className="mt-2 body-muted">{t.app.history.reviewAngleDesc}</p>
                 </Card>
 
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-green">
                         <CheckCircle2 className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Execution truth</h2>
-                    <p className="mt-2 body-muted">Keep the archive honest by marking what was actually used and what still needs a decision.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.history.executionTruth}</h2>
+                    <p className="mt-2 body-muted">{t.app.history.executionTruthDesc}</p>
                 </Card>
 
                 <Card className="dashboard-card-lg">
                     <div className="icon-box icon-bg-amber">
                         <Clock3 className="h-5 w-5" />
                     </div>
-                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">Fast retrieval</h2>
-                    <p className="mt-2 body-muted">Find a strong previous angle in seconds when you need to comment quickly without starting from zero.</p>
+                    <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.history.fastRetrieval}</h2>
+                    <p className="mt-2 body-muted">{t.app.history.fastRetrievalDesc}</p>
                 </Card>
             </section>
 
@@ -201,19 +201,23 @@ export default function HistoryPage() {
             <section>
                 <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <h2 className="section-heading">Recent outputs</h2>
-                        <p className="body-muted">Each card keeps the source, the generated reply and the decision controls in one place.</p>
+                        <h2 className="section-heading">{t.app.history.recentOutputs}</h2>
+                        <p className="body-muted">{t.app.history.recentOutputsDesc}</p>
                     </div>
-                    <p className="text-[13px] font-medium text-secondary-text">{filteredHistory.length} result{filteredHistory.length === 1 ? "" : "s"}</p>
+                    <p className="text-[13px] font-medium text-secondary-text">
+                        {filteredHistory.length === 1 
+                            ? t.app.history.resultsCount.replace("{0}", "1")
+                            : t.app.history.resultsCountPlural.replace("{0}", filteredHistory.length.toString())}
+                    </p>
                 </div>
             </section>
 
             {filteredHistory.length === 0 ? (
                 <StatePanel
                     icon={<Archive className="h-6 w-6 text-primary-text" />}
-                    title={t.app.historyEmptyTitle}
-                    description={t.app.historyEmptyDesc}
-                    actionLabel={t.app.historyEmptyAction}
+                    title={t.app.common.historyEmptyTitle}
+                    description={t.app.common.historyEmptyDesc}
+                    actionLabel={t.app.common.historyEmptyAction}
                     onAction={resetFilters}
                 />
             ) : (
@@ -222,7 +226,7 @@ export default function HistoryPage() {
                         <HistoryItemCard
                             key={item.id}
                             item={item}
-                            profileName={item.profileId ? (profileMap.get(item.profileId) ?? t.app.unknownProfile) : t.app.unknownProfile}
+                            profileName={item.profileId ? (profileMap.get(item.profileId) ?? t.app.common.unknownProfile) : t.app.common.unknownProfile}
                             onCopy={handleCopy}
                             onReuse={handleReuse}
                             onToggleApplied={handleToggleApplied}

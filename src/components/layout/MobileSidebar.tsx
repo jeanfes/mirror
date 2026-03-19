@@ -9,7 +9,8 @@ import { Menu, X } from "lucide-react"
 import clsx from "clsx"
 import { AnimatePresence, motion } from "motion/react"
 import { createPortal } from "react-dom"
-import { navItems } from "./nav-items"
+import { getNavItems } from "./nav-items"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 const SettingsModal = dynamic(() => import("./SettingsModal"), {
     ssr: false
@@ -20,6 +21,8 @@ export function MobileSidebar() {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
+    const { t } = useLanguageStore()
+    const navItems = getNavItems(t)
 
     useEffect(() => {
         navItems.forEach((item) => {

@@ -109,7 +109,7 @@ export function LoginForm() {
                     type="submit"
                     disabled={isAnyLocked}
                     loading={isPending || isNavigating}
-                    loadingLabel={t.app.signingIn}
+                    loadingLabel={t.app.common.signingIn}
                 >
                     {t.auth.loginBtn}
                 </Button>

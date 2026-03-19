@@ -27,7 +27,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
             <div className="space-y-1.5">
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 <p className="text-[15px] font-bold text-primary-text">
-                  {t.billing.cardEndingIn} {method.last4}
+                  {t.app.billing.cardEndingIn} {method.last4}
                 </p>
                 {method.isDefault && (
                   <span className="inline-flex items-center rounded-full bg-accent-blue/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-accent-blue">
@@ -36,14 +36,14 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
                 )}
               </div>
               <p className="text-[13px] text-secondary-text font-medium opacity-80">
-                {t.billing.expires} {method.expiry}
+                {t.app.billing.expires} {method.expiry}
               </p>
             </div>
           </div>
 
           <Button variant="secondary" size="md" className="h-10 px-4 gap-2.5 font-bold shadow-sm whitespace-nowrap w-full sm:w-auto">
             <Edit2 className="h-3.5 w-3.5" />
-            {t.billing.updateCard}
+            {t.app.billing.updateCard}
           </Button>
         </div>
       </Card>
@@ -53,7 +53,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
         className="w-full border-dashed border-2 py-6 bg-transparent hover:bg-surface-subtle transition-all gap-2 rounded-2xl"
       >
         <Plus className="h-4 w-4" />
-        {t.billing.managePaymentMethod}
+        {t.app.billing.managePaymentMethod}
       </Button>
     </div>
   )

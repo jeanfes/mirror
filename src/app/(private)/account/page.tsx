@@ -32,8 +32,8 @@ export default function AccountPage() {
         return (
             <StatePanel
                 tone="error"
-                title={t.app.accountErrorTitle}
-                description={t.app.accountErrorDesc}
+                title={t.app.common.accountErrorTitle}
+                description={t.app.common.accountErrorDesc}
             />
         )
     }
@@ -62,16 +62,16 @@ export default function AccountPage() {
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            A cleaner view of plan, capacity and how the extension is actually being used.
+                            {t.app.account.heroTitle}
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            Account should feel like an operating summary: how much room you have left, what plan you are on and whether the workflow is converting into real outputs.
+                            {t.app.account.heroDesc}
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
-                            <div className="workspace-hero-chip">Billing footprint</div>
-                            <div className="workspace-hero-chip">Usage health</div>
-                            <div className="workspace-hero-chip">Profile coverage</div>
+                            <div className="workspace-hero-chip">{t.app.account.chip1}</div>
+                            <div className="workspace-hero-chip">{t.app.account.chip2}</div>
+                            <div className="workspace-hero-chip">{t.app.account.chip3}</div>
                         </div>
                     </div>
 
@@ -79,14 +79,14 @@ export default function AccountPage() {
                         <div className="flex items-end justify-between gap-4">
                             <div>
                                 <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{resolvedAccount.plan}</h2>
-                                <p className="mt-2 text-[14px] leading-6 text-white/72">{currentPlan?.summary ?? "Your active plan for the current workspace."}</p>
+                                <p className="mt-2 text-[14px] leading-6 text-white/72">{currentPlan?.summary ?? t.app.account.activePlanDesc}</p>
                             </div>
                             <p className="text-[28px] font-semibold tracking-[-0.04em] text-white">{currentPlan?.price ?? "$0"}</p>
                         </div>
 
                         <div className="dashboard-dark-stat-muted mt-6">
                             <div className="flex items-center justify-between gap-3 text-[12px] font-semibold uppercase tracking-widest text-white/58">
-                                <span>Credits used</span>
+                                <span>{t.app.account.creditsUsed}</span>
                                 <span>{Math.round(creditUsage)}%</span>
                             </div>
                             <ProgressBar
@@ -96,19 +96,19 @@ export default function AccountPage() {
                                 value={creditUsage}
                             />
                             <div className="mt-3 flex items-center justify-between gap-3 text-[13px] text-white/72">
-                                <span>{usedCredits} used</span>
-                                <span>{resolvedAccount.creditsRemaining} remaining</span>
+                                <span>{usedCredits} {t.app.account.used}</span>
+                                <span>{resolvedAccount.creditsRemaining} {t.app.account.remaining}</span>
                             </div>
                         </div>
 
                         <div className="mt-4 grid grid-cols-2 gap-3">
                             <div className="dashboard-dark-stat-muted">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Renewal</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : "N/A"}</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.renewal}</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
                             </div>
                             <div className="dashboard-dark-stat-muted">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">Latest output</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true }) : "No activity"}</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.latestOutput}</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{latestHistoryItem ? formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true }) : t.app.account.noActivity}</p>
                             </div>
                         </div>
                     </Card>
@@ -117,9 +117,9 @@ export default function AccountPage() {
 
             <Tabs defaultValue="overview">
                 <TabsList>
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="usage">Usage</TabsTrigger>
-                    <TabsTrigger value="billing">{t.billing.title}</TabsTrigger>
+                    <TabsTrigger value="overview">{t.app.account.tabOverview}</TabsTrigger>
+                    <TabsTrigger value="usage">{t.app.account.tabUsage}</TabsTrigger>
+                    <TabsTrigger value="billing">{t.app.billing.title}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview">
@@ -128,34 +128,34 @@ export default function AccountPage() {
                             <div className="icon-box icon-bg-purple">
                                 <CreditCard className="h-5 w-5" />
                             </div>
-                            <p className="dashboard-overline mt-4">Current plan</p>
+                            <p className="dashboard-overline mt-4">{t.app.account.currentPlan}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.plan}</p>
-                            <p className="mt-2 body-muted">Renews on {resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : "N/A"}</p>
+                            <p className="mt-2 body-muted">{t.app.account.renewsOn} {resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
                             <div className="icon-box icon-bg-green">
                                 <BarChart3 className="h-5 w-5" />
                             </div>
-                            <p className="dashboard-overline mt-4">Credits remaining</p>
+                            <p className="dashboard-overline mt-4">{t.app.account.creditsRemainingLabel}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.creditsRemaining}</p>
-                            <p className="mt-2 body-muted">Available for new generations in the current billing cycle.</p>
+                            <p className="mt-2 body-muted">{t.app.account.creditsAvailableDesc}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
                             <div className="icon-box icon-bg-amber">
                                 <Layers3 className="h-5 w-5" />
                             </div>
-                            <p className="dashboard-overline mt-4">Active profiles</p>
+                            <p className="dashboard-overline mt-4">{t.app.account.activeProfilesLabel}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{activeProfiles}</p>
-                            <p className="mt-2 body-muted">Profiles currently available to the extension.</p>
+                            <p className="mt-2 body-muted">{t.app.account.activeProfilesDesc}</p>
                         </Card>
                     </div>
 
                     <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_360px]">
                         <Card className="dashboard-card-xl">
-                            <p className="dashboard-overline">Plan notes</p>
-                            <h3 className="mt-3 section-heading">{currentPlan?.summary ?? "Your current plan is active."}</h3>
+                            <p className="dashboard-overline">{t.app.account.planNotes}</p>
+                            <h3 className="mt-3 section-heading">{currentPlan?.summary ?? t.app.account.planActiveFallback}</h3>
                             <div className="mt-5 grid gap-3 sm:grid-cols-3">
                                 {(currentPlan?.features ?? []).map((feature) => (
                                     <div key={feature} className="rounded-3xl border border-border-soft bg-surface-card p-4 text-[14px] font-medium text-secondary-text">
@@ -166,9 +166,9 @@ export default function AccountPage() {
                         </Card>
 
                         <Card className="dashboard-card-xl">
-                            <p className="dashboard-overline">Usage balance</p>
-                            <p className="mt-3 section-heading">{Math.round(100 - creditUsage)}% capacity still available</p>
-                            <p className="mt-2 body-muted">A quick signal for whether the current plan still fits the posting rhythm you are building.</p>
+                            <p className="dashboard-overline">{t.app.account.usageBalance}</p>
+                            <p className="mt-3 section-heading">{t.app.account.capacityAvailable.replace('{0}', Math.round(100 - creditUsage).toString())}</p>
+                            <p className="mt-2 body-muted">{t.app.account.capacityDesc}</p>
 
                             <ProgressBar
                                 className="mt-5"
@@ -184,35 +184,35 @@ export default function AccountPage() {
                 <TabsContent value="usage">
                     <div className="grid gap-4 md:grid-cols-3">
                         <Card className="dashboard-card-lg">
-                            <p className="dashboard-overline">Generated this month</p>
+                            <p className="dashboard-overline">{t.app.account.generatedThisMonth}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{generatedThisMonth}</p>
-                            <p className="mt-2 body-muted">All generated comments stored in your local MVP workspace.</p>
+                            <p className="mt-2 body-muted">{t.app.account.generatedDesc}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
-                            <p className="dashboard-overline">Applied comments</p>
+                            <p className="dashboard-overline">{t.app.account.appliedComments}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{appliedCount}</p>
-                            <p className="mt-2 body-muted">Comments already marked as posted or used.</p>
+                            <p className="mt-2 body-muted">{t.app.account.appliedDesc}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
-                            <p className="dashboard-overline">Reused comments</p>
+                            <p className="dashboard-overline">{t.app.account.reusedComments}</p>
                             <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{reusableCount}</p>
-                            <p className="mt-2 body-muted">History items duplicated from previous high-performing outputs.</p>
+                            <p className="mt-2 body-muted">{t.app.account.reusedDesc}</p>
                         </Card>
                     </div>
 
                     <div className="mt-4 grid gap-4 lg:grid-cols-2">
                         <Card className="dashboard-card-xl">
-                            <p className="dashboard-overline">Adoption signal</p>
-                            <p className="mt-3 section-heading">{historyItems.length === 0 ? "No usage yet" : `${Math.round((appliedCount / historyItems.length) * 100)}% of archived comments were applied`}</p>
-                            <p className="mt-2 body-muted">This helps frame whether the generation flow is creating outputs that are useful enough to actually post.</p>
+                            <p className="dashboard-overline">{t.app.account.adoptionSignal}</p>
+                            <p className="mt-3 section-heading">{historyItems.length === 0 ? t.app.account.noUsageYet : t.app.account.adoptionMetrix.replace('{0}', Math.round((appliedCount / historyItems.length) * 100).toString())}</p>
+                            <p className="mt-2 body-muted">{t.app.account.adoptionDesc}</p>
                         </Card>
 
                         <Card className="dashboard-card-xl">
-                            <p className="dashboard-overline">Recent activity</p>
-                            <p className="mt-3 section-heading">{latestHistoryItem ? latestHistoryItem.postAuthor : "No archived comments yet"}</p>
-                            <p className="mt-2 body-muted">{latestHistoryItem ? `Latest generated comment was added ${formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })}.` : "Generate a few comments and this section will start showing momentum."}</p>
+                            <p className="dashboard-overline">{t.app.account.recentActivity}</p>
+                            <p className="mt-3 section-heading">{latestHistoryItem ? latestHistoryItem.postAuthor : t.app.account.noArchivedComments}</p>
+                            <p className="mt-2 body-muted">{latestHistoryItem ? t.app.account.latestCommentAdded.replace('{0}', formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })) : t.app.account.generateToSeeMomentum}</p>
                         </Card>
                     </div>
                 </TabsContent>
@@ -220,14 +220,14 @@ export default function AccountPage() {
                     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.7fr]">
                         <div className="space-y-6">
                             <div className="space-y-3 px-1">
-                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.billing.history}</h3>
+                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.history}</h3>
                                 <BillingHistory invoices={invoices} />
                             </div>
                         </div>
 
                         <div className="space-y-6">
                             <div className="space-y-3 px-1">
-                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.billing.paymentMethods}</h3>
+                                <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.paymentMethods}</h3>
                                 <PaymentMethods methods={paymentMethods} />
                             </div>
                         </div>
