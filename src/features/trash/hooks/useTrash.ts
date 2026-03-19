@@ -11,7 +11,7 @@ import {
 
 export function useTrash() {
     const queryClient = useQueryClient()
-    const userId = useUserId()
+    const { userId, isAuthenticating } = useUserId()
     const trashKey = userId ? makeQueryKey("trash", userId) : ["trash"]
 
     const query = useQuery<TrashItem[]>({
@@ -43,8 +43,10 @@ export function useTrash() {
 
     return {
         ...query,
+        isLoading: query.isLoading || isAuthenticating,
         restore: restoreMutation.mutateAsync,
         deleteForever: deleteMutation.mutateAsync,
         isMutating: restoreMutation.isPending || deleteMutation.isPending
     }
+
 }

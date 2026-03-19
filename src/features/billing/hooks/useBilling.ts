@@ -5,7 +5,7 @@ import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 import { getInvoices, getBillingInfo } from "@/features/billing/services/billing.service"
 
 export function useBilling() {
-  const userId = useUserId()
+  const { userId, isAuthenticating } = useUserId()
   const invoicesKey = userId ? makeQueryKey("invoices", userId) : ["invoices"]
   const billingInfoKey = userId ? makeQueryKey("billingInfo", userId) : ["billingInfo"]
 
@@ -29,13 +29,14 @@ export function useBilling() {
 
   return {
     invoices: invoicesQuery.data ?? [],
-    isLoadingInvoices: invoicesQuery.isPending,
+    isLoadingInvoices: invoicesQuery.isPending || isAuthenticating,
     isErrorInvoices: invoicesQuery.isError,
     paymentMethods: billingInfoQuery.data?.paymentMethod ? [billingInfoQuery.data.paymentMethod] : [],
     billingInfo: billingInfoQuery.data,
-    isLoadingSettings: billingInfoQuery.isPending,
+    isLoadingSettings: billingInfoQuery.isPending || isAuthenticating,
     isErrorSettings: billingInfoQuery.isError,
     refetchInvoices: invoicesQuery.refetch,
     refetchBillingInfo: billingInfoQuery.refetch
   }
+
 }

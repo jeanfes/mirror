@@ -10,7 +10,7 @@ import type { UserSettings } from "@/types/database.types"
 
 export function useUserSettings() {
   const queryClient = useQueryClient()
-  const userId = useUserId()
+  const { userId, isAuthenticating } = useUserId()
   const settingsKey = userId ? makeQueryKey("user-settings", userId) : ["user-settings"]
 
   const query = useQuery({
@@ -31,8 +31,9 @@ export function useUserSettings() {
 
   return {
     ...query,
-    isLoading: query.isPending,
+    isLoading: query.isPending || isAuthenticating,
     updateSettings: mutation.mutateAsync,
     isMutating: mutation.isPending
   }
+
 }

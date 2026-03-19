@@ -9,8 +9,9 @@ export function makeQueryKey(key: string, userId: string): (string | undefined)[
 }
 
 
-export function useUserId(): string | undefined {
+export function useUserId(): { userId: string | undefined; isAuthenticating: boolean } {
   const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [isAuthenticating, setIsAuthenticating] = useState(true)
 
   useEffect(() => {
     let mounted = true
@@ -18,11 +19,13 @@ export function useUserId(): string | undefined {
       .then(({ userId }) => {
         if (mounted) {
           setUserId(userId)
+          setIsAuthenticating(false)
         }
       })
       .catch(() => {
         if (mounted) {
           setUserId(undefined)
+          setIsAuthenticating(false)
         }
       })
 
@@ -31,6 +34,7 @@ export function useUserId(): string | undefined {
     }
   }, [])
 
-  return userId
+  return { userId, isAuthenticating }
 }
+
 

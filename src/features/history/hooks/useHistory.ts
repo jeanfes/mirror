@@ -6,7 +6,7 @@ import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
 
 export function useHistory(filters?: ListHistoryFilters) {
   const queryClient = useQueryClient()
-  const userId = useUserId()
+  const { userId, isAuthenticating } = useUserId()
   const historyKey = userId ? [...makeQueryKey("history", userId), ...Object.values(filters ?? {})] : ["history", ...Object.values(filters ?? {})]
 
   const query = useQuery({
@@ -41,11 +41,12 @@ export function useHistory(filters?: ListHistoryFilters) {
 
   return {
     ...query,
-    isLoading: query.isPending,
+    isLoading: query.isPending || isAuthenticating,
     toggleHistoryApplied: toggleMutation.mutateAsync,
     reuseHistoryItem: reuseMutation.mutateAsync,
     moveToTrash: trashMutation.mutateAsync,
     isMutating: toggleMutation.isPending || reuseMutation.isPending || trashMutation.isPending
   }
+
 }
 

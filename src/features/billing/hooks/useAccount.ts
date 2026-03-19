@@ -6,7 +6,7 @@ import { getAccount, setPlan, type PlanName } from "@/features/billing/services/
 
 export function useAccount() {
   const queryClient = useQueryClient()
-  const userId = useUserId()
+  const { userId, isAuthenticating } = useUserId()
   const accountKey = userId ? makeQueryKey("account", userId) : ["account"]
 
   const query = useQuery({
@@ -27,9 +27,11 @@ export function useAccount() {
 
   return {
     ...query,
+    isLoading: query.isLoading || isAuthenticating,
     setPlan: mutation.mutateAsync,
     isMutating: mutation.isPending,
     isUpdatingPlan: mutation.isPending
   }
+
 }
 

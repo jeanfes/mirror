@@ -15,7 +15,7 @@ import type { VoiceProfile } from "@/types/database.types"
 
 export function useProfiles() {
   const queryClient = useQueryClient()
-  const userId = useUserId()
+  const { userId, isAuthenticating } = useUserId()
   const profilesKey = userId ? makeQueryKey("profiles", userId) : ["profiles"]
 
   const query = useQuery({
@@ -63,7 +63,7 @@ export function useProfiles() {
 
   return {
     ...query,
-    isLoading: query.isPending,
+    isLoading: query.isPending || isAuthenticating,
     createProfile: createMutation.mutateAsync,
     updateProfile: updateMutation.mutateAsync,
     toggleProfile: toggleMutation.mutateAsync,
