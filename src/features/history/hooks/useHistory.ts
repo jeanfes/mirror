@@ -41,6 +41,7 @@ export function useHistory(filters?: ListHistoryFilters) {
 
   return {
     ...query,
+    isLoading: query.isPending,
     toggleHistoryApplied: toggleMutation.mutateAsync,
     reuseHistoryItem: reuseMutation.mutateAsync,
     moveToTrash: trashMutation.mutateAsync,

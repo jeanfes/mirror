@@ -93,19 +93,19 @@ export default function TrashPage() {
                             <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-white">{t.app.trash.waitingDecision}</h2>
                             <div className="mt-6 grid grid-cols-2 gap-3">
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.totalLabel}</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.total}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.total}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.profilesLabel}</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.profiles}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.profiles}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.commentsLabel}</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.comments}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.comments}</p>
                                 </div>
                                 <div className="dashboard-dark-stat">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.draftsLabel}</p>
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.trash.drafts}</p>
                                     <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.drafts}</p>
                                 </div>
                             </div>
@@ -144,18 +144,18 @@ export default function TrashPage() {
                                         </div>
                                         <p className="mt-2 max-w-2xl body-muted">{item.summary}</p>
                                         <p className="mt-3 text-[12px] font-medium text-secondary-text">
-                                            {t.app.trash.deletedAt.replace("{0}", formatDistanceToNow(item.deletedAt, { addSuffix: true }))}
+                                            {t.app.trash.deletedX.replace("{0}", formatDistanceToNow(item.deletedAt, { addSuffix: true }))}
                                         </p>
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
                                         <Button type="button" variant="secondary" onClick={() => restoreItem(item.id)} loading={isMutating}>
                                             <ArchiveRestore className="h-4 w-4" />
-                                            {t.app.trash.restoreBtn}
+                                            {t.app.trash.restore}
                                         </Button>
                                         <Button type="button" onClick={() => deleteForever(item.id)} loading={isMutating}>
                                             <Trash2 className="h-4 w-4" />
-                                            {t.app.trash.deleteBtn}
+                                            {t.app.trash.deleteForever}
                                         </Button>
                                     </div>
                                 </div>

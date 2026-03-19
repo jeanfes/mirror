@@ -63,6 +63,7 @@ export function useProfiles() {
 
   return {
     ...query,
+    isLoading: query.isPending,
     createProfile: createMutation.mutateAsync,
     updateProfile: updateMutation.mutateAsync,
     toggleProfile: toggleMutation.mutateAsync,

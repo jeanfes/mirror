@@ -47,24 +47,24 @@ export default function ProfilesPage() {
         try {
             if (profileId) {
                 await updateProfile({ ...values, id: profileId })
-                toast.success("Profile updated")
+                toast.success(t.app.common.profileUpdated)
             } else {
                 await createProfile(values)
-                toast.success("Profile created")
+                toast.success(t.app.common.profileCreated)
             }
 
             closeDialog()
         } catch {
-            toast.error("Could not save profile")
+            toast.error(t.app.common.profileSaveError)
         }
     }
 
     const handleToggle = async (profileId: string) => {
         try {
             await toggleProfile(profileId)
-            toast.success("Profile status updated")
+            toast.success(t.app.common.profileStatusUpdated)
         } catch {
-            toast.error("Could not update profile status")
+            toast.error(t.app.common.profileStatusError)
         }
     }
 
@@ -76,9 +76,9 @@ export default function ProfilesPage() {
         if (!deleteTargetId) return
         try {
             await deleteProfile(deleteTargetId)
-            toast.success("Profile deleted")
+            toast.success(t.app.common.profileDeleted)
         } catch {
-            toast.error("Could not delete profile")
+            toast.error(t.app.common.profileDeleteError)
         } finally {
             setDeleteTargetId(null)
         }
@@ -111,24 +111,24 @@ export default function ProfilesPage() {
                 <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                     <div className="max-w-2xl">
                         <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
-                            Build the voices your extension comments with.
+                            {t.app.profiles.heroTitle}
                         </h1>
                         <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
-                            Profiles are the identity layer of Mirror. Each one defines tone, posture and sample phrasing so your comment suggestions feel consistent instead of generic.
+                            {t.app.profiles.heroDesc}
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
                             <div className="workspace-hero-chip">
                                 <MessageSquareQuote className="h-4 w-4 text-primary-text" />
-                                Tone-led comments
+                                {t.app.profiles.chip1}
                             </div>
                             <div className="workspace-hero-chip">
                                 <Layers3 className="h-4 w-4 text-primary-text" />
-                                Multiple posting angles
+                                {t.app.profiles.chip2}
                             </div>
                             <div className="workspace-hero-chip">
                                 <Star className="h-4 w-4 text-primary-text" />
-                                Reusable brand voices
+                                {t.app.profiles.chip3}
                             </div>
                         </div>
                     </div>
@@ -136,28 +136,28 @@ export default function ProfilesPage() {
                     <div className="dashboard-dark-panel p-5">
                         <div className="flex items-start justify-between gap-3">
                             <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">Profile coverage</p>
+                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">{t.app.profiles.profileCoverage}</p>
                                 <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{list.length}</p>
                             </div>
                             <Button onClick={openCreateDialog} className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft">
                                 <Plus className="h-4 w-4" />
-                                New profile
+                                {t.app.profiles.newProfile}
                             </Button>
                         </div>
 
                         <div className="mt-6 grid gap-4 sm:grid-cols-2">
                             <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">Active now</p>
+                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">{t.app.profiles.activeNow}</p>
                                 <p className="mt-2 text-2xl font-black tracking-[-0.03em]">{activeProfiles}</p>
                             </div>
                             <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">Emoji ready</p>
+                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">{t.app.profiles.emojiReady}</p>
                                 <p className="mt-2 text-2xl font-black tracking-[-0.03em]">{emojiReadyProfiles}</p>
                             </div>
                         </div>
 
                         <p className="mt-5 text-[13px] leading-6 text-white/68">
-                            The best profile set mixes one reliable default voice with one or two more opinionated tones for different post contexts.
+                            {t.app.profiles.coverageDesc}
                         </p>
                     </div>
                 </div>
@@ -165,19 +165,19 @@ export default function ProfilesPage() {
 
             <section className="grid gap-4 md:grid-cols-3">
                 <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Role</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Identity system</p>
-                    <p className="mt-2 body-muted">Profiles make the extension feel opinionated and consistent instead of random on every generation.</p>
+                    <p className="dashboard-overline">{t.app.profiles.role}</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">{t.app.profiles.identitySystem}</p>
+                    <p className="mt-2 body-muted">{t.app.profiles.identitySystemDesc}</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Best practice</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Three clear examples</p>
-                    <p className="mt-2 body-muted">A good profile gives enough sample phrasing to guide tone without overfitting every response.</p>
+                    <p className="dashboard-overline">{t.app.profiles.bestPractice}</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">{t.app.profiles.threeExamples}</p>
+                    <p className="mt-2 body-muted">{t.app.profiles.threeExamplesDesc}</p>
                 </Card>
                 <Card className="rounded-3xl p-5">
-                    <p className="dashboard-overline">Outcome</p>
-                    <p className="mt-2 text-lg font-bold text-primary-text">Faster daily use</p>
-                    <p className="mt-2 body-muted">When the voices are strong, choosing a comment direction becomes much faster inside the extension.</p>
+                    <p className="dashboard-overline">{t.app.profiles.outcome}</p>
+                    <p className="mt-2 text-lg font-bold text-primary-text">{t.app.profiles.fasterDaily}</p>
+                    <p className="mt-2 body-muted">{t.app.profiles.fasterDailyDesc}</p>
                 </Card>
             </section>
 
@@ -193,12 +193,12 @@ export default function ProfilesPage() {
                 <section className="space-y-3">
                     <div className="flex items-end justify-between gap-3">
                         <div>
-                            <h2 className="text-2xl font-bold tracking-[-0.03em] text-primary-text">Your voice library</h2>
-                            <p className="mt-1 text-[14px] text-secondary-text">Each card should feel like a distinct commenting posture you can deploy on demand.</p>
+                            <h2 className="text-2xl font-bold tracking-[-0.03em] text-primary-text">{t.app.profiles.libraryTitle}</h2>
+                            <p className="mt-1 text-[14px] text-secondary-text">{t.app.profiles.libraryDesc}</p>
                         </div>
                         <div className="hidden rounded-full border border-border-soft bg-surface-base px-3 py-1.5 text-[12px] font-semibold text-secondary-text md:inline-flex md:items-center md:gap-1.5">
                             <Star className="h-3.5 w-3.5 text-accent-purple" />
-                            Stronger profiles create better generations
+                            {t.app.profiles.strongerProfilesHint}
                         </div>
                     </div>
 
@@ -226,13 +226,14 @@ export default function ProfilesPage() {
 
             <ConfirmDialog
                 open={deleteTargetId !== null}
-                title="Delete this profile?"
+                title={t.app.profiles.deleteDialogTitle}
                 description={
                     deleteTarget
-                        ? `"${deleteTarget.name}" will be permanently removed. This action cannot be undone.`
-                        : "This profile will be permanently removed. This action cannot be undone."
+                        ? t.app.profiles.deleteDialogDescMatch.replace("{0}", deleteTarget.name)
+                        : t.app.profiles.deleteDialogDescFallback
                 }
-                confirmLabel="Delete profile"
+                confirmLabel={t.app.profiles.deleteConfirm}
+                cancelLabel={t.app.profileForm.cancel}
                 isPending={isMutating}
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setDeleteTargetId(null)}

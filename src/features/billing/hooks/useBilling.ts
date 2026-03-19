@@ -29,11 +29,11 @@ export function useBilling() {
 
   return {
     invoices: invoicesQuery.data ?? [],
-    isLoadingInvoices: invoicesQuery.isLoading,
+    isLoadingInvoices: invoicesQuery.isPending,
     isErrorInvoices: invoicesQuery.isError,
     paymentMethods: billingInfoQuery.data?.paymentMethod ? [billingInfoQuery.data.paymentMethod] : [],
     billingInfo: billingInfoQuery.data,
-    isLoadingSettings: billingInfoQuery.isLoading,
+    isLoadingSettings: billingInfoQuery.isPending,
     isErrorSettings: billingInfoQuery.isError,
     refetchInvoices: invoicesQuery.refetch,
     refetchBillingInfo: billingInfoQuery.refetch

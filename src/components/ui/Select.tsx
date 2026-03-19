@@ -28,6 +28,13 @@ export function Select({
     triggerClassName = "",
     label
 }: SelectProps) {
+    const EMPTY_VALUE = "___EMPTY___"
+    const safeValue = value === "" ? EMPTY_VALUE : value
+
+    const handleValueChange = (newVal: string) => {
+        onChange(newVal === EMPTY_VALUE ? "" : newVal)
+    }
+
     return (
         <div className={cn("space-y-1.5", className)}>
             {label && (
@@ -35,7 +42,7 @@ export function Select({
                     {label}
                 </span>
             )}
-            <SelectPrimitive.Root value={value} onValueChange={onChange}>
+            <SelectPrimitive.Root value={safeValue} onValueChange={handleValueChange}>
                 <SelectPrimitive.Trigger
                     className={cn(
                         "flex h-10 w-full items-center justify-between rounded-xl border border-border-soft bg-surface-elevated px-3 py-2 text-[13px] font-medium text-primary-text transition-all hover:bg-surface-hover focus:outline-none focus:ring-2 focus:ring-accent-purple/30 disabled:cursor-not-allowed disabled:opacity-50",
@@ -57,20 +64,23 @@ export function Select({
                             <ChevronUp className="h-4 w-4" />
                         </SelectPrimitive.ScrollUpButton>
                         <SelectPrimitive.Viewport className="h-(--radix-select-content-available-height) p-1 custom-scrollbar overflow-y-auto">
-                            {options.map((option) => (
-                                <SelectPrimitive.Item
-                                    key={option.value}
-                                    value={option.value}
-                                    className="relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2 text-[13px] text-primary-text outline-none transition-colors hover:bg-surface-hover focus:bg-surface-hover data-disabled:pointer-events-none data-disabled:opacity-40"
-                                >
-                                    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                                        <SelectPrimitive.ItemIndicator>
-                                            <Check className="h-4 w-4 text-accent-purple" />
-                                        </SelectPrimitive.ItemIndicator>
-                                    </span>
-                                    <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
-                                </SelectPrimitive.Item>
-                            ))}
+                            {options.map((option) => {
+                                const safeOptionValue = option.value === "" ? EMPTY_VALUE : option.value
+                                return (
+                                    <SelectPrimitive.Item
+                                        key={safeOptionValue}
+                                        value={safeOptionValue}
+                                        className="relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2 text-[13px] text-primary-text outline-none transition-colors hover:bg-surface-hover focus:bg-surface-hover data-disabled:pointer-events-none data-disabled:opacity-40"
+                                    >
+                                        <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                                            <SelectPrimitive.ItemIndicator>
+                                                <Check className="h-4 w-4 text-accent-purple" />
+                                            </SelectPrimitive.ItemIndicator>
+                                        </span>
+                                        <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
+                                    </SelectPrimitive.Item>
+                                )
+                            })}
                         </SelectPrimitive.Viewport>
                         <SelectPrimitive.ScrollDownButton className="flex cursor-default items-center justify-center py-1">
                             <ChevronDown className="h-4 w-4" />

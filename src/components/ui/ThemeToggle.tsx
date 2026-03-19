@@ -25,10 +25,20 @@ const themeOptions: Array<{
 interface ThemeSegmentedControlProps {
     className?: string
     compact?: boolean
+    onChange?: (preference: ThemePreference) => void | Promise<void>
 }
 
-export function ThemeSegmentedControl({ className, compact = false }: ThemeSegmentedControlProps) {
+export function ThemeSegmentedControl({ className, compact = false, onChange }: ThemeSegmentedControlProps) {
     const { themePreference, setThemePreference } = useTheme()
+
+    const handlePreferenceChange = (preference: ThemePreference) => {
+        if (preference === themePreference) {
+            return
+        }
+
+        setThemePreference(preference)
+        void onChange?.(preference)
+    }
 
     return (
         <div
@@ -49,7 +59,7 @@ export function ThemeSegmentedControl({ className, compact = false }: ThemeSegme
                         type="button"
                         role="radio"
                         aria-checked={isActive}
-                        onClick={() => setThemePreference(option.value)}
+                        onClick={() => handlePreferenceChange(option.value)}
                         className={cn(
                             "inline-flex items-center justify-center rounded-full border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/35",
                             compact ? "h-8 w-8" : "h-9 min-w-27 gap-2 px-3.5",

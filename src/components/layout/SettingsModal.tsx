@@ -32,8 +32,11 @@ import {
 } from "@/components/ui/Dialog"
 import { ThemeSegmentedControl } from "@/components/ui/ThemeToggle"
 import { useLogout } from "@/features/auth/hooks/useLogout"
+import { useLanguageStore } from "@/store/useLanguageStore"
+import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { useTheme } from "../providers/ThemeProvider"
 import { ChangePasswordModal } from "@/features/auth/components/ChangePasswordModal"
+import type { ThemePreference } from "@/lib/theme"
 
 interface SettingsModalProps {
     children: React.ReactNode
@@ -47,11 +50,28 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
-    const [lang, setLang] = useState("en")
+
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
     const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
     const { logout, isPending: isLogoutPending } = useLogout()
-    const { themePreference } = useTheme()
+    const { themePreference, setThemePreference } = useTheme()
+    const { t, language, setLanguage } = useLanguageStore()
+    const { updateSettings } = useUserSettings()
+
+    const mapThemePreferenceToSettingsTheme = (preference: ThemePreference): "light" | "dark" | "auto" => {
+        return preference === "system" ? "auto" : preference
+    }
+
+    const handleThemeChange = async (nextPreference: ThemePreference) => {
+        const previousPreference = themePreference
+
+        try {
+            await updateSettings({ theme: mapThemePreferenceToSettingsTheme(nextPreference) })
+        } catch {
+            setThemePreference(previousPreference)
+            toast.error("Could not save theme to profile")
+        }
+    }
 
     const handleLogout = async () => {
         await logout()
@@ -74,19 +94,19 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                     {children}
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 h-[80vh] flex flex-col sm:h-162.5">
-                    <DialogTitle className="sr-only">Settings</DialogTitle>
+                    <DialogTitle className="sr-only">{t.app.settingsModal.title}</DialogTitle>
                     <DialogDescription className="sr-only">Manage your account settings and preferences</DialogDescription>
                     <Tabs defaultValue="general" className="flex-1 flex flex-col overflow-hidden">
                         <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
-                            
+
                             <div className="w-full sm:w-70 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 backdrop-blur-sm flex flex-col z-10">
                                 <div className="hidden sm:flex items-center gap-3 px-2 mb-8 mt-2">
                                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-premium-sm">
                                         <Settings className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-[17px] font-bold tracking-tight text-primary-dark">Settings</h2>
-                                        <p className="text-[11px] font-medium text-secondary-text uppercase tracking-wider">Account Control</p>
+                                        <h2 className="text-[17px] font-bold tracking-tight text-primary-dark">{t.app.settingsModal.title}</h2>
+                                        <p className="text-[11px] font-medium text-secondary-text uppercase tracking-wider">{t.app.settingsModal.subtitle}</p>
                                     </div>
                                 </div>
 
@@ -124,10 +144,10 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                 </TabsList>
                             </div>
 
-                            
+
                             <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10 backdrop-blur-sm">
                                 <AnimatePresence>
-                                    
+
                                     <TabsContent value="general" key="general" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -137,8 +157,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="settings-section-title">General Info</h3>
-                                                <p className="settings-section-description">Manage your personal details and account settings.</p>
+                                                <h3 className="settings-section-title">{t.app.settingsModal.generalInfoTitle}</h3>
+                                                <p className="settings-section-description">{t.app.settingsModal.generalInfoDesc}</p>
                                             </div>
 
                                             <Card className="p-6 space-y-6">
@@ -163,25 +183,36 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                         <Input
                                                             disabled
-                                                            label="Full Name"
+                                                            label={t.app.settingsModal.fullName}
                                                             defaultValue={user.name}
                                                         />
                                                         <Input
                                                             disabled
-                                                            label="Email Address"
+                                                            label={t.app.settingsModal.emailAddress}
                                                             defaultValue={user.email}
                                                         />
                                                     </div>
 
                                                     <div className="pt-2">
                                                         <Select
-                                                            label="Application Language"
-                                                            value={lang}
-                                                            onChange={(val) => { setLang(val); toast.success("Language preference updated"); }}
+                                                            label={t.app.settingsModal.appLanguage}
+                                                            value={language}
+                                                            onChange={async (val) => {
+                                                                const newLang = val as "en" | "es" | "pt" | "fr" | "de";
+                                                                try {
+                                                                    await updateSettings({ language: newLang });
+                                                                    setLanguage(newLang);
+                                                                    toast.success("Language preference updated");
+                                                                } catch {
+                                                                    toast.error("Could not save language to profile");
+                                                                }
+                                                            }}
                                                             options={[
-                                                                { label: "English (United States)", value: "en" },
-                                                                { label: "Español (España)", value: "es" },
-                                                                { label: "Português (Brasil)", value: "pt" }
+                                                                { label: "English", value: "en" },
+                                                                { label: "Español", value: "es" },
+                                                                { label: "Português", value: "pt" },
+                                                                { label: "Français", value: "fr" },
+                                                                { label: "Deutsch", value: "de" }
                                                             ]}
                                                         />
                                                     </div>
@@ -190,7 +221,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    
+
                                     <TabsContent value="appearance" key="appearance" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -200,31 +231,31 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="settings-section-title">Appearance</h3>
-                                                <p className="settings-section-description">Switch appearance instantly across landing, auth and workspace.</p>
+                                                <h3 className="settings-section-title">{t.app.settingsModal.appearanceTitle}</h3>
+                                                <p className="settings-section-description">{t.app.settingsModal.appearanceDesc}</p>
                                             </div>
 
                                             <Card className="p-6 sm:p-7">
                                                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                                     <div>
-                                                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-secondary-text">Active theme</p>
+                                                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-secondary-text">{t.app.settingsModal.activeTheme}</p>
                                                         <p className="mt-1 text-[14px] font-semibold text-primary-text">
                                                             {themePreference === "system"
                                                                 ? `System`
                                                                 : `${themePreference === "dark" ? "Dark" : "Light"} mode`}
                                                         </p>
                                                     </div>
-                                                    <ThemeSegmentedControl className="w-full sm:w-auto" />
+                                                    <ThemeSegmentedControl className="w-full sm:w-auto" onChange={handleThemeChange} />
                                                 </div>
 
                                                 <p className="mt-4 text-[12px] leading-5 text-secondary-text">
-                                                    Light: bright interface. Dark: deeper contrast. System: follows your device.
+                                                    {t.app.settingsModal.themeDesc}
                                                 </p>
                                             </Card>
                                         </motion.div>
                                     </TabsContent>
 
-                                    
+
                                     <TabsContent value="security" key="security" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -234,8 +265,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="settings-section-title">Security</h3>
-                                                <p className="settings-section-description">Protect your account with advanced authentication methods.</p>
+                                                <h3 className="settings-section-title">{t.app.settingsModal.securityTitle}</h3>
+                                                <p className="settings-section-description">{t.app.settingsModal.securityDesc}</p>
                                             </div>
 
                                             <div className="grid gap-4">
@@ -245,7 +276,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                             <Shield className="h-5.5 w-5.5" />
                                                         </div>
                                                         <div>
-                                                            <p className="text-[15px] font-bold text-primary-text">Master Password</p>
+                                                            <p className="text-[15px] font-bold text-primary-text">{t.app.settingsModal.masterPassword}</p>
                                                             <p className="text-xs text-secondary-text font-medium">Last updated March 2026</p>
                                                         </div>
                                                     </div>
@@ -259,15 +290,15 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                 </Card>
 
                                                 <div className="rounded-2xl border border-border-soft bg-surface-base/50 p-5 mt-2">
-                                                    <h4 className="text-[13px] font-bold text-primary-text mb-3 uppercase tracking-wider">Security Best Practices</h4>
+                                                    <h4 className="text-[13px] font-bold text-primary-text mb-3 uppercase tracking-wider">{t.app.settingsModal.securityBestPractices}</h4>
                                                     <ul className="space-y-2.5 text-[13px] text-secondary-text">
                                                         <li className="flex items-start gap-3">
                                                             <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
-                                                            <span>Use a complex password with at least 8 characters.</span>
+                                                            <span>{t.app.settingsModal.securityBp1}</span>
                                                         </li>
                                                         <li className="flex items-start gap-3">
                                                             <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
-                                                            <span>Change your password regularly to keep your account safe.</span>
+                                                            <span>{t.app.settingsModal.securityBp2}</span>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -275,7 +306,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    
+
                                     <TabsContent value="notifications" key="notifications" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -285,8 +316,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="settings-section-title">Notifications</h3>
-                                                <p className="settings-section-description">Decide how and when you want to be notified.</p>
+                                                <h3 className="settings-section-title">{t.app.settingsModal.notificationsTitle}</h3>
+                                                <p className="settings-section-description">{t.app.settingsModal.notificationsDesc}</p>
                                             </div>
 
                                             <Card className="p-0 overflow-hidden divide-y divide-border-soft border-0 shadow-none!">
@@ -306,7 +337,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                         </motion.div>
                                     </TabsContent>
 
-                                    
+
                                     <TabsContent value="data" key="data" asChild>
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
@@ -316,8 +347,8 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                             className="mt-0 space-y-8 outline-none"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="settings-section-title">Data & Controls</h3>
-                                                <p className="settings-section-description">Take control of your data and backup your history.</p>
+                                                <h3 className="settings-section-title">{t.app.settingsModal.dataControlsTitle}</h3>
+                                                <p className="settings-section-description">{t.app.settingsModal.dataControlsDesc}</p>
                                             </div>
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -326,10 +357,10 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                         <div className="h-9 w-9 rounded-xl bg-accent-blue/12 flex items-center justify-center text-accent-blue">
                                                             <Download className="h-5 w-5" />
                                                         </div>
-                                                        <p className="text-[15px] font-bold text-primary-text">Export Library</p>
+                                                        <p className="text-[15px] font-bold text-primary-text">{t.app.settingsModal.exportLibrary}</p>
                                                     </div>
-                                                    <p className="text-xs leading-5 text-secondary-text font-medium">Download a complete backup of all your created profiles and usage history in JSON format.</p>
-                                                    <Button variant="secondary" className="w-full font-bold h-10 mt-2" onClick={() => toast.success("Backup started. You will receive an email shortly.")}>Start Backup</Button>
+                                                    <p className="text-xs leading-5 text-secondary-text font-medium">{t.app.settingsModal.exportLibraryDesc}</p>
+                                                    <Button variant="secondary" className="w-full font-bold h-10 mt-2" onClick={() => toast.success("Backup started. You will receive an email shortly.")}>{t.app.settingsModal.startBackup}</Button>
                                                 </Card>
 
                                                 <Card className="p-6 space-y-4 surface-danger">
@@ -337,10 +368,10 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                         <div className="h-9 w-9 rounded-xl bg-(--danger-soft-bg) flex items-center justify-center text-danger">
                                                             <Trash2 className="h-5 w-5" />
                                                         </div>
-                                                        <p className="text-[15px] font-bold text-danger">Danger Zone</p>
+                                                        <p className="text-[15px] font-bold text-danger">{t.app.settingsModal.dangerZone}</p>
                                                     </div>
-                                                    <p className="text-xs leading-5 text-danger/70 font-medium">Deleting your account is permanent. All profiles, history and plans will be lost immediately.</p>
-                                                    <Button variant="dangerSoft" className="w-full font-bold h-10 mt-2" onClick={() => setIsDeleteAccountConfirmOpen(true)}>Delete Account</Button>
+                                                    <p className="text-xs leading-5 text-danger/70 font-medium">{t.app.settingsModal.dangerZoneDesc}</p>
+                                                    <Button variant="dangerSoft" className="w-full font-bold h-10 mt-2" onClick={() => setIsDeleteAccountConfirmOpen(true)}>{t.app.settingsModal.deleteAccount}</Button>
                                                 </Card>
                                             </div>
                                         </motion.div>

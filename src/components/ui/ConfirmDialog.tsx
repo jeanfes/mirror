@@ -10,6 +10,7 @@ interface ConfirmDialogProps {
     description?: string
     confirmLabel?: string
     confirmPendingLabel?: string
+    cancelLabel?: string
     isPending?: boolean
     onConfirm: () => void
     onCancel: () => void
@@ -21,6 +22,7 @@ export function ConfirmDialog({
     description,
     confirmLabel = "Delete",
     confirmPendingLabel = "Working...",
+    cancelLabel = "Cancel",
     isPending = false,
     onConfirm,
     onCancel,
@@ -69,7 +71,7 @@ export function ConfirmDialog({
                             onClick={onCancel}
                             disabled={isPending}
                         >
-                            Cancel
+                            {cancelLabel}
                         </Button>
                         <Button
                             type="button"

@@ -16,6 +16,9 @@ export function LandingHeader() {
                 <div className="flex min-w-0 items-center gap-4 lg:gap-7">
                     <Link href={ROUTES.public.index} className="flex shrink-0 items-center gap-2 text-[1.15rem] font-black tracking-tighter text-primary-dark">
                         <Image src="/icon.png" alt="Mirror Logo" width={24} height={24} className="rounded-md" />
+                        <span className="hidden sm:inline-flex items-center gap-1.5">
+                            Mirror <span className="text-secondary-text font-semibold text-[0.95em]">| Landing</span>
+                        </span>
                     </Link>
 
                     <nav className="hidden min-w-0 items-center gap-5 lg:gap-7 md:flex">
@@ -36,42 +39,29 @@ export function LandingHeader() {
                             <span className="hidden md:inline text-[12px] font-bold uppercase tracking-wider">{language}</span>
                         </button>
 
-                        <div className="absolute top-full right-0 mt-2 w-36 rounded-2xl border border-border-soft bg-surface-overlay-strong p-2 shadow-premium-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 origin-top-right flex flex-col gap-0.5">
-                            <button
-                                onClick={() => setLanguage("es")}
-                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover ${language === 'es' ? 'text-primary-dark bg-surface-base' : 'text-secondary-text'}`}
-                            >
-                                Español
-                                {language === "es" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
-                            </button>
-                            <button
-                                onClick={() => setLanguage("en")}
-                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover ${language === 'en' ? 'text-primary-dark bg-surface-base' : 'text-secondary-text'}`}
-                            >
-                                English
-                                {language === "en" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
-                            </button>
-                            <button
-                                onClick={() => setLanguage("pt")}
-                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover ${language === 'pt' ? 'text-primary-dark bg-surface-base' : 'text-secondary-text'}`}
-                            >
-                                Português
-                                {language === "pt" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
-                            </button>
-                            <button
-                                onClick={() => setLanguage("fr")}
-                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover ${language === 'fr' ? 'text-primary-dark bg-surface-base' : 'text-secondary-text'}`}
-                            >
-                                Français
-                                {language === "fr" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
-                            </button>
-                            <button
-                                onClick={() => setLanguage("de")}
-                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover ${language === 'de' ? 'text-primary-dark bg-surface-base' : 'text-secondary-text'}`}
-                            >
-                                Deutsch
-                                {language === "de" && <div className="h-1.5 w-1.5 rounded-full bg-accent-blue" />}
-                            </button>
+                        <div className="absolute top-full right-0 mt-3 w-40 rounded-2xl border border-white/10 bg-surface-base/85 p-1.5 shadow-2xl backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out origin-top-right group-hover:translate-y-0 translate-y-2 flex flex-col gap-0.5">
+                            {[
+                                { code: "es", label: "Español" },
+                                { code: "en", label: "English" },
+                                { code: "pt", label: "Português" },
+                                { code: "fr", label: "Français" },
+                                { code: "de", label: "Deutsch" },
+                            ].map((lang) => (
+                                <button
+                                    key={lang.code}
+                                    onClick={() => setLanguage(lang.code as any)}
+                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                                        language === lang.code
+                                            ? "bg-surface-hover text-primary-dark shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                                            : "text-secondary-text hover:bg-surface-hover/50 hover:text-primary-dark"
+                                    }`}
+                                >
+                                    {lang.label}
+                                    {language === lang.code && (
+                                        <div className="h-1.5 w-1.5 rounded-full bg-accent-blue shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                                    )}
+                                </button>
+                            ))}
                         </div>
                     </div>
                     <Link

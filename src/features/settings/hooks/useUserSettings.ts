@@ -18,7 +18,7 @@ export function useUserSettings() {
     queryFn: getUserSettings,
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     enabled: !!userId
   })
 
@@ -31,6 +31,7 @@ export function useUserSettings() {
 
   return {
     ...query,
+    isLoading: query.isPending,
     updateSettings: mutation.mutateAsync,
     isMutating: mutation.isPending
   }
