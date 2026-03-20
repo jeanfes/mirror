@@ -26,6 +26,8 @@ export const ROUTES = {
   }
 } as const
 
+export type Routes = typeof ROUTES
+
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.private.profiles
 export const DEFAULT_UNAUTHENTICATED_ROUTE = ROUTES.public.index
 

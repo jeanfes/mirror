@@ -1,14 +1,13 @@
-"use client"
-
 import { LegalLayout } from "@/components/layout/LegalLayout"
 
-export default function TermsPage() {
+export default async function TermsPage() {
   return (
     <LegalLayout
       title="Términos y Condiciones de Uso"
       subtitle="Lee atentamente las reglas que rigen el uso de Mirror para asegurar una experiencia segura y transparente."
       lastUpdated="17 de Marzo de 2026"
     >
+
       <section>
         <h2 className="text-2xl font-black tracking-tight text-primary-dark mb-4">PREÁMBULO</h2>
         <p>

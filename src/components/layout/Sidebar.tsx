@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -23,13 +23,13 @@ export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname()
     const router = useRouter()
     const { t } = useLanguageStore()
-    const navItems = getNavItems(t)
+    const navItems = useMemo(() => getNavItems(t), [t])
 
     useEffect(() => {
         navItems.forEach((item) => {
             router.prefetch(item.href)
         })
-    }, [router])
+    }, [router, navItems])
 
     return (
         <aside className="hidden md:flex h-screen w-min flex-col items-center justify-between overflow-y-auto pt-5 p-4.5 custom-scrollbar">

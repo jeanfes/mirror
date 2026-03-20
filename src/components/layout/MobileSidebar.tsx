@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import dynamic from "next/dynamic"
@@ -22,13 +22,13 @@ export function MobileSidebar() {
     const pathname = usePathname()
     const router = useRouter()
     const { t } = useLanguageStore()
-    const navItems = getNavItems(t)
+    const navItems = useMemo(() => getNavItems(t), [t])
 
     useEffect(() => {
         navItems.forEach((item) => {
             router.prefetch(item.href)
         })
-    }, [router])
+    }, [router, navItems])
 
     useEffect(() => {
         const originalOverflow = document.body.style.overflow

@@ -49,7 +49,7 @@ export function LandingHeader() {
                             ].map((lang) => (
                                 <button
                                     key={lang.code}
-                                    onClick={() => setLanguage(lang.code as any)}
+                                    onClick={() => setLanguage(lang.code as "es" | "en" | "pt" | "fr" | "de")}
                                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                                         language === lang.code
                                             ? "bg-surface-hover text-primary-dark shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
