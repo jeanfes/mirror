@@ -1,6 +1,6 @@
 import { Mail, MessageSquare } from "lucide-react";
 import { getDictionary } from "@/lib/i18n-server";
-import { ContactForm } from "./ContactForm";
+import { ContactForm } from "@/features/contact/components/ContactForm";
 
 export default async function ContactPage() {
     const { t } = await getDictionary();

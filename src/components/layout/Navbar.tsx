@@ -8,6 +8,7 @@ import { MobileSidebar } from "./MobileSidebar"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { useLoadingStore } from "@/store/useLoadingStore"
 export function Navbar() {
     const { data: account, isLoading: isAccountLoading } = useAccount()
     const pathname = usePathname()
@@ -17,7 +18,9 @@ export function Navbar() {
     const currentSection =
         navItems.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? t.app.navigation.profiles
 
-    if (isAccountLoading) return null
+    const isPageLoading = useLoadingStore((state) => state.isPageLoading)
+
+    if (isAccountLoading || isPageLoading) return null
 
     return (
         <header className="relative flex pb-2 pt-0 w-full shrink-0 items-center justify-between border-b border-border-soft">

@@ -1,9 +1,9 @@
 import { getDictionary } from "@/lib/i18n-server";
 import { ROUTES } from "@/lib/routes";
-import { HeroSection } from "./HeroSection";
-import { HowItWorksSection } from "./HowItWorksSection";
-import { LandingFeaturesSection } from "./LandingFeaturesSection";
-import { CTASection } from "./CTASection";
+import { HeroSection } from "@/features/landing/components/HeroSection";
+import { HowItWorksSection } from "@/features/landing/components/HowItWorksSection";
+import { LandingFeaturesSection } from "@/features/landing/components/LandingFeaturesSection";
+import { CTASection } from "@/features/landing/components/CTASection";
 
 export default async function LandingPage() {
     const { t } = await getDictionary();

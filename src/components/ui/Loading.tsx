@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useLoadingStore } from "@/store/useLoadingStore"
 
 const LOADING_MIN_DISPLAY_MS = 150
 
@@ -39,6 +40,15 @@ export function useLoadingDelay(active: boolean, delayMs = LOADING_MIN_DISPLAY_M
 }
 
 export function LoadingOverlay({ show, label = "Cargando..." }: { show: boolean, label?: string }) {
+    const setIsPageLoading = useLoadingStore((state) => state.setIsPageLoading)
+
+    useEffect(() => {
+        if (show) {
+            setIsPageLoading(true)
+            return () => setIsPageLoading(false)
+        }
+    }, [show, setIsPageLoading])
+
     if (!show) return null
 
     return (
@@ -58,6 +68,17 @@ export function LoadingOverlay({ show, label = "Cargando..." }: { show: boolean,
             </div>
         </div>
     )
+}
+
+export function PageLoadingIndicator() {
+    const setIsPageLoading = useLoadingStore((state) => state.setIsPageLoading)
+
+    useEffect(() => {
+        setIsPageLoading(true)
+        return () => setIsPageLoading(false)
+    }, [setIsPageLoading])
+
+    return null
 }
 
 

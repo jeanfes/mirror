@@ -1,6 +1,6 @@
 import { Zap, Users, PenTool, Brain } from "lucide-react";
 import { getDictionary } from "@/lib/i18n-server";
-import { FeatureCard } from "./FeatureCard";
+import { FeatureCard } from "@/features/landing/components/FeatureCard";
 
 export default async function FeaturesPage() {
     const { t } = await getDictionary();

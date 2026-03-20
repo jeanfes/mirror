@@ -1,6 +1,6 @@
 import { getDictionary } from "@/lib/i18n-server";
 import { ROUTES } from "@/lib/routes";
-import { PricingCard } from "./PricingCard";
+import { PricingCard } from "@/features/pricing/components/PricingCard";
 import { getServerSession } from "@/lib/auth";
 
 export default async function PricingPage() {

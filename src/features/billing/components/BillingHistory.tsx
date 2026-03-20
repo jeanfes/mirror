@@ -1,6 +1,7 @@
 "use client"
 
 import { Download, FileText } from "lucide-react"
+import { motion } from "motion/react"
 import { format } from "date-fns"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { type Invoice } from "@/features/billing/services/billing.service"
@@ -36,12 +37,29 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
 
   if (invoices.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-secondary-text mb-4">
-          <FileText className="h-6 w-6" />
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex flex-col items-center justify-center py-20 px-6 text-center neo-card rounded-3xl border border-border-soft bg-surface-base/30 backdrop-blur-sm shadow-premium-sm"
+      >
+        <div className="relative mb-6">
+          <motion.div 
+            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full" 
+          />
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-surface-elevated text-secondary-text shadow-premium-sm ring-1 ring-border-soft">
+            <FileText className="h-10 w-10 text-primary-text/40" strokeWidth={1.5} />
+          </div>
         </div>
-        <p className="text-[14px] font-medium text-secondary-text">{t.app.billing.noInvoices}</p>
-      </div>
+        <h3 className="text-xl font-black text-primary-text mb-2 tracking-tight">
+          {t.app.billing.noInvoicesTitle}
+        </h3>
+        <p className="max-w-xs text-[15px] font-medium text-secondary-text leading-relaxed">
+          {t.app.billing.noInvoicesDesc}
+        </p>
+      </motion.div>
     )
   }
 

@@ -2,7 +2,7 @@ import { HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { getDictionary } from "@/lib/i18n-server";
 import { ROUTES } from "@/lib/routes";
-import { FAQAccordion } from "./FAQAccordion";
+import { FAQAccordion } from "@/features/faq/components/FAQAccordion";
 
 export default async function FAQPage() {
     const { t } = await getDictionary();
