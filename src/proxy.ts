@@ -9,7 +9,14 @@ import {
 import { getSupabasePublicEnv } from "@/lib/supabase/env"
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request })
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-pathname", request.nextUrl.pathname)
+
+  let response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  })
 
   const supabaseEnv = getSupabasePublicEnv()
   if (!supabaseEnv) {
@@ -35,7 +42,11 @@ export async function proxy(request: NextRequest) {
             request.cookies.set(name, value)
           )
 
-          response = NextResponse.next({ request })
+          response = NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
