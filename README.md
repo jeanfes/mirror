@@ -38,15 +38,6 @@ Next.js app for the Mirror product web experience.
 pnpm install
 ```
 
-2. Create environment file:
-
-```bash
-# Create or edit .env.local with:
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=YOUR_PUBLISHABLE_KEY
-# Legacy compatibility: NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
-```
-
 3. Start dev server:
 
 ```bash
