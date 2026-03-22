@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useTransition,
 } from "react"
 import {
   getCookieValue,
@@ -30,12 +31,24 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 function writeThemeState(preference: ThemePreference, resolvedTheme: ResolvedTheme) {
-  document.documentElement.dataset.theme = resolvedTheme
-  document.documentElement.dataset.themePreference = preference
-  document.documentElement.style.colorScheme = resolvedTheme
-  window.localStorage.setItem(THEME_STORAGE_KEY, preference)
-  document.cookie = `${THEME_PREFERENCE_COOKIE}=${preference}; path=/; max-age=31536000; SameSite=Lax`
-  document.cookie = `${THEME_RESOLVED_COOKIE}=${resolvedTheme}; path=/; max-age=31536000; SameSite=Lax`
+  // Use requestIdleCallback or setTimeout to avoid blocking the main thread
+  // during the critical path of rendering and painting.
+  const work = () => {
+    document.documentElement.dataset.theme = resolvedTheme
+    document.documentElement.dataset.themePreference = preference
+    document.documentElement.style.colorScheme = resolvedTheme
+    window.localStorage.setItem(THEME_STORAGE_KEY, preference)
+    document.cookie = `${THEME_PREFERENCE_COOKIE}=${preference}; path=/; max-age=31536000; SameSite=Lax`
+    document.cookie = `${THEME_RESOLVED_COOKIE}=${resolvedTheme}; path=/; max-age=31536000; SameSite=Lax`
+  }
+
+  if (typeof window !== "undefined") {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(() => work(), { timeout: 2000 })
+    } else {
+      setTimeout(work, 0)
+    }
+  }
 }
 
 function getSystemTheme(): ResolvedTheme {
@@ -69,6 +82,7 @@ export function ThemeProvider({
   initialThemePreference,
   initialResolvedTheme,
 }: ThemeProviderProps) {
+  const [isPending, startTransition] = useTransition()
   const [state, setState] = useState(() => {
     const themePreference = readClientPreference(initialThemePreference)
     const systemTheme = readSystemTheme(initialResolvedTheme)
@@ -89,7 +103,9 @@ export function ThemeProvider({
   }, [])
 
   const setThemePreference = useCallback((pref: ThemePreference) => {
-    setState((prev) => ({ ...prev, themePreference: pref }))
+    startTransition(() => {
+      setState((prev) => ({ ...prev, themePreference: pref }))
+    })
   }, [])
 
 

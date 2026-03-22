@@ -1,29 +1,22 @@
 "use client"
 
 import React, { memo, useCallback, useRef, useState } from "react"
-import Image from "next/image"
 import { toast } from "sonner"
 import {
-  BadgeCheck,
   Bell,
   Download,
   ExternalLink,
   LogOut,
   Shield,
-  Trash2,
   Settings,
   Palette,
   User,
 } from "lucide-react"
 
-import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { Select } from "@/components/ui/Select"
 import { LoadingOverlay } from "@/components/ui/Loading"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs"
-import { Toggle } from "@/components/ui/Toggle"
-import { Input } from "@/components/ui/Input"
 import {
   Dialog,
   DialogContent,
@@ -31,13 +24,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import { ThemeSegmentedControl } from "@/components/ui/ThemeToggle"
 import { useLogout } from "@/features/auth/hooks/useLogout"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { useTheme } from "../providers/ThemeProvider"
 import { ChangePasswordModal } from "@/features/auth/components/ChangePasswordModal"
 import type { ThemePreference } from "@/lib/theme"
+
+import { GeneralTab } from "@/features/settings/components/GeneralTab"
+import { AppearanceTab } from "@/features/settings/components/AppearanceTab"
+import { SecurityTab } from "@/features/settings/components/SecurityTab"
+import { NotificationsTab } from "@/features/settings/components/NotificationsTab"
+import { DataTab } from "@/features/settings/components/DataTab"
 
 interface SettingsModalProps {
   children: React.ReactNode
@@ -81,13 +79,10 @@ const SettingsModal = memo(function SettingsModal({
     const prev = themeRef.current
     setThemePreference(nextPref)
     try {
-      setIsUpdating(true)
       await updateSettings({ theme: nextPref === "system" ? "auto" : nextPref })
     } catch {
       setThemePreference(prev)
       toast.error("Error al guardar el tema")
-    } finally {
-      setIsUpdating(false)
     }
   }, [setThemePreference, updateSettings])
 
@@ -109,12 +104,9 @@ const SettingsModal = memo(function SettingsModal({
 
   const handleToggleChange = useCallback(async (key: 'notificationsEnabled' | 'desktopAlertsEnabled', value: boolean) => {
     try {
-      setIsUpdating(true)
       await updateSettings({ [key]: value })
     } catch {
       toast.error("Error al guardar preferencia")
-    } finally {
-      setIsUpdating(false)
     }
   }, [updateSettings])
 
@@ -176,130 +168,60 @@ const SettingsModal = memo(function SettingsModal({
 
               <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10">
                 
-                <TabsContent value="general" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200 b-none">
+                <TabsContent value="general" className="mt-0 b-none">
                   {activeTab === "general" && (
-                    <>
-                      <SectionHeader title={t.app.settingsModal.generalInfoTitle} description={t.app.settingsModal.generalInfoDesc} />
-                      <Card className="p-6 space-y-6">
-                        <div className="flex items-center gap-5">
-                          <div className="relative h-20 w-20 shrink-0">
-                            <div className="relative h-full w-full rounded-3xl bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white text-3xl font-bold shadow-lg overflow-hidden">
-                              {user.avatar ? (
-                                <Image 
-                                  src={user.avatar} 
-                                  alt="Avatar" 
-                                  fill 
-                                  sizes="80px"
-                                  className="rounded-3xl object-cover" 
-                                />
-                              ) : (
-                                user.name.charAt(0).toUpperCase()
-                              )}
-                            </div>
-                            <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl bg-surface-elevated text-accent-purple shadow-sm ring-1 ring-border-soft">
-                              <BadgeCheck className="h-4 w-4 fill-accent-purple text-white" />
-                            </div>
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-primary-text">{user.name}</h4>
-                            <p className="text-xs text-secondary-text font-medium">{user.email}</p>
-                          </div>
-                        </div>
-                        <div className="grid gap-5">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <Input disabled label="Nombre" defaultValue={user.name} />
-                            <Input disabled label="Email" defaultValue={user.email} />
-                          </div>
-                          <Select
-                            label="Idioma de la App"
-                            value={language}
-                            onChange={handleLanguageChange}
-                            options={[
-                              { label: "English", value: "en" }, { label: "Español", value: "es" },
-                              { label: "Português", value: "pt" }, { label: "Français", value: "fr" },
-                              { label: "Deutsch", value: "de" },
-                            ]}
-                          />
-                        </div>
-                      </Card>
-                    </>
+                    <GeneralTab 
+                      user={user} 
+                      language={language} 
+                      onLanguageChange={handleLanguageChange}
+                      t={{
+                        generalInfoTitle: t.app.settingsModal.generalInfoTitle,
+                        generalInfoDesc: t.app.settingsModal.generalInfoDesc
+                      }}
+                    />
                   )}
                 </TabsContent>
 
-                <TabsContent value="appearance" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                <TabsContent value="appearance" className="mt-0">
                   {activeTab === "appearance" && (
-                    <>
-                      <SectionHeader title="Apariencia" description="Personaliza cómo se ve tu espacio de trabajo." />
-                      <Card className="p-6 sm:p-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                          <p className="text-[11px] font-semibold uppercase tracking-widest text-secondary-text">Tema Activo</p>
-                          <p className="mt-1 text-[14px] font-semibold text-primary-text capitalize">{themePreference} mode</p>
-                        </div>
-                        <ThemeSegmentedControl onChange={handleThemeChange} />
-                      </Card>
-                    </>
+                    <AppearanceTab 
+                      themePreference={themePreference}
+                      onThemeChange={handleThemeChange}
+                      title="Apariencia"
+                      description="Personaliza cómo se ve tu espacio de trabajo."
+                      activeLabel="Tema Activo"
+                    />
                   )}
                 </TabsContent>
 
-                <TabsContent value="security" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                <TabsContent value="security" className="mt-0">
                   {activeTab === "security" && (
-                    <>
-                      <SectionHeader title="Seguridad" description="Gestiona tu contraseña y protege tu cuenta." />
-                      <Card className="p-4 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Shield className="h-5 w-5" /></div>
-                          <div>
-                            <p className="text-sm font-bold text-primary-text">Contraseña Maestra</p>
-                            <p className="text-[10px] text-secondary-text uppercase">Actualizada hace poco</p>
-                          </div>
-                        </div>
-                        <Button variant="secondary" onClick={() => setIsChangePasswordOpen(true)}>Actualizar</Button>
-                      </Card>
-                    </>
+                    <SecurityTab 
+                      onUpdatePassword={() => setIsChangePasswordOpen(true)}
+                      title="Seguridad"
+                      description="Gestiona tu contraseña y protege tu cuenta."
+                    />
                   )}
                 </TabsContent>
 
-                <TabsContent value="notifications" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                <TabsContent value="notifications" className="mt-0">
                   {activeTab === "notifications" && (
-                    <>
-                      <SectionHeader title="Notificaciones" description="Elige qué alertas quieres recibir." />
-                      <Card className="p-4 space-y-4">
-                        <Toggle 
-                          label="Actualizaciones por Email" 
-                          checked={settings?.notificationsEnabled ?? true} 
-                          onChange={(v) => handleToggleChange('notificationsEnabled', v)}
-                        />
-                        <Toggle 
-                          label="Alertas de Escritorio" 
-                          checked={settings?.desktopAlertsEnabled ?? false} 
-                          onChange={(v) => handleToggleChange('desktopAlertsEnabled', v)}
-                        />
-                      </Card>
-                    </>
+                    <NotificationsTab 
+                      settings={settings}
+                      onToggleChange={handleToggleChange}
+                      title="Notificaciones"
+                      description="Elige qué alertas quieres recibir."
+                    />
                   )}
                 </TabsContent>
 
-                <TabsContent value="data" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                <TabsContent value="data" className="mt-0">
                   {activeTab === "data" && (
-                    <>
-                      <SectionHeader title="Datos y Privacidad" description="Exporta tu información o elimina tu cuenta." />
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Card className="p-6 space-y-4">
-                          <div className="flex items-center gap-3">
-                            <Download className="h-5 w-5 text-blue-500" />
-                            <p className="text-sm font-bold">Exportar Biblioteca</p>
-                          </div>
-                          <Button variant="secondary" className="w-full" onClick={() => toast.success("Backup iniciado")}>Empezar Backup</Button>
-                        </Card>
-                        <Card className="p-6 space-y-4 border-red-200 bg-red-50/30">
-                          <div className="flex items-center gap-3">
-                            <Trash2 className="h-5 w-5 text-red-500" />
-                            <p className="text-sm font-bold text-red-600">Zona de Peligro</p>
-                          </div>
-                          <Button variant="dangerSoft" className="w-full" onClick={() => setIsDeleteAccountConfirmOpen(true)}>Eliminar Cuenta</Button>
-                        </Card>
-                      </div>
-                    </>
+                    <DataTab 
+                      onDeleteAccount={() => setIsDeleteAccountConfirmOpen(true)}
+                      title="Datos y Privacidad"
+                      description="Exporta tu información o elimina tu cuenta."
+                    />
                   )}
                 </TabsContent>
 
@@ -350,13 +272,6 @@ const SettingsTabTrigger = ({ value, icon, label }: { value: string, icon: React
   <TabsTrigger value={value} className="settings-nav-trigger shrink-0 gap-2">
     {icon} {label}
   </TabsTrigger>
-)
-
-const SectionHeader = ({ title, description }: { title: string, description: string }) => (
-  <div className="space-y-1">
-    <h3 className="settings-section-title">{title}</h3>
-    <p className="settings-section-description">{description}</p>
-  </div>
 )
 
 const FooterLink = ({ href, label }: { href: string, label: string }) => (

@@ -29,7 +29,7 @@ export function FAQAccordion({ questions }: FAQAccordionProps) {
               className="flex w-full items-center justify-between p-6 md:p-8 text-left"
             >
               <h3 className="text-lg md:text-xl font-black text-primary-dark pr-8">{faq.q}</h3>
-              <div className={`shrink-0 h-10 w-10 flex items-center justify-center rounded-full transition-colors duration-300 ${isOpen ? 'bg-primary-dark text-white' : 'bg-bg-main text-primary-dark'}`}>
+              <div className={`shrink-0 h-10 w-10 flex items-center justify-center rounded-full transition-colors duration-300 ${isOpen ? 'bg-primary-dark text-text-inverse' : 'bg-surface-base text-primary-dark shadow-sm'}`}>
                 <Plus className={`h-6 w-6 transition-transform duration-300 ${isOpen ? 'rotate-45' : 'rotate-0'}`} />
               </div>
             </button>
