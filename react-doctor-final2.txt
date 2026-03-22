@@ -1,0 +1,46 @@
+react-doctor v0.0.30
+
+[32m✔[39m Select projects to scan [2m›[22m mirror
+[2mScanning C:\Proyectos\Extensions\mirror\web...[22m
+
+- Detecting framework. Found [36mNext.js[39m.
+[32m✔[39m Detecting framework. Found [36mNext.js[39m.
+- Detecting React version. Found [36mReact 19.2.3[39m.
+[32m✔[39m Detecting React version. Found [36mReact 19.2.3[39m.
+- Detecting language. Found [36mTypeScript[39m.
+[32m✔[39m Detecting language. Found [36mTypeScript[39m.
+- Detecting React Compiler. Not found.
+[32m✔[39m Detecting React Compiler. Not found.
+- Found [36m120[39m source files.
+[32m✔[39m Found [36m120[39m source files.
+
+- Running lint checks...
+- Detecting dead code.
+[32m✔[39m Detecting dead code.
+- Running lint checks...
+[32m✔[39m Running lint checks.
+  [33m⚠[39m Unused file
+[2m    This file is not imported by any other file in the project.[22m
+[2m    fix-exports.mjs[22m
+
+  [33m⚠[39m Unused type: OAuthStartError
+[2m    src\features\auth\errors.ts[22m
+
+  [2m┌────────────────────────────────────────────────────┐[22m
+  [2m│[22m [32m┌─────┐[39m                                            [2m│[22m
+  [2m│[22m [32m│ ◠ ◠ │[39m                                            [2m│[22m
+  [2m│[22m [32m│  ▽  │[39m                                            [2m│[22m
+  [2m│[22m [32m└─────┘[39m                                            [2m│[22m
+  [2m│[22m React Doctor [2m(www.react.doctor)[22m                    [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [32m99[39m / 100  [32mGreat[39m                                    [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [32m██████████████████████████████████████████████████[39m[2m[22m [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [33m⚠ 2 warnings[39m  [2macross 2/120 files[22m  [2min 8.4s[22m          [2m│[22m
+  [2m└────────────────────────────────────────────────────┘[22m
+
+[2m  Full diagnostics written to C:\Users\jeane\AppData\Local\Temp\react-doctor-f314111e-932c-487c-b277-c0142baf2802[22m
+
+[2m  Share your results: [36mhttps://www.react.doctor/share?p=mirror&s=99&w=2&f=2[39m[22m
+
