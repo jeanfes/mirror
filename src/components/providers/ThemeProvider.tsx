@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import {
-    DEFAULT_RESOLVED_THEME,
     DEFAULT_THEME_PREFERENCE,
     getCookieValue,
     parseThemePreference,
@@ -117,8 +116,4 @@ export function useTheme() {
     }
 
     return context
-}
-
-function getInitialResolvedTheme(preference: ThemePreference, fallbackResolvedTheme?: ResolvedTheme) {
-    return resolveThemePreference(preference, fallbackResolvedTheme ?? DEFAULT_RESOLVED_THEME)
 }

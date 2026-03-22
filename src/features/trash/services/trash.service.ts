@@ -40,9 +40,7 @@ export async function listTrash(
       .order("deleted_at", { ascending: false }),
     supabase
       .from("generation_history")
-      .select(
-        "id, kind, post_author, post_snippet, generated_text, deleted_at"
-      )
+      .select("id, kind, post_author, post_snippet, generated_text, deleted_at")
       .eq("user_id", userId)
       .not("deleted_at", "is", null)
       .order("deleted_at", { ascending: false }),
@@ -78,44 +76,19 @@ export async function listTrash(
   )
 }
 
-async function identifyTrashItemType(
-  supabase: SupabaseClient,
-  userId: string,
-  id: string
-): Promise<"profile" | "comment" | null> {
-  const { data: profile } = await supabase
-    .from("voice_profiles")
-    .select("id")
-    .eq("id", id)
-    .eq("user_id", userId)
-    .not("deleted_at", "is", null)
-    .maybeSingle()
-
-  if (profile) return "profile"
-
-  const { data: history } = await supabase
-    .from("generation_history")
-    .select("id")
-    .eq("id", id)
-    .eq("user_id", userId)
-    .not("deleted_at", "is", null)
-    .maybeSingle()
-
-  return history ? "comment" : null
-}
-
+/**
+ * Pass kind from the cache — avoids 2 extra SQL queries per operation.
+ * Previously identifyTrashItemType() ran 2 queries to detect the type;
+ * now the caller passes it since TrashItem already has the kind field.
+ */
 export async function restoreTrashItem(
   supabase: SupabaseClient,
   userId: string,
-  id: string
-): Promise<{ id: string; kind: "profile" | "comment" }> {
-  const kind = await identifyTrashItemType(supabase, userId, id)
-  if (!kind) throw new Error(`Item ${id} not found in trash`)
-
+  id: string,
+  kind: TrashItem["kind"]
+): Promise<{ id: string; kind: TrashItem["kind"] }> {
   if (kind === "profile") {
-    const { error } = await supabase.rpc("restore_profile_from_trash", {
-      p_profile_id: id,
-    })
+    const { error } = await supabase.rpc("restore_profile_from_trash", { p_profile_id: id })
     if (error) {
       const { error: fbErr } = await supabase
         .from("voice_profiles")
@@ -125,9 +98,7 @@ export async function restoreTrashItem(
       if (fbErr) throw fbErr
     }
   } else {
-    const { error } = await supabase.rpc("restore_history_from_trash", {
-      p_history_id: id,
-    })
+    const { error } = await supabase.rpc("restore_history_from_trash", { p_history_id: id })
     if (error) {
       const { error: fbErr } = await supabase
         .from("generation_history")
@@ -137,22 +108,17 @@ export async function restoreTrashItem(
       if (fbErr) throw fbErr
     }
   }
-
   return { id, kind }
 }
 
 export async function deleteTrashItem(
   supabase: SupabaseClient,
   userId: string,
-  id: string
-): Promise<{ id: string; kind: "profile" | "comment" }> {
-  const kind = await identifyTrashItemType(supabase, userId, id)
-  if (!kind) throw new Error(`Item ${id} not found in trash`)
-
+  id: string,
+  kind: TrashItem["kind"]
+): Promise<{ id: string; kind: TrashItem["kind"] }> {
   if (kind === "profile") {
-    const { error } = await supabase.rpc("permanently_delete_profile", {
-      p_profile_id: id,
-    })
+    const { error } = await supabase.rpc("permanently_delete_profile", { p_profile_id: id })
     if (error) {
       const { error: fbErr } = await supabase
         .from("voice_profiles")
@@ -162,9 +128,7 @@ export async function deleteTrashItem(
       if (fbErr) throw fbErr
     }
   } else {
-    const { error } = await supabase.rpc("permanently_delete_history", {
-      p_history_id: id,
-    })
+    const { error } = await supabase.rpc("permanently_delete_history", { p_history_id: id })
     if (error) {
       const { error: fbErr } = await supabase
         .from("generation_history")
@@ -174,6 +138,5 @@ export async function deleteTrashItem(
       if (fbErr) throw fbErr
     }
   }
-
   return { id, kind }
 }

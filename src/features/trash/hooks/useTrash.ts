@@ -25,12 +25,9 @@ export function useTrash() {
     enabled: !!userId,
   })
 
-  const restoreMutation = useMutation<
-    { id: string; kind: "profile" | "comment" },
-    Error,
-    string
-  >({
-    mutationFn: (id: string) => restoreTrashItem(supabase, userId!, id),
+  const restoreMutation = useMutation({
+    mutationFn: ({ id, kind }: { id: string; kind: TrashItem["kind"] }) =>
+      restoreTrashItem(supabase, userId!, id, kind),
     onSuccess: (result) => {
       queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
         prev?.filter((item) => item.id !== result.id) ?? []
@@ -38,12 +35,9 @@ export function useTrash() {
     },
   })
 
-  const deleteMutation = useMutation<
-    { id: string; kind: "profile" | "comment" },
-    Error,
-    string
-  >({
-    mutationFn: (id: string) => deleteTrashItem(supabase, userId!, id),
+  const deleteMutation = useMutation({
+    mutationFn: ({ id, kind }: { id: string; kind: TrashItem["kind"] }) =>
+      deleteTrashItem(supabase, userId!, id, kind),
     onSuccess: (result) => {
       queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
         prev?.filter((item) => item.id !== result.id) ?? []
@@ -54,8 +48,10 @@ export function useTrash() {
   return {
     ...query,
     isLoading: query.isLoading || isAuthenticating,
-    restore: restoreMutation.mutateAsync,
-    deleteForever: deleteMutation.mutateAsync,
+    restore: (id: string, kind: TrashItem["kind"]) =>
+      restoreMutation.mutateAsync({ id, kind }),
+    deleteForever: (id: string, kind: TrashItem["kind"]) =>
+      deleteMutation.mutateAsync({ id, kind }),
     isMutating: restoreMutation.isPending || deleteMutation.isPending,
   }
 }

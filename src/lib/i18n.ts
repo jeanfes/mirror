@@ -1018,7 +1018,7 @@ export const dictionaries = {
         "defaultsLabel": "Defaults",
         "languageBaselineTitle": "Language and profile baseline",
         "languageBaselineDesc": "These choices define how Mirror initializes before each generation.",
-        "whyMattersTitle": "Why esto importa",
+        "whyMattersTitle": "Why this matters",
         "whyMattersDesc": "Good defaults reduce manual cleanup and keep results consistent with your normal writing style.",
         "preferencesUpdated": "Preferences updated",
         "preferencesError": "Could not save preferences",

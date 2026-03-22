@@ -1,6 +1,12 @@
 import { addDays } from "date-fns"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow } from "@/types/database.types"
+import type {
+  UserAccount,
+  Invoice,
+  PaymentMethod,
+  UserAccountRow,
+  InvoiceRow,
+} from "@/types/database.types"
 
 export type { Invoice, PaymentMethod }
 
@@ -19,50 +25,57 @@ export const planDefinitions: PlanDefinition[] = [
   {
     name: "Free",
     price: "$0",
-    credits: 50,
-    summary: "Basic generation access for occasional posting without advanced tuning.",
+    credits: 120,
+    summary:
+      "Basic generation access for occasional posting without advanced tuning.",
     features: [
-      "50 monthly generations",
+      "120 monthly generations",
       "1 basic voice profile",
       "Standard tone matching",
-      "Community support"
-    ]
+      "Community support",
+    ],
   },
   {
     name: "Pro",
     price: "$19",
-    credits: 250,
-    summary: "For professionals building a regular cadence and refining their own voice.",
+    credits: 1200,
+    summary:
+      "For professionals building a regular cadence and refining their own voice.",
     recommended: true,
     features: [
-      "250 monthly generations",
-      "3 dynamic voice profiles",
+      "1,200 monthly generations",
+      "10 dynamic voice profiles",
       "Tone strictness controls",
-      "Basic history archive"
-    ]
+      "Basic history archive",
+    ],
   },
   {
     name: "Elite",
     price: "$49",
-    credits: 1000,
-    summary: "High volume output and multi-persona testing for advanced users.",
+    credits: 4000,
+    summary:
+      "High volume output and multi-persona testing for advanced users.",
     features: [
-      "1,000 monthly generations",
+      "4,000 monthly generations",
       "Unlimited voice profiles",
       "Unlimited history archive",
-      "Priority API processing"
-    ]
-  }
+      "Priority API processing",
+    ],
+  },
 ]
 
-export async function setPlan(supabase: SupabaseClient, userId: string, planName: PlanName) {
+export async function setPlan(
+  supabase: SupabaseClient,
+  userId: string,
+  planName: PlanName
+) {
   const { data, error } = await supabase
     .from("user_account")
     .update({ plan: planName })
     .eq("user_id", userId)
     .select("*")
     .single()
-  
+
   if (error) throw error
   return mapRowToAccountStatus(data as UserAccountRow)
 }
@@ -74,20 +87,19 @@ function mapRowToAccountStatus(row: UserAccountRow): UserAccount {
     creditsUsedThisMonth: row.credits_used_this_month ?? 0,
     renewalDate: row.renewal_date ?? addDays(new Date(), 30).toISOString(),
     subscriptionStatus: row.subscription_status,
-    lastGenerationAt: row.last_generation_at
+    lastGenerationAt: row.last_generation_at,
   }
 }
 
 function formatAmount(currency: string, amountPaidInCents: number) {
   const normalizedCurrency = currency.toUpperCase()
   const amount = amountPaidInCents / 100
-
   try {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: normalizedCurrency,
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(amount)
   } catch {
     return `$${amount.toFixed(2)}`
@@ -96,13 +108,18 @@ function formatAmount(currency: string, amountPaidInCents: number) {
 
 function mapInvoiceStatus(rawStatus: string): Invoice["status"] {
   const normalized = rawStatus.trim().toLowerCase()
-  if (["paid", "pending", "failed", "refunded", "void"].includes(normalized)) {
+  if (
+    ["paid", "pending", "failed", "refunded", "void"].includes(normalized)
+  ) {
     return normalized as Invoice["status"]
   }
   return "unknown"
 }
 
-export async function getAccount(supabase: SupabaseClient, userId: string): Promise<UserAccount> {
+export async function getAccount(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UserAccount> {
   const { data, error } = await supabase
     .from("user_account")
     .select("*")
@@ -118,15 +135,17 @@ export async function getAccount(supabase: SupabaseClient, userId: string): Prom
       creditsUsedThisMonth: 0,
       renewalDate: addDays(new Date(), 30).toISOString(),
       subscriptionStatus: null,
-      lastGenerationAt: null
+      lastGenerationAt: null,
     }
   }
 
   return mapRowToAccountStatus(data as UserAccountRow)
 }
 
-
-export async function getInvoices(supabase: SupabaseClient, userId: string): Promise<Invoice[]> {
+export async function getInvoices(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<Invoice[]> {
   const { data, error } = await supabase
     .from("invoices")
     .select("*")
@@ -140,26 +159,39 @@ export async function getInvoices(supabase: SupabaseClient, userId: string): Pro
     date: invoice.created_at,
     amount: formatAmount(invoice.currency, invoice.amount_paid),
     status: mapInvoiceStatus(invoice.status),
-    downloadUrl: invoice.invoice_url ?? "#"
+    downloadUrl: invoice.invoice_url ?? "#",
   }))
 }
 
 interface BillingInfoResponse {
-  payment_method?: { id: string; brand: string; last4: string; exp_month: number; exp_year: number }
+  payment_method?: {
+    id: string
+    brand: string
+    last4: string
+    exp_month: number
+    exp_year: number
+  }
   subscription?: { update_payment_method_url: string }
   portal_url?: string
 }
 
-
 export async function getBillingInfo(supabase: SupabaseClient) {
   const {
-    data: { session }
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  const accessToken = session?.access_token
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 
-  if (!accessToken || !supabaseUrl) {
+  if (!user || !supabaseUrl) {
+    return { paymentMethod: null, updateUrl: null, portalUrl: null }
+  }
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  const accessToken = session?.access_token
+
+  if (!accessToken) {
     return { paymentMethod: null, updateUrl: null, portalUrl: null }
   }
 
@@ -169,9 +201,9 @@ export async function getBillingInfo(supabase: SupabaseClient) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     })
 
     if (!response.ok) {
@@ -187,10 +219,11 @@ export async function getBillingInfo(supabase: SupabaseClient) {
 
   if (payload.payment_method) {
     const brand = (payload.payment_method.brand ?? "visa").toLowerCase()
-    const mappedType: PaymentMethod["brand"] =
-      brand.includes("master") ? "mastercard" :
-      brand.includes("amex") ? "amex" :
-      "visa"
+    const mappedType: PaymentMethod["brand"] = brand.includes("master")
+      ? "mastercard"
+      : brand.includes("amex")
+        ? "amex"
+        : "visa"
 
     const month = String(payload.payment_method.exp_month).padStart(2, "0")
     const year = String(payload.payment_method.exp_year).slice(-2)
@@ -200,15 +233,13 @@ export async function getBillingInfo(supabase: SupabaseClient) {
       brand: mappedType,
       last4: payload.payment_method.last4 ?? "0000",
       expiry: `${month}/${year}`,
-      isDefault: true
+      isDefault: true,
     }
   }
 
   return {
     paymentMethod: pm,
     updateUrl: payload.subscription?.update_payment_method_url ?? null,
-    portalUrl: payload.portal_url ?? null
+    portalUrl: payload.portal_url ?? null,
   }
 }
-
-
