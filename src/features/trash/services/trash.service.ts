@@ -1,4 +1,4 @@
-import { getAuthContext } from "@/lib/supabase/auth-context"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 export interface TrashItem {
   id: string
@@ -24,11 +24,14 @@ interface DeletedHistoryRow {
   deleted_at: string
 }
 
-
-export async function listTrash(): Promise<TrashItem[]> {
-  const { supabase, userId } = await getAuthContext()
-
-  const [{ data: deletedProfiles, error: profilesError }, { data: deletedHistory, error: historyError }] = await Promise.all([
+export async function listTrash(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<TrashItem[]> {
+  const [
+    { data: deletedProfiles, error: profilesError },
+    { data: deletedHistory, error: historyError },
+  ] = await Promise.all([
     supabase
       .from("voice_profiles")
       .select("id, name, description, deleted_at")
@@ -37,37 +40,46 @@ export async function listTrash(): Promise<TrashItem[]> {
       .order("deleted_at", { ascending: false }),
     supabase
       .from("generation_history")
-      .select("id, kind, post_author, post_snippet, generated_text, deleted_at")
+      .select(
+        "id, kind, post_author, post_snippet, generated_text, deleted_at"
+      )
       .eq("user_id", userId)
       .not("deleted_at", "is", null)
-      .order("deleted_at", { ascending: false })
+      .order("deleted_at", { ascending: false }),
   ])
 
   if (profilesError) throw profilesError
   if (historyError) throw historyError
 
-  const profileItems: TrashItem[] = ((deletedProfiles ?? []) as DeletedProfileRow[]).map((item) => ({
+  const profileItems: TrashItem[] = (
+    (deletedProfiles ?? []) as DeletedProfileRow[]
+  ).map((item) => ({
     id: item.id,
     title: item.name,
     kind: "profile",
     deletedAt: Date.parse(item.deleted_at),
-    summary: item.description ?? "Deleted profile"
+    summary: item.description ?? "Deleted profile",
   }))
 
-  const historyItems: TrashItem[] = ((deletedHistory ?? []) as DeletedHistoryRow[]).map((item) => ({
+  const historyItems: TrashItem[] = (
+    (deletedHistory ?? []) as DeletedHistoryRow[]
+  ).map((item) => ({
     id: item.id,
-    title: item.post_author ? `Comment draft for ${item.post_author}` : "Deleted generation",
+    title: item.post_author
+      ? `Comment draft for ${item.post_author}`
+      : "Deleted generation",
     kind: item.kind === "comment" ? "comment" : "draft",
     deletedAt: Date.parse(item.deleted_at),
-    summary: item.post_snippet ?? item.generated_text
+    summary: item.post_snippet ?? item.generated_text,
   }))
 
-  return [...profileItems, ...historyItems].sort((a, b) => b.deletedAt - a.deletedAt)
+  return [...profileItems, ...historyItems].sort(
+    (a, b) => b.deletedAt - a.deletedAt
+  )
 }
 
-
 async function identifyTrashItemType(
-  supabase: NonNullable<Awaited<ReturnType<typeof getAuthContext>>["supabase"]>,
+  supabase: SupabaseClient,
   userId: string,
   id: string
 ): Promise<"profile" | "comment" | null> {
@@ -92,21 +104,36 @@ async function identifyTrashItemType(
   return history ? "comment" : null
 }
 
-export async function restoreTrashItem(id: string): Promise<{ id: string; kind: "profile" | "comment" }> {
-  const { supabase, userId } = await getAuthContext()
+export async function restoreTrashItem(
+  supabase: SupabaseClient,
+  userId: string,
+  id: string
+): Promise<{ id: string; kind: "profile" | "comment" }> {
   const kind = await identifyTrashItemType(supabase, userId, id)
-  if (!kind) throw new Error(`Item with id ${id} not found in trash`)
+  if (!kind) throw new Error(`Item ${id} not found in trash`)
 
   if (kind === "profile") {
-    const { error } = await supabase.rpc("restore_profile_from_trash", { p_profile_id: id })
+    const { error } = await supabase.rpc("restore_profile_from_trash", {
+      p_profile_id: id,
+    })
     if (error) {
-      const { error: fbErr } = await supabase.from("voice_profiles").update({ deleted_at: null }).eq("id", id).eq("user_id", userId)
+      const { error: fbErr } = await supabase
+        .from("voice_profiles")
+        .update({ deleted_at: null })
+        .eq("id", id)
+        .eq("user_id", userId)
       if (fbErr) throw fbErr
     }
   } else {
-    const { error } = await supabase.rpc("restore_history_from_trash", { p_history_id: id })
+    const { error } = await supabase.rpc("restore_history_from_trash", {
+      p_history_id: id,
+    })
     if (error) {
-      const { error: fbErr } = await supabase.from("generation_history").update({ deleted_at: null }).eq("id", id).eq("user_id", userId)
+      const { error: fbErr } = await supabase
+        .from("generation_history")
+        .update({ deleted_at: null })
+        .eq("id", id)
+        .eq("user_id", userId)
       if (fbErr) throw fbErr
     }
   }
@@ -114,22 +141,36 @@ export async function restoreTrashItem(id: string): Promise<{ id: string; kind: 
   return { id, kind }
 }
 
-
-export async function deleteTrashItem(id: string): Promise<{ id: string; kind: "profile" | "comment" }> {
-  const { supabase, userId } = await getAuthContext()
+export async function deleteTrashItem(
+  supabase: SupabaseClient,
+  userId: string,
+  id: string
+): Promise<{ id: string; kind: "profile" | "comment" }> {
   const kind = await identifyTrashItemType(supabase, userId, id)
-  if (!kind) throw new Error(`Item with id ${id} not found in trash`)
+  if (!kind) throw new Error(`Item ${id} not found in trash`)
 
   if (kind === "profile") {
-    const { error } = await supabase.rpc("permanently_delete_profile", { p_profile_id: id })
+    const { error } = await supabase.rpc("permanently_delete_profile", {
+      p_profile_id: id,
+    })
     if (error) {
-      const { error: fbErr } = await supabase.from("voice_profiles").delete().eq("id", id).eq("user_id", userId)
+      const { error: fbErr } = await supabase
+        .from("voice_profiles")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId)
       if (fbErr) throw fbErr
     }
   } else {
-    const { error } = await supabase.rpc("permanently_delete_history", { p_history_id: id })
+    const { error } = await supabase.rpc("permanently_delete_history", {
+      p_history_id: id,
+    })
     if (error) {
-      const { error: fbErr } = await supabase.from("generation_history").delete().eq("id", id).eq("user_id", userId)
+      const { error: fbErr } = await supabase
+        .from("generation_history")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId)
       if (fbErr) throw fbErr
     }
   }

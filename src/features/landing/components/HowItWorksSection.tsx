@@ -2,8 +2,8 @@
 
 import { m } from "motion/react";
 import { Download, SlidersHorizontal, Keyboard } from "lucide-react";
+import { Dictionary } from "@/lib/i18n";
 
-import { Dictionary } from "@/types/i18n";
 
 interface HowItWorksSectionProps {
     t: Dictionary;

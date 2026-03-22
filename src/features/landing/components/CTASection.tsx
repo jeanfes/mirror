@@ -4,8 +4,8 @@ import { m } from "motion/react";
 import Link from "next/link";
 import { Rocket } from "lucide-react";
 
-import { Dictionary } from "@/types/i18n";
 import { Routes } from "@/lib/routes";
+import { Dictionary } from "@/lib/i18n";
 
 interface CTASectionProps {
     t: Dictionary;

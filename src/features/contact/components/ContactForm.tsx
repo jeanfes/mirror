@@ -4,9 +4,9 @@ import { Send } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
-import { toast } from "sonner";
+import { Dictionary } from "@/lib/i18n";
 import { m } from "motion/react";
-import { Dictionary } from "@/types/i18n";
+import { toast } from "sonner";
 
 interface ContactFormProps {
     t: Dictionary;

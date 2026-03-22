@@ -2,19 +2,20 @@
 
 import { useUserStore } from "@/store/useUserStore"
 
+
 interface User {
-    id: string
-    email?: string
-    name?: string
-    avatar?: string
+  id: string
+  name?: string
+  email?: string
+  avatar?: string
 }
 
 export function UserHydrator({ user }: { user: User }) {
-    const initialized = useUserStore((state) => state.user?.id === user.id)
+  const { user: storeUser } = useUserStore.getState()
 
-    if (!initialized) {
-        useUserStore.setState({ user })
-    }
+  if (storeUser?.id !== user.id) {
+    useUserStore.getState().setUser(user)
+  }
 
-    return null
+  return null
 }

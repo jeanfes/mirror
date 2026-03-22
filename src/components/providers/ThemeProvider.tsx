@@ -79,7 +79,6 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
 
     useEffect(() => {
         const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY)
-
         syncFromEnvironment()
         mediaQuery.addEventListener("change", handleSystemThemeChange)
         window.addEventListener("storage", handleStorage)

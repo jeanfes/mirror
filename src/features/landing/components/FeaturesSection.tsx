@@ -2,14 +2,14 @@
 
 import { m } from "motion/react";
 import { Bot, Layers, Fingerprint } from "lucide-react";
+import { Dictionary } from "@/lib/i18n";
 
-import { Dictionary } from "@/types/i18n";
 
-interface LandingFeaturesSectionProps {
+interface FeaturesSectionProps {
     t: Dictionary;
 }
 
-export function LandingFeaturesSection({ t }: LandingFeaturesSectionProps) {
+export function FeaturesSection({ t }: FeaturesSectionProps) {
     const fadeInUp = {
         initial: { opacity: 0, y: 20 },
         whileInView: { opacity: 1, y: 0 },
