@@ -1,7 +1,10 @@
+import { Metadata, Viewport } from "next"
 import { Space_Grotesk } from "next/font/google"
 import { cookies } from "next/headers"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from "next/script"
+import { Toaster } from "sonner"
+
 import { AppProviders } from "@/components/providers/AppProviders"
 import {
   THEME_PREFERENCE_COOKIE,
@@ -13,6 +16,7 @@ import {
   resolveThemePreference,
   buildThemeInitScript,
 } from "@/lib/theme"
+
 import "../styles/globals.css"
 
 const spaceGrotesk = Space_Grotesk({
@@ -21,6 +25,25 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   weight: ["300", "400", "500", "700"],
 })
+
+export const metadata: Metadata = {
+  title: {
+    default: "Mirror",
+    template: "%s | Mirror",
+  },
+  description: "Workspace inteligente con IA local-first.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/favicon.ico",
+  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export default async function RootLayout({
   children,
@@ -31,10 +54,8 @@ export default async function RootLayout({
   const pref = cookieStore.get(THEME_PREFERENCE_COOKIE)?.value
   const res = cookieStore.get(THEME_RESOLVED_COOKIE)?.value
 
-  const initialThemePreference =
-    parseThemePreference(pref) ?? DEFAULT_THEME_PREFERENCE
-  const systemFallbackTheme =
-    parseResolvedTheme(res) ?? DEFAULT_RESOLVED_THEME
+  const initialThemePreference = parseThemePreference(pref) ?? DEFAULT_THEME_PREFERENCE
+  const systemFallbackTheme = parseResolvedTheme(res) ?? DEFAULT_RESOLVED_THEME
   const initialResolvedTheme = resolveThemePreference(
     initialThemePreference,
     systemFallbackTheme
@@ -54,23 +75,31 @@ export default async function RootLayout({
         </Script>
       </head>
       <body
-        className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased`}
+        className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
       >
         <AppProviders
           initialThemePreference={initialThemePreference}
           initialResolvedTheme={initialResolvedTheme}
         >
           {children}
+          <Toaster 
+            position="top-right" 
+            richColors 
+            closeButton
+            toastOptions={{
+              className: 'font-sans border-border-soft bg-surface-overlay/80 backdrop-blur-md',
+            }} 
+          />
         </AppProviders>
+
         <SpeedInsights />
-        {/* ReactScan — only injected in development */}
+
         {process.env.NODE_ENV === "development" && <DevScan />}
       </body>
     </html>
   )
 }
 
-// Lazy-loaded only in development so it never ships to production
 async function DevScan() {
   const { ReactScan } = await import("@/components/performance/RootScan")
   return <ReactScan />
