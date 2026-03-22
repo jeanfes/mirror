@@ -128,7 +128,7 @@ export async function getAccount(): Promise<UserAccount> {
   return mapRowToAccountStatus(data as UserAccountRow)
 }
 
-export async function getPlanQuotas(planName: PlanQuotasRow["plan"]) {
+async function getPlanQuotas(planName: PlanQuotasRow["plan"]) {
   const { supabase } = await getAuthContext()
   const { data, error } = await supabase
     .from("plan_quotas")
@@ -230,7 +230,7 @@ export async function getBillingInfo() {
   }
 }
 
-export async function getUsageStats() {
+async function getUsageStats() {
   const { supabase, userId } = await getAuthContext()
 
   const startOfMonth = new Date()
@@ -263,7 +263,7 @@ export async function getUsageStats() {
   }
 }
 
-export async function createCheckout(plan: "Pro" | "Elite") {
+async function createCheckout(plan: "Pro" | "Elite") {
   const { supabase } = await getAuthContext()
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://tudominio.com"

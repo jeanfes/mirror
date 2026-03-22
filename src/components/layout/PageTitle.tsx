@@ -39,9 +39,7 @@ export function PageTitle() {
     })()
 
     useEffect(() => {
-        if (pageTitle) {
-            document.title = `${pageTitle} | Mirror`
-        }
+        document.title = pageTitle ? `${pageTitle} | Mirror` : "Mirror"
     }, [pageTitle])
 
     if (!pathname) return null

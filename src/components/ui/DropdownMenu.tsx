@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils"
 
 export const DropdownMenu = DropdownMenuPrimitive.Root
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
-export const DropdownMenuGroup = DropdownMenuPrimitive.Group
-export const DropdownMenuPortal = DropdownMenuPrimitive.Portal
-export const DropdownMenuSub = DropdownMenuPrimitive.Sub
+const DropdownMenuGroup = DropdownMenuPrimitive.Group
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal
+const DropdownMenuSub = DropdownMenuPrimitive.Sub
 export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
 export function DropdownMenuContent({
@@ -47,7 +47,7 @@ export function DropdownMenuItem({
     )
 }
 
-export function DropdownMenuCheckboxItem({
+function DropdownMenuCheckboxItem({
     className,
     children,
     checked,
@@ -95,10 +95,10 @@ export function DropdownMenuRadioItem({
     )
 }
 
-export const DropdownMenuLabel = DropdownMenuPrimitive.Label
-export const DropdownMenuSeparator = DropdownMenuPrimitive.Separator
+const DropdownMenuLabel = DropdownMenuPrimitive.Label
+const DropdownMenuSeparator = DropdownMenuPrimitive.Separator
 
-export function DropdownMenuSubTrigger({
+function DropdownMenuSubTrigger({
     className,
     inset,
     children,
@@ -121,7 +121,7 @@ export function DropdownMenuSubTrigger({
     )
 }
 
-export function DropdownMenuSubContent({
+function DropdownMenuSubContent({
     className,
     ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
@@ -136,7 +136,7 @@ export function DropdownMenuSubContent({
     )
 }
 
-export function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
+function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
     return (
         <span
             className={cn("ml-auto text-xs tracking-widest opacity-60", className)}

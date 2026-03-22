@@ -81,9 +81,9 @@ export function ProfileCard({ profile, onEdit, onToggle, onDelete }: ProfileCard
                 </div>
 
                 <div className="mt-4 space-y-2.5">
-                    {(profile.examples ?? []).map((example: string, index: number) => (
-                        <div key={`${profile.id}_example_${index}`} className="rounded-2xl border border-border-soft bg-surface-card px-3.5 py-3">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-text">Example {index + 1}</p>
+                    {(profile.examples ?? []).map((example: string, i: number) => (
+                        <div key={example} className="rounded-2xl border border-border-soft bg-surface-card px-3.5 py-3">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-text">Example {i + 1}</p>
                             <p className="mt-2 text-[13px] leading-6 text-secondary-text">{example}</p>
                         </div>
                     ))}

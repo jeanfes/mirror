@@ -216,7 +216,7 @@ export async function moveToTrash(id: string): Promise<{ id: string }> {
   return { id }
 }
 
-export async function getProfileStats() {
+async function getProfileStats() {
   const { supabase, userId } = await getAuthContext()
   
   const [totalRes, emojiRes] = await Promise.all([

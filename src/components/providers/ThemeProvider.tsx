@@ -50,35 +50,35 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
     }))
     const { themePreference, systemTheme } = state
 
+    const syncFromEnvironment = useMemo(() => () => {
+        const storedPreference = parseThemePreference(window.localStorage.getItem(THEME_STORAGE_KEY))
+        const cookiePreference = parseThemePreference(getCookieValue(THEME_PREFERENCE_COOKIE, document.cookie))
+        const nextPreference = storedPreference ?? cookiePreference ?? initialThemePreference ?? DEFAULT_THEME_PREFERENCE
+        const nextSystemTheme = getSystemTheme()
+
+        setState({
+            themePreference: nextPreference,
+            systemTheme: nextSystemTheme
+        })
+    }, [initialThemePreference])
+
+    const handleSystemThemeChange = useMemo(() => () => {
+        setState(prev => ({ ...prev, systemTheme: getSystemTheme() }))
+    }, [])
+
+    const handleStorage = useMemo(() => (event: StorageEvent) => {
+        if (event.key !== THEME_STORAGE_KEY) {
+            return
+        }
+
+        const nextPreference = parseThemePreference(event.newValue)
+        if (nextPreference) {
+            setState(prev => ({ ...prev, themePreference: nextPreference }))
+        }
+    }, [])
+
     useEffect(() => {
         const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY)
-
-        const syncFromEnvironment = () => {
-            const storedPreference = parseThemePreference(window.localStorage.getItem(THEME_STORAGE_KEY))
-            const cookiePreference = parseThemePreference(getCookieValue(THEME_PREFERENCE_COOKIE, document.cookie))
-            const nextPreference = storedPreference ?? cookiePreference ?? initialThemePreference ?? DEFAULT_THEME_PREFERENCE
-            const nextSystemTheme = getSystemTheme()
-
-            setState({
-                themePreference: nextPreference,
-                systemTheme: nextSystemTheme
-            })
-        }
-
-        const handleSystemThemeChange = () => {
-            setState(prev => ({ ...prev, systemTheme: getSystemTheme() }))
-        }
-
-        const handleStorage = (event: StorageEvent) => {
-            if (event.key !== THEME_STORAGE_KEY) {
-                return
-            }
-
-            const nextPreference = parseThemePreference(event.newValue)
-            if (nextPreference) {
-                setState(prev => ({ ...prev, themePreference: nextPreference }))
-            }
-        }
 
         syncFromEnvironment()
         mediaQuery.addEventListener("change", handleSystemThemeChange)
@@ -88,7 +88,7 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
             mediaQuery.removeEventListener("change", handleSystemThemeChange)
             window.removeEventListener("storage", handleStorage)
         }
-    }, [initialThemePreference])
+    }, [syncFromEnvironment, handleSystemThemeChange, handleStorage])
 
     const resolvedTheme = resolveThemePreference(themePreference, systemTheme)
 
@@ -120,6 +120,6 @@ export function useTheme() {
     return context
 }
 
-export function getInitialResolvedTheme(preference: ThemePreference, fallbackResolvedTheme?: ResolvedTheme) {
+function getInitialResolvedTheme(preference: ThemePreference, fallbackResolvedTheme?: ResolvedTheme) {
     return resolveThemePreference(preference, fallbackResolvedTheme ?? DEFAULT_RESOLVED_THEME)
 }

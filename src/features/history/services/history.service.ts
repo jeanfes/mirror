@@ -101,7 +101,7 @@ export async function moveToTrash(id: string): Promise<void> {
   }
 }
 
-export async function getHistoryStats() {
+async function getHistoryStats() {
   const { supabase, userId } = await getAuthContext()
 
   const { data: counts, error } = await supabase
@@ -124,7 +124,7 @@ export async function getHistoryStats() {
   }
 }
 
-export interface GenerateInput {
+interface GenerateInput {
   profile_id: string
   kind: "comment" | "post" | "rewrite"
   post_snippet?: string
@@ -135,7 +135,7 @@ export interface GenerateInput {
   origin?: "web" | "extension"
 }
 
-export async function generateContent(input: GenerateInput) {
+async function generateContent(input: GenerateInput) {
   const { supabase } = await getAuthContext()
 
   const { data, error } = await supabase.functions.invoke("generate", {

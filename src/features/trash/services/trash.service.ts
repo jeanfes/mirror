@@ -24,7 +24,7 @@ interface DeletedHistoryRow {
   deleted_at: string
 }
 
-export async function getTrashCounts() {
+async function getTrashCounts() {
   const { supabase, userId } = await getAuthContext()
 
   const [profilesRes, historyRes] = await Promise.all([
@@ -135,7 +135,7 @@ export async function restoreTrashItem(id: string): Promise<{ id: string; kind: 
   return { id, kind }
 }
 
-export async function restoreAll() {
+async function restoreAll() {
   const { supabase } = await getAuthContext()
   const { data, error } = await supabase.rpc("restore_all_from_trash")
   if (error) throw error

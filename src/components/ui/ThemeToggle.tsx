@@ -82,7 +82,7 @@ interface ThemeToggleProps {
     className?: string
 }
 
-export function ThemeDropdown({ className }: ThemeToggleProps) {
+function ThemeDropdown({ className }: ThemeToggleProps) {
     const { themePreference, setThemePreference } = useTheme()
     const selectedOption = themeOptions.find((option) => option.value === themePreference) ?? themeOptions[0]
     const SelectedIcon = selectedOption.icon

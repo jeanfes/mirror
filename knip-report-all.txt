@@ -1,0 +1,42 @@
+[93m[4mUnlisted dependencies[24m[39m (1)
+postcss  postcss.config.mjs
+[93m[4mUnused exports[24m[39m (31)
+DEFAULT_UNAUTHENTICATED_ROUTE            src/lib/routes.ts:32:14                                       
+PRIVATE_PATHS                            src/lib/routes.ts:34:14                                       
+AUTH_PATHS                               src/lib/routes.ts:35:14                                       
+KNOWN_APP_PATHS                          src/lib/routes.ts:36:14                                       
+isKnownAppPath                 function  src/lib/routes.ts:56:17                                       
+getPlanQuotas                  function  src/features/billing/services/billing.service.ts:131:23       
+getUsageStats                  function  src/features/billing/services/billing.service.ts:233:23       
+createCheckout                 function  src/features/billing/services/billing.service.ts:266:23       
+getTrashCounts                 function  src/features/trash/services/trash.service.ts:27:23            
+restoreAll                     function  src/features/trash/services/trash.service.ts:138:23           
+getProfileStats                function  src/features/profiles/services/profiles.service.ts:219:23     
+getInitialResolvedTheme        function  src/components/providers/ThemeProvider.tsx:123:17             
+ThemeDropdown                  function  src/components/ui/ThemeToggle.tsx:85:17                       
+getHistoryStats                function  src/features/history/services/history.service.ts:104:23       
+generateContent                function  src/features/history/services/history.service.ts:138:23       
+DialogClose                              src/components/ui/Dialog.tsx:9:14                             
+DialogPortal                   function  src/components/ui/Dialog.tsx:11:17                            
+DropdownMenuGroup                        src/components/ui/DropdownMenu.tsx:9:14                       
+DropdownMenuPortal                       src/components/ui/DropdownMenu.tsx:10:14                      
+DropdownMenuSub                          src/components/ui/DropdownMenu.tsx:11:14                      
+DropdownMenuCheckboxItem       function  src/components/ui/DropdownMenu.tsx:50:17                      
+DropdownMenuLabel                        src/components/ui/DropdownMenu.tsx:98:14                      
+DropdownMenuSeparator                    src/components/ui/DropdownMenu.tsx:99:14                      
+DropdownMenuSubTrigger         function  src/components/ui/DropdownMenu.tsx:101:17                     
+DropdownMenuSubContent         function  src/components/ui/DropdownMenu.tsx:124:17                     
+DropdownMenuShortcut           function  src/components/ui/DropdownMenu.tsx:139:17                     
+updateUserName                 function  src/features/settings/services/user-settings.service.ts:102:23
+updateUserAvatar               function  src/features/settings/services/user-settings.service.ts:112:23
+exportUserData                 function  src/features/settings/services/user-settings.service.ts:138:23
+deleteAccount                  function  src/features/settings/services/user-settings.service.ts:152:23
+initializePostLogin            function  src/features/auth/services/auth.service.ts:46:23              
+[93m[4mUnused exported types[24m[39m (7)
+SelectOption     interface  src/components/ui/Select.tsx:7:18                      
+UserProfileRow   interface  src/types/database.types.ts:1:18                       
+UserSettingsRow  interface  src/types/database.types.ts:10:18                      
+PlanQuotas       interface  src/types/database.types.ts:162:18                     
+GenerateInput    interface  src/features/history/services/history.service.ts:127:18
+InputProps       interface  src/components/ui/Input.tsx:4:18                       
+TextareaProps    interface  src/components/ui/Textarea.tsx:4:18                    

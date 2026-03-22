@@ -1,4 +1,4 @@
-export interface UserProfileRow {
+interface UserProfileRow {
   id: string
   name: string
   avatar_url: string | null
@@ -7,7 +7,7 @@ export interface UserProfileRow {
   created_at: string
 }
 
-export interface UserSettingsRow {
+interface UserSettingsRow {
   user_id: string
   language: "es" | "en" | "pt" | "fr" | "de"
   theme: "light" | "dark" | "auto"
@@ -159,7 +159,7 @@ export interface UserAccount {
   lastGenerationAt: string | null
 }
 
-export interface PlanQuotas {
+interface PlanQuotas {
   plan: PlanQuotasRow["plan"]
   monthlyGenerations: number
   maxProfiles: number

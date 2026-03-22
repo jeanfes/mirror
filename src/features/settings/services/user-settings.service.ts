@@ -99,7 +99,7 @@ export async function updateUserSettings(input: Partial<UserSettings>): Promise<
   return mapRowToSettings(data)
 }
 
-export async function updateUserName(name: string): Promise<void> {
+async function updateUserName(name: string): Promise<void> {
   const { supabase, userId } = await getAuthContext()
   const { error } = await supabase
     .from("user_profiles")
@@ -109,7 +109,7 @@ export async function updateUserName(name: string): Promise<void> {
   if (error) throw error
 }
 
-export async function updateUserAvatar(file: File): Promise<string> {
+async function updateUserAvatar(file: File): Promise<string> {
   const { supabase, userId } = await getAuthContext()
   
   const ext = file.name.split('.').pop()
@@ -135,7 +135,7 @@ export async function updateUserAvatar(file: File): Promise<string> {
   return publicUrl
 }
 
-export async function exportUserData() {
+async function exportUserData() {
   const { supabase } = await getAuthContext()
   const { data, error } = await supabase.functions.invoke("export-data", {})
 
@@ -149,7 +149,7 @@ export async function exportUserData() {
   URL.revokeObjectURL(url)
 }
 
-export async function deleteAccount() {
+async function deleteAccount() {
   const { supabase } = await getAuthContext()
   const { data, error } = await supabase.functions.invoke("delete-account", { body: {} })
   

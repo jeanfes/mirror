@@ -43,9 +43,9 @@ export function LoadingOverlay({ show, label = "Cargando..." }: { show: boolean,
     const setIsPageLoading = useLoadingStore((state) => state.setIsPageLoading)
 
     useEffect(() => {
-        if (show) {
-            setIsPageLoading(true)
-            return () => setIsPageLoading(false)
+        setIsPageLoading(show)
+        return () => {
+            if (show) setIsPageLoading(false)
         }
     }, [show, setIsPageLoading])
 

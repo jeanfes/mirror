@@ -43,7 +43,7 @@ export async function signOut() {
 }
 
 
-export async function initializePostLogin(userId: string) {
+async function initializePostLogin(userId: string) {
   const supabase = createClient()
   
   const [profileRes, settingsRes, accountRes] = await Promise.all([
