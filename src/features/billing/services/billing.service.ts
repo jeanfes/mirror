@@ -2,7 +2,7 @@ import { addDays } from "date-fns"
 import { getAuthContext } from "@/lib/supabase/auth-context"
 import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow, PlanQuotasRow } from "@/types/database.types"
 
-export type { Invoice, PaymentMethod, UserAccount }
+export type { Invoice, PaymentMethod }
 
 export type PlanName = "Free" | "Pro" | "Elite"
 
