@@ -69,9 +69,7 @@ export async function generateMetadata(): Promise<Metadata> {
             template: "%s | Mirror"
         },
         description: "Digital voice workspace for Mirror",
-        icons: {
-            icon: "/icon.png"
-        },
+
         openGraph: {
             title: "Mirror",
             description: "Digital voice workspace for Mirror",

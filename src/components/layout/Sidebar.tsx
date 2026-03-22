@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import clsx from "clsx"
 import { motion } from "motion/react"
 import Image from "next/image"
@@ -21,15 +21,8 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
     const initial = (user.name?.[0] ?? user.email?.[0] ?? "U").toUpperCase()
     const pathname = usePathname()
-    const router = useRouter()
     const { t } = useLanguageStore()
     const navItems = useMemo(() => getNavItems(t), [t])
-
-    useEffect(() => {
-        navItems.forEach((item) => {
-            router.prefetch(item.href)
-        })
-    }, [router, navItems])
 
     return (
         <aside className="hidden md:flex h-screen w-min flex-col items-center justify-between overflow-y-auto pt-5 p-4.5 custom-scrollbar">
@@ -44,8 +37,6 @@ export function Sidebar({ user }: SidebarProps) {
                             href={item.href}
                             title={item.label}
                             aria-label={item.label}
-                            onMouseEnter={() => router.prefetch(item.href)}
-                            onFocus={() => router.prefetch(item.href)}
                             className={clsx(
                                 "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors",
                                 isActive ? "text-white" : "text-secondary-text hover:text-primary-dark"
