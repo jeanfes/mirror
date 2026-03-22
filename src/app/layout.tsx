@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { cookies} from "next/headers"
 import { AppProviders } from "@/components/providers/AppProviders"
 import { PageTitle } from "@/components/layout/PageTitle"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import {
     buildThemeInitScript,
     DEFAULT_RESOLVED_THEME,
@@ -68,6 +69,7 @@ export default async function RootLayout({
         >
             <head>
                 <script dangerouslySetInnerHTML={{ __html: buildThemeInitScript(initialThemePreference, initialResolvedTheme) }} />
+                <SpeedInsights />
             </head>
             <body className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased`}>
                 <AppProviders initialThemePreference={initialThemePreference} initialResolvedTheme={initialResolvedTheme}>
