@@ -24,27 +24,6 @@ interface DeletedHistoryRow {
   deleted_at: string
 }
 
-async function getTrashCounts() {
-  const { supabase, userId } = await getAuthContext()
-
-  const [profilesRes, historyRes] = await Promise.all([
-    supabase
-      .from("voice_profiles")
-      .select("id", { count: "exact" })
-      .eq("user_id", userId)
-      .not("deleted_at", "is", null),
-    supabase
-      .from("generation_history")
-      .select("id, kind", { count: "exact" })
-      .eq("user_id", userId)
-      .not("deleted_at", "is", null)
-  ])
-  
-  return {
-    profiles: profilesRes.count ?? 0,
-    history: historyRes.count ?? 0
-  }
-}
 
 export async function listTrash(): Promise<TrashItem[]> {
   const { supabase, userId } = await getAuthContext()
@@ -135,12 +114,6 @@ export async function restoreTrashItem(id: string): Promise<{ id: string; kind: 
   return { id, kind }
 }
 
-async function restoreAll() {
-  const { supabase } = await getAuthContext()
-  const { data, error } = await supabase.rpc("restore_all_from_trash")
-  if (error) throw error
-  return data
-}
 
 export async function deleteTrashItem(id: string): Promise<{ id: string; kind: "profile" | "comment" }> {
   const { supabase, userId } = await getAuthContext()

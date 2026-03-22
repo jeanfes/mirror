@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import dynamic from "next/dynamic"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import clsx from "clsx"
 import { AnimatePresence, m } from "motion/react"
@@ -20,19 +20,14 @@ export function MobileSidebar() {
     const [isOpen, setIsOpen] = useState(false)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
     const pathname = usePathname()
-    const router = useRouter()
     const { t } = useLanguageStore()
+    
     const navItems = useMemo(() => getNavItems(t), [t])
 
     useEffect(() => {
-        navItems.forEach((item) => {
-            router.prefetch(item.href)
-        })
-    }, [router, navItems])
-
-    useEffect(() => {
+        if (typeof window === "undefined") return
+        
         const originalOverflow = document.body.style.overflow
-
         if (isOpen) {
             document.body.style.overflow = "hidden"
         }
@@ -51,7 +46,7 @@ export function MobileSidebar() {
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-40 flex">
-                    
+                    {/* Overlay con desenfoque */}
                     <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -61,7 +56,7 @@ export function MobileSidebar() {
                         aria-hidden="true"
                     />
 
-                    
+                    {/* Sidebar Lateral */}
                     <m.aside
                         initial={{ x: "-100%" }}
                         animate={{ x: 0 }}
@@ -71,7 +66,7 @@ export function MobileSidebar() {
                     >
                         <div className="mb-4 flex items-center justify-between">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-light bg-surface-card">
-                                <Image src="/icon.png" alt="Mirror logo" width={22} height={22} priority />
+                                <Image src="/icon.png" alt="Logo" width={22} height={22} priority />
                             </div>
                             <m.button
                                 whileTap={{ scale: 0.9 }}
@@ -94,9 +89,6 @@ export function MobileSidebar() {
                                         href={item.href}
                                         title={item.label}
                                         onClick={() => setIsOpen(false)}
-                                        onMouseEnter={() => router.prefetch(item.href)}
-                                        onFocus={() => router.prefetch(item.href)}
-                                        onTouchStart={() => router.prefetch(item.href)}
                                         className={clsx(
                                             "relative flex h-11 w-full items-center gap-3 rounded-2xl px-3 text-[13px] font-semibold transition-colors",
                                             isActive ? "text-white" : "text-secondary-text hover:bg-surface-hover hover:text-primary-dark"
@@ -120,6 +112,7 @@ export function MobileSidebar() {
                             })}
                         </div>
 
+                        {/* Footer del Sidebar con Ajustes */}
                         <m.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -152,6 +145,7 @@ export function MobileSidebar() {
                 <Menu className="h-5 w-5" />
             </m.button>
 
+            {/* Renderizado seguro del Portal */}
             {typeof window !== "undefined" ? createPortal(sidebarOverlay, document.body) : null}
 
             <SettingsModal
@@ -164,4 +158,3 @@ export function MobileSidebar() {
         </div>
     )
 }
-

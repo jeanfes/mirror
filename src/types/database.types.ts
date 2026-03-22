@@ -1,25 +1,3 @@
-interface UserProfileRow {
-  id: string
-  name: string
-  avatar_url: string | null
-  avatar_source: "google" | "upload" | null
-  password_updated_at: string | null
-  created_at: string
-}
-
-interface UserSettingsRow {
-  user_id: string
-  language: "es" | "en" | "pt" | "fr" | "de"
-  theme: "light" | "dark" | "auto"
-  default_profile_id: string | null
-  notifications_enabled: boolean
-  auto_save_drafts: boolean
-  auto_insert_comments: boolean
-  require_strict_tone: boolean
-  show_confidence_hints: boolean
-  desktop_alerts_enabled: boolean
-  onboarding_completed: boolean
-}
 
 export interface VoiceProfileRow {
   id: string
@@ -159,13 +137,6 @@ export interface UserAccount {
   lastGenerationAt: string | null
 }
 
-interface PlanQuotas {
-  plan: PlanQuotasRow["plan"]
-  monthlyGenerations: number
-  maxProfiles: number
-  maxHistoryRetentionDays: number
-  featuresAllowed: string[]
-}
 
 export interface Invoice {
   id: string

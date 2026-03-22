@@ -6,8 +6,6 @@ import { cn } from "@/lib/utils"
 
 export const Dialog = DialogPrimitive.Root
 export const DialogTrigger = DialogPrimitive.Trigger
-const DialogClose = DialogPrimitive.Close
-
 function DialogPortal({ children }: { children: React.ReactNode }) {
     return <DialogPrimitive.Portal>{children}</DialogPrimitive.Portal>
 }

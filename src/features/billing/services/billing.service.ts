@@ -1,6 +1,6 @@
 import { addDays } from "date-fns"
 import { getAuthContext } from "@/lib/supabase/auth-context"
-import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow, PlanQuotasRow } from "@/types/database.types"
+import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow } from "@/types/database.types"
 
 export type { Invoice, PaymentMethod }
 
@@ -128,18 +128,6 @@ export async function getAccount(): Promise<UserAccount> {
   return mapRowToAccountStatus(data as UserAccountRow)
 }
 
-async function getPlanQuotas(planName: PlanQuotasRow["plan"]) {
-  const { supabase } = await getAuthContext()
-  const { data, error } = await supabase
-    .from("plan_quotas")
-    .select("*")
-    .eq("plan", planName)
-    .single()
-
-  if (error) throw error
-
-  return data as PlanQuotasRow
-}
 
 export async function getInvoices(): Promise<Invoice[]> {
   const { supabase, userId } = await getAuthContext()
@@ -230,52 +218,4 @@ export async function getBillingInfo() {
   }
 }
 
-async function getUsageStats() {
-  const { supabase, userId } = await getAuthContext()
 
-  const startOfMonth = new Date()
-  startOfMonth.setDate(1)
-  startOfMonth.setHours(0, 0, 0, 0)
-
-  const { data: monthHistory, error } = await supabase
-    .from("generation_history")
-    .select("status, source, post_author, created_at")
-    .eq("user_id", userId)
-    .is("deleted_at", null)
-    .gte("created_at", startOfMonth.toISOString())
-    .order("created_at", { ascending: false })
-
-  if (error) throw error
-
-  const items = monthHistory ?? []
-  const generatedThisMonth = items.length
-  const appliedComments = items.filter(h => h.status === "applied").length
-  const reusedComments = items.filter(h => h.source === "history_reuse").length
-  const adoptionRate = generatedThisMonth > 0 ? Math.round((appliedComments / generatedThisMonth) * 100) : 0
-  const lastActivity = items[0]?.post_author ?? null
-
-  return {
-    generatedThisMonth,
-    appliedComments,
-    reusedComments,
-    adoptionRate,
-    lastActivity
-  }
-}
-
-async function createCheckout(plan: "Pro" | "Elite") {
-  const { supabase } = await getAuthContext()
-
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://tudominio.com"
-
-  const { data, error } = await supabase.functions.invoke("create-checkout", {
-    body: {
-      plan,
-      success_url: `${origin}/account?upgraded=true`,
-      cancel_url: `${origin}/plans`
-    }
-  })
-
-  if (error) throw error
-  return data as { checkout_url: string }
-}

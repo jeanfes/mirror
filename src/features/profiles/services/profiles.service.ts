@@ -216,25 +216,4 @@ export async function moveToTrash(id: string): Promise<{ id: string }> {
   return { id }
 }
 
-async function getProfileStats() {
-  const { supabase, userId } = await getAuthContext()
-  
-  const [totalRes, emojiRes] = await Promise.all([
-    supabase
-      .from("voice_profiles")
-      .select("id", { count: "exact" })
-      .eq("user_id", userId)
-      .is("deleted_at", null),
-    supabase
-      .from("voice_profiles")
-      .select("id", { count: "exact" })
-      .eq("user_id", userId)
-      .eq("allow_emojis", true)
-      .is("deleted_at", null)
-  ])
-
-  return {
-    totalActive: totalRes.count ?? 0,
-    emojiReady: emojiRes.count ?? 0
-  }
-}
+

@@ -1,53 +1,27 @@
 import { Space_Grotesk } from "next/font/google"
-import type { Metadata } from "next"
-import Script from "next/script"
-import { cookies} from "next/headers"
-import { AppProviders } from "@/components/providers/AppProviders"
-import { PageTitle } from "@/components/layout/PageTitle"
+import { cookies } from "next/headers"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import Script from "next/script"
+import { AppProviders } from "@/components/providers/AppProviders"
 import {
-    buildThemeInitScript,
-    DEFAULT_RESOLVED_THEME,
-    DEFAULT_THEME_PREFERENCE,
-    parseResolvedTheme,
-    parseThemePreference,
-    resolveThemePreference,
     THEME_PREFERENCE_COOKIE,
-    THEME_RESOLVED_COOKIE
+    THEME_RESOLVED_COOKIE,
+    DEFAULT_THEME_PREFERENCE,
+    DEFAULT_RESOLVED_THEME,
+    parseThemePreference,
+    parseResolvedTheme,
+    resolveThemePreference,
+    buildThemeInitScript
 } from "@/lib/theme"
 import "../styles/globals.css"
-
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+import { ReactScan } from "@/components/performance/RootScan"
 
 const spaceGrotesk = Space_Grotesk({
-    variable: "--font-space-grotesk",
     subsets: ["latin"],
-    display: "swap"
+    display: "swap",
+    variable: "--font-space-grotesk",
+    weight: ["300", "400", "500", "700"],
 })
-
-export const metadata: Metadata = {
-    metadataBase: new URL(siteUrl),
-    title: {
-        template: "%s | Mirror",
-        default: "Mirror",
-    },
-    icons: {
-        icon: "/icon.png"
-    },
-    description: "Digital voice workspace for Mirror",
-    openGraph: {
-        title: "Mirror",
-        description: "Digital voice workspace for Mirror",
-        url: "/",
-        siteName: "Mirror",
-        type: "website"
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Mirror",
-        description: "Digital voice workspace for Mirror"
-    }
-}
 
 export default async function RootLayout({
     children
@@ -55,30 +29,35 @@ export default async function RootLayout({
     children: React.ReactNode
 }) {
     const cookieStore = await cookies()
-    const initialThemePreference =
-        parseThemePreference(cookieStore.get(THEME_PREFERENCE_COOKIE)?.value) ?? DEFAULT_THEME_PREFERENCE
-    const systemFallbackTheme = parseResolvedTheme(cookieStore.get(THEME_RESOLVED_COOKIE)?.value) ?? DEFAULT_RESOLVED_THEME
+    const pref = cookieStore.get(THEME_PREFERENCE_COOKIE)?.value
+    const res = cookieStore.get(THEME_RESOLVED_COOKIE)?.value
+
+    const initialThemePreference = parseThemePreference(pref) ?? DEFAULT_THEME_PREFERENCE
+    const systemFallbackTheme = parseResolvedTheme(res) ?? DEFAULT_RESOLVED_THEME
     const initialResolvedTheme = resolveThemePreference(initialThemePreference, systemFallbackTheme)
 
     return (
         <html
-            lang="en"
+            lang="es"
+            className={spaceGrotesk.variable}
             data-theme={initialResolvedTheme}
             data-theme-preference={initialThemePreference}
             suppressHydrationWarning
-            style={{ colorScheme: initialResolvedTheme }}
         >
             <head>
                 <Script id="theme-init" strategy="beforeInteractive">
                     {buildThemeInitScript(initialThemePreference, initialResolvedTheme)}
                 </Script>
-                <SpeedInsights />
             </head>
             <body className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased`}>
-                <AppProviders initialThemePreference={initialThemePreference} initialResolvedTheme={initialResolvedTheme}>
-                    <PageTitle />
+                <ReactScan />
+                <AppProviders
+                    initialThemePreference={initialThemePreference}
+                    initialResolvedTheme={initialResolvedTheme}
+                >
                     {children}
                 </AppProviders>
+                <SpeedInsights />
             </body>
         </html>
     )
