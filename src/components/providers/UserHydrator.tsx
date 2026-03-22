@@ -1,7 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
 import { useUserStore } from "@/store/useUserStore"
-
 
 interface User {
   id: string
@@ -11,11 +11,12 @@ interface User {
 }
 
 export function UserHydrator({ user }: { user: User }) {
-  const { user: storeUser } = useUserStore.getState()
-
-  if (storeUser?.id !== user.id) {
-    useUserStore.getState().setUser(user)
-  }
+  useEffect(() => {
+    const current = useUserStore.getState().user
+    if (current?.id !== user.id) {
+      useUserStore.getState().setUser(user)
+    }
+  }, [user])
 
   return null
 }

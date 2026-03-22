@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useState, memo } from "react"
+import React, { memo, useCallback, useRef, useState } from "react"
 import Image from "next/image"
-import { m, AnimatePresence } from "motion/react"
 import { toast } from "sonner"
 import {
   BadgeCheck,
@@ -39,7 +38,6 @@ import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { useTheme } from "../providers/ThemeProvider"
 import { ChangePasswordModal } from "@/features/auth/components/ChangePasswordModal"
 import type { ThemePreference } from "@/lib/theme"
-import { ROUTES } from "@/lib/routes"
 
 interface SettingsModalProps {
   children: React.ReactNode
@@ -61,6 +59,7 @@ const SettingsModal = memo(function SettingsModal({
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
   const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   const { logout, isPending: isLogoutPending } = useLogout()
   const { themePreference, setThemePreference } = useTheme()
@@ -69,522 +68,270 @@ const SettingsModal = memo(function SettingsModal({
   const setLanguage = useLanguageStore((state) => state.setLanguage)
   const { data: settings, updateSettings } = useUserSettings()
 
-  const mapThemePreferenceToSettingsTheme = (
-    preference: ThemePreference
-  ): "light" | "dark" | "auto" => {
-    return preference === "system" ? "auto" : preference
-  }
+  const themeRef = useRef(themePreference)
+  const langRef = useRef(language)
+  const settingsRef = useRef(settings)
 
-  const handleThemeChange = async (nextPreference: ThemePreference) => {
-    const previousPreference = themePreference
+  themeRef.current = themePreference
+  langRef.current = language
+  settingsRef.current = settings
+
+  const handleThemeChange = useCallback(async (nextPref: ThemePreference) => {
+    const prev = themeRef.current
+    setThemePreference(nextPref)
     try {
-      await updateSettings({
-        theme: mapThemePreferenceToSettingsTheme(nextPreference),
-      })
+      setIsUpdating(true)
+      await updateSettings({ theme: nextPref === "system" ? "auto" : nextPref })
     } catch {
-      setThemePreference(previousPreference)
-      toast.error("Could not save theme to profile")
+      setThemePreference(prev)
+      toast.error("Error al guardar el tema")
+    } finally {
+      setIsUpdating(false)
     }
-  }
+  }, [setThemePreference, updateSettings])
 
-  const handleLogout = async () => {
+  const handleLanguageChange = useCallback(async (val: string) => {
+    const prev = langRef.current
+    const newLang = val as "en" | "es" | "pt" | "fr" | "de"
+    setLanguage(newLang)
+    try {
+      setIsUpdating(true)
+      await updateSettings({ language: newLang })
+      toast.success("Idioma actualizado")
+    } catch {
+      setLanguage(prev)
+      toast.error("Error al cambiar idioma")
+    } finally {
+      setIsUpdating(false)
+    }
+  }, [setLanguage, updateSettings])
+
+  const handleToggleChange = useCallback(async (key: 'notificationsEnabled' | 'desktopAlertsEnabled', value: boolean) => {
+    try {
+      setIsUpdating(true)
+      await updateSettings({ [key]: value })
+    } catch {
+      toast.error("Error al guardar preferencia")
+    } finally {
+      setIsUpdating(false)
+    }
+  }, [updateSettings])
+
+  const handleLogout = useCallback(async () => {
     await logout()
-  }
+  }, [logout])
 
-  const handleDeleteAccountConfirm = async () => {
-    setIsDeleteAccountConfirmOpen(false)
-  }
+  const handleDialogOpenChange = useCallback((nextOpen: boolean) => {
+    if (!isLogoutPending && !isUpdating) onOpenChange?.(nextOpen)
+  }, [isLogoutPending, isUpdating, onOpenChange])
 
   return (
     <>
-      <Dialog
-        open={open}
-        onOpenChange={(nextOpen) => {
-          if (!isLogoutPending) onOpenChange?.(nextOpen)
-        }}
-      >
+      <Dialog open={open} onOpenChange={handleDialogOpenChange}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="max-w-4xl p-0 h-[80vh] flex flex-col sm:h-162.5">
-          <DialogTitle className="sr-only">
-            {t.app.settingsModal.title}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Manage your account settings and preferences
-          </DialogDescription>
-          <Tabs
-            defaultValue="general"
-            className="flex-1 flex flex-col overflow-hidden"
-          >
+        <DialogContent className="max-w-4xl p-0 h-[80vh] flex flex-col sm:h-162.5 overflow-hidden">
+          <DialogTitle className="sr-only">{t.app.settingsModal.title}</DialogTitle>
+          <DialogDescription className="sr-only">Gestiona tu cuenta y preferencias</DialogDescription>
+
+          <Tabs defaultValue="general" className="flex-1 flex flex-col overflow-hidden">
             <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
-              {/* ── Sidebar nav ── */}
-              <div className="w-full sm:w-70 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 backdrop-blur-sm flex flex-col z-10">
+              
+              {/* Sidebar */}
+              <aside className="w-full sm:w-64 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 flex flex-col z-10">
                 <div className="hidden sm:flex items-center gap-3 px-2 mb-8 mt-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-premium-sm">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-sm">
                     <Settings className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-[17px] font-bold tracking-tight text-primary-dark">
-                      {t.app.settingsModal.title}
-                    </h2>
-                    <p className="text-[11px] font-medium text-secondary-text uppercase tracking-wider">
-                      {t.app.settingsModal.subtitle}
-                    </p>
+                    <h2 className="text-[17px] font-bold text-primary-dark">{t.app.settingsModal.title}</h2>
+                    <p className="text-[11px] font-medium text-secondary-text uppercase tracking-wider">{t.app.settingsModal.subtitle}</p>
                   </div>
                 </div>
 
-                <TabsList className="flex-row sm:flex-col h-auto items-center sm:items-stretch justify-start rounded-none border-0 bg-transparent p-0 sm:space-y-1.5 focus:outline-none overflow-x-auto overflow-y-hidden sm:overflow-visible custom-scrollbar pb-2 sm:pb-0 gap-2 sm:gap-0">
-                  <TabsTrigger value="general" className="settings-nav-trigger shrink-0">
-                    <User className="h-4.5 w-4.5" />
-                    General
-                  </TabsTrigger>
-                  <TabsTrigger value="appearance" className="settings-nav-trigger">
-                    <Palette className="h-4.5 w-4.5" />
-                    Appearance
-                  </TabsTrigger>
-                  <TabsTrigger value="security" className="settings-nav-trigger">
-                    <Shield className="h-4.5 w-4.5" />
-                    Security
-                  </TabsTrigger>
-                  <TabsTrigger value="notifications" className="settings-nav-trigger">
-                    <Bell className="h-4.5 w-4.5" />
-                    Alerts
-                  </TabsTrigger>
-                  <TabsTrigger value="data" className="settings-nav-trigger shrink-0">
-                    <Download className="h-4.5 w-4.5" />
-                    Export
-                  </TabsTrigger>
+                <TabsList className="flex-row sm:flex-col h-auto items-center sm:items-stretch justify-start rounded-none bg-transparent p-0 gap-2 sm:gap-1.5 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0">
+                  <SettingsTabTrigger value="general" icon={<User className="h-4 w-4" />} label="General" />
+                  <SettingsTabTrigger value="appearance" icon={<Palette className="h-4 w-4" />} label="Apariencia" />
+                  <SettingsTabTrigger value="security" icon={<Shield className="h-4 w-4" />} label="Seguridad" />
+                  <SettingsTabTrigger value="notifications" icon={<Bell className="h-4 w-4" />} label="Alertas" />
+                  <SettingsTabTrigger value="data" icon={<Download className="h-4 w-4" />} label="Exportar" />
 
-                  <div className="hidden sm:block pt-8 mt-auto space-y-2">
+                  <div className="hidden sm:block pt-8 mt-auto">
                     <Button
-                      type="button"
                       variant="dangerSoft"
-                      className="w-full justify-start"
+                      className="w-full justify-start gap-2"
                       onClick={() => setIsLogoutConfirmOpen(true)}
-                      disabled={isLogoutPending}
+                      disabled={isLogoutPending || isUpdating}
                     >
-                      <LogOut className="h-4 w-4 shrink-0 stroke-[2.2]" />
-                      <span>
-                        {isLogoutPending ? "Logging out..." : "Log out"}
-                      </span>
+                      <LogOut className="h-4 w-4 stroke-[2.2]" />
+                      <span>{isLogoutPending ? "Saliendo..." : "Cerrar sesión"}</span>
                     </Button>
-                    <div className="px-4 py-2 opacity-50">
-                      <p className="text-[10px] font-bold text-secondary-text uppercase tracking-widest">
-                        Version 1.0.4
-                      </p>
-                    </div>
+                    <p className="px-4 py-4 text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.4</p>
                   </div>
                 </TabsList>
-              </div>
+              </aside>
 
-              {/* ── Content area ── */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10 backdrop-blur-sm">
-                <AnimatePresence>
-                  {/* General */}
-                  <TabsContent value="general" key="general" asChild>
-                    <m.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.1 }}
-                      className="mt-0 space-y-8 outline-none"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="settings-section-title">
-                          {t.app.settingsModal.generalInfoTitle}
-                        </h3>
-                        <p className="settings-section-description">
-                          {t.app.settingsModal.generalInfoDesc}
-                        </p>
-                      </div>
-
-                      <Card className="p-6 space-y-6">
-                        <div className="flex items-center gap-5">
-                          <div className="group relative h-20 w-20 shrink-0">
-                            <div className="h-full w-full rounded-3xl bg-linear-to-br from-[#171b2d] to-[#2d334d] flex items-center justify-center text-white text-3xl font-bold shadow-premium-lg">
-                              {user.avatar ? (
-                                <Image
-                                  src={user.avatar}
-                                  alt={`${user.name} avatar`}
-                                  fill
-                                  className="rounded-3xl object-cover"
-                                  sizes="80px"
-                                />
-                              ) : (
-                                (user.name.charAt(0) || "U").toUpperCase()
-                              )}
-                            </div>
-                            <button className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl bg-surface-elevated text-accent-purple shadow-premium-sm ring-1 ring-border-soft hover:scale-110 transition-transform">
-                              <BadgeCheck className="h-4 w-4 fill-accent-purple text-white" />
-                            </button>
-                          </div>
-                          <div className="space-y-1">
-                            <h4 className="font-bold text-primary-text">
-                              {user.name}
-                            </h4>
-                            <p className="text-xs text-secondary-text font-medium">
-                              {user.email}
-                            </p>
-                          </div>
+              {/* Content Area */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10">
+                
+                <TabsContent value="general" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                  <SectionHeader title={t.app.settingsModal.generalInfoTitle} description={t.app.settingsModal.generalInfoDesc} />
+                  <Card className="p-6 space-y-6">
+                    <div className="flex items-center gap-5">
+                      <div className="relative h-20 w-20 shrink-0">
+                        <div className="h-full w-full rounded-3xl bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                          {user.avatar ? <Image src={user.avatar} alt="Avatar" fill className="rounded-3xl object-cover" /> : user.name.charAt(0).toUpperCase()}
                         </div>
-
-                        <div className="grid gap-5">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <Input
-                              disabled
-                              label={t.app.settingsModal.fullName}
-                              defaultValue={user.name}
-                            />
-                            <Input
-                              disabled
-                              label={t.app.settingsModal.emailAddress}
-                              defaultValue={user.email}
-                            />
-                          </div>
-
-                          <div className="pt-2">
-                            <Select
-                              label={t.app.settingsModal.appLanguage}
-                              value={language}
-                              onChange={async (val) => {
-                                const newLang = val as
-                                  | "en"
-                                  | "es"
-                                  | "pt"
-                                  | "fr"
-                                  | "de"
-                                try {
-                                  await updateSettings({ language: newLang })
-                                  setLanguage(newLang)
-                                  toast.success(
-                                    "Language preference updated"
-                                  )
-                                } catch {
-                                  toast.error(
-                                    "Could not save language to profile"
-                                  )
-                                }
-                              }}
-                              options={[
-                                { label: "English", value: "en" },
-                                { label: "Español", value: "es" },
-                                { label: "Português", value: "pt" },
-                                { label: "Français", value: "fr" },
-                                { label: "Deutsch", value: "de" },
-                              ]}
-                            />
-                          </div>
-                        </div>
-                      </Card>
-                    </m.div>
-                  </TabsContent>
-
-                  {/* Appearance */}
-                  <TabsContent value="appearance" key="appearance" asChild>
-                    <m.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.1 }}
-                      className="mt-0 space-y-8 outline-none"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="settings-section-title">
-                          {t.app.settingsModal.appearanceTitle}
-                        </h3>
-                        <p className="settings-section-description">
-                          {t.app.settingsModal.appearanceDesc}
-                        </p>
-                      </div>
-
-                      <Card className="p-6 sm:p-7">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-secondary-text">
-                              {t.app.settingsModal.activeTheme}
-                            </p>
-                            <p className="mt-1 text-[14px] font-semibold text-primary-text">
-                              {themePreference === "system"
-                                ? "System"
-                                : `${themePreference === "dark" ? "Dark" : "Light"} mode`}
-                            </p>
-                          </div>
-                          <ThemeSegmentedControl
-                            className="w-full sm:w-auto"
-                            onChange={handleThemeChange}
-                          />
-                        </div>
-                        <p className="mt-4 text-[12px] leading-5 text-secondary-text">
-                          {t.app.settingsModal.themeDesc}
-                        </p>
-                      </Card>
-                    </m.div>
-                  </TabsContent>
-
-                  {/* Security */}
-                  <TabsContent value="security" key="security" asChild>
-                    <m.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.1 }}
-                      className="mt-0 space-y-8 outline-none"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="settings-section-title">
-                          {t.app.settingsModal.securityTitle}
-                        </h3>
-                        <p className="settings-section-description">
-                          {t.app.settingsModal.securityDesc}
-                        </p>
-                      </div>
-
-                      <div className="grid gap-4">
-                        <Card className="settings-card-row">
-                          <div className="flex items-center gap-5">
-                            <div className="h-12 w-12 rounded-2xl bg-accent-blue/12 flex items-center justify-center text-accent-blue">
-                              <Shield className="h-5.5 w-5.5" />
-                            </div>
-                            <div>
-                              <p className="text-[15px] font-bold text-primary-text">
-                                {t.app.settingsModal.masterPassword}
-                              </p>
-                              <p className="text-xs text-secondary-text font-medium">
-                                Last updated March 2026
-                              </p>
-                            </div>
-                          </div>
-                          <Button
-                            variant="secondary"
-                            className="font-bold h-9 px-5"
-                            onClick={() => setIsChangePasswordOpen(true)}
-                          >
-                            Update
-                          </Button>
-                        </Card>
-
-                        <div className="rounded-2xl border border-border-soft bg-surface-base/50 p-5 mt-2">
-                          <h4 className="text-[13px] font-bold text-primary-text mb-3 uppercase tracking-wider">
-                            {t.app.settingsModal.securityBestPractices}
-                          </h4>
-                          <ul className="space-y-2.5 text-[13px] text-secondary-text">
-                            <li className="flex items-start gap-3">
-                              <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
-                              <span>{t.app.settingsModal.securityBp1}</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                              <div className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-blue" />
-                              <span>{t.app.settingsModal.securityBp2}</span>
-                            </li>
-                          </ul>
+                        <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-xl bg-surface-elevated text-accent-purple shadow-sm ring-1 ring-border-soft">
+                          <BadgeCheck className="h-4 w-4 fill-accent-purple text-white" />
                         </div>
                       </div>
-                    </m.div>
-                  </TabsContent>
-
-                  {/* Notifications — now connected to updateSettings */}
-                  <TabsContent value="notifications" key="notifications" asChild>
-                    <m.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.1 }}
-                      className="mt-0 space-y-8 outline-none"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="settings-section-title">
-                          {t.app.settingsModal.notificationsTitle}
-                        </h3>
-                        <p className="settings-section-description">
-                          {t.app.settingsModal.notificationsDesc}
-                        </p>
+                      <div>
+                        <h4 className="font-bold text-primary-text">{user.name}</h4>
+                        <p className="text-xs text-secondary-text font-medium">{user.email}</p>
                       </div>
-
-                      <Card className="p-4 space-y-3">
-                        <Toggle
-                          label={t.app.settingsModal.emailUpdates}
-                          checked={settings?.notificationsEnabled ?? true}
-                          onChange={async (value) => {
-                            try {
-                              await updateSettings({
-                                notificationsEnabled: value,
-                              })
-                            } catch {
-                              toast.error(
-                                "Could not save notification preference"
-                              )
-                            }
-                          }}
-                        />
-                        <Toggle
-                          label={t.app.settingsModal.desktopAlerts}
-                          checked={settings?.desktopAlertsEnabled ?? false}
-                          onChange={async (value) => {
-                            try {
-                              await updateSettings({
-                                desktopAlertsEnabled: value,
-                              })
-                            } catch {
-                              toast.error(
-                                "Could not save notification preference"
-                              )
-                            }
-                          }}
-                        />
-                      </Card>
-                    </m.div>
-                  </TabsContent>
-
-                  {/* Data / Export */}
-                  <TabsContent value="data" key="data" asChild>
-                    <m.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.1 }}
-                      className="mt-0 space-y-8 outline-none"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="settings-section-title">
-                          {t.app.settingsModal.dataControlsTitle}
-                        </h3>
-                        <p className="settings-section-description">
-                          {t.app.settingsModal.dataControlsDesc}
-                        </p>
-                      </div>
-
+                    </div>
+                    <div className="grid gap-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Card className="p-6 space-y-4">
-                          <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-xl bg-accent-blue/12 flex items-center justify-center text-accent-blue">
-                              <Download className="h-5 w-5" />
-                            </div>
-                            <p className="text-[15px] font-bold text-primary-text">
-                              {t.app.settingsModal.exportLibrary}
-                            </p>
-                          </div>
-                          <p className="text-xs leading-5 text-secondary-text font-medium">
-                            {t.app.settingsModal.exportLibraryDesc}
-                          </p>
-                          <Button
-                            variant="secondary"
-                            className="w-full font-bold h-10 mt-2"
-                            onClick={() =>
-                              toast.success(
-                                "Backup started. You will receive an email shortly."
-                              )
-                            }
-                          >
-                            {t.app.settingsModal.startBackup}
-                          </Button>
-                        </Card>
-
-                        <Card className="p-6 space-y-4 surface-danger">
-                          <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-xl bg-(--danger-soft-bg) flex items-center justify-center text-danger">
-                              <Trash2 className="h-5 w-5" />
-                            </div>
-                            <p className="text-[15px] font-bold text-danger">
-                              {t.app.settingsModal.dangerZone}
-                            </p>
-                          </div>
-                          <p className="text-xs leading-5 text-danger/70 font-medium">
-                            {t.app.settingsModal.dangerZoneDesc}
-                          </p>
-                          <Button
-                            variant="dangerSoft"
-                            className="w-full font-bold h-10 mt-2"
-                            onClick={() =>
-                              setIsDeleteAccountConfirmOpen(true)
-                            }
-                          >
-                            {t.app.settingsModal.deleteAccount}
-                          </Button>
-                        </Card>
+                        <Input disabled label="Nombre" defaultValue={user.name} />
+                        <Input disabled label="Email" defaultValue={user.email} />
                       </div>
-                    </m.div>
-                  </TabsContent>
-                </AnimatePresence>
+                      <Select
+                        label="Idioma de la App"
+                        value={language}
+                        onChange={handleLanguageChange}
+                        options={[
+                          { label: "English", value: "en" }, { label: "Español", value: "es" },
+                          { label: "Português", value: "pt" }, { label: "Français", value: "fr" },
+                          { label: "Deutsch", value: "de" },
+                        ]}
+                      />
+                    </div>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="appearance" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                  <SectionHeader title="Apariencia" description="Personaliza cómo se ve tu espacio de trabajo." />
+                  <Card className="p-6 sm:p-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-widest text-secondary-text">Tema Activo</p>
+                      <p className="mt-1 text-[14px] font-semibold text-primary-text capitalize">{themePreference} mode</p>
+                    </div>
+                    <ThemeSegmentedControl onChange={handleThemeChange} />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="security" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                  <SectionHeader title="Seguridad" description="Gestiona tu contraseña y protege tu cuenta." />
+                  <Card className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Shield className="h-5 w-5" /></div>
+                      <div>
+                        <p className="text-sm font-bold text-primary-text">Contraseña Maestra</p>
+                        <p className="text-[10px] text-secondary-text uppercase">Actualizada hace poco</p>
+                      </div>
+                    </div>
+                    <Button variant="secondary" onClick={() => setIsChangePasswordOpen(true)}>Actualizar</Button>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="notifications" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                  <SectionHeader title="Notificaciones" description="Elige qué alertas quieres recibir." />
+                  <Card className="p-4 space-y-4">
+                    <Toggle 
+                      label="Actualizaciones por Email" 
+                      checked={settings?.notificationsEnabled ?? true} 
+                      onChange={(v) => handleToggleChange('notificationsEnabled', v)}
+                    />
+                    <Toggle 
+                      label="Alertas de Escritorio" 
+                      checked={settings?.desktopAlertsEnabled ?? false} 
+                      onChange={(v) => handleToggleChange('desktopAlertsEnabled', v)}
+                    />
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="data" className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+                  <SectionHeader title="Datos y Privacidad" description="Exporta tu información o elimina tu cuenta." />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Card className="p-6 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <Download className="h-5 w-5 text-blue-500" />
+                        <p className="text-sm font-bold">Exportar Biblioteca</p>
+                      </div>
+                      <Button variant="secondary" className="w-full" onClick={() => toast.success("Backup iniciado")}>Empezar Backup</Button>
+                    </Card>
+                    <Card className="p-6 space-y-4 border-red-200 bg-red-50/30">
+                      <div className="flex items-center gap-3">
+                        <Trash2 className="h-5 w-5 text-red-500" />
+                        <p className="text-sm font-bold text-red-600">Zona de Peligro</p>
+                      </div>
+                      <Button variant="dangerSoft" className="w-full" onClick={() => setIsDeleteAccountConfirmOpen(true)}>Eliminar Cuenta</Button>
+                    </Card>
+                  </div>
+                </TabsContent>
+
               </div>
             </div>
           </Tabs>
 
           {/* Footer */}
-          <div className="relative z-10 flex flex-col sm:flex-row h-auto min-h-14 py-3 sm:py-0 shrink-0 items-center justify-between gap-3 sm:gap-0 border-t border-border-soft bg-surface-overlay px-4 sm:px-8 backdrop-blur-sm">
-            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-5">
-              <a
-                href="https://status.mirroraidev.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="settings-footer-link"
-              >
-                Status <ExternalLink className="h-2.5 w-2.5" />
-              </a>
-              <a
-                href={ROUTES.public.faq}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="settings-footer-link"
-              >
-                Docs <ExternalLink className="h-2.5 w-2.5" />
-              </a>
-              <a
-                href="https://mirroraidev.vercel.app/changelog"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="settings-footer-link"
-              >
-                Changelog <ExternalLink className="h-2.5 w-2.5" />
-              </a>
+          <footer className="flex h-14 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 shrink-0">
+            <div className="flex gap-5">
+              <FooterLink href="#" label="Status" />
+              <FooterLink href="#" label="Docs" />
+              <FooterLink href="#" label="Changelog" />
             </div>
-            <div className="flex items-center gap-1.5 opacity-60 transition-all duration-300 hover:opacity-100">
-              <p className="text-[10px] font-bold text-secondary-text">
-                Powered by{" "}
-              </p>
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-black tracking-tighter text-primary-text uppercase">
-                <Image
-                  src="/icon.png"
-                  alt="Mirror logo"
-                  width={16}
-                  height={16}
-                  className="h-4 w-auto"
-                />
-                <span>Mirror</span>
-              </span>
+            <div className="flex items-center gap-2 opacity-50">
+              <span className="text-[10px] font-bold">Powered by MIRROR</span>
             </div>
-          </div>
+          </footer>
         </DialogContent>
       </Dialog>
 
+      {/* Modals de Soporte */}
       <ConfirmDialog
         open={isLogoutConfirmOpen}
-        title="Close your session?"
-        description="You will leave the private workspace and will need to sign in again to continue."
-        confirmLabel="Log out"
-        confirmPendingLabel="Logging out..."
+        title="¿Cerrar sesión?"
+        description="Tendrás que volver a ingresar para acceder a tu espacio privado."
+        confirmLabel="Salir"
         isPending={isLogoutPending}
         onConfirm={handleLogout}
-        onCancel={() => {
-          if (!isLogoutPending) setIsLogoutConfirmOpen(false)
-        }}
+        onCancel={() => setIsLogoutConfirmOpen(false)}
       />
 
       <ConfirmDialog
         open={isDeleteAccountConfirmOpen}
-        title="Delete your account?"
-        description="This action is permanent and will remove all your profiles, history and plans."
-        confirmLabel="Delete account"
-        onConfirm={handleDeleteAccountConfirm}
+        title="¿Eliminar cuenta?"
+        description="Esta acción es permanente y borrará todos tus datos."
+        confirmLabel="Eliminar definitivamente"
+        onConfirm={() => setIsDeleteAccountConfirmOpen(false)}
         onCancel={() => setIsDeleteAccountConfirmOpen(false)}
       />
 
-      <ChangePasswordModal
-        open={isChangePasswordOpen}
-        onOpenChange={setIsChangePasswordOpen}
-      />
-
-      <LoadingOverlay show={isLogoutPending} label="Logging out..." />
+      <ChangePasswordModal open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} />
+      <LoadingOverlay show={isLogoutPending || isUpdating} label={isLogoutPending ? "Saliendo..." : "Guardando cambios..."} />
     </>
   )
 })
+
+
+const SettingsTabTrigger = ({ value, icon, label }: { value: string, icon: React.ReactNode, label: string }) => (
+  <TabsTrigger value={value} className="settings-nav-trigger shrink-0 gap-2">
+    {icon} {label}
+  </TabsTrigger>
+)
+
+const SectionHeader = ({ title, description }: { title: string, description: string }) => (
+  <div className="space-y-1">
+    <h3 className="settings-section-title">{title}</h3>
+    <p className="settings-section-description">{description}</p>
+  </div>
+)
+
+const FooterLink = ({ href, label }: { href: string, label: string }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer" className="settings-footer-link flex items-center gap-1">
+    {label} <ExternalLink className="h-2.5 w-2.5" />
+  </a>
+)
 
 export default SettingsModal

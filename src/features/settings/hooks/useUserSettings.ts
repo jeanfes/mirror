@@ -20,7 +20,7 @@ export function useUserSettings() {
     queryFn: () => getUserSettings(supabase, userId!),
     staleTime: 120_000,
     gcTime: 900_000,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     enabled: !!userId,
   })
 
