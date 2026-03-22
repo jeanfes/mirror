@@ -1,4 +1,4 @@
-import { getAuthContext } from "@/lib/supabase/auth-context"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
 function mapRowToHistoryItem(row: GenerationHistoryRow & { profileName?: string }): GenerationHistory {
@@ -25,9 +25,7 @@ export interface ListHistoryFilters {
   search?: string
 }
 
-export async function listHistory(filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function listHistory(supabase: SupabaseClient, userId: string, filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
   let query = supabase
     .from("generation_history")
     .select("*, voice_profiles(name)")
@@ -59,11 +57,11 @@ export async function listHistory(filters?: ListHistoryFilters): Promise<Generat
 }
 
 export async function updateHistoryStatus(
+  supabase: SupabaseClient,
+  userId: string,
   id: string,
   newStatus: "pending" | "applied" | "dismissed"
 ): Promise<void> {
-  const { supabase, userId } = await getAuthContext()
-
   const { error } = await supabase
     .from("generation_history")
     .update({ status: newStatus, updated_at: new Date().toISOString() })
@@ -75,9 +73,7 @@ export async function updateHistoryStatus(
   }
 }
 
-export async function reuseHistoryItem(id: string): Promise<string> {
-  const { supabase } = await getAuthContext()
-
+export async function reuseHistoryItem(supabase: SupabaseClient, id: string): Promise<string> {
   const { data: newId, error } = await supabase.rpc("reuse_generation", { p_history_id: id })
 
   if (error) {
@@ -87,9 +83,7 @@ export async function reuseHistoryItem(id: string): Promise<string> {
   return String(newId)
 }
 
-export async function moveToTrash(id: string): Promise<void> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function moveToTrash(supabase: SupabaseClient, userId: string, id: string): Promise<void> {
   const { error } = await supabase
     .from("generation_history")
     .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })

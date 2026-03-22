@@ -6,35 +6,24 @@ import { useLoadingStore } from "@/store/useLoadingStore"
 const LOADING_MIN_DISPLAY_MS = 150
 
 export function useLoadingDelay(active: boolean, delayMs = LOADING_MIN_DISPLAY_MS) {
-    const [visible, setVisible] = useState(active)
-    const visibleSinceRef = useRef<number | null>(null)
+    const [visible, setVisible] = useState(false)
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     useEffect(() => {
+        if (timerRef.current) clearTimeout(timerRef.current)
+
         if (active) {
-            visibleSinceRef.current = visibleSinceRef.current ?? Date.now()
-            if (!visible) {
-                const timeoutId = window.setTimeout(() => setVisible(true), 50)
-                return () => window.clearTimeout(timeoutId)
-            }
-            return
+            // Short delay before showing to avoid flicker
+            timerRef.current = setTimeout(() => setVisible(true), 50)
+        } else {
+            // Keep visible for a minimum duration
+            timerRef.current = setTimeout(() => setVisible(false), delayMs)
         }
 
-        if (!visible) {
-            visibleSinceRef.current = null
-            return
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current)
         }
-
-        const visibleSince = visibleSinceRef.current ?? Date.now()
-        const elapsedMs = Date.now() - visibleSince
-        const remainingMs = Math.max(delayMs - elapsedMs, 0)
-
-        const timeoutId = window.setTimeout(() => {
-            setVisible(false)
-            visibleSinceRef.current = null
-        }, remainingMs)
-
-        return () => window.clearTimeout(timeoutId)
-    }, [active, delayMs, visible])
+    }, [active, delayMs])
 
     return visible
 }

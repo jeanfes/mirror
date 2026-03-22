@@ -1,5 +1,5 @@
 import { addDays } from "date-fns"
-import { getAuthContext } from "@/lib/supabase/auth-context"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { UserAccount, Invoice, PaymentMethod, UserAccountRow, InvoiceRow } from "@/types/database.types"
 
 export type { Invoice, PaymentMethod }
@@ -55,8 +55,7 @@ export const planDefinitions: PlanDefinition[] = [
   }
 ]
 
-export async function setPlan(planName: PlanName) {
-  const { supabase, userId } = await getAuthContext()
+export async function setPlan(supabase: SupabaseClient, userId: string, planName: PlanName) {
   const { data, error } = await supabase
     .from("user_account")
     .update({ plan: planName })
@@ -103,9 +102,7 @@ function mapInvoiceStatus(rawStatus: string): Invoice["status"] {
   return "unknown"
 }
 
-export async function getAccount(): Promise<UserAccount> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function getAccount(supabase: SupabaseClient, userId: string): Promise<UserAccount> {
   const { data, error } = await supabase
     .from("user_account")
     .select("*")
@@ -129,9 +126,7 @@ export async function getAccount(): Promise<UserAccount> {
 }
 
 
-export async function getInvoices(): Promise<Invoice[]> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function getInvoices(supabase: SupabaseClient, userId: string): Promise<Invoice[]> {
   const { data, error } = await supabase
     .from("invoices")
     .select("*")
@@ -156,9 +151,7 @@ interface BillingInfoResponse {
 }
 
 
-export async function getBillingInfo() {
-  const { supabase } = await getAuthContext()
-
+export async function getBillingInfo(supabase: SupabaseClient) {
   const {
     data: { session }
   } = await supabase.auth.getSession()

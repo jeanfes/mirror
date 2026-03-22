@@ -2,16 +2,18 @@
 
 import { listHistory, moveToTrash, reuseHistoryItem, updateHistoryStatus, type ListHistoryFilters } from "@/features/history/services/history.service"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
+import { useSupabaseClient } from "@/lib/supabase/client"
+import { useSession } from "@/lib/supabase/useSession"
 
 export function useHistory(filters?: ListHistoryFilters) {
   const queryClient = useQueryClient()
-  const { userId, isAuthenticating } = useUserId()
-  const historyKey = userId ? [...makeQueryKey("history", userId), ...Object.values(filters ?? {})] : ["history", ...Object.values(filters ?? {})]
+  const supabase = useSupabaseClient()
+  const { userId, isAuthenticating } = useSession()
+  const historyKey = ["history", userId, ...Object.values(filters ?? {})]
 
   const query = useQuery({
     queryKey: historyKey,
-    queryFn: () => listHistory(filters),
+    queryFn: () => listHistory(supabase, userId!, filters),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
@@ -19,23 +21,23 @@ export function useHistory(filters?: ListHistoryFilters) {
   })
 
   const toggleMutation = useMutation({
-    mutationFn: (id: string) => updateHistoryStatus(id, "applied"),
+    mutationFn: (id: string) => updateHistoryStatus(supabase, userId!, id, "applied"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
+      queryClient.invalidateQueries({ queryKey: ["history", userId] })
     }
   })
 
   const reuseMutation = useMutation({
-    mutationFn: (id: string) => reuseHistoryItem(id),
+    mutationFn: (id: string) => reuseHistoryItem(supabase, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
+      queryClient.invalidateQueries({ queryKey: ["history", userId] })
     }
   })
 
   const trashMutation = useMutation({
-    mutationFn: (id: string) => moveToTrash(id),
+    mutationFn: (id: string) => moveToTrash(supabase, userId!, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
+      queryClient.invalidateQueries({ queryKey: ["history", userId] })
     }
   })
 

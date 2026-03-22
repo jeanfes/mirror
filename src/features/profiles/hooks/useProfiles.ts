@@ -1,7 +1,8 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
+import { useSupabaseClient } from "@/lib/supabase/client"
+import { useSession } from "@/lib/supabase/useSession"
 import {
   createProfile,
   moveToTrash,
@@ -15,12 +16,13 @@ import type { VoiceProfile } from "@/types/database.types"
 
 export function useProfiles() {
   const queryClient = useQueryClient()
-  const { userId, isAuthenticating } = useUserId()
-  const profilesKey = userId ? makeQueryKey("profiles", userId) : ["profiles"]
+  const supabase = useSupabaseClient()
+  const { userId, isAuthenticating } = useSession()
+  const profilesKey = ["profiles", userId]
 
   const query = useQuery({
     queryKey: profilesKey,
-    queryFn: listProfiles,
+    queryFn: () => listProfiles(supabase, userId!),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
@@ -28,32 +30,41 @@ export function useProfiles() {
   })
 
   const createMutation = useMutation({
-    mutationFn: (input: CreateProfileInput) => createProfile(input),
+    mutationFn: (input: CreateProfileInput) => createProfile(supabase, userId!, input),
     onSuccess: (created) => {
       queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) => [created, ...(prev ?? [])])
     }
   })
 
   const updateMutation = useMutation({
-    mutationFn: (input: UpdateProfileInput) => updateProfile(input),
+    mutationFn: (input: UpdateProfileInput) => updateProfile(supabase, userId!, input),
     onSuccess: (updated) => {
       queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
-        (prev ?? []).map((p) => p.id === updated.id ? updated : p)
+        (prev ?? []).map((p) => (p.id === updated.id ? updated : p))
       )
     }
   })
 
   const toggleMutation = useMutation({
-    mutationFn: (id: string) => toggleProfile(id),
-    onSuccess: (toggled) => {
+    mutationFn: ({ id, currentEnabled }: { id: string; currentEnabled: boolean }) =>
+      toggleProfile(supabase, userId!, id, currentEnabled),
+    onMutate: async ({ id, currentEnabled }) => {
+      await queryClient.cancelQueries({ queryKey: profilesKey })
+      const previous = queryClient.getQueryData<VoiceProfile[]>(profilesKey)
       queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
-        (prev ?? []).map((p) => p.id === toggled.id ? toggled : p)
+        (prev ?? []).map((p) => (p.id === id ? { ...p, enabled: !currentEnabled } : p))
       )
+      return { previous }
+    },
+    onError: (_, __, ctx) => {
+      if (ctx?.previous) {
+        queryClient.setQueryData(profilesKey, ctx.previous)
+      }
     }
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => moveToTrash(id),
+    mutationFn: (id: string) => moveToTrash(supabase, userId!, id),
     onSuccess: (result) => {
       queryClient.setQueryData(profilesKey, (prev: VoiceProfile[] | undefined) =>
         (prev ?? []).filter((p) => p.id !== result.id)
@@ -66,7 +77,7 @@ export function useProfiles() {
     isLoading: query.isPending || isAuthenticating,
     createProfile: createMutation.mutateAsync,
     updateProfile: updateMutation.mutateAsync,
-    toggleProfile: toggleMutation.mutateAsync,
+    toggleProfile: (id: string, currentEnabled: boolean) => toggleMutation.mutateAsync({ id, currentEnabled }),
     deleteProfile: deleteMutation.mutateAsync,
     isMutating:
       createMutation.isPending ||

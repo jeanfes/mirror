@@ -1,4 +1,4 @@
-import { getAuthContext } from "@/lib/supabase/auth-context"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { VoiceProfile, VoiceProfileRow, StyleTrainingRow } from "@/types/database.types"
 
 export interface CreateProfileInput {
@@ -33,39 +33,7 @@ function mapRowToProfile(row: VoiceProfileRow, examples: string[]): VoiceProfile
   }
 }
 
-
-async function getProfileById(
-  supabase: NonNullable<Awaited<ReturnType<typeof getAuthContext>>["supabase"]>,
-  userId: string,
-  profileId: string
-): Promise<VoiceProfile> {
-  const { data: profileData, error: profileError } = await supabase
-    .from("voice_profiles")
-    .select("*")
-    .eq("id", profileId)
-    .eq("user_id", userId)
-    .single()
-
-  if (profileError) throw profileError
-
-  const { data: trainingData, error: trainingError } = await supabase
-    .from("style_training")
-    .select("*")
-    .eq("profile_id", profileId)
-    .order("display_order", { ascending: true })
-
-  if (trainingError) throw trainingError
-
-  const examples = (trainingData ?? [])
-    .filter((row: StyleTrainingRow) => row.content)
-    .map((row: StyleTrainingRow) => row.content)
-
-  return mapRowToProfile(profileData as VoiceProfileRow, examples)
-}
-
-export async function listProfiles(): Promise<VoiceProfile[]> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function listProfiles(supabase: SupabaseClient, userId: string): Promise<VoiceProfile[]> {
   const { data: profilesData, error: profilesError } = await supabase
     .from("voice_profiles")
     .select("*")
@@ -100,10 +68,12 @@ export async function listProfiles(): Promise<VoiceProfile[]> {
   return profileRows.map((row) => mapRowToProfile(row, examplesByProfileId.get(row.id) ?? []))
 }
 
-export async function createProfile(input: CreateProfileInput): Promise<VoiceProfile> {
-  const { supabase, userId } = await getAuthContext()
-
-  const { data: createdProfile, error: createError } = await supabase
+export async function createProfile(
+  supabase: SupabaseClient, 
+  userId: string, 
+  input: CreateProfileInput
+): Promise<VoiceProfile> {
+  const { data: created, error: createError } = await supabase
     .from("voice_profiles")
     .insert({
       user_id: userId,
@@ -113,7 +83,7 @@ export async function createProfile(input: CreateProfileInput): Promise<VoicePro
       allow_emojis: input.allowEmojis,
       enabled: input.enabled
     })
-    .select("id")
+    .select("*")
     .single()
 
   if (createError) throw createError
@@ -124,7 +94,7 @@ export async function createProfile(input: CreateProfileInput): Promise<VoicePro
 
   if (examples.length > 0) {
     const rows = examples.map((content, index) => ({
-      profile_id: createdProfile.id,
+      profile_id: created.id,
       kind: "example",
       content,
       display_order: index
@@ -133,13 +103,15 @@ export async function createProfile(input: CreateProfileInput): Promise<VoicePro
     if (examplesError) throw examplesError
   }
 
-  return getProfileById(supabase, userId, createdProfile.id)
+  return mapRowToProfile(created as VoiceProfileRow, examples)
 }
 
-export async function updateProfile(input: UpdateProfileInput): Promise<VoiceProfile> {
-  const { supabase, userId } = await getAuthContext()
-
-  const { error: updateError } = await supabase
+export async function updateProfile(
+  supabase: SupabaseClient, 
+  userId: string, 
+  input: UpdateProfileInput
+): Promise<VoiceProfile> {
+  const { data: updated, error: updateError } = await supabase
     .from("voice_profiles")
     .update({
       name: input.name,
@@ -151,6 +123,8 @@ export async function updateProfile(input: UpdateProfileInput): Promise<VoicePro
     })
     .eq("id", input.id)
     .eq("user_id", userId)
+    .select("*")
+    .single()
 
   if (updateError) throw updateError
 
@@ -171,37 +145,32 @@ export async function updateProfile(input: UpdateProfileInput): Promise<VoicePro
     if (examplesError) throw examplesError
   }
 
-  return getProfileById(supabase, userId, input.id)
+  return mapRowToProfile(updated as VoiceProfileRow, examples)
 }
 
-export async function toggleProfile(id: string): Promise<VoiceProfile> {
-  const { supabase, userId } = await getAuthContext()
-
-  const { data: current, error: currentError } = await supabase
-    .from("voice_profiles")
-    .select("enabled")
-    .eq("id", id)
-    .eq("user_id", userId)
-    .single()
-
-  if (currentError) throw currentError
-
-  const { error: updateError } = await supabase
+export async function toggleProfile(
+  supabase: SupabaseClient, 
+  userId: string, 
+  id: string, 
+  currentEnabled: boolean
+): Promise<void> {
+  const { error } = await supabase
     .from("voice_profiles")
     .update({
-      enabled: !current.enabled,
+      enabled: !currentEnabled,
       updated_at: new Date().toISOString()
     })
     .eq("id", id)
     .eq("user_id", userId)
 
-  if (updateError) throw updateError
-
-  return getProfileById(supabase, userId, id)
+  if (error) throw error
 }
 
-export async function moveToTrash(id: string): Promise<{ id: string }> {
-  const { supabase } = await getAuthContext()
+export async function moveToTrash(
+  supabase: SupabaseClient, 
+  userId: string, 
+  id: string
+): Promise<{ id: string }> {
   const { error } = await supabase.rpc("move_profile_to_trash", { p_profile_id: id })
   
   if (error) {
@@ -209,6 +178,7 @@ export async function moveToTrash(id: string): Promise<{ id: string }> {
       .from("voice_profiles")
       .update({ deleted_at: new Date().toISOString() })
       .eq("id", id)
+      .eq("user_id", userId)
       
     if (fallbackError) throw fallbackError
   }

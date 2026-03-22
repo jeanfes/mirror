@@ -2,6 +2,8 @@
 
 import { format, formatDistanceToNow } from "date-fns"
 import { BarChart3, CreditCard, Layers3 } from "lucide-react"
+import dynamic from "next/dynamic"
+import { useMemo, useState } from "react"
 import { Card } from "@/components/ui/Card"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
@@ -10,25 +12,61 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { useBilling } from "@/features/billing/hooks/useBilling"
 import { planDefinitions } from "@/features/billing/services/billing.service"
-import { BillingHistory } from "@/features/billing/components/BillingHistory"
-import { PaymentMethods } from "@/features/billing/components/PaymentMethods"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
+const BillingHistory = dynamic(() => import("@/features/billing/components/BillingHistory").then(m => m.BillingHistory), {
+    loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" />
+})
+const PaymentMethods = dynamic(() => import("@/features/billing/components/PaymentMethods").then(m => m.PaymentMethods), {
+    loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" />
+})
+
 export default function AccountPage() {
+    const [activeTab, setActiveTab] = useState("overview")
     const { data: account, isLoading: isAccountLoading, isError } = useAccount()
-    const { invoices, paymentMethods } = useBilling()
+    const { invoices, paymentMethods } = useBilling({ enabled: activeTab === "billing" })
     const { data: history } = useHistory()
     const { data: profiles } = useProfiles()
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isAccountLoading || !account)
 
+    const stats = useMemo(() => {
+        if (!account) return null
+
+        const historyItems = history ?? []
+        const profileItems = profiles ?? []
+        const activeProfiles = profileItems.filter((p) => p.enabled).length
+        const appliedCount = historyItems.filter((i) => i.status === "applied").length
+        const reusableCount = historyItems.filter((i) => i.source === "history_reuse").length
+        const currentMonth = new Date().getMonth()
+        const generatedThisMonth = historyItems.filter((i) => new Date(i.createdAt).getMonth() === currentMonth).length
+        const currentPlan = planDefinitions.find((p) => p.name === account.plan)
+        const totalCredits = currentPlan?.credits ?? account.creditsRemaining
+        const usedCredits = Math.max(totalCredits - account.creditsRemaining, 0)
+        const creditUsage = totalCredits > 0 ? Math.min((usedCredits / totalCredits) * 100, 100) : 0
+        const latestHistoryItem = historyItems[0]
+
+        return {
+            historyItems,
+            activeProfiles,
+            appliedCount,
+            reusableCount,
+            generatedThisMonth,
+            currentPlan,
+            totalCredits,
+            usedCredits,
+            creditUsage,
+            latestHistoryItem
+        }
+    }, [account, history, profiles])
+
     if (showLoading) {
         return <LoadingOverlay show={true} />
     }
 
-    if (isError || !account) {
+    if (isError || !account || !stats) {
         return (
             <StatePanel
                 tone="error"
@@ -38,20 +76,17 @@ export default function AccountPage() {
         )
     }
 
-    const resolvedAccount = account!
-
-    const historyItems = history ?? []
-    const profileItems = profiles ?? []
-    const activeProfiles = profileItems.filter((profile) => profile.enabled).length
-    const appliedCount = historyItems.filter((item) => item.status === "applied").length
-    const reusableCount = historyItems.filter((item) => item.source === "history_reuse").length
-    const currentMonth = new Date().getMonth()
-    const generatedThisMonth = historyItems.filter((item) => new Date(item.createdAt).getMonth() === currentMonth).length
-    const currentPlan = planDefinitions.find((plan) => plan.name === resolvedAccount.plan)
-    const totalCredits = currentPlan?.credits ?? resolvedAccount.creditsRemaining
-    const usedCredits = Math.max(totalCredits - resolvedAccount.creditsRemaining, 0)
-    const creditUsage = totalCredits > 0 ? Math.min((usedCredits / totalCredits) * 100, 100) : 0
-    const latestHistoryItem = historyItems[0]
+    const {
+        historyItems,
+        activeProfiles,
+        appliedCount,
+        reusableCount,
+        generatedThisMonth,
+        currentPlan,
+        usedCredits,
+        creditUsage,
+        latestHistoryItem
+    } = stats
 
     return (
         <div className="space-y-6">
@@ -78,7 +113,7 @@ export default function AccountPage() {
                     <Card className="dashboard-dark-panel">
                         <div className="flex items-end justify-between gap-4">
                             <div>
-                                <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{resolvedAccount.plan}</h2>
+                                <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{account.plan}</h2>
                                 <p className="mt-2 text-[14px] leading-6 text-white/72">{currentPlan?.summary ?? t.app.account.activePlanDesc}</p>
                             </div>
                             <p className="text-[28px] font-semibold tracking-[-0.04em] text-white">{currentPlan?.price ?? "$0"}</p>
@@ -97,14 +132,14 @@ export default function AccountPage() {
                             />
                             <div className="mt-3 flex items-center justify-between gap-3 text-[13px] text-white/72">
                                 <span>{usedCredits} {t.app.account.used}</span>
-                                <span>{resolvedAccount.creditsRemaining} {t.app.account.remaining}</span>
+                                <span>{account.creditsRemaining} {t.app.account.remaining}</span>
                             </div>
                         </div>
 
                         <div className="mt-4 grid grid-cols-2 gap-3">
                             <div className="dashboard-dark-stat-muted">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.renewal}</p>
-                                <p className="mt-2 text-[15px] font-semibold text-white">{resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
+                                <p className="mt-2 text-[15px] font-semibold text-white">{account.renewalDate ? format(new Date(account.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
                             </div>
                             <div className="dashboard-dark-stat-muted">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.latestOutput}</p>
@@ -115,7 +150,7 @@ export default function AccountPage() {
                 </div>
             </section>
 
-            <Tabs defaultValue="overview">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList>
                     <TabsTrigger value="overview">{t.app.account.tabOverview}</TabsTrigger>
                     <TabsTrigger value="usage">{t.app.account.tabUsage}</TabsTrigger>
@@ -129,8 +164,8 @@ export default function AccountPage() {
                                 <CreditCard className="h-5 w-5" />
                             </div>
                             <p className="dashboard-overline mt-4">{t.app.account.currentPlan}</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.plan}</p>
-                            <p className="mt-2 body-muted">{t.app.account.renewsOn} {resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{account.plan}</p>
+                            <p className="mt-2 body-muted">{t.app.account.renewsOn} {account.renewalDate ? format(new Date(account.renewalDate), "MMM d, yyyy") : t.app.account.na}</p>
                         </Card>
 
                         <Card className="dashboard-card-lg">
@@ -138,7 +173,7 @@ export default function AccountPage() {
                                 <BarChart3 className="h-5 w-5" />
                             </div>
                             <p className="dashboard-overline mt-4">{t.app.account.creditsRemainingLabel}</p>
-                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{resolvedAccount.creditsRemaining}</p>
+                            <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{account.creditsRemaining}</p>
                             <p className="mt-2 body-muted">{t.app.account.creditsAvailableDesc}</p>
                         </Card>
 

@@ -1,30 +1,34 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
+import { useSupabaseClient } from "@/lib/supabase/client"
+import { useSession } from "@/lib/supabase/useSession"
 import { getInvoices, getBillingInfo } from "@/features/billing/services/billing.service"
 
-export function useBilling() {
-  const { userId, isAuthenticating } = useUserId()
-  const invoicesKey = userId ? makeQueryKey("invoices", userId) : ["invoices"]
-  const billingInfoKey = userId ? makeQueryKey("billingInfo", userId) : ["billingInfo"]
+export function useBilling(options?: { enabled?: boolean }) {
+  const supabase = useSupabaseClient()
+  const { userId, isAuthenticating } = useSession()
+  const isEnabled = options?.enabled !== false && !!userId
+  
+  const invoicesKey = ["invoices", userId]
+  const billingInfoKey = ["billingInfo", userId]
 
   const invoicesQuery = useQuery({
     queryKey: invoicesKey,
-    queryFn: getInvoices,
+    queryFn: () => getInvoices(supabase, userId!),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
-    enabled: !!userId
+    enabled: isEnabled
   })
 
   const billingInfoQuery = useQuery({
     queryKey: billingInfoKey,
-    queryFn: getBillingInfo,
+    queryFn: () => getBillingInfo(supabase),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
-    enabled: !!userId
+    enabled: isEnabled
   })
 
   return {
