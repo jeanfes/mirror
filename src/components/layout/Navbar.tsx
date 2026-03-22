@@ -19,23 +19,26 @@ export function Navbar() {
         navItems.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? t.app.navigation.profiles
 
     const isPageLoading = useLoadingStore((state) => state.isPageLoading)
-
-    if (isAccountLoading || isPageLoading) return null
+    const isLoading = isAccountLoading || isPageLoading
 
     return (
         <header className="relative flex pb-2 pt-0 w-full shrink-0 items-center justify-between border-b border-border-soft">
             <div className="flex min-w-0 items-center gap-3">
                 <MobileSidebar />
-                <h1 className="truncate text-[16px] font-semibold tracking-[-0.01em] text-primary-text">{currentSection}</h1>
+                <h1 className="truncate text-[16px] font-semibold tracking-[-0.01em] text-primary-text">
+                    {isLoading ? t.auth.loading : currentSection}
+                </h1>
             </div>
 
-            {account?.plan === "Free" ? (
+            {!isLoading && account?.plan === "Free" && (
                 <Link href={ROUTES.private.plans}>
                     <Button size="md" className="h-8.5 rounded-full px-4 text-[12px]">
                         Upgrade
                     </Button>
                 </Link>
-            ) : <div className="h-8 w-22.5" aria-hidden="true" />}
+            )}
+            {isLoading && <div className="h-8.5 w-20 animate-pulse rounded-full bg-surface-hover" />}
+            {!isLoading && account?.plan !== "Free" && <div className="h-8 w-22.5" aria-hidden="true" />}
         </header>
     )
 }

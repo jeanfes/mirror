@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import {
     DEFAULT_RESOLVED_THEME,
     DEFAULT_THEME_PREFERENCE,
@@ -95,15 +95,15 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
         writeThemeState(themePreference, resolvedTheme)
     }, [resolvedTheme, themePreference])
 
+    const value = useMemo(() => ({
+        themePreference,
+        resolvedTheme,
+        systemTheme,
+        setThemePreference: setThemePreferenceState
+    }), [themePreference, resolvedTheme, systemTheme])
+
     return (
-        <ThemeContext.Provider
-            value={{
-                themePreference,
-                resolvedTheme,
-                systemTheme,
-                setThemePreference: setThemePreferenceState
-            }}
-        >
+        <ThemeContext.Provider value={value}>
             {children}
         </ThemeContext.Provider>
     )
