@@ -1,15 +1,11 @@
-"use client"
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { Loader2 } from "lucide-react"
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "dangerSoft"
 type ButtonSize = "md" | "lg"
 
-import { m } from "motion/react"
-import type { HTMLMotionProps } from "motion/react"
-import { Loader2 } from "lucide-react"
-
-interface ButtonProps extends HTMLMotionProps<"button"> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: ButtonVariant
     size?: ButtonSize
     loading?: boolean
@@ -42,8 +38,7 @@ export function Button({
     const isDisabled = disabled || loading
 
     return (
-        <m.button
-            whileTap={{ scale: 0.98 }}
+        <button
             disabled={isDisabled}
             aria-busy={ariaBusy ?? loading}
             aria-label={loading ? (loadingLabel || "Working...") : undefined}
@@ -65,6 +60,6 @@ export function Button({
                     <Loader2 className="h-5 w-5 animate-spin opacity-80" aria-hidden="true" />
                 </span>
             )}
-        </m.button>
+        </button>
     )
 }

@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { Dictionary } from "@/lib/i18n";
-import { m } from "motion/react";
 import { toast } from "sonner";
 
 interface ContactFormProps {
@@ -18,15 +17,8 @@ export function ContactForm({ t }: ContactFormProps) {
         toast.success(t.contactPage.successMessage);
     };
 
-    const fadeInUp = {
-        initial: { opacity: 0, y: 8 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.25, ease: "easeOut" as const }
-    };
-
     return (
-        <m.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
+        <div className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid gap-6 sm:grid-cols-2">
                     <Input
@@ -66,6 +58,6 @@ export function ContactForm({ t }: ContactFormProps) {
                     </Button>
                 </div>
             </form>
-        </m.div>
+        </div>
     );
 }

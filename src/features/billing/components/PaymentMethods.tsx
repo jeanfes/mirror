@@ -1,10 +1,7 @@
-"use client"
-
 import { type PaymentMethod } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { Card } from "@/components/ui/Card"
 import { CreditCard} from "lucide-react"
-import { m } from "motion/react"
 
 interface PaymentMethodsProps {
   methods: PaymentMethod[]
@@ -16,10 +13,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
 
   if (!method) {
     return (
-      <m.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
+      <div
         className="space-y-4"
       >
         <div className="flex flex-col items-center justify-center py-20 px-10 text-center neo-card rounded-3xl border border-border-soft bg-surface-base/30 backdrop-blur-sm shadow-premium-sm">
@@ -36,7 +30,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
             {t.app.billing.noPaymentMethodsDesc}
           </p>
         </div>
-      </m.div>
+      </div>
     )
   }
 

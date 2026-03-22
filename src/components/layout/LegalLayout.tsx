@@ -1,7 +1,4 @@
-"use client"
-
 import { ReactNode } from "react"
-import { m } from "motion/react"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { ROUTES } from "@/lib/routes"
@@ -18,9 +15,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
     <div className="bg-surface-base min-h-screen pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         
-        <m.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
+        <div
           className="mb-8"
         >
           <Link
@@ -32,15 +27,11 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             </div>
             Volver al inicio
           </Link>
-        </m.div>
+        </div>
 
         
         <header className="mb-16">
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+          <div>
             <span className="inline-block px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue text-[11px] font-black uppercase tracking-[0.15em] mb-4">
               Legal & Privacidad
             </span>
@@ -54,14 +45,11 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
               <div className="h-px w-8 bg-border-soft" />
               Última actualización: {lastUpdated}
             </div>
-          </m.div>
+          </div>
         </header>
 
         
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+        <div
           className="legal-content prose prose-slate max-w-none 
             prose-headings:text-primary-dark prose-headings:font-black prose-headings:tracking-tight 
             prose-p:text-secondary-text prose-p:leading-relaxed prose-p:text-[16px]
@@ -71,7 +59,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             [&>section]:mb-12"
         >
           {children}
-        </m.div>
+        </div>
       </div>
     </div>
   )

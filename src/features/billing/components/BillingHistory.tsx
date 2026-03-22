@@ -1,7 +1,4 @@
-"use client"
-
 import { Download, FileText } from "lucide-react"
-import { m } from "motion/react"
 import { format } from "date-fns"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { type Invoice } from "@/features/billing/services/billing.service"
@@ -37,17 +34,12 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
 
   if (invoices.length === 0) {
     return (
-      <m.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+      <div 
         className="flex flex-col items-center justify-center py-20 px-6 text-center neo-card rounded-3xl border border-border-soft bg-surface-base/30 backdrop-blur-sm shadow-premium-sm"
       >
         <div className="relative mb-6">
-          <m.div 
-            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full" 
+          <div 
+            className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full opacity-10" 
           />
           <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-surface-elevated text-secondary-text shadow-premium-sm ring-1 ring-border-soft">
             <FileText className="h-10 w-10 text-primary-text/40" strokeWidth={1.5} />
@@ -59,7 +51,7 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
         <p className="max-w-xs text-[15px] font-medium text-secondary-text leading-relaxed">
           {t.app.billing.noInvoicesDesc}
         </p>
-      </m.div>
+      </div>
     )
   }
 

@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import type { ResolvedTheme, ThemePreference } from "@/lib/theme"
 import { ThemeProvider } from "./ThemeProvider"
 import { Toaster } from "sonner"
-import { LazyMotion, domAnimation } from "motion/react"
-import type { ResolvedTheme, ThemePreference } from "@/lib/theme"
 
 interface AppProvidersProps {
   children: React.ReactNode
@@ -54,9 +53,7 @@ export function AppProviders({
       initialResolvedTheme={initialResolvedTheme}
     >
       <QueryClientProvider client={queryClient}>
-        <LazyMotion features={domAnimation} strict>
-          {children}
-        </LazyMotion>
+        {children}
         <Toaster
           position="top-right"
           gap={8}

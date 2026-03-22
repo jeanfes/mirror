@@ -73,14 +73,17 @@ export default function AccountPage() {
 
   if (showLoading) return <LoadingOverlay show={true} />
 
-  if (isError || !account || !stats) {
-    return (
-      <StatePanel
-        tone="error"
-        title={t.app.common.accountErrorTitle}
-        description={t.app.common.accountErrorDesc}
-      />
-    )
+  if (isAccountLoading || !account || !stats) {
+    if (isError) {
+      return (
+        <StatePanel
+          tone="error"
+          title={t.app.common.accountErrorTitle}
+          description={t.app.common.accountErrorDesc}
+        />
+      )
+    }
+    return null
   }
 
   const {

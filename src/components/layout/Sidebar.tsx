@@ -5,7 +5,6 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import clsx from "clsx"
-import { m } from "motion/react"
 import Image from "next/image"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -43,14 +42,8 @@ export function Sidebar({ user }: SidebarProps) {
                             )}
                         >
                             {isActive && (
-                                <m.div
-                                    layoutId="activeIndicator"
+                                <div
                                     className="absolute inset-0 bg-(--nav-active-bg) rounded-full shadow-premium-sm"
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 450,
-                                        damping: 35
-                                    }}
                                 />
                             )}
                             <Icon className="relative z-10 h-5 w-5" />

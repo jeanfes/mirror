@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useMemo } from "react"
@@ -12,12 +13,72 @@ import { useTrash } from "@/features/trash/hooks/useTrash"
 import type { TrashItem } from "@/features/trash/services/trash.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
+import { memo } from "react"
+
+const TrashItemCard = memo(({ 
+  item, 
+  onRestore, 
+  onDelete, 
+  isMutating, 
+  t 
+}: { 
+  item: TrashItem
+  onRestore: (item: TrashItem) => void
+  onDelete: (item: TrashItem) => void
+  isMutating: boolean
+  t: any
+}) => (
+  <Card className="dashboard-card-xl">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-primary-text">
+            {item.title}
+          </h3>
+          <span className="rounded-full border border-border-soft bg-surface-base px-2.5 py-1 text-[11px] font-semibold text-secondary-text capitalize">
+            {item.kind}
+          </span>
+        </div>
+        <p className="mt-2 max-w-2xl body-muted">{item.summary}</p>
+        <p className="mt-3 text-[12px] font-medium text-secondary-text">
+          {t.app.trash.deletedX.replace(
+            "{0}",
+            formatDistanceToNow(item.deletedAt, { addSuffix: true })
+          )}
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => onRestore(item)}
+          loading={isMutating}
+        >
+          <ArchiveRestore className="h-4 w-4" />
+          {t.app.trash.restore}
+        </Button>
+        <Button
+          type="button"
+          onClick={() => onDelete(item)}
+          loading={isMutating}
+        >
+          <Trash2 className="h-4 w-4" />
+          {t.app.trash.deleteForever}
+        </Button>
+      </div>
+    </div>
+  </Card>
+))
+TrashItemCard.displayName = "TrashItemCard"
+
 export default function TrashPage() {
   const {
     data,
     isLoading,
     isError,
     restore,
+    restoreAll,
     deleteForever: deleteItem,
     isMutating,
   } = useTrash()
@@ -48,18 +109,22 @@ export default function TrashPage() {
       await deleteItem(item.id, item.kind)
       toast.success(t.app.common.itemDeleted)
     } catch {
-      toast.error(t.app.common.itemDeleteError)
+      if (!isMutating) { // Prevent multiple error toasts if optimistic update failed
+         toast.error(t.app.common.itemDeleteError)
+      }
     }
   }
 
-  // Use Promise.all instead of sequential awaits — N items = N parallel requests
-  const restoreAll = async () => {
+  // Optimized batch restore from hook
+  const handleRestoreAll = async () => {
     if (items.length === 0) return
     try {
-      await Promise.all(items.map((item) => restore(item.id, item.kind)))
+      await restoreAll(items)
       toast.success(t.app.common.allRestored)
     } catch {
-      toast.error(t.app.common.allRestoreError)
+      if (!isMutating) {
+        toast.error(t.app.common.allRestoreError)
+      }
     }
   }
 
@@ -159,7 +224,7 @@ export default function TrashPage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={restoreAll}
+              onClick={handleRestoreAll}
               loading={isMutating}
             >
               <Undo2 className="h-4 w-4" />
@@ -169,47 +234,14 @@ export default function TrashPage() {
 
           <div className="space-y-4">
             {items.map((item) => (
-              <Card key={item.id} className="dashboard-card-xl">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-primary-text">
-                        {item.title}
-                      </h3>
-                      <span className="rounded-full border border-border-soft bg-surface-base px-2.5 py-1 text-[11px] font-semibold text-secondary-text capitalize">
-                        {item.kind}
-                      </span>
-                    </div>
-                    <p className="mt-2 max-w-2xl body-muted">{item.summary}</p>
-                    <p className="mt-3 text-[12px] font-medium text-secondary-text">
-                      {t.app.trash.deletedX.replace(
-                        "{0}",
-                        formatDistanceToNow(item.deletedAt, { addSuffix: true })
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() => restoreItem(item)}
-                      loading={isMutating}
-                    >
-                      <ArchiveRestore className="h-4 w-4" />
-                      {t.app.trash.restore}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => deleteForever(item)}
-                      loading={isMutating}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      {t.app.trash.deleteForever}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <TrashItemCard
+                key={item.id}
+                item={item}
+                onRestore={restoreItem}
+                onDelete={deleteForever}
+                isMutating={isMutating}
+                t={t}
+              />
             ))}
           </div>
         </>

@@ -1,6 +1,3 @@
-"use client";
-
-import { m } from "motion/react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
@@ -19,14 +16,11 @@ interface PricingCardProps {
     popularText?: string;
 }
 
-export function PricingCard({ plan, href, index, perMonthText, popularText }: PricingCardProps) {
+export function PricingCard({ plan, href, perMonthText, popularText }: PricingCardProps) {
     const isPro = plan.popular;
 
     return (
-        <m.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: 0.1 + index * 0.05, ease: "easeOut" }}
+        <div
             className={`${isPro 
                 ? "neo-shell relative flex flex-col border border-border-soft bg-surface-overlay p-8 shadow-premium-md md:scale-105 z-20 rounded-[22px]" 
                 : "neo-card flex flex-col rounded-[22px] border border-border-light bg-surface-card backdrop-blur-sm p-8 shadow-premium-sm"
@@ -53,14 +47,14 @@ export function PricingCard({ plan, href, index, perMonthText, popularText }: Pr
                     </li>
                 ))}
             </ul>
-            <m.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <div>
                 <Link 
                     href={href} 
                     className={`${isPro ? "neo-btn-primary shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl`}
                 >
                     {plan.buttonText}
                 </Link>
-            </m.div>
-        </m.div>
+            </div>
+        </div>
     );
 }

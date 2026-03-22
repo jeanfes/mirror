@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       "lucide-react",
       "date-fns",
-      "motion/react",
     ],
   },
 
