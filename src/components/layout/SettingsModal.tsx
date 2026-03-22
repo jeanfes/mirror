@@ -1,6 +1,6 @@
-import { useState } from "react"
+import React, { useState, memo } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "motion/react"
+import { m, AnimatePresence } from "motion/react"
 import { toast } from "sonner"
 import {
     BadgeCheck,
@@ -49,13 +49,15 @@ interface SettingsModalProps {
     }
 }
 
-export default function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
+const SettingsModal = memo(function SettingsModal({ children, open, onOpenChange, user = { name: "User Name", email: "user@example.com" } }: SettingsModalProps) {
 
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
     const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
     const { logout, isPending: isLogoutPending } = useLogout()
     const { themePreference, setThemePreference } = useTheme()
-    const { t, language, setLanguage } = useLanguageStore()
+    const t = useLanguageStore((state) => state.t)
+    const language = useLanguageStore((state) => state.language)
+    const setLanguage = useLanguageStore((state) => state.setLanguage)
     const { updateSettings } = useUserSettings()
 
     const mapThemePreferenceToSettingsTheme = (preference: ThemePreference): "light" | "dark" | "auto" => {
@@ -149,7 +151,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                 <AnimatePresence>
 
                                     <TabsContent value="general" key="general" asChild>
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -218,12 +220,12 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     </div>
                                                 </div>
                                             </Card>
-                                        </motion.div>
+                                        </m.div>
                                     </TabsContent>
 
 
                                     <TabsContent value="appearance" key="appearance" asChild>
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -252,12 +254,12 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     {t.app.settingsModal.themeDesc}
                                                 </p>
                                             </Card>
-                                        </motion.div>
+                                        </m.div>
                                     </TabsContent>
 
 
                                     <TabsContent value="security" key="security" asChild>
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -303,12 +305,12 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     </ul>
                                                 </div>
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     </TabsContent>
 
 
                                     <TabsContent value="notifications" key="notifications" asChild>
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -334,12 +336,12 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     />
                                                 </div>
                                             </Card>
-                                        </motion.div>
+                                        </m.div>
                                     </TabsContent>
 
 
                                     <TabsContent value="data" key="data" asChild>
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -10 }}
@@ -374,7 +376,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
                                                     <Button variant="dangerSoft" className="w-full font-bold h-10 mt-2" onClick={() => setIsDeleteAccountConfirmOpen(true)}>{t.app.settingsModal.deleteAccount}</Button>
                                                 </Card>
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     </TabsContent>
                                 </AnimatePresence>
                             </div>
@@ -430,5 +432,7 @@ export default function SettingsModal({ children, open, onOpenChange, user = { n
             <LoadingOverlay show={isLogoutPending} label="Logging out..." />
         </>
     )
-}
+})
+
+export default SettingsModal
 

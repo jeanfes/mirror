@@ -1,0 +1,42 @@
+react-doctor v0.0.30
+
+[32m✔[39m Select projects to scan [2m›[22m mirror
+Scanning uncommitted changes
+
+[2mScanning C:\Proyectos\Extensions\mirror\web...[22m
+
+- Detecting framework. Found [36mNext.js[39m.
+[32m✔[39m Detecting framework. Found [36mNext.js[39m.
+- Detecting React version. Found [36mReact 19.2.3[39m.
+[32m✔[39m Detecting React version. Found [36mReact 19.2.3[39m.
+- Detecting language. Found [36mTypeScript[39m.
+[32m✔[39m Detecting language. Found [36mTypeScript[39m.
+- Detecting React Compiler. Not found.
+[32m✔[39m Detecting React Compiler. Not found.
+- Scanning [36m26[39m changed source files.
+[32m✔[39m Scanning [36m26[39m changed source files.
+
+- Running lint checks...
+[32m✔[39m Running lint checks.
+  [33m⚠[39m 3 setState calls in a single useEffect — consider using useReducer or deriving state
+[2m    Combine into useReducer: `const [state, dispatch] = useReducer(reducer, initialState)`[22m
+[2m    src/components/providers/ThemeProvider.tsx: 53[22m
+
+  [2m┌────────────────────────────────────────────────────┐[22m
+  [2m│[22m [32m┌─────┐[39m                                            [2m│[22m
+  [2m│[22m [32m│ ◠ ◠ │[39m                                            [2m│[22m
+  [2m│[22m [32m│  ▽  │[39m                                            [2m│[22m
+  [2m│[22m [32m└─────┘[39m                                            [2m│[22m
+  [2m│[22m React Doctor [2m(www.react.doctor)[22m                    [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [32m99[39m / 100  [32mGreat[39m                                    [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [32m██████████████████████████████████████████████████[39m[2m[22m [2m│[22m
+  [2m│[22m                                                    [2m│[22m
+  [2m│[22m [33m⚠ 1 warning[39m  [2macross 1/26 files[22m  [2min 9.5s[22m            [2m│[22m
+  [2m└────────────────────────────────────────────────────┘[22m
+
+[2m  Full diagnostics written to C:\Users\jeane\AppData\Local\Temp\react-doctor-f412e225-cc00-4e58-b424-9c5fad9a25eb[22m
+
+[2m  Share your results: [36mhttps://www.react.doctor/share?p=mirror&s=99&w=1&f=1[39m[22m
+

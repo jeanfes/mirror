@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
@@ -23,7 +23,7 @@ export function PricingCard({ plan, href, index, perMonthText, popularText }: Pr
     const isPro = plan.popular;
 
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, delay: 0.1 + index * 0.05, ease: "easeOut" }}
@@ -46,21 +46,21 @@ export function PricingCard({ plan, href, index, perMonthText, popularText }: Pr
                 <span className={`${isPro ? "text-primary-dark/70" : "text-secondary-text"} text-sm font-bold uppercase tracking-wider`}>{perMonthText}</span>
             </div>
             <ul className="space-y-4 mb-10 flex-1">
-                {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
+                {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
                         <CheckCircle2 className={`h-4.5 w-4.5 shrink-0 mt-0.5 ${isPro ? "text-accent-blue" : "text-primary-light"}`} />
                         {feature}
                     </li>
                 ))}
             </ul>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <m.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link 
                     href={href} 
                     className={`${isPro ? "neo-btn-primary shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl`}
                 >
                     {plan.buttonText}
                 </Link>
-            </motion.div>
-        </motion.div>
+            </m.div>
+        </m.div>
     );
 }

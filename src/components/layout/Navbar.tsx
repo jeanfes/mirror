@@ -12,7 +12,7 @@ import { useLoadingStore } from "@/store/useLoadingStore"
 export function Navbar() {
     const { data: account, isLoading: isAccountLoading } = useAccount()
     const pathname = usePathname()
-    const { t } = useLanguageStore()
+    const t = useLanguageStore((state) => state.t)
     const navItems = getNavItems(t)
 
     const currentSection =

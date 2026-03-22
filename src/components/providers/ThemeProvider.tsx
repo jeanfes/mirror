@@ -44,8 +44,11 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, initialThemePreference, initialResolvedTheme }: ThemeProviderProps) {
-    const [themePreference, setThemePreferenceState] = useState<ThemePreference>(initialThemePreference)
-    const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(initialResolvedTheme)
+    const [state, setState] = useState(() => ({
+        themePreference: initialThemePreference,
+        systemTheme: initialResolvedTheme
+    }))
+    const { themePreference, systemTheme } = state
 
     useEffect(() => {
         const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY)
@@ -56,16 +59,14 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
             const nextPreference = storedPreference ?? cookiePreference ?? initialThemePreference ?? DEFAULT_THEME_PREFERENCE
             const nextSystemTheme = getSystemTheme()
 
-            setThemePreferenceState((currentPreference) =>
-                currentPreference === nextPreference ? currentPreference : nextPreference
-            )
-            setSystemTheme((currentSystemTheme) =>
-                currentSystemTheme === nextSystemTheme ? currentSystemTheme : nextSystemTheme
-            )
+            setState({
+                themePreference: nextPreference,
+                systemTheme: nextSystemTheme
+            })
         }
 
         const handleSystemThemeChange = () => {
-            setSystemTheme(getSystemTheme())
+            setState(prev => ({ ...prev, systemTheme: getSystemTheme() }))
         }
 
         const handleStorage = (event: StorageEvent) => {
@@ -75,7 +76,7 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
 
             const nextPreference = parseThemePreference(event.newValue)
             if (nextPreference) {
-                setThemePreferenceState(nextPreference)
+                setState(prev => ({ ...prev, themePreference: nextPreference }))
             }
         }
 
@@ -99,7 +100,7 @@ export function ThemeProvider({ children, initialThemePreference, initialResolve
         themePreference,
         resolvedTheme,
         systemTheme,
-        setThemePreference: setThemePreferenceState
+        setThemePreference: (pref: ThemePreference) => setState(prev => ({ ...prev, themePreference: pref }))
     }), [themePreference, resolvedTheme, systemTheme])
 
     return (

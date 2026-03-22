@@ -5,6 +5,7 @@ import { ResolvedTheme, ThemePreference } from "@/lib/theme"
 import { ThemeProvider } from "./ThemeProvider"
 import { useState } from "react"
 import { Toaster } from "sonner"
+import { LazyMotion, domAnimation } from "motion/react"
 
 interface AppProvidersProps {
     children: React.ReactNode
@@ -32,7 +33,9 @@ export function AppProviders({ children, initialThemePreference, initialResolved
     return (
         <ThemeProvider initialThemePreference={initialThemePreference} initialResolvedTheme={initialResolvedTheme}>
             <QueryClientProvider client={queryClient}>
-                {children}
+                <LazyMotion features={domAnimation}>
+                    {children}
+                </LazyMotion>
                 <Toaster
                     position="top-right"
                     gap={8}

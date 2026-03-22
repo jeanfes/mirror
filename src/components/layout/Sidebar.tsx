@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import clsx from "clsx"
-import { motion } from "motion/react"
+import { m } from "motion/react"
 import Image from "next/image"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -21,7 +21,7 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
     const initial = (user.name?.[0] ?? user.email?.[0] ?? "U").toUpperCase()
     const pathname = usePathname()
-    const { t } = useLanguageStore()
+    const t = useLanguageStore((state) => state.t)
     const navItems = useMemo(() => getNavItems(t), [t])
 
     return (
@@ -43,7 +43,7 @@ export function Sidebar({ user }: SidebarProps) {
                             )}
                         >
                             {isActive && (
-                                <motion.div
+                                <m.div
                                     layoutId="activeIndicator"
                                     className="absolute inset-0 bg-(--nav-active-bg) rounded-full shadow-premium-sm"
                                     transition={{

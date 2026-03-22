@@ -4,7 +4,7 @@ import { type PaymentMethod } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { Card } from "@/components/ui/Card"
 import { CreditCard} from "lucide-react"
-import { motion } from "motion/react"
+import { m } from "motion/react"
 
 interface PaymentMethodsProps {
   methods: PaymentMethod[]
@@ -16,7 +16,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
 
   if (!method) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
@@ -36,7 +36,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
             {t.app.billing.noPaymentMethodsDesc}
           </p>
         </div>
-      </motion.div>
+      </m.div>
     )
   }
 

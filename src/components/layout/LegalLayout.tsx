@@ -1,7 +1,7 @@
 "use client"
 
 import { ReactNode } from "react"
-import { motion } from "motion/react"
+import { m } from "motion/react"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { ROUTES } from "@/lib/routes"
@@ -18,7 +18,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
     <div className="bg-surface-base min-h-screen pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           className="mb-8"
@@ -32,11 +32,11 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             </div>
             Volver al inicio
           </Link>
-        </motion.div>
+        </m.div>
 
         
         <header className="mb-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -54,11 +54,11 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
               <div className="h-px w-8 bg-border-soft" />
               Última actualización: {lastUpdated}
             </div>
-          </motion.div>
+          </m.div>
         </header>
 
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -71,7 +71,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             [&>section]:mb-12"
         >
           {children}
-        </motion.div>
+        </m.div>
       </div>
     </div>
   )

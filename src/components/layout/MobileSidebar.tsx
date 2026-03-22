@@ -7,7 +7,7 @@ import dynamic from "next/dynamic"
 import { usePathname, useRouter } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import clsx from "clsx"
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, m } from "motion/react"
 import { createPortal } from "react-dom"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -52,7 +52,7 @@ export function MobileSidebar() {
             {isOpen && (
                 <div className="fixed inset-0 z-40 flex">
                     
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -62,7 +62,7 @@ export function MobileSidebar() {
                     />
 
                     
-                    <motion.aside
+                    <m.aside
                         initial={{ x: "-100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
@@ -73,14 +73,14 @@ export function MobileSidebar() {
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-light bg-surface-card">
                                 <Image src="/icon.png" alt="Mirror logo" width={22} height={22} priority />
                             </div>
-                            <motion.button
+                            <m.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => setIsOpen(false)}
                                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-soft bg-surface-elevated text-secondary-text shadow-premium-sm"
                                 aria-label="Close menu"
                             >
                                 <X className="h-4 w-4" />
-                            </motion.button>
+                            </m.button>
                         </div>
 
                         <div className="custom-scrollbar flex-1 space-y-2 overflow-y-auto pr-1">
@@ -103,7 +103,7 @@ export function MobileSidebar() {
                                         )}
                                     >
                                         {isActive && (
-                                            <motion.div
+                                            <m.div
                                                 layoutId="activeIndicatorMobile"
                                                 className="absolute inset-0 rounded-2xl bg-(--nav-active-bg) shadow-premium-sm"
                                                 transition={{
@@ -120,7 +120,7 @@ export function MobileSidebar() {
                             })}
                         </div>
 
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, duration: 0.2 }}
@@ -134,8 +134,8 @@ export function MobileSidebar() {
                             >
                                 U
                             </button>
-                        </motion.div>
-                    </motion.aside>
+                        </m.div>
+                    </m.aside>
                 </div>
             )}
         </AnimatePresence>
@@ -143,14 +143,14 @@ export function MobileSidebar() {
 
     return (
         <div className="block md:hidden">
-            <motion.button
+            <m.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(true)}
                 className="flex items-center justify-center rounded-md p-2 text-secondary-text hover:bg-surface-hover"
                 aria-label="Open menu"
             >
                 <Menu className="h-5 w-5" />
-            </motion.button>
+            </m.button>
 
             {typeof window !== "undefined" ? createPortal(sidebarOverlay, document.body) : null}
 

@@ -1,5 +1,6 @@
 import { Space_Grotesk } from "next/font/google"
 import type { Metadata } from "next"
+import Script from "next/script"
 import { cookies} from "next/headers"
 import { AppProviders } from "@/components/providers/AppProviders"
 import { PageTitle } from "@/components/layout/PageTitle"
@@ -68,7 +69,9 @@ export default async function RootLayout({
             style={{ colorScheme: initialResolvedTheme }}
         >
             <head>
-                <script dangerouslySetInnerHTML={{ __html: buildThemeInitScript(initialThemePreference, initialResolvedTheme) }} />
+                <Script id="theme-init" strategy="beforeInteractive">
+                    {buildThemeInitScript(initialThemePreference, initialResolvedTheme)}
+                </Script>
                 <SpeedInsights />
             </head>
             <body className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased`}>

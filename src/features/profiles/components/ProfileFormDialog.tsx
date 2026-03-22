@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, memo } from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -46,8 +46,8 @@ const defaults: ProfileFormValues = {
     enabled: true
 }
 
-export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit }: ProfileFormDialogProps) {
-    const { t } = useLanguageStore()
+export const ProfileFormDialog = memo(function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit }: ProfileFormDialogProps) {
+    const t = useLanguageStore((state) => state.t)
     const {
         register,
         control,
@@ -208,4 +208,4 @@ export function ProfileFormDialog({ open, profile, isPending, onClose, onSubmit 
             </DialogContent>
         </Dialog>
     )
-}
+})

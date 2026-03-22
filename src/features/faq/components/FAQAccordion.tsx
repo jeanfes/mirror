@@ -21,7 +21,7 @@ export function FAQAccordion({ questions }: FAQAccordionProps) {
         const isOpen = openIndex === i;
         return (
           <div
-            key={i}
+            key={faq.q}
             className={`neo-card rounded-[18px] border border-border-light bg-surface-card backdrop-blur-sm shadow-premium-sm transition-all duration-300 ${isOpen ? 'shadow-premium-md scale-[1.02]' : 'hover:shadow-premium-sm'}`}
           >
             <button

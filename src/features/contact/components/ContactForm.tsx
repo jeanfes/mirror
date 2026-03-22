@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { toast } from "sonner";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Dictionary } from "@/types/i18n";
 
 interface ContactFormProps {
@@ -26,7 +26,7 @@ export function ContactForm({ t }: ContactFormProps) {
     };
 
     return (
-        <motion.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
+        <m.div {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }} className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid gap-6 sm:grid-cols-2">
                     <Input
@@ -66,6 +66,6 @@ export function ContactForm({ t }: ContactFormProps) {
                     </Button>
                 </div>
             </form>
-        </motion.div>
+        </m.div>
     );
 }

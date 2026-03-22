@@ -5,8 +5,9 @@ import { twMerge } from "tailwind-merge"
 type ButtonVariant = "primary" | "secondary" | "ghost" | "dangerSoft"
 type ButtonSize = "md" | "lg"
 
-import { motion } from "motion/react"
+import { m } from "motion/react"
 import type { HTMLMotionProps } from "motion/react"
+import { Loader2 } from "lucide-react"
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
     variant?: ButtonVariant
@@ -41,7 +42,7 @@ export function Button({
     const isDisabled = disabled || loading
 
     return (
-        <motion.button
+        <m.button
             whileTap={{ scale: 0.98 }}
             disabled={isDisabled}
             aria-busy={ariaBusy ?? loading}
@@ -61,9 +62,9 @@ export function Button({
             </span>
             {loading && (
                 <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="loading-spinner h-5 w-5 border-t-current! opacity-80" aria-hidden="true" />
+                    <Loader2 className="h-5 w-5 animate-spin opacity-80" aria-hidden="true" />
                 </span>
             )}
-        </motion.button>
+        </m.button>
     )
 }
