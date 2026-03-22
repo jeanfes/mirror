@@ -1,7 +1,9 @@
+import { Loader2 } from "lucide-react"
+
 export default function Loading() {
     return (
         <div className="flex h-full min-h-[50vh] w-full items-center justify-center animate-in fade-in duration-300">
-            <div className="loading-spinner h-10 w-10 text-primary-text" />
+            <Loader2 className="h-10 w-10 animate-spin text-primary-text" />
         </div>
     )
 }

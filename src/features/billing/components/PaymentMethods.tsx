@@ -1,10 +1,9 @@
 "use client"
 
-import { CreditCard, Edit2, Plus } from "lucide-react"
-import { useLanguageStore } from "@/store/useLanguageStore"
 import { type PaymentMethod } from "@/features/billing/services/billing.service"
-import { Button } from "@/components/ui/Button"
+import { useLanguageStore } from "@/store/useLanguageStore"
 import { Card } from "@/components/ui/Card"
+import { CreditCard} from "lucide-react"
 import { motion } from "motion/react"
 
 interface PaymentMethodsProps {
@@ -33,7 +32,7 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
           <h3 className="text-lg font-bold text-primary-text mb-2 tracking-tight">
             {t.app.billing.noPaymentMethodsTitle}
           </h3>
-          <p className="max-w-[240px] text-[14px] font-medium text-secondary-text leading-relaxed">
+          <p className="max-w-60 text-[14px] font-medium text-secondary-text leading-relaxed">
             {t.app.billing.noPaymentMethodsDesc}
           </p>
         </div>
