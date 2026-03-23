@@ -1,7 +1,19 @@
 import { createClient } from "@/lib/supabase/server"
+import { cache } from "react"
 
-export async function getServerSession() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  return user
-}
+export const getServerSession = cache(async () => {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase.auth.getUser()
+
+    if (error) {
+      console.error("Supabase error:", error)
+      return null
+    }
+
+    return data?.user ?? null
+  } catch (e) {
+    console.error("Server session crash:", e)
+    return null
+  }
+})

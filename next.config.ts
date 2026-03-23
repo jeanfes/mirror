@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       "lucide-react",
       "date-fns",
-    ]
+    ],
   },
 
   images: {
@@ -21,8 +21,15 @@ const nextConfig: NextConfig = {
   },
 
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production"
-  }
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+
+  turbopack: {
+    resolveAlias:
+      process.env.NODE_ENV === "production"
+        ? { "react-scan": "./src/lib/empty-module.ts" }
+        : {},
+  },
 }
 
 export default nextConfig

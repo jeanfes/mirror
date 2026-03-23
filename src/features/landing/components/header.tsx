@@ -16,9 +16,6 @@ export function LandingHeader() {
                 <div className="flex min-w-0 items-center gap-4 lg:gap-7">
                     <Link href={ROUTES.public.index} className="flex shrink-0 items-center gap-2 text-[1.15rem] font-black tracking-tighter text-primary-dark">
                         <Image src="/icon.png" alt="Mirror Logo" width={24} height={24} className="rounded-md" />
-                        <span className="hidden sm:inline-flex items-center gap-1.5">
-                            Mirror <span className="text-secondary-text font-semibold text-[0.95em]">| Landing</span>
-                        </span>
                     </Link>
 
                     <nav className="hidden min-w-0 items-center gap-5 lg:gap-7 md:flex">
@@ -49,7 +46,7 @@ export function LandingHeader() {
                             ].map((lang) => (
                                 <button
                                     key={lang.code}
-                                    onClick={() => setLanguage(lang.code as any)}
+                                    onClick={() => setLanguage(lang.code as "es" | "en" | "pt" | "fr" | "de")}
                                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                                         language === lang.code
                                             ? "bg-surface-hover text-primary-dark shadow-[0_2px_10px_rgba(0,0,0,0.05)]"

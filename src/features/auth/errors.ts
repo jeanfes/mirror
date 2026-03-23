@@ -35,7 +35,7 @@ export type ResetPasswordError =
     | "connection_error"
     | "generic_error"
 
-export type OAuthStartError =
+type OAuthStartError =
     | "oauth_unavailable"
     | "rate_limit"
     | "auth_unavailable"

@@ -1,50 +1,106 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
+import { useSupabaseClient } from "@/lib/supabase/client"
+import { useSession } from "@/lib/supabase/useSession"
 import {
-    listTrash,
-    restoreTrashItem,
-    deleteTrashItem,
-    type TrashItem
+  listTrash,
+  restoreTrashItem,
+  deleteTrashItem,
+  type TrashItem,
 } from "@/features/trash/services/trash.service"
 
 export function useTrash() {
-    const queryClient = useQueryClient()
-    const userId = useUserId()
-    const trashKey = userId ? makeQueryKey("trash", userId) : ["trash"]
+  const queryClient = useQueryClient()
+  const supabase = useSupabaseClient()
+  const { userId, isAuthenticating } = useSession()
+  const trashKey = ["trash", userId]
 
-    const query = useQuery<TrashItem[]>({
-        queryKey: trashKey,
-        queryFn: listTrash,
-        staleTime: 120_000,
-        gcTime: 900_000,
-        refetchOnWindowFocus: false,
-        enabled: !!userId
-    })
+  const query = useQuery<TrashItem[]>({
+    queryKey: trashKey,
+    queryFn: () => listTrash(supabase, userId!),
+    staleTime: 120_000,
+    gcTime: 900_000,
+    refetchOnWindowFocus: false,
+    enabled: !!userId,
+  })
 
-    const restoreMutation = useMutation<{ id: string; kind: "profile" | "comment" }, Error, string>({
-        mutationFn: (id: string) => restoreTrashItem(id),
-        onSuccess: (result) => {
-            queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
-                prev?.filter((item) => item.id !== result.id) ?? []
-            )
-        }
-    })
+  const restoreMutation = useMutation({
+    mutationFn: ({ id, kind }: { id: string; kind: TrashItem["kind"] }) =>
+      restoreTrashItem(supabase, userId!, id, kind),
+    onMutate: async ({ id }) => {
+      await queryClient.cancelQueries({ queryKey: trashKey })
+      const previousTrash = queryClient.getQueryData<TrashItem[]>(trashKey)
+      queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
+        prev?.filter((item) => item.id !== id) ?? []
+      )
+      return { previousTrash }
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTrash) {
+        queryClient.setQueryData(trashKey, context.previousTrash)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: trashKey })
+    },
+  })
 
-    const deleteMutation = useMutation<{ id: string; kind: "profile" | "comment" }, Error, string>({
-        mutationFn: (id: string) => deleteTrashItem(id),
-        onSuccess: (result) => {
-            queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
-                prev?.filter((item) => item.id !== result.id) ?? []
-            )
-        }
-    })
+  const deleteMutation = useMutation({
+    mutationFn: ({ id, kind }: { id: string; kind: TrashItem["kind"] }) =>
+      deleteTrashItem(supabase, userId!, id, kind),
+    onMutate: async ({ id }) => {
+      await queryClient.cancelQueries({ queryKey: trashKey })
+      const previousTrash = queryClient.getQueryData<TrashItem[]>(trashKey)
+      queryClient.setQueryData<TrashItem[]>(trashKey, (prev) =>
+        prev?.filter((item) => item.id !== id) ?? []
+      )
+      return { previousTrash }
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTrash) {
+        queryClient.setQueryData(trashKey, context.previousTrash)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: trashKey })
+    },
+  })
 
-    return {
-        ...query,
-        restore: restoreMutation.mutateAsync,
-        deleteForever: deleteMutation.mutateAsync,
-        isMutating: restoreMutation.isPending || deleteMutation.isPending
-    }
+  const restoreAllMutation = useMutation({
+    mutationFn: (items: TrashItem[]) =>
+      Promise.all(
+        items.map((item) =>
+          restoreTrashItem(supabase, userId!, item.id, item.kind)
+        )
+      ),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: trashKey })
+      const previousTrash = queryClient.getQueryData<TrashItem[]>(trashKey)
+      queryClient.setQueryData<TrashItem[]>(trashKey, () => [])
+      return { previousTrash }
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTrash) {
+        queryClient.setQueryData(trashKey, context.previousTrash)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: trashKey })
+    },
+  })
+
+  return {
+    ...query,
+    isLoading: query.isLoading || isAuthenticating,
+    restore: (id: string, kind: TrashItem["kind"]) =>
+      restoreMutation.mutateAsync({ id, kind }),
+    restoreAll: (items: TrashItem[]) => restoreAllMutation.mutateAsync(items),
+    deleteForever: (id: string, kind: TrashItem["kind"]) =>
+      deleteMutation.mutateAsync({ id, kind }),
+    isMutating:
+      restoreMutation.isPending ||
+      deleteMutation.isPending ||
+      restoreAllMutation.isPending,
+  }
 }

@@ -26,18 +26,12 @@ export const ROUTES = {
   }
 } as const
 
-export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.private.profiles
-export const DEFAULT_UNAUTHENTICATED_ROUTE = ROUTES.public.index
+export type Routes = typeof ROUTES
 
-export const PRIVATE_PATHS = Object.values(ROUTES.private)
-export const AUTH_PATHS = [ROUTES.auth.login, ROUTES.auth.register, ROUTES.auth.forgotPassword, ROUTES.auth.resetPassword]
-export const KNOWN_APP_PATHS = [
-  ROUTES.public.index,
-  ...Object.values(ROUTES.public),
-  ...AUTH_PATHS,
-  ROUTES.auth.callback,
-  ...PRIVATE_PATHS
-]
+export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.private.profiles
+
+const PRIVATE_PATHS = Object.values(ROUTES.private)
+const AUTH_PATHS = [ROUTES.auth.login, ROUTES.auth.register, ROUTES.auth.forgotPassword, ROUTES.auth.resetPassword]
 
 function isPathOrChild(pathname: string, basePath: string) {
   return pathname === basePath || pathname.startsWith(`${basePath}/`)
@@ -49,8 +43,4 @@ export function isPrivatePath(pathname: string) {
 
 export function isAuthPath(pathname: string) {
   return AUTH_PATHS.some((path) => isPathOrChild(pathname, path))
-}
-
-export function isKnownAppPath(pathname: string) {
-  return KNOWN_APP_PATHS.some((path) => pathname === path)
 }

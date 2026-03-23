@@ -1,4 +1,4 @@
-import { getAuthContext } from "@/lib/supabase/auth-context"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
 function mapRowToHistoryItem(row: GenerationHistoryRow & { profileName?: string }): GenerationHistory {
@@ -25,9 +25,7 @@ export interface ListHistoryFilters {
   search?: string
 }
 
-export async function listHistory(filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function listHistory(supabase: SupabaseClient, userId: string, filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
   let query = supabase
     .from("generation_history")
     .select("*, voice_profiles(name)")
@@ -59,11 +57,11 @@ export async function listHistory(filters?: ListHistoryFilters): Promise<Generat
 }
 
 export async function updateHistoryStatus(
+  supabase: SupabaseClient,
+  userId: string,
   id: string,
   newStatus: "pending" | "applied" | "dismissed"
 ): Promise<void> {
-  const { supabase, userId } = await getAuthContext()
-
   const { error } = await supabase
     .from("generation_history")
     .update({ status: newStatus, updated_at: new Date().toISOString() })
@@ -75,9 +73,7 @@ export async function updateHistoryStatus(
   }
 }
 
-export async function reuseHistoryItem(id: string): Promise<string> {
-  const { supabase } = await getAuthContext()
-
+export async function reuseHistoryItem(supabase: SupabaseClient, id: string): Promise<string> {
   const { data: newId, error } = await supabase.rpc("reuse_generation", { p_history_id: id })
 
   if (error) {
@@ -87,9 +83,7 @@ export async function reuseHistoryItem(id: string): Promise<string> {
   return String(newId)
 }
 
-export async function moveToTrash(id: string): Promise<void> {
-  const { supabase, userId } = await getAuthContext()
-
+export async function moveToTrash(supabase: SupabaseClient, userId: string, id: string): Promise<void> {
   const { error } = await supabase
     .from("generation_history")
     .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
@@ -101,59 +95,3 @@ export async function moveToTrash(id: string): Promise<void> {
   }
 }
 
-export async function getHistoryStats() {
-  const { supabase, userId } = await getAuthContext()
-
-  const { data: counts, error } = await supabase
-    .from("generation_history")
-    .select("status, source")
-    .eq("user_id", userId)
-    .is("deleted_at", null)
-
-  if (error) {
-    throw error
-  }
-
-  const items = counts ?? []
-
-  return {
-    archived: items.length,
-    applied: items.filter((item) => item.status === "applied").length,
-    pending: items.filter((item) => item.status === "pending").length,
-    reused: items.filter((item) => item.source === "history_reuse").length
-  }
-}
-
-export interface GenerateInput {
-  profile_id: string
-  kind: "comment" | "post" | "rewrite"
-  post_snippet?: string
-  post_author?: string
-  post_headline?: string
-  draft_text?: string
-  goal?: string
-  origin?: "web" | "extension"
-}
-
-export async function generateContent(input: GenerateInput) {
-  const { supabase } = await getAuthContext()
-
-  const { data, error } = await supabase.functions.invoke("generate", {
-    body: {
-      profile_id: input.profile_id,
-      kind: input.kind,
-      post_snippet: input.post_snippet,
-      post_author: input.post_author,
-      post_headline: input.post_headline,
-      draft_text: input.draft_text,
-      goal: input.goal ?? "networking",
-      origin: input.origin ?? "web"
-    }
-  })
-
-  if (error) {
-    throw error
-  }
-
-  return data
-}

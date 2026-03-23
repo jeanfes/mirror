@@ -141,30 +141,7 @@ export default function PlansPage() {
                 </div>
             </section>
 
-            <section className="rounded-[28px] border border-border-soft bg-surface-base p-5 shadow-premium-sm md:p-6">
-                <div className="grid gap-4 md:grid-cols-4">
-                    <div>
-                        <p className="dashboard-overline">{t.app.plans.signal}</p>
-                        <p className="mt-2 text-[15px] font-semibold text-primary-text">{t.app.plans.profileDepth}</p>
-                        <p className="mt-2 text-[13px] leading-6 text-secondary-text">{t.app.plans.profileDepthDesc}</p>
-                    </div>
-                    <div>
-                        <p className="dashboard-overline">{t.app.plans.throughput}</p>
-                        <p className="mt-2 text-[15px] font-semibold text-primary-text">{t.app.plans.monthlyGeneration}</p>
-                        <p className="mt-2 text-[13px] leading-6 text-secondary-text">{t.app.plans.monthlyGenerationDesc}</p>
-                    </div>
-                    <div>
-                        <p className="dashboard-overline">{t.app.plans.workflow}</p>
-                        <p className="mt-2 text-[15px] font-semibold text-primary-text">{t.app.plans.historyReuse}</p>
-                        <p className="mt-2 text-[13px] leading-6 text-secondary-text">{t.app.plans.historyReuseDesc}</p>
-                    </div>
-                    <div>
-                        <p className="dashboard-overline">{t.app.plans.decision}</p>
-                        <p className="mt-2 text-[15px] font-semibold text-primary-text">{t.app.plans.upgradeSpeed}</p>
-                        <p className="mt-2 text-[13px] leading-6 text-secondary-text">{t.app.plans.upgradeSpeedDesc}</p>
-                    </div>
-                </div>
-            </section>
+
         </div>
     )
 }

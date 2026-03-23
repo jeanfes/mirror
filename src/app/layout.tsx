@@ -1,82 +1,106 @@
+import { Metadata, Viewport } from "next"
 import { Space_Grotesk } from "next/font/google"
-import type { Metadata } from "next"
 import { cookies } from "next/headers"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import Script from "next/script"
+import { Toaster } from "sonner"
+
 import { AppProviders } from "@/components/providers/AppProviders"
-import { getServerSession } from "@/lib/auth"
 import {
-    buildThemeInitScript,
-    DEFAULT_RESOLVED_THEME,
-    DEFAULT_THEME_PREFERENCE,
-    parseResolvedTheme,
-    parseThemePreference,
-    resolveThemePreference,
-    THEME_PREFERENCE_COOKIE,
-    THEME_RESOLVED_COOKIE
+  THEME_PREFERENCE_COOKIE,
+  THEME_RESOLVED_COOKIE,
+  DEFAULT_THEME_PREFERENCE,
+  DEFAULT_RESOLVED_THEME,
+  parseThemePreference,
+  parseResolvedTheme,
+  resolveThemePreference,
+  buildThemeInitScript,
 } from "@/lib/theme"
+
 import "../styles/globals.css"
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-
 const spaceGrotesk = Space_Grotesk({
-    variable: "--font-space-grotesk",
-    subsets: ["latin"]
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+  weight: ["300", "400", "500", "700"],
 })
 
-export async function generateMetadata(): Promise<Metadata> {
-    const user = await getServerSession()
+export const metadata: Metadata = {
+  title: {
+    default: "Mirror",
+    template: "%s | Mirror",
+  },
+  description: "Workspace inteligente con IA local-first.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/favicon.ico",
+  },
+}
 
-    return {
-        metadataBase: new URL(siteUrl),
-        title: {
-            default: user ? "Mirror | Dashboard" : "Mirror | Landing",
-            template: "%s | Mirror"
-        },
-        description: "Digital voice workspace for Mirror",
-        icons: {
-            icon: "/icon.png"
-        },
-        openGraph: {
-            title: "Mirror",
-            description: "Digital voice workspace for Mirror",
-            url: "/",
-            siteName: "Mirror",
-            type: "website"
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: "Mirror",
-            description: "Digital voice workspace for Mirror"
-        }
-    }
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default async function RootLayout({
-    children
+  children,
 }: {
-    children: React.ReactNode
+  children: React.ReactNode
 }) {
-    const cookieStore = await cookies()
-    const initialThemePreference =
-        parseThemePreference(cookieStore.get(THEME_PREFERENCE_COOKIE)?.value) ?? DEFAULT_THEME_PREFERENCE
-    const systemFallbackTheme = parseResolvedTheme(cookieStore.get(THEME_RESOLVED_COOKIE)?.value) ?? DEFAULT_RESOLVED_THEME
-    const initialResolvedTheme = resolveThemePreference(initialThemePreference, systemFallbackTheme)
+  const cookieStore = await cookies()
+  const pref = cookieStore.get(THEME_PREFERENCE_COOKIE)?.value
+  const res = cookieStore.get(THEME_RESOLVED_COOKIE)?.value
 
-    return (
-        <html
-            lang="en"
-            data-theme={initialResolvedTheme}
-            data-theme-preference={initialThemePreference}
-            suppressHydrationWarning
-            style={{ colorScheme: initialResolvedTheme }}
+  const initialThemePreference = parseThemePreference(pref) ?? DEFAULT_THEME_PREFERENCE
+  const systemFallbackTheme = parseResolvedTheme(res) ?? DEFAULT_RESOLVED_THEME
+  const initialResolvedTheme = resolveThemePreference(
+    initialThemePreference,
+    systemFallbackTheme
+  )
+
+  return (
+    <html
+      lang="es"
+      className={spaceGrotesk.variable}
+      data-theme={initialResolvedTheme}
+      data-theme-preference={initialThemePreference}
+      suppressHydrationWarning
+    >
+      <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {buildThemeInitScript(initialThemePreference, initialResolvedTheme)}
+        </Script>
+      </head>
+      <body
+        className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
+      >
+        <AppProviders
+          initialThemePreference={initialThemePreference}
+          initialResolvedTheme={initialResolvedTheme}
         >
-            <head>
-                <script dangerouslySetInnerHTML={{ __html: buildThemeInitScript(initialThemePreference, initialResolvedTheme) }} />
-            </head>
-            <body className={`${spaceGrotesk.variable} bg-bg-main text-primary-text antialiased`}>
-                <AppProviders initialThemePreference={initialThemePreference} initialResolvedTheme={initialResolvedTheme}>
-                    {children}
-                </AppProviders>
-            </body>
-        </html>
-    )
+          {children}
+          <Toaster 
+            position="top-right" 
+            richColors 
+            closeButton
+            toastOptions={{
+              className: 'font-sans border-border-soft bg-surface-overlay/80 backdrop-blur-md',
+            }} 
+          />
+        </AppProviders>
+
+        <SpeedInsights />
+
+        {process.env.NODE_ENV === "development" && <DevScan />}
+      </body>
+    </html>
+  )
+}
+
+async function DevScan() {
+  const { ReactScan } = await import("@/components/performance/RootScan")
+  return <ReactScan />
 }

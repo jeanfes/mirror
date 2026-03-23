@@ -1,5 +1,6 @@
 "use client"
 
+import React, { memo } from "react"
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { Button } from "@/components/ui/Button"
@@ -19,7 +20,7 @@ interface HistoryFiltersProps {
     onReset: () => void
 }
 
-export function HistoryFilters({
+export const HistoryFilters = memo(function HistoryFilters({
     profileValue,
     appliedValue,
     searchValue,
@@ -36,7 +37,7 @@ export function HistoryFilters({
     const hasProfileFilter = profileValue !== "all"
     const hasStatusFilter = appliedValue !== "all"
     const hasActiveFilters = hasSearch || hasProfileFilter || hasStatusFilter
-    const { t } = useLanguageStore()
+    const t = useLanguageStore((state) => state.t)
 
     return (
         <div className="feature-glass-panel">
@@ -137,4 +138,4 @@ export function HistoryFilters({
             </div>
         </div>
     )
-}
+})

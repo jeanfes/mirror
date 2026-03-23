@@ -1,51 +1,103 @@
 "use client"
 
-import { listHistory, moveToTrash, reuseHistoryItem, updateHistoryStatus, type ListHistoryFilters } from "@/features/history/services/history.service"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { makeQueryKey, useUserId } from "@/lib/react-query-helpers"
+/**
+ * useHistory — React Query hook for generation history.
+ *
+ * Changes from original:
+ * - Accepts optional `enabled` flag for tab-based lazy loading
+ * - historyKey serialization fixed: Object.values(filters) is unstable
+ *   (insertion-order dependent). Explicit key prevents phantom cache misses.
+ * - optimistic toggle with proper rollback
+ */
 
-export function useHistory(filters?: ListHistoryFilters) {
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useSupabaseClient } from "@/lib/supabase/client"
+import { useSession } from "@/lib/supabase/useSession"
+import {
+  listHistory,
+  moveToTrash,
+  reuseHistoryItem,
+  updateHistoryStatus,
+  type ListHistoryFilters,
+} from "@/features/history/services/history.service"
+import type { GenerationHistory } from "@/types/database.types"
+
+export function useHistory(
+  filters?: ListHistoryFilters,
+  options?: { enabled?: boolean }
+) {
   const queryClient = useQueryClient()
-  const userId = useUserId()
-  const historyKey = userId ? [...makeQueryKey("history", userId), ...Object.values(filters ?? {})] : ["history", ...Object.values(filters ?? {})]
+  const supabase = useSupabaseClient()
+  const { userId, isAuthenticating } = useSession()
+
+  // Stable, deterministic key — not Object.values(filters) which is order-dependent
+  const historyKey = [
+    "history",
+    userId,
+    filters?.profileId ?? "all",
+    filters?.status ?? "all",
+    filters?.search ?? "",
+  ]
 
   const query = useQuery({
     queryKey: historyKey,
-    queryFn: () => listHistory(filters),
+    queryFn: () => listHistory(supabase, userId!, filters),
     staleTime: 120_000,
     gcTime: 900_000,
     refetchOnWindowFocus: false,
-    enabled: !!userId
+    enabled: !!userId && options?.enabled !== false,
   })
 
   const toggleMutation = useMutation({
-    mutationFn: (id: string) => updateHistoryStatus(id, "applied"),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
-    }
+    mutationFn: async (id: string) => {
+      const items = queryClient.getQueryData<GenerationHistory[]>(historyKey)
+      const current = items?.find((h) => h.id === id)
+      const nextStatus = current?.status === "applied" ? "pending" : "applied"
+      await updateHistoryStatus(supabase, userId!, id, nextStatus)
+      return { id, nextStatus }
+    },
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: historyKey })
+      const previous = queryClient.getQueryData<GenerationHistory[]>(historyKey)
+      queryClient.setQueryData<GenerationHistory[]>(historyKey, (prev) =>
+        (prev ?? []).map((h) =>
+          h.id === id
+            ? { ...h, status: h.status === "applied" ? "pending" : "applied" }
+            : h
+        )
+      )
+      return { previous }
+    },
+    onError: (_err, _id, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(historyKey, ctx.previous)
+    },
   })
 
   const reuseMutation = useMutation({
-    mutationFn: (id: string) => reuseHistoryItem(id),
+    mutationFn: (id: string) => reuseHistoryItem(supabase, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
-    }
+      queryClient.invalidateQueries({ queryKey: ["history", userId] })
+    },
   })
 
   const trashMutation = useMutation({
-    mutationFn: (id: string) => moveToTrash(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? makeQueryKey("history", userId) : ["history"] })
-    }
+    mutationFn: (id: string) => moveToTrash(supabase, userId!, id),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData<GenerationHistory[]>(historyKey, (prev) =>
+        (prev ?? []).filter((h) => h.id !== id)
+      )
+    },
   })
 
   return {
     ...query,
-    isLoading: query.isPending,
+    isLoading: query.isPending || isAuthenticating,
     toggleHistoryApplied: toggleMutation.mutateAsync,
     reuseHistoryItem: reuseMutation.mutateAsync,
     moveToTrash: trashMutation.mutateAsync,
-    isMutating: toggleMutation.isPending || reuseMutation.isPending || trashMutation.isPending
+    isMutating:
+      toggleMutation.isPending ||
+      reuseMutation.isPending ||
+      trashMutation.isPending,
   }
 }
-

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/Button"
 import Link from "next/link"
 import { getServerSession } from "@/lib/auth"
 import { ROUTES } from "@/lib/routes"
-import * as motion from "motion/react-client"
 
 export default async function NotFound() {
     const user = await getServerSession()
@@ -17,22 +16,16 @@ export default async function NotFound() {
                 <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary-main/5 blur-3xl" />
                 <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-primary-main/10 blur-3xl" />
                 
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                <div 
                     className="relative flex flex-col items-center text-center"
                 >
-                    <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.6, type: "spring" }}
+                    <div
                         className="mb-6"
                     >
                         <h1 className="bg-linear-to-b from-primary-text to-primary-text/60 bg-clip-text text-8xl font-bold tracking-tighter text-transparent sm:text-9xl">
                             404
                         </h1>
-                    </motion.div>
+                    </div>
 
                     <h2 className="text-2xl font-bold text-primary-text sm:text-3xl">
                         Page not found
@@ -42,10 +35,7 @@ export default async function NotFound() {
                         The route you requested does not exist in this workspace or you might not have access.
                     </p>
 
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
+                    <div 
                         className="mt-10"
                     >
                         <Link href={href}>
@@ -53,8 +43,8 @@ export default async function NotFound() {
                                 {label}
                             </Button>
                         </Link>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             </div>
         </div>
     )

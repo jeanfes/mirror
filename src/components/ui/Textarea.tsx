@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import * as React from "react"
 
-export interface TextareaProps
+interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
   error?: string

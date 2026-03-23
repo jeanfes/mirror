@@ -6,9 +6,7 @@ import { cn } from "@/lib/utils"
 
 export const Dialog = DialogPrimitive.Root
 export const DialogTrigger = DialogPrimitive.Trigger
-export const DialogClose = DialogPrimitive.Close
-
-export function DialogPortal({ children }: { children: React.ReactNode }) {
+function DialogPortal({ children }: { children: React.ReactNode }) {
     return <DialogPrimitive.Portal>{children}</DialogPrimitive.Portal>
 }
 
@@ -19,11 +17,11 @@ type DialogLayer = "base" | "priority"
 
 const dialogLayerStyles: Record<DialogLayer, { overlay: string; content: string }> = {
     base: {
-        overlay: "z-40 bg-[var(--dialog-overlay-base)] backdrop-blur-xl",
+        overlay: "z-40 bg-[var(--dialog-overlay-base)] backdrop-blur-sm",
         content: "z-50"
     },
     priority: {
-        overlay: "z-70 bg-[var(--dialog-overlay-priority)] backdrop-blur-2xl",
+        overlay: "z-70 bg-[var(--dialog-overlay-priority)] backdrop-blur-md",
         content: "z-80"
     }
 }
@@ -42,7 +40,7 @@ export function DialogContent({
             <DialogPrimitive.Overlay className={cn("fixed inset-0 animate-in fade-in duration-300", layerStyles.overlay)} />
             <DialogPrimitive.Content
                 className={cn(
-                    "neo-panel fixed left-1/2 top-1/2 w-[min(90vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-xl ring-1 ring-black/8 shadow-premium-lg outline-none",
+                    "neo-panel fixed left-1/2 top-1/2 w-[min(90vw,900px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl backdrop-blur-lg ring-1 ring-black/8 shadow-premium-lg outline-none",
                     layerStyles.content,
                     className
                 )}

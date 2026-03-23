@@ -60,8 +60,11 @@ export default function ProfilesPage() {
     }
 
     const handleToggle = async (profileId: string) => {
+        const profile = profiles?.find((p) => p.id === profileId)
+        if (!profile) return
+
         try {
-            await toggleProfile(profileId)
+            await toggleProfile(profileId, profile.enabled)
             toast.success(t.app.common.profileStatusUpdated)
         } catch {
             toast.error(t.app.common.profileStatusError)

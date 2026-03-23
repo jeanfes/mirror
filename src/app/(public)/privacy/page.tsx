@@ -1,14 +1,13 @@
-"use client"
-
 import { LegalLayout } from "@/components/layout/LegalLayout"
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
   return (
     <LegalLayout
       title="Política de Privacidad"
       subtitle="Tu privacidad es nuestra prioridad absoluta. Aquí detallamos cómo protegemos y tratamos tus datos personales bajo los más altos estándares internacionales."
       lastUpdated="17 de Marzo de 2026"
     >
+
       <section>
         <h2 className="text-2xl font-black tracking-tight text-primary-dark mb-4 italic underline decoration-accent-blue decoration-4 underline-offset-8">PREÁMBULO</h2>
         <p>
