@@ -264,6 +264,8 @@ h6 {
   border: 1px solid var(--border-soft);
   border-radius: 24px;
   backdrop-filter: blur(20px);
+  will-change: transform, opacity;
+  transform: translateZ(0); 
 }
 
 .neo-card {
@@ -274,6 +276,8 @@ h6 {
   background: var(--panel-bg, var(--surface-base));
   border: 1px solid var(--panel-border-color, var(--border-soft));
   backdrop-filter: blur(20px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .loading-shimmer {
@@ -308,7 +312,7 @@ h6 {
   background: var(--button-primary-bg);
   border: 1px solid var(--button-primary-border);
   border-radius: 12px;
-  transition: all 180ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
 .neo-btn-primary:hover {
@@ -320,7 +324,7 @@ h6 {
   border: 1px solid var(--button-secondary-border);
   border-radius: 12px;
   color: var(--button-secondary-text);
-  transition: all 180ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .neo-btn-muted:hover {
@@ -332,7 +336,7 @@ h6 {
   border: 1px solid var(--button-danger-soft-border);
   border-radius: 12px;
   color: var(--button-danger-soft-text);
-  transition: all 180ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .neo-btn-danger-soft:hover {
@@ -380,7 +384,7 @@ h6 {
   background: var(--input-bg);
   border: 1px solid var(--border-soft);
   color: var(--primary-text);
-  transition: all 200ms ease;
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .neo-input:focus {
@@ -474,6 +478,8 @@ h6 {
   padding: 1.25rem;
   backdrop-filter: blur(24px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .feature-soft-card {
@@ -482,6 +488,8 @@ h6 {
   background: var(--surface-card);
   padding: 1rem;
   backdrop-filter: blur(12px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .feature-soft-card-strong {

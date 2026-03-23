@@ -28,7 +28,6 @@ export function getAuthContext(): Promise<AuthContext> {
   return authContextPromise
 }
 
-/** Call this on logout to prevent stale user context on next login. */
 export function clearAuthContext(): void {
   authContextPromise = null
 }

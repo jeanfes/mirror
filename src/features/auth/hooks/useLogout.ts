@@ -25,14 +25,13 @@ export const useLogout = () => {
         return
       }
 
-      // Clear all cached auth state to prevent stale data on next login
       clearAuthContext()
       useUserStore.getState().clearUser()
-      await queryClient.clear()
+      queryClient.clear()
 
       toast.success("Session closed")
-      router.replace(ROUTES.auth.login)
       router.refresh()
+      router.replace(ROUTES.auth.login)
     } catch {
       toast.error("Could not close your session")
     } finally {
