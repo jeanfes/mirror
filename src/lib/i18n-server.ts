@@ -1,12 +1,15 @@
 import { cookies } from "next/headers";
-import { dictionaries, Dictionary } from "./i18n";
+import { loadDictionary } from "./i18n";
+import type { Dictionary } from "./i18n/types";
 
 export async function getDictionary() {
   const cookieStore = await cookies();
   const locale = cookieStore.get("NEXT_LOCALE")?.value || "es";
   
+  const dictionary = await loadDictionary(locale);
+  
   return {
-    t: (dictionaries[locale as keyof typeof dictionaries] || dictionaries.es) as Dictionary,
+    t: dictionary as Dictionary,
     lang: locale
   };
 }

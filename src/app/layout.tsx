@@ -91,9 +91,7 @@ export default async function RootLayout({
             }} 
           />
         </AppProviders>
-
         <SpeedInsights />
-
         {process.env.NODE_ENV === "development" && <DevScan />}
       </body>
     </html>

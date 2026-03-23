@@ -1,22 +1,22 @@
-import { createBrowserClient } from "@supabase/ssr"
-import { useMemo } from "react"
 import { getRequiredSupabasePublicEnv } from "@/lib/supabase/env"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { createBrowserClient } from "@supabase/ssr"
+import { useMemo } from "react"
 
-let supabaseClient: SupabaseClient | null = null
-
-export function createClient() {
-  if (supabaseClient) return supabaseClient
-
-  const supabaseEnv = getRequiredSupabasePublicEnv()
-  supabaseClient = createBrowserClient(
-    supabaseEnv.url,
-    supabaseEnv.key
-  )
-
-  return supabaseClient
+declare global {
+  var __supabaseClient: SupabaseClient | undefined
 }
 
-export function useSupabaseClient() {
+export function createClient(): SupabaseClient {
+  if (globalThis.__supabaseClient) return globalThis.__supabaseClient
+
+  const { url, key } = getRequiredSupabasePublicEnv()
+  const client = createBrowserClient(url, key)
+
+  globalThis.__supabaseClient = client
+  return client
+}
+
+export function useSupabaseClient(): SupabaseClient {
   return useMemo(() => createClient(), [])
 }

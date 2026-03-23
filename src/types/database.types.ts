@@ -18,7 +18,7 @@ export interface VoiceProfileRow {
 export interface StyleTrainingRow {
   id: string
   profile_id: string
-  kind: "example" | "guideline"
+  kind: "example" | "questionnaire"
   content: string
   questionnaire_answers: Record<string, unknown> | null
   display_order: number
@@ -61,6 +61,11 @@ export interface UserAccountRow {
   subscription_status: string | null
   last_generation_at: string | null
   provider_subscription_id: string | null
+  payment_provider: string
+  provider_customer_id: string | null
+  id: string
+  created_at: string
+  updated_at: string
 }
 
 export interface InvoiceRow {

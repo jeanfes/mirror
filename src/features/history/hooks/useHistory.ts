@@ -1,17 +1,6 @@
 "use client"
 
-/**
- * useHistory — React Query hook for generation history.
- *
- * Changes from original:
- * - Accepts optional `enabled` flag for tab-based lazy loading
- * - historyKey serialization fixed: Object.values(filters) is unstable
- *   (insertion-order dependent). Explicit key prevents phantom cache misses.
- * - optimistic toggle with proper rollback
- */
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
 import { useSession } from "@/lib/supabase/useSession"
 import {
   listHistory,
@@ -21,16 +10,16 @@ import {
   type ListHistoryFilters,
 } from "@/features/history/services/history.service"
 import type { GenerationHistory } from "@/types/database.types"
+import { createClient } from "@/lib/supabase/client"
 
 export function useHistory(
   filters?: ListHistoryFilters,
   options?: { enabled?: boolean }
 ) {
   const queryClient = useQueryClient()
-  const supabase = useSupabaseClient()
+  const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
 
-  // Stable, deterministic key — not Object.values(filters) which is order-dependent
   const historyKey = [
     "history",
     userId,

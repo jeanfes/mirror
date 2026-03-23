@@ -1,8 +1,8 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
 import { useSession } from "@/lib/supabase/useSession"
+import { createClient } from "@/lib/supabase/client"
 import {
   listTrash,
   restoreTrashItem,
@@ -11,10 +11,10 @@ import {
 } from "@/features/trash/services/trash.service"
 
 export function useTrash() {
-  const queryClient = useQueryClient()
-  const supabase = useSupabaseClient()
   const { userId, isAuthenticating } = useSession()
+  const queryClient = useQueryClient()
   const trashKey = ["trash", userId]
+  const supabase = createClient()
 
   const query = useQuery<TrashItem[]>({
     queryKey: trashKey,

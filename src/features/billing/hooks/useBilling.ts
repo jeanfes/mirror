@@ -1,12 +1,12 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
-import { useSession } from "@/lib/supabase/useSession"
 import { getInvoices, getBillingInfo } from "@/features/billing/services/billing.service"
+import { useSession } from "@/lib/supabase/useSession"
+import { createClient } from "@/lib/supabase/client"
+import { useQuery } from "@tanstack/react-query"
 
 export function useBilling(options?: { enabled?: boolean }) {
-  const supabase = useSupabaseClient()
+  const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
   const isEnabled = options?.enabled !== false && !!userId
   

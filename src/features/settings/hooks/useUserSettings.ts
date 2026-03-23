@@ -1,8 +1,8 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
 import { useSession } from "@/lib/supabase/useSession"
+import { createClient } from "@/lib/supabase/client"
 import {
   getUserSettings,
   updateUserSettings,
@@ -11,7 +11,7 @@ import type { UserSettings } from "@/types/database.types"
 
 export function useUserSettings() {
   const queryClient = useQueryClient()
-  const supabase = useSupabaseClient()
+  const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
   const settingsKey = ["user-settings", userId]
 

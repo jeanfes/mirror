@@ -4,7 +4,6 @@ import { useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type { ResolvedTheme, ThemePreference } from "@/lib/theme"
 import { ThemeProvider } from "./ThemeProvider"
-import { Toaster } from "sonner"
 
 interface AppProvidersProps {
   children: React.ReactNode
@@ -54,20 +53,6 @@ export function AppProviders({
     >
       <QueryClientProvider client={queryClient}>
         {children}
-        <Toaster
-          position="top-right"
-          gap={8}
-          toastOptions={{
-            duration: 2000,
-            classNames: {
-              toast: "toast-surface",
-              title: "toast-title",
-              description: "toast-description",
-              success: "toast-success",
-              error: "toast-error",
-            },
-          }}
-        />
       </QueryClientProvider>
     </ThemeProvider>
   )

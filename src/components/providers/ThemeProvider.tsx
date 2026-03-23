@@ -82,7 +82,7 @@ export function ThemeProvider({
   initialThemePreference,
   initialResolvedTheme,
 }: ThemeProviderProps) {
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [state, setState] = useState(() => {
     const themePreference = readClientPreference(initialThemePreference)
     const systemTheme = readSystemTheme(initialResolvedTheme)

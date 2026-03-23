@@ -1,7 +1,6 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
 import { useSession } from "@/lib/supabase/useSession"
 import {
   createProfile,
@@ -13,12 +12,13 @@ import {
   type UpdateProfileInput,
 } from "@/features/profiles/services/profiles.service"
 import type { VoiceProfile } from "@/types/database.types"
+import { createClient } from "@/lib/supabase/client"
 
 export function useProfiles(options?: { enabled?: boolean }) {
-  const queryClient = useQueryClient()
-  const supabase = useSupabaseClient()
   const { userId, isAuthenticating } = useSession()
   const profilesKey = ["profiles", userId]
+  const queryClient = useQueryClient()
+  const supabase = createClient()
 
   const query = useQuery({
     queryKey: profilesKey,

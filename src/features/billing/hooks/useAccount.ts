@@ -1,13 +1,13 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSupabaseClient } from "@/lib/supabase/client"
-import { useSession } from "@/lib/supabase/useSession"
 import { getAccount, setPlan, type PlanName } from "@/features/billing/services/billing.service"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "@/lib/supabase/useSession"
+import { createClient } from "@/lib/supabase/client"
 
 export function useAccount() {
   const queryClient = useQueryClient()
-  const supabase = useSupabaseClient()
+const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
   const accountKey = ["account", userId]
 
