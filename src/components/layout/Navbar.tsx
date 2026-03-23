@@ -39,7 +39,7 @@ export function Navbar() {
       {!isLoading && account?.plan === "Free" && (
         <Link href={ROUTES.private.plans}>
           <Button size="md" className="h-8.5 rounded-full px-4 text-[12px]">
-            Upgrade
+            {t.app.navigation.upgrade}
           </Button>
         </Link>
       )}

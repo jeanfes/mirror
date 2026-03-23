@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/DropdownMenu"
 import type { VoiceProfile } from "@/types/database.types"
 
+import { useLanguageStore } from "@/store/useLanguageStore"
+
 interface ProfileCardProps {
   profile: VoiceProfile
   onEdit: (id: string) => void
@@ -33,6 +35,8 @@ export function ProfileCard({
   onToggle,
   onDelete,
 }: ProfileCardProps) {
+  const t = useLanguageStore((state) => state.t)
+  
   return (
     <Card className="relative overflow-hidden rounded-[28px] border border-border-soft p-0 shadow-premium-md">
       <div
@@ -45,7 +49,7 @@ export function ProfileCard({
           <div className="max-w-[80%]">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text shadow-premium-sm">
               <WandSparkles className="h-2.5 w-2.5 text-secondary-text" />
-              Voice profile
+              {t.app.profiles.voiceProfile}
             </div>
             <h2 className="mt-4 text-2xl font-black tracking-[-0.04em] text-primary-text">
               {profile.name}
@@ -59,7 +63,7 @@ export function ProfileCard({
                 type="button"
                 variant="ghost"
                 className="h-10 w-10 rounded-full border border-border-soft bg-surface-elevated p-0"
-                aria-label="Open profile actions"
+                aria-label={t.app.profiles.openActions}
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -67,7 +71,7 @@ export function ProfileCard({
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onEdit(profile.id)}>
                 <Pencil className="mr-2 h-4 w-4" />
-                Edit
+                {t.app.profiles.edit}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onToggle(profile.id)}>
                 {profile.enabled ? (
@@ -75,14 +79,14 @@ export function ProfileCard({
                 ) : (
                   <Eye className="mr-2 h-4 w-4" />
                 )}
-                {profile.enabled ? "Disable" : "Enable"}
+                {profile.enabled ? t.app.profiles.disable : t.app.profiles.enable}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-600"
                 onClick={() => onDelete(profile.id)}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                {t.app.profiles.delete}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -90,20 +94,20 @@ export function ProfileCard({
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
           <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
-            {profile.enabled ? "Enabled" : "Disabled"}
+            {profile.enabled ? t.app.profiles.enabled : t.app.profiles.disabled}
           </span>
           <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
-            {profile.allowEmojis ? "Emoji ready" : "No emojis"}
+            {profile.allowEmojis ? t.app.profiles.emojiReady : t.app.profiles.noEmojis}
           </span>
           <span className="text-[12px] font-medium text-secondary-text">
-            Updated {formatDistanceToNow(profile.updatedAt, { addSuffix: true })}
+            {t.app.profiles.updatedPrefix} {formatDistanceToNow(profile.updatedAt, { addSuffix: true })}
           </span>
         </div>
 
         <div className="mt-5 rounded-3xl border border-border-soft bg-surface-card p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="dashboard-overline">Tone map</p>
+              <p className="dashboard-overline">{t.app.profiles.toneMap}</p>
               <p className="mt-1 text-[15px] font-semibold text-primary-text">
                 {profile.tone}
               </p>
@@ -122,7 +126,7 @@ export function ProfileCard({
               className="rounded-2xl border border-border-soft bg-surface-card px-3.5 py-3"
             >
               <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-text">
-                Example {i + 1}
+                {t.app.profiles.examplePrefix} {i + 1}
               </p>
               <p className="mt-2 text-[13px] leading-6 text-secondary-text">
                 {example}

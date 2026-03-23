@@ -3,13 +3,13 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-interface FAQItem {
-  q: string;
-  a: string;
+export interface FAQItem {
+  readonly q: string;
+  readonly a: string;
 }
 
 interface FAQAccordionProps {
-  questions: FAQItem[];
+  readonly questions: readonly FAQItem[];
 }
 
 export function FAQAccordion({ questions }: FAQAccordionProps) {

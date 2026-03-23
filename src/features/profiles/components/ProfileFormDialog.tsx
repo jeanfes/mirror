@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, memo } from "react"
+import { useEffect, memo, useMemo } from "react"
 import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,18 +21,20 @@ import {
 } from "@/components/ui/Dialog"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
-const profileSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  description: z.string().min(8, "Add a clearer description"),
-  tone: z.string().min(3, "Tone is required"),
-  example1: z.string().min(6, "Example 1 is too short"),
-  example2: z.string().min(6, "Example 2 is too short"),
-  example3: z.string().min(6, "Example 3 is too short"),
+import { Dictionary } from "@/lib/i18n"
+
+const createProfileSchema = (t: Dictionary) => z.object({
+  name: z.string().min(2, t.app.profileForm.errors.nameRequired),
+  description: z.string().min(8, t.app.profileForm.errors.descRequired),
+  tone: z.string().min(3, t.app.profileForm.errors.toneRequired),
+  example1: z.string().min(6, t.app.profileForm.errors.exampleMin),
+  example2: z.string().min(6, t.app.profileForm.errors.exampleMin),
+  example3: z.string().min(6, t.app.profileForm.errors.exampleMin),
   allowEmojis: z.boolean(),
   enabled: z.boolean(),
 })
 
-type ProfileFormValues = z.infer<typeof profileSchema>
+type ProfileFormValues = z.infer<ReturnType<typeof createProfileSchema>>
 
 interface ProfileFormDialogProps {
   open: boolean
@@ -64,6 +66,8 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
   onSubmit,
 }: ProfileFormDialogProps) {
   const t = useLanguageStore((state) => state.t)
+  const currentSchema = useMemo(() => createProfileSchema(t), [t])
+
   const {
     register,
     control,
@@ -71,7 +75,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
     formState: { errors },
     reset,
   } = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(currentSchema),
     defaultValues: defaults,
   })
 
@@ -103,16 +107,15 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
       {/* Remove inline style — border-none class already handles this */}
       <DialogContent className="w-[min(94vw,760px)] max-h-[90vh] flex flex-col rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden">
         <DialogDescription className="sr-only">
-          Form to create or edit a voice profile
+          {t.app.profileForm.formDescription}
         </DialogDescription>
         <div className="flex flex-col lg:grid lg:grid-cols-[0.92fr_1.08fr] overflow-hidden flex-1">
           <div className="dashboard-dark-panel dashboard-dark-panel-split shrink-0 overflow-hidden md:p-6">
             <h2 className="text-3xl font-black tracking-[-0.04em]">
-              {profile ? "Refine this voice" : "Create a new voice"}
+              {profile ? t.app.profileForm.refineVoice : t.app.profileForm.createNewVoice}
             </h2>
             <p className="mt-4 text-[14px] leading-7 text-white/85">
-              Good profiles are specific enough to guide tone and flexible
-              enough to work across different LinkedIn posts.
+              {t.app.profileForm.voiceDesc}
             </p>
 
             <div className="hidden sm:block mt-6 rounded-[22px] border border-white/20 bg-white/12 p-4 backdrop-blur-sm">
@@ -120,9 +123,9 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                 {t.app.profileForm.strongProfileTitle}
               </p>
               <ul className="mt-3 space-y-3 text-[13px] leading-6 text-white/90">
-                <li>Choose one clear posture, not three mixed personalities.</li>
-                <li>Use examples that sound publishable right away.</li>
-                <li>Only enable emojis if they match your public tone.</li>
+                <li>{t.app.profileForm.strongProfileL1}</li>
+                <li>{t.app.profileForm.strongProfileL2}</li>
+                <li>{t.app.profileForm.strongProfileL3}</li>
               </ul>
             </div>
 
@@ -131,8 +134,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                 <Lightbulb className="h-4 w-4" />
               </div>
               <p className="text-[13px] leading-6 text-white/85">
-                Mirror works best when each profile sounds like a repeatable
-                professional persona, not just a different adjective.
+                {t.app.profileForm.mirrorWorksBest}
               </p>
             </div>
           </div>
@@ -140,11 +142,10 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
           <div className="bg-surface-elevated p-5 md:p-6 overflow-y-auto custom-scrollbar flex-1 lg:max-h-[80vh]">
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-primary-text">
-                {profile ? "Edit profile" : "Create profile"}
+                {profile ? t.app.profileForm.editProfile : t.app.profileForm.createProfile}
               </DialogTitle>
               <p className="text-[13px] leading-6 text-secondary-text">
-                Define voice, tone and three sample comments for consistent
-                generation.
+                {t.app.profileForm.defineVoiceDesc}
               </p>
             </DialogHeader>
 
@@ -158,7 +159,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                 />
                 <Textarea
                   label={t.app.profileForm.descLabel}
-                  placeholder="What kind of perspective does this profile bring?"
+                  placeholder={t.app.profileForm.descPlaceholder}
                   rows={2}
                   error={errors.description?.message}
                   {...register("description")}
@@ -175,8 +176,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                     {t.app.profileForm.exampleComments}
                   </p>
                   <p className="text-[13px] text-secondary-text">
-                    Use three short examples that feel ready to post, not
-                    abstract instructions.
+                    {t.app.profileForm.exampleCommentsDesc}
                   </p>
                   <div className="mt-3 grid gap-3">
                     <Textarea
@@ -232,14 +232,14 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                   variant="secondary"
                   onClick={onClose}
                 >
-                  Cancel
+                  {t.app.profileForm.cancel}
                 </Button>
                 <Button type="submit" disabled={isPending}>
                   {isPending
-                    ? "Saving..."
+                    ? t.app.profileForm.saving
                     : profile
-                      ? "Save changes"
-                      : "Create profile"}
+                      ? t.app.profileForm.saveChanges
+                      : t.app.profileForm.createProfile}
                 </Button>
               </DialogFooter>
             </form>

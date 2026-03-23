@@ -290,7 +290,8 @@ const de = {
       trash: "Papierkorb",
       openMenu: "Menü öffnen",
       closeMenu: "Menü schließen",
-      openUserSettings: "Einstellungen öffnen"
+      openUserSettings: "Einstellungen öffnen",
+      upgrade: "Upgrade"
     },
     account: {
       title: "Konto",
@@ -433,7 +434,19 @@ const de = {
       deleteDialogTitle: "Profil löschen?",
       deleteDialogDescMatch: "{0} wird endgültig entfernt.",
       deleteDialogDescFallback: "Wird endgültig entfernt.",
-      deleteConfirm: "Löschen"
+      deleteConfirm: "Profil löschen",
+      edit: "Bearbeiten",
+      delete: "Löschen",
+      enable: "Aktivieren",
+      disable: "Deaktivieren",
+      enabled: "Aktiviert",
+      disabled: "Deaktiviert",
+      noEmojis: "Keine Emojis",
+      toneMap: "Tonkarte",
+      examplePrefix: "Beispiel",
+      updatedPrefix: "Aktualisiert",
+      voiceProfile: "Sprachprofil",
+      openActions: "Profilaktionen öffnen"
     },
     settings: {
       heroTitle: "Alles an einem Ort.",
@@ -506,7 +519,14 @@ const de = {
       profileEnabled: "Profil aktiv",
       cancel: "Abbrechen",
       saving: "Speichern...",
-      saveChanges: "Speichern"
+      saveChanges: "Änderungen speichern",
+      formDescription: "Formular zum Erstellen oder Bearbeiten eines Sprachprofils",
+      errors: {
+        nameRequired: "Name ist erforderlich",
+        descRequired: "Fügen Sie eine klarere Beschreibung hinzu",
+        toneRequired: "Ton ist erforderlich",
+        exampleMin: "Beispiel ist zu kurz"
+      }
     },
     settingsModal: {
       title: "Konfiguration",

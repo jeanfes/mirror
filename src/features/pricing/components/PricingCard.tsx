@@ -3,17 +3,17 @@ import { CheckCircle2 } from "lucide-react";
 
 interface PricingCardProps {
     plan: {
-        name: string;
-        desc: string;
-        price: string;
-        features: string[];
-        buttonText: string;
-        popular?: boolean;
+        readonly name: string;
+        readonly desc: string;
+        readonly price: string;
+        readonly features: readonly string[];
+        readonly buttonText: string;
+        readonly popular?: boolean;
     };
-    href: string;
-    index: number;
-    perMonthText: string;
-    popularText?: string;
+    readonly href: string;
+    readonly index: number;
+    readonly perMonthText: string;
+    readonly popularText?: string;
 }
 
 export function PricingCard({ plan, href, perMonthText, popularText }: PricingCardProps) {

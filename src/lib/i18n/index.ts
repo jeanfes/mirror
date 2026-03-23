@@ -1,4 +1,5 @@
 import type { Dictionary } from "./types"
+export type { Dictionary }
 
 export async function loadDictionary(lang: string): Promise<Dictionary> {
   switch (lang) {

@@ -60,7 +60,7 @@ export function MobileSidebar() {
           <button
             onClick={() => setIsOpen(false)}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-soft bg-surface-elevated text-secondary-text shadow-premium-sm"
-            aria-label="Close menu"
+            aria-label={t.app.navigation.closeMenu}
           >
             <X className="h-4 w-4" />
           </button>
@@ -104,7 +104,7 @@ export function MobileSidebar() {
             type="button"
             onClick={handleOpenSettingsFromSidebar}
             className="cursor-pointer group relative flex h-11 w-11 items-center justify-center rounded-full bg-surface-elevated border border-border-soft text-[14px] font-bold text-primary-text transition-transform hover:scale-105 active:scale-95 focus:outline-none overflow-hidden"
-            aria-label="Open user settings"
+            aria-label={t.app.navigation.openUserSettings}
           >
             {user.avatar ? (
               <Image
@@ -128,7 +128,7 @@ export function MobileSidebar() {
       <button
         onClick={() => setIsOpen(true)}
         className="flex items-center justify-center rounded-md p-2 text-secondary-text hover:bg-surface-hover"
-        aria-label="Open menu"
+        aria-label={t.app.navigation.openMenu}
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -142,7 +142,7 @@ export function MobileSidebar() {
         onOpenChange={setIsSettingsOpen}
         user={user}
       >
-        <span className="sr-only">Open settings</span>
+        <span className="sr-only">{t.app.navigation.openUserSettings}</span>
       </SettingsModal>
     </div>
   )

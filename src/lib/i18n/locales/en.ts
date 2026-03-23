@@ -36,6 +36,7 @@ const en = {
     titleSpan: "Pricing",
     subtitle: "Plans designed for you. Start using Mirror for free today and scale when you need to.",
     freePlan: "Basic Plan",
+    freeDesc: "For occasional users and testers",
     perMonth: "/ month",
     freeFeatures: [
       "120 completions per month",
@@ -289,7 +290,8 @@ const en = {
       trash: "Trash",
       openMenu: "Open menu",
       closeMenu: "Close menu",
-      openUserSettings: "Open user settings"
+      openUserSettings: "Open settings",
+      upgrade: "Upgrade"
     },
     account: {
       title: "Account",
@@ -432,7 +434,19 @@ const en = {
       deleteDialogTitle: "Delete this profile?",
       deleteDialogDescMatch: "{0} will be permanently removed.",
       deleteDialogDescFallback: "This profile will be permanently removed.",
-      deleteConfirm: "Delete profile"
+      deleteConfirm: "Delete profile",
+      edit: "Edit",
+      delete: "Delete",
+      enable: "Enable",
+      disable: "Disable",
+      enabled: "Enabled",
+      disabled: "Disabled",
+      noEmojis: "No emojis",
+      toneMap: "Tone map",
+      examplePrefix: "Example",
+      updatedPrefix: "Updated",
+      voiceProfile: "Voice profile",
+      openActions: "Open profile actions"
     },
     settings: {
       heroTitle: "Configure Mirror in one place, without jumping between sections.",
@@ -505,7 +519,14 @@ const en = {
       profileEnabled: "Profile enabled",
       cancel: "Cancel",
       saving: "Saving...",
-      saveChanges: "Save changes"
+      saveChanges: "Save changes",
+      formDescription: "Form to create or edit a voice profile",
+      errors: {
+        nameRequired: "Name is required",
+        descRequired: "Add a clearer description",
+        toneRequired: "Tone is required",
+        exampleMin: "Example is too short"
+      }
     },
     settingsModal: {
       title: "Settings",

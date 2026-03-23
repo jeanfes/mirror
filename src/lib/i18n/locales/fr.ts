@@ -290,7 +290,8 @@ const fr = {
       trash: "Corbeille",
       openMenu: "Ouvrir le menu",
       closeMenu: "Fermer le menu",
-      openUserSettings: "Ouvrir les réglages"
+      openUserSettings: "Ouvrir les réglages",
+      upgrade: "Améliorer"
     },
     account: {
       title: "Compte",
@@ -433,7 +434,19 @@ const fr = {
       deleteDialogTitle: "Supprimer ce profil ?",
       deleteDialogDescMatch: "{0} sera supprimé définitivement.",
       deleteDialogDescFallback: "Ce profil sera supprimé définitivement.",
-      deleteConfirm: "Supprimer le profil"
+      deleteConfirm: "Supprimer le profil",
+      edit: "Modifier",
+      delete: "Supprimer",
+      enable: "Activer",
+      disable: "Désactiver",
+      enabled: "Activé",
+      disabled: "Désactivé",
+      noEmojis: "Pas d'emojis",
+      toneMap: "Carte de ton",
+      examplePrefix: "Exemple",
+      updatedPrefix: "Mis à jour",
+      voiceProfile: "Profil de voix",
+      openActions: "Ouvrir les actions de profil"
     },
     settings: {
       heroTitle: "Configurez Mirror en un seul endroit.",
@@ -505,8 +518,15 @@ const fr = {
       allowEmojis: "Autoriser les emojis",
       profileEnabled: "Profil activé",
       cancel: "Annuler",
-      saving: "Sauvegarde...",
-      saveChanges: "Sauvegarder les changements"
+      saving: "Enregistrement...",
+      saveChanges: "Sauvegarder les changements",
+      formDescription: "Formulaire pour créer ou modifier un profil de voix",
+      errors: {
+        nameRequired: "Le nom est requis",
+        descRequired: "Ajoutez une description plus claire",
+        toneRequired: "Le ton est requis",
+        exampleMin: "L'exemple est trop court"
+      }
     },
     settingsModal: {
       title: "Paramètres",

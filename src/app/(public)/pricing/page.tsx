@@ -1,7 +1,7 @@
-import { getDictionary } from "@/lib/i18n-server";
-import { ROUTES } from "@/lib/routes";
 import { PricingCard } from "@/features/pricing/components/PricingCard";
+import { getDictionary } from "@/lib/i18n-server";
 import { getServerSession } from "@/lib/auth";
+import { ROUTES } from "@/lib/routes";
 
 export default async function PricingPage() {
     const { t } = await getDictionary();

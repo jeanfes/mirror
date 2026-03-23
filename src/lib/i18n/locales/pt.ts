@@ -290,7 +290,8 @@ const pt = {
       trash: "Lixeira",
       openMenu: "Abrir menu",
       closeMenu: "Fechar menu",
-      openUserSettings: "Abrir ajustes"
+      openUserSettings: "Abrir ajustes",
+      upgrade: "Melhorar"
     },
     account: {
       title: "Conta",
@@ -433,7 +434,19 @@ const pt = {
       deleteDialogTitle: "Excluir este perfil?",
       deleteDialogDescMatch: "{0} será removido permanentemente.",
       deleteDialogDescFallback: "Este perfil será removido permanentemente.",
-      deleteConfirm: "Excluir perfil"
+      deleteConfirm: "Excluir perfil",
+      edit: "Editar",
+      delete: "Excluir",
+      enable: "Ativar",
+      disable: "Desativar",
+      enabled: "Ativado",
+      disabled: "Desativado",
+      noEmojis: "Sem emojis",
+      toneMap: "Mapa de tom",
+      examplePrefix: "Exemplo",
+      updatedPrefix: "Atualizado",
+      voiceProfile: "Perfil de voz",
+      openActions: "Abrir ações do perfil"
     },
     settings: {
       heroTitle: "Configure o Mirror num só lugar, sem saltar entre seções.",
@@ -506,7 +519,14 @@ const pt = {
       profileEnabled: "Perfil ativado",
       cancel: "Cancelar",
       saving: "Salvando...",
-      saveChanges: "Salvar alterações"
+      saveChanges: "Salvar alterações",
+      formDescription: "Formulário para criar ou editar um perfil de voz",
+      errors: {
+        nameRequired: "O nome é obrigatório",
+        descRequired: "Adicione uma descrição mais clara",
+        toneRequired: "O tom é obrigatório",
+        exampleMin: "O exemplo é muito curto"
+      }
     },
     settingsModal: {
       title: "Configuração",
