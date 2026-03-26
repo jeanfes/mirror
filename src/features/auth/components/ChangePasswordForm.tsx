@@ -56,7 +56,7 @@ export function ChangePasswordForm({ onCancel }: ChangePasswordFormProps) {
     <form className="space-y-4" onSubmit={onSubmit} noValidate aria-busy={isPending}>
       <Input
         {...register("currentPassword")}
-        label={t.auth.currentPasswordLabel || "Current Password"}
+        label={t.auth.currentPasswordLabel}
         type={showPassword ? "text" : "password"}
         autoComplete="current-password"
         disabled={isPending}
@@ -123,7 +123,7 @@ export function ChangePasswordForm({ onCancel }: ChangePasswordFormProps) {
             onClick={onCancel}
             disabled={isPending}
           >
-            {t.auth.back || "Back"}
+            {t.auth.back}
           </Button>
         )}
       </div>

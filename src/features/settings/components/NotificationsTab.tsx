@@ -3,6 +3,7 @@
 import React, { memo } from "react"
 import { Card } from "@/components/ui/Card"
 import { Toggle } from "@/components/ui/Toggle"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 interface NotificationsTabProps {
   settings: {
@@ -20,17 +21,19 @@ export const NotificationsTab = memo(function NotificationsTab({
   title,
   description
 }: NotificationsTabProps) {
+  const t = useLanguageStore((state) => state.t)
+
   return (
     <div className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
       <SectionHeader title={title} description={description} />
       <Card className="p-4 space-y-4">
         <Toggle 
-          label="Actualizaciones por Email" 
+          label={t.app.settingsModal.emailUpdates} 
           checked={settings?.notificationsEnabled ?? true} 
           onChange={(v) => onToggleChange('notificationsEnabled', v)}
         />
         <Toggle 
-          label="Alertas de Escritorio" 
+          label={t.app.settingsModal.desktopAlerts} 
           checked={settings?.desktopAlertsEnabled ?? false} 
           onChange={(v) => onToggleChange('desktopAlertsEnabled', v)}
         />

@@ -252,7 +252,11 @@ const es = {
       profileStatusUpdated: "Estado del perfil actualizado",
       profileStatusError: "No se pudo actualizar el estado del perfil",
       profileDeleted: "Perfil eliminado",
-      profileDeleteError: "No se pudo eliminar el perfil"
+      profileDeleteError: "No se pudo eliminar el perfil",
+      cancel: "Cancelar",
+      confirm: "Confirmar",
+      delete: "Eliminar",
+      working: "Trabajando..."
     },
     billing: {
       title: "Facturación",
@@ -577,7 +581,12 @@ const es = {
       logoutConfirmTitle: "¿Cerrar sesión?",
       logoutConfirmDesc: "Saldrás de tu espacio de trabajo y deberás iniciar sesión nuevamente.",
       deleteConfirmTitle: "¿Eliminar tu cuenta?",
-      deleteConfirmDesc: "Esta acción es permanente y eliminará perfiles e historial al instante."
+      deleteConfirmDesc: "Esta acción es permanente y eliminará perfiles e historial al instante.",
+      languageUpdated: "Idioma actualizado",
+      languageUpdateError: "No se pudo cambiar el idioma",
+      themeSaveError: "No se pudo guardar el tema",
+      savingChanges: "Guardando cambios...",
+      backupStarted: "Copia de seguridad iniciada"
     }
   }
 } as const

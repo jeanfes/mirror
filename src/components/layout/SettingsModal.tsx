@@ -82,7 +82,7 @@ const SettingsModal = memo(function SettingsModal({
       await updateSettings({ theme: nextPref === "system" ? "auto" : nextPref })
     } catch {
       setThemePreference(prev)
-      toast.error("Error al guardar el tema")
+      toast.error(t.app.settingsModal.themeSaveError)
     }
   }, [setThemePreference, updateSettings])
 
@@ -93,10 +93,10 @@ const SettingsModal = memo(function SettingsModal({
     try {
       setIsUpdating(true)
       await updateSettings({ language: newLang })
-      toast.success("Idioma actualizado")
+      toast.success(t.app.settingsModal.languageUpdated)
     } catch {
       setLanguage(prev)
-      toast.error("Error al cambiar idioma")
+      toast.error(t.app.settingsModal.languageUpdateError)
     } finally {
       setIsUpdating(false)
     }
@@ -106,7 +106,7 @@ const SettingsModal = memo(function SettingsModal({
     try {
       await updateSettings({ [key]: value })
     } catch {
-      toast.error("Error al guardar preferencia")
+      toast.error(t.app.settings.preferencesError)
     }
   }, [updateSettings])
 
@@ -124,7 +124,7 @@ const SettingsModal = memo(function SettingsModal({
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="max-w-4xl p-0 h-[80vh] flex flex-col sm:h-162.5 overflow-hidden">
           <DialogTitle className="sr-only">{t.app.settingsModal.title}</DialogTitle>
-          <DialogDescription className="sr-only">Gestiona tu cuenta y preferencias</DialogDescription>
+          <DialogDescription className="sr-only">{t.app.settingsModal.subtitle}</DialogDescription>
 
           <Tabs 
             value={activeTab} 
@@ -145,11 +145,11 @@ const SettingsModal = memo(function SettingsModal({
                 </div>
 
                 <TabsList className="flex-row sm:flex-col h-auto items-center sm:items-stretch justify-start rounded-none bg-transparent p-0 gap-2 sm:gap-1.5 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 border-0">
-                  <SettingsTabTrigger value="general" icon={<User className="h-4 w-4" />} label="General" />
-                  <SettingsTabTrigger value="appearance" icon={<Palette className="h-4 w-4" />} label="Apariencia" />
-                  <SettingsTabTrigger value="security" icon={<Shield className="h-4 w-4" />} label="Seguridad" />
-                  <SettingsTabTrigger value="notifications" icon={<Bell className="h-4 w-4" />} label="Alertas" />
-                  <SettingsTabTrigger value="data" icon={<Download className="h-4 w-4" />} label="Exportar" />
+                  <SettingsTabTrigger value="general" icon={<User className="h-4 w-4" />} label={t.app.settingsModal.tabGeneral} />
+                  <SettingsTabTrigger value="appearance" icon={<Palette className="h-4 w-4" />} label={t.app.settingsModal.tabAppearance} />
+                  <SettingsTabTrigger value="security" icon={<Shield className="h-4 w-4" />} label={t.app.settingsModal.tabSecurity} />
+                  <SettingsTabTrigger value="notifications" icon={<Bell className="h-4 w-4" />} label={t.app.settingsModal.tabAlerts} />
+                  <SettingsTabTrigger value="data" icon={<Download className="h-4 w-4" />} label={t.app.settingsModal.tabExport} />
 
                   <div className="hidden sm:block pt-8 mt-auto">
                     <Button
@@ -159,7 +159,7 @@ const SettingsModal = memo(function SettingsModal({
                       disabled={isLogoutPending || isUpdating}
                     >
                       <LogOut className="h-4 w-4 stroke-[2.2]" />
-                      <span>{isLogoutPending ? "Saliendo..." : "Cerrar sesión"}</span>
+                      <span>{isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.logOut}</span>
                     </Button>
                     <p className="px-4 py-4 text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.4</p>
                   </div>
@@ -176,7 +176,10 @@ const SettingsModal = memo(function SettingsModal({
                       onLanguageChange={handleLanguageChange}
                       t={{
                         generalInfoTitle: t.app.settingsModal.generalInfoTitle,
-                        generalInfoDesc: t.app.settingsModal.generalInfoDesc
+                        generalInfoDesc: t.app.settingsModal.generalInfoDesc,
+                        fullName: t.app.settingsModal.fullName,
+                        emailAddress: t.app.settingsModal.emailAddress,
+                        appLanguage: t.app.settingsModal.appLanguage
                       }}
                     />
                   )}
@@ -187,9 +190,9 @@ const SettingsModal = memo(function SettingsModal({
                     <AppearanceTab 
                       themePreference={themePreference}
                       onThemeChange={handleThemeChange}
-                      title="Apariencia"
-                      description="Personaliza cómo se ve tu espacio de trabajo."
-                      activeLabel="Tema Activo"
+                      title={t.app.settingsModal.appearanceTitle}
+                      description={t.app.settingsModal.appearanceDesc}
+                      activeLabel={t.app.settingsModal.activeTheme}
                     />
                   )}
                 </TabsContent>
@@ -198,8 +201,8 @@ const SettingsModal = memo(function SettingsModal({
                   {activeTab === "security" && (
                     <SecurityTab 
                       onUpdatePassword={() => setIsChangePasswordOpen(true)}
-                      title="Seguridad"
-                      description="Gestiona tu contraseña y protege tu cuenta."
+                      title={t.app.settingsModal.securityTitle}
+                      description={t.app.settingsModal.securityDesc}
                     />
                   )}
                 </TabsContent>
@@ -209,8 +212,8 @@ const SettingsModal = memo(function SettingsModal({
                     <NotificationsTab 
                       settings={settings}
                       onToggleChange={handleToggleChange}
-                      title="Notificaciones"
-                      description="Elige qué alertas quieres recibir."
+                      title={t.app.settingsModal.notificationsTitle}
+                      description={t.app.settingsModal.notificationsDesc}
                     />
                   )}
                 </TabsContent>
@@ -219,8 +222,8 @@ const SettingsModal = memo(function SettingsModal({
                   {activeTab === "data" && (
                     <DataTab 
                       onDeleteAccount={() => setIsDeleteAccountConfirmOpen(true)}
-                      title="Datos y Privacidad"
-                      description="Exporta tu información o elimina tu cuenta."
+                      title={t.app.settingsModal.dataControlsTitle}
+                      description={t.app.settingsModal.dataControlsDesc}
                     />
                   )}
                 </TabsContent>
@@ -231,12 +234,12 @@ const SettingsModal = memo(function SettingsModal({
 
           <footer className="flex h-14 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 shrink-0">
             <div className="flex gap-5">
-              <FooterLink href="#" label="Status" />
-              <FooterLink href="#" label="Docs" />
-              <FooterLink href="#" label="Changelog" />
+              <FooterLink href="#" label={t.app.settingsModal.status} />
+              <FooterLink href="#" label={t.app.settingsModal.docs} />
+              <FooterLink href="#" label={t.app.settingsModal.changelog} />
             </div>
             <div className="flex items-center gap-2 opacity-50">
-              <span className="text-[10px] font-bold">Powered by MIRROR</span>
+              <span className="text-[10px] font-bold">{t.app.settingsModal.poweredBy} MIRROR</span>
             </div>
           </footer>
         </DialogContent>
@@ -244,9 +247,10 @@ const SettingsModal = memo(function SettingsModal({
 
       <ConfirmDialog
         open={isLogoutConfirmOpen}
-        title="¿Cerrar sesión?"
-        description="Tendrás que volver a ingresar para acceder a tu espacio privado."
-        confirmLabel="Salir"
+        title={t.app.settingsModal.logoutConfirmTitle}
+        description={t.app.settingsModal.logoutConfirmDesc}
+        confirmLabel={t.app.settingsModal.logOut}
+        cancelLabel={t.app.common.cancel}
         isPending={isLogoutPending}
         onConfirm={handleLogout}
         onCancel={() => setIsLogoutConfirmOpen(false)}
@@ -254,15 +258,16 @@ const SettingsModal = memo(function SettingsModal({
 
       <ConfirmDialog
         open={isDeleteAccountConfirmOpen}
-        title="¿Eliminar cuenta?"
-        description="Esta acción es permanente y borrará todos tus datos."
-        confirmLabel="Eliminar definitivamente"
+        title={t.app.settingsModal.deleteConfirmTitle}
+        description={t.app.settingsModal.deleteConfirmDesc}
+        confirmLabel={t.app.settingsModal.deleteAccount}
+        cancelLabel={t.app.common.cancel}
         onConfirm={() => setIsDeleteAccountConfirmOpen(false)}
         onCancel={() => setIsDeleteAccountConfirmOpen(false)}
       />
 
       <ChangePasswordModal open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} />
-      <LoadingOverlay show={isLogoutPending || isUpdating} label={isLogoutPending ? "Saliendo..." : "Guardando cambios..."} />
+      <LoadingOverlay show={isLogoutPending || isUpdating} label={isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.savingChanges} />
     </>
   )
 })

@@ -252,7 +252,11 @@ const de = {
       profileStatusUpdated: "Status aktualisiert",
       profileStatusError: "Status-Update fehlgeschlagen",
       profileDeleted: "Profil entfernt",
-      profileDeleteError: "Entfernen fehlgeschlagen"
+      profileDeleteError: "Entfernen fehlgeschlagen",
+      cancel: "Abbrechen",
+      confirm: "Bestätigen",
+      delete: "Löschen",
+      working: "In Arbeit..."
     },
     billing: {
       title: "Abrechnung",
@@ -577,7 +581,12 @@ const de = {
       logoutConfirmTitle: "Abmelden?",
       logoutConfirmDesc: "Du musst dich neu anmelden.",
       deleteConfirmTitle: "Konto löschen?",
-      deleteConfirmDesc: "Alles wird endgültig gelöscht."
+      deleteConfirmDesc: "Alles wird endgültig gelöscht.",
+      languageUpdated: "Sprache aktualisiert",
+      languageUpdateError: "Sprache konnte nicht geändert werden",
+      themeSaveError: "Thema konnte nicht gespeichert werden",
+      savingChanges: "Änderungen werden gespeichert...",
+      backupStarted: "Backup gestartet"
     }
   }
 } as const

@@ -41,14 +41,14 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
           <div 
             className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full opacity-10" 
           />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-surface-elevated text-secondary-text shadow-premium-sm ring-1 ring-border-soft">
-            <FileText className="h-10 w-10 text-primary-text/40" strokeWidth={1.5} />
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated text-secondary-text shadow-sm ring-1 ring-border-soft">
+            <FileText className="h-8 w-8 text-primary-text/40" strokeWidth={1.5} />
           </div>
         </div>
-        <h3 className="text-xl font-black text-primary-text mb-2 tracking-tight">
+        <h3 className="text-lg font-black text-primary-text mb-2 tracking-tight">
           {t.app.billing.noInvoicesTitle}
         </h3>
-        <p className="max-w-xs text-[15px] font-medium text-secondary-text leading-relaxed">
+        <p className="max-w-xs text-[14px] font-medium text-secondary-text leading-relaxed">
           {t.app.billing.noInvoicesDesc}
         </p>
       </div>

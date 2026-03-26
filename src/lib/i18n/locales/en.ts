@@ -252,7 +252,11 @@ const en = {
       profileStatusUpdated: "Profile status updated",
       profileStatusError: "Could not update profile status",
       profileDeleted: "Profile deleted",
-      profileDeleteError: "Could not delete profile"
+      profileDeleteError: "Could not delete profile",
+      cancel: "Cancel",
+      confirm: "Confirm",
+      delete: "Delete",
+      working: "Working..."
     },
     billing: {
       title: "Billing",
@@ -577,7 +581,12 @@ const en = {
       logoutConfirmTitle: "Close your session?",
       logoutConfirmDesc: "You will leave the private workspace and will need to sign in again to continue.",
       deleteConfirmTitle: "Delete your account?",
-      deleteConfirmDesc: "This action is permanent and will remove all your profiles, history and plans."
+      deleteConfirmDesc: "This action is permanent and will remove all your profiles, history and plans.",
+      languageUpdated: "Language updated",
+      languageUpdateError: "Could not change the language",
+      themeSaveError: "Could not save the theme",
+      savingChanges: "Saving changes...",
+      backupStarted: "Backup started"
     }
   }
 } as const

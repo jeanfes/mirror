@@ -5,6 +5,7 @@ import { Download, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { toast } from "sonner"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 interface DataTabProps {
   onDeleteAccount: () => void
@@ -17,23 +18,25 @@ export const DataTab = memo(function DataTab({
   title,
   description
 }: DataTabProps) {
+  const t = useLanguageStore((state) => state.t)
+
   return (
     <div className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
       <SectionHeader title={title} description={description} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="flex-col space-y-4">
         <Card className="p-6 space-y-4">
           <div className="flex items-center gap-3">
             <Download className="h-5 w-5 text-blue-500" />
-            <p className="text-sm font-bold">Exportar Biblioteca</p>
+            <p className="text-sm font-bold">{t.app.settingsModal.exportLibrary}</p>
           </div>
-          <Button variant="secondary" className="w-full" onClick={() => toast.success("Backup iniciado")}>Empezar Backup</Button>
+          <Button variant="secondary" className="w-full" onClick={() => toast.success(t.app.settingsModal.backupStarted)}>{t.app.settingsModal.startBackup}</Button>
         </Card>
-        <Card className="p-6 space-y-4 border-red-200 bg-red-50/30">
+        <Card className="className=p-6 space-y-4">
           <div className="flex items-center gap-3">
             <Trash2 className="h-5 w-5 text-red-500" />
-            <p className="text-sm font-bold text-red-600">Zona de Peligro</p>
+            <p className="text-sm font-bold text-red-600">{t.app.settingsModal.dangerZone}</p>
           </div>
-          <Button variant="dangerSoft" className="w-full" onClick={onDeleteAccount}>Eliminar Cuenta</Button>
+          <Button variant="dangerSoft" className="w-full" onClick={onDeleteAccount}>{t.app.settingsModal.deleteAccount}</Button>
         </Card>
       </div>
     </div>

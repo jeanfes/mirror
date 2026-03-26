@@ -252,7 +252,11 @@ const fr = {
       profileStatusUpdated: "Statut du profil mis à jour",
       profileStatusError: "Impossible de mettre à jour le statut du profil",
       profileDeleted: "Profil supprimé",
-      profileDeleteError: "Impossible de supprimer le profil"
+      profileDeleteError: "Impossible de supprimer le profil",
+      cancel: "Annuler",
+      confirm: "Confirmer",
+      delete: "Supprimer",
+      working: "Traitement..."
     },
     billing: {
       title: "Facturation",
@@ -577,7 +581,12 @@ const fr = {
       logoutConfirmTitle: "Fermer la session ?",
       logoutConfirmDesc: "Vous devrez vous reconnecter pour continuer.",
       deleteConfirmTitle: "Supprimer votre compte ?",
-      deleteConfirmDesc: "Cette action est permanente et supprimera tout instantanément."
+      deleteConfirmDesc: "Cette action est permanente et supprimera tout instantanément.",
+      languageUpdated: "Langue mise à jour",
+      languageUpdateError: "Impossible de changer la langue",
+      themeSaveError: "Impossible d'enregistrer le thème",
+      savingChanges: "Enregistrement des modifications...",
+      backupStarted: "Sauvegarde démarrée"
     }
   }
 } as const

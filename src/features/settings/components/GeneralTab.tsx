@@ -18,6 +18,9 @@ interface GeneralTabProps {
   t: {
     generalInfoTitle: string
     generalInfoDesc: string
+    fullName: string
+    emailAddress: string
+    appLanguage: string
   }
 }
 
@@ -57,11 +60,11 @@ export const GeneralTab = memo(function GeneralTab({
         </div>
         <div className="grid gap-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input disabled label="Nombre" defaultValue={user.name} />
-            <Input disabled label="Email" defaultValue={user.email} />
+            <Input disabled label={t.fullName} defaultValue={user.name} />
+            <Input disabled label={t.emailAddress} defaultValue={user.email} />
           </div>
           <Select
-            label="Idioma de la App"
+            label={t.appLanguage}
             value={language}
             onChange={onLanguageChange}
             options={[

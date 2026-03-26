@@ -84,10 +84,11 @@ export default async function RootLayout({
           {children}
           <Toaster 
             position="top-right" 
-            richColors 
-            closeButton
+            closeButton={true}
+            expand={false}
+            visibleToasts={3}
             toastOptions={{
-              className: 'font-sans border-border-soft bg-surface-overlay/80 backdrop-blur-md',
+              className: 'sonner-toast-custom',
             }} 
           />
         </AppProviders>
