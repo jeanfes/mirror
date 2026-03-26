@@ -6,6 +6,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import clsx from "clsx"
 import Image from "next/image"
+import { motion } from "framer-motion"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
@@ -37,13 +38,19 @@ export function Sidebar({ user }: SidebarProps) {
                             title={item.label}
                             aria-label={item.label}
                             className={clsx(
-                                "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors",
+                                "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/50",
                                 isActive ? "text-white" : "text-secondary-text hover:text-primary-dark"
                             )}
                         >
                             {isActive && (
-                                <div
+                                <motion.div
+                                    layoutId="sidebar-active-pill"
                                     className="absolute inset-0 bg-(--nav-active-bg) rounded-full shadow-premium-sm"
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 30,
+                                    }}
                                 />
                             )}
                             <Icon className="relative z-10 h-5 w-5" />

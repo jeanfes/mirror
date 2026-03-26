@@ -29,6 +29,32 @@ export const useLogin = () => {
                 return mapLoginError(error)
             }
 
+            // Sync theme and language to cookies instantly to prevent FOUC on initial redirect
+            try {
+                const { createClient } = await import("@/lib/supabase/client")
+                const supabase = createClient()
+                const { data: { user } } = await supabase.auth.getUser()
+                
+                if (user) {
+                    const { data: profile } = await supabase
+                        .from("profiles")
+                        .select("theme_preference, language_preference")
+                        .eq("id", user.id)
+                        .single()
+                        
+                    if (profile) {
+                        if (profile.theme_preference) {
+                            document.cookie = `mirror-theme-preference=${profile.theme_preference}; path=/; max-age=31536000; SameSite=Lax`
+                        }
+                        if (profile.language_preference) {
+                            document.cookie = `NEXT_LOCALE=${profile.language_preference}; path=/; max-age=31536000; SameSite=Lax`
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to sync preferences before redirect", err)
+            }
+
             setIsPending(false)
             setIsNavigating(true)
             router.push(DEFAULT_AUTHENTICATED_ROUTE)

@@ -27,6 +27,29 @@ export async function GET(request: NextRequest) {
       if (exchangeError) {
         return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_exchange_failed`, request.url))
       }
+
+      // Fetch user profile to apply theme and language to cookies instantly (Prevent FOUC)
+      const { data: { user } } = await supabase.auth.getUser()
+      const response = NextResponse.redirect(new URL(nextPath, request.url))
+      
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("theme_preference, language_preference")
+          .eq("id", user.id)
+          .single()
+
+        if (profile) {
+          if (profile.theme_preference) {
+            response.cookies.set("mirror-theme-preference", profile.theme_preference, { path: "/", maxAge: 31536000, sameSite: "lax" })
+          }
+          if (profile.language_preference) {
+            response.cookies.set("NEXT_LOCALE", profile.language_preference, { path: "/", maxAge: 31536000, sameSite: "lax" })
+          }
+        }
+      }
+
+      return response
     } catch {
       return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=supabase_config_missing`, request.url))
     }
