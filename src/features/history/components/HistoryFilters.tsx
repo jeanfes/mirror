@@ -55,9 +55,11 @@ export const HistoryFilters = memo(function HistoryFilters({
                     <span className="feature-pill px-3 py-1.5">
                         {t.app.historyFilters.showingXofY.replace("{0}", resultsCount.toString()).replace("{1}", totalCount.toString())}
                     </span>
-                    <Button type="button" variant="secondary" onClick={onReset} disabled={!hasActiveFilters}>
-                        {t.app.historyFilters.reset}
-                    </Button>
+                    {hasActiveFilters && (
+                        <Button type="button" variant="secondary" onClick={onReset}>
+                            {t.app.historyFilters.reset}
+                        </Button>
+                    )}
                 </div>
             </div>
 

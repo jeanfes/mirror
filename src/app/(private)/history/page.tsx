@@ -28,6 +28,10 @@ export default function HistoryPage() {
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading)
 
+    const hasActiveFilters = useMemo(() => {
+        return search.trim().length > 0 || selectedProfileId !== "all" || appliedFilter !== "all"
+    }, [search, selectedProfileId, appliedFilter])
+
     const profileMap = useMemo(() => {
         return new Map((profiles ?? []).map((profile) => [profile.id, profile.name]))
     }, [profiles])
@@ -217,8 +221,8 @@ export default function HistoryPage() {
                     icon={<Archive className="h-6 w-6 text-primary-text" />}
                     title={t.app.common.historyEmptyTitle}
                     description={t.app.common.historyEmptyDesc}
-                    actionLabel={t.app.common.historyEmptyAction}
-                    onAction={resetFilters}
+                    actionLabel={hasActiveFilters ? t.app.common.historyEmptyAction : undefined}
+                    onAction={hasActiveFilters ? resetFilters : undefined}
                 />
             ) : (
                 <div className="space-y-4">
