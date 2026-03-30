@@ -23,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-space-grotesk",
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 })
 
 export const metadata: Metadata = {
@@ -75,7 +75,7 @@ export default async function RootLayout({
         </Script>
       </head>
       <body
-        className={`${spaceGrotesk.className} bg-bg-main text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
+        className={`${spaceGrotesk.className} font-sans bg-bg-main text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
       >
         <AppProviders
           initialThemePreference={initialThemePreference}

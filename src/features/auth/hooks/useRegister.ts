@@ -2,8 +2,8 @@
 
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
+import { useRouter, useSearchParams } from "next/navigation"
+import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
 import { signUpWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { RegisterValues } from "../schemas"
@@ -13,6 +13,8 @@ export const useRegister = () => {
     const [isPending, setIsPending] = useState(false)
     const [isNavigating, setIsNavigating] = useState(false)
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const nextParam = searchParams.get("next")
     const registerSuccessMessage = useLanguageStore((state) => state.t.auth.registerSuccess)
 
     const register = useCallback(async (data: RegisterValues): Promise<RegisterError | null> => {
@@ -32,14 +34,20 @@ export const useRegister = () => {
             setIsPending(false)
             setIsNavigating(true)
             toast.success(registerSuccessMessage)
-            router.push(DEFAULT_AUTHENTICATED_ROUTE)
+            
+            if (nextParam && nextParam.startsWith("chrome-extension://")) {
+                router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextParam)}`)
+            } else {
+                router.push(nextParam || DEFAULT_AUTHENTICATED_ROUTE)
+            }
+            
             router.refresh()
             return null
         } catch {
             setIsPending(false)
             return "connection_error"
         }
-    }, [registerSuccessMessage, router])
+    }, [registerSuccessMessage, router, nextParam])
 
     return { register, isPending, isNavigating }
 }

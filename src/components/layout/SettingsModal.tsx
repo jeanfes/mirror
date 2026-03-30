@@ -84,7 +84,7 @@ const SettingsModal = memo(function SettingsModal({
       setThemePreference(prev)
       toast.error(t.app.settingsModal.themeSaveError)
     }
-  }, [setThemePreference, updateSettings])
+  }, [setThemePreference, updateSettings, t.app.settingsModal.themeSaveError])
 
   const handleLanguageChange = useCallback(async (val: string) => {
     const prev = langRef.current
@@ -100,7 +100,7 @@ const SettingsModal = memo(function SettingsModal({
     } finally {
       setIsUpdating(false)
     }
-  }, [setLanguage, updateSettings])
+  }, [setLanguage, updateSettings, t.app.settingsModal.languageUpdated, t.app.settingsModal.languageUpdateError])
 
   const handleToggleChange = useCallback(async (key: 'notificationsEnabled' | 'desktopAlertsEnabled', value: boolean) => {
     try {
@@ -108,7 +108,7 @@ const SettingsModal = memo(function SettingsModal({
     } catch {
       toast.error(t.app.settings.preferencesError)
     }
-  }, [updateSettings])
+  }, [updateSettings, t.app.settings.preferencesError])
 
   const handleLogout = useCallback(async () => {
     await logout()

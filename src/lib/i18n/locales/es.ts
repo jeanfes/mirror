@@ -471,14 +471,19 @@ const es = {
       showConfidenceLabel: "Mostrar confianza en la extensión",
       defaultsLabel: "Predeterminados",
       languageBaselineTitle: "Idioma y perfil base",
-      languageBaselineDesc: "Configuración inicial antes de cada generación.",
+      languageBaselineDesc: "Estas opciones definen cómo Mirror se inicializa antes de cada generación.",
       whyMattersTitle: "Preferencias",
       whyMattersDesc: "Configura Mirror para que se adapte mejor a tu estilo de escritura.",
       preferencesUpdated: "Preferencias actualizadas",
       preferencesError: "No se pudieron guardar las preferencias",
       noDefaultProfile: "Sin perfil predeterminado",
       languageLabel: "Idioma",
-      defaultProfileLabel: "Perfil predeterminado"
+      defaultProfileLabel: "Perfil predeterminado",
+      labelEn: "English",
+      labelEs: "Español",
+      labelPt: "Português",
+      labelFr: "Français",
+      labelDe: "Deutsch"
     },
     historyFilters: {
       workbenchFilters: "Filtros de trabajo",

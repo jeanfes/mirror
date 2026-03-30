@@ -237,9 +237,12 @@ input[type="reset"]:disabled {
 body {
   min-height: 100vh;
   color: var(--primary-text);
-  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
+  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif !important;
   background: var(--shell-shared-bg);
   transition: background-color 180ms ease, color 180ms ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .shell-shared-bg {

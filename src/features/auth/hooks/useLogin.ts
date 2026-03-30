@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
 import { signInWithGoogle, signInWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -14,6 +14,8 @@ export const useLogin = () => {
     const [isPendingGoogle, setIsPendingGoogle] = useState(false)
     const [isNavigating, setIsNavigating] = useState(false)
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const nextParam = searchParams.get("next")
     const authErrors = useLanguageStore((state) => state.t.auth.errors)
 
     const login = useCallback(async (data: LoginValues): Promise<LoginError | null> => {
@@ -57,19 +59,29 @@ export const useLogin = () => {
 
             setIsPending(false)
             setIsNavigating(true)
-            router.push(DEFAULT_AUTHENTICATED_ROUTE)
+            
+            if (nextParam && nextParam.startsWith("chrome-extension://")) {
+                router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextParam)}`)
+            } else {
+                router.push(nextParam || DEFAULT_AUTHENTICATED_ROUTE)
+            }
+            
             router.refresh()
             return null
         } catch {
             setIsPending(false)
             return "connection_error"
         }
-    }, [router])
+    }, [router, nextParam])
 
     const loginWithGoogle = useCallback(async () => {
         setIsPendingGoogle(true)
         try {
-            const { error } = await signInWithGoogle(`${window.location.origin}${ROUTES.auth.callback}`)
+            const callbackUrl = new URL(`${window.location.origin}${ROUTES.auth.callback}`)
+            if (nextParam) {
+                callbackUrl.searchParams.set("next", nextParam)
+            }
+            const { error } = await signInWithGoogle(callbackUrl.toString())
 
             if (error) {
                 const mappedError = mapOAuthStartError(error)
@@ -87,7 +99,7 @@ export const useLogin = () => {
             toast.error(authErrors.connectionError)
             setIsPendingGoogle(false)
         }
-    }, [authErrors])
+    }, [authErrors, nextParam])
 
     return { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating }
 }

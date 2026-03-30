@@ -4,6 +4,7 @@ import { createClient as createSupabaseServerClient } from "@/lib/supabase/serve
 
 function sanitizeNextPath(value: string | null) {
   if (!value) return DEFAULT_AUTHENTICATED_ROUTE
+  if (value.startsWith("chrome-extension://")) return value
   if (!value.startsWith("/")) return DEFAULT_AUTHENTICATED_ROUTE
   if (value.startsWith("//")) return DEFAULT_AUTHENTICATED_ROUTE
   return value
@@ -13,7 +14,12 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
   const error = requestUrl.searchParams.get("error")
-  const nextPath = sanitizeNextPath(requestUrl.searchParams.get("next"))
+  
+  let nextPath = requestUrl.searchParams.get("next")
+  if (!nextPath) {
+    nextPath = request.cookies.get("mirror_extension_sync")?.value || null
+  }
+  nextPath = sanitizeNextPath(nextPath)
 
   if (error) {
     return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_failed`, request.url))
@@ -22,15 +28,18 @@ export async function GET(request: NextRequest) {
   if (code) {
     try {
       const supabase = await createSupabaseServerClient()
-      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+      const { data: { session }, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
       if (exchangeError) {
         return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_exchange_failed`, request.url))
       }
 
-      // Fetch user profile to apply theme and language to cookies instantly (Prevent FOUC)
-      const { data: { user } } = await supabase.auth.getUser()
-      const response = NextResponse.redirect(new URL(nextPath, request.url))
+      const user = session?.user
+      const response = NextResponse.redirect(
+        nextPath.startsWith("chrome-extension://") 
+          ? new URL(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextPath)}`, request.url)
+          : new URL(nextPath, request.url)
+      )
       
       if (user) {
         const { data: profile } = await supabase
@@ -48,6 +57,8 @@ export async function GET(request: NextRequest) {
           }
         }
       }
+
+      response.cookies.delete("mirror_extension_sync")
 
       return response
     } catch {

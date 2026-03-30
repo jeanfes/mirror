@@ -13,10 +13,8 @@ export function useLoadingDelay(active: boolean, delayMs = LOADING_MIN_DISPLAY_M
         if (timerRef.current) clearTimeout(timerRef.current)
 
         if (active) {
-            // Short delay before showing to avoid flicker
             timerRef.current = setTimeout(() => setVisible(true), 50)
         } else {
-            // Keep visible for a minimum duration
             timerRef.current = setTimeout(() => setVisible(false), delayMs)
         }
 
@@ -44,7 +42,7 @@ export function LoadingOverlay({ show, label = "Cargando..." }: { show: boolean,
         <div
             className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm transition-all duration-300 rounded-[inherit]"
             style={{ 
-                background: "rgba(var(--bg-main-rgb), 0.65)"
+                background: "var(--loading-overlay-bg)"
             }}
             role="status"
             aria-live="polite"

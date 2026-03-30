@@ -18,7 +18,7 @@ export default function PrivateLoading() {
             </div>
             
             {/* Main Area Skeleton */}
-            <div className="flex-1 min-h-[400px] bg-surface-hover/40 rounded-3xl border border-border-soft p-6 flex flex-col gap-4">
+            <div className="flex-1 min-h-100 bg-surface-hover/40 rounded-3xl border border-border-soft p-6 flex flex-col gap-4">
                 <div className="flex justify-between items-center border-b border-border-soft pb-4">
                     <div className="h-6 w-32 bg-surface-hover rounded-lg" />
                     <div className="h-10 w-24 bg-surface-hover rounded-full" />

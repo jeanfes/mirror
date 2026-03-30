@@ -470,15 +470,20 @@ const en = {
       requireStrictLabel: "Stricter tone",
       showConfidenceLabel: "Show confidence in extension",
       defaultsLabel: "Defaults",
-      languageBaselineTitle: "Language and base profile",
-      languageBaselineDesc: "Initial setup before each generation.",
+      languageBaselineTitle: "Language and profile baseline",
+      languageBaselineDesc: "These choices define how Mirror initializes before each generation.",
       whyMattersTitle: "Preferences",
       whyMattersDesc: "Configure Mirror to best fit your writing style.",
       preferencesUpdated: "Preferences updated",
       preferencesError: "Could not save preferences",
       noDefaultProfile: "No default profile",
       languageLabel: "Language",
-      defaultProfileLabel: "Default profile"
+      defaultProfileLabel: "Default profile",
+      labelEn: "English",
+      labelEs: "Español",
+      labelPt: "Português",
+      labelFr: "Français",
+      labelDe: "Deutsch"
     },
     historyFilters: {
       workbenchFilters: "Workbench filters",

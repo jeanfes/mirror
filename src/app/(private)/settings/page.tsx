@@ -152,9 +152,9 @@ export default function SettingsPage() {
                 </Card>
 
                 <Card className="dashboard-card-xl">
-                    <p className="dashboard-overline">Defaults</p>
-                    <h2 className="mt-3 section-heading">Language and profile baseline</h2>
-                    <p className="mt-2 body-muted">These choices define how Mirror initializes before each generation.</p>
+                    <p className="dashboard-overline">{t.app.settings.defaultsLabel}</p>
+                    <h2 className="mt-3 section-heading">{t.app.settings.languageBaselineTitle}</h2>
+                    <p className="mt-2 body-muted">{t.app.settings.languageBaselineDesc}</p>
 
                     <div className="mt-5 space-y-4">
                         <Select
@@ -163,11 +163,11 @@ export default function SettingsPage() {
                             label={t.app.settings.languageLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={[
-                                { label: "English", value: "en" },
-                                { label: "Español", value: "es" },
-                                { label: "Português", value: "pt" },
-                                { label: "Français", value: "fr" },
-                                { label: "Deutsch", value: "de" }
+                                { label: t.app.settings.labelEn, value: "en" },
+                                { label: t.app.settings.labelEs, value: "es" },
+                                { label: t.app.settings.labelPt, value: "pt" },
+                                { label: t.app.settings.labelFr, value: "fr" },
+                                { label: t.app.settings.labelDe, value: "de" }
                             ]}
                         />
 

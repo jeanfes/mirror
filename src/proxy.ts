@@ -58,10 +58,19 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user }
   } = await supabase.auth.getUser()
-
+  
   const pathname = request.nextUrl.pathname
+  const nextParam = request.nextUrl.searchParams.get("next")
 
   if (user && (pathname === ROUTES.public.index || isAuthPath(pathname))) {
+    if (pathname === "/auth/extension-redirect" || pathname === "/auth/extension-sync") {
+      return response
+    }
+    if (nextParam?.startsWith("chrome-extension://")) {
+      const redirectUrl = new URL(ROUTES.auth.login.replace("/login", "/extension-redirect"), request.url)
+      redirectUrl.searchParams.set("next", nextParam)
+      return NextResponse.redirect(redirectUrl)
+    }
     return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
   }
 

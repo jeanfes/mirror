@@ -7,13 +7,23 @@ export const getServerSession = cache(async () => {
     const { data, error } = await supabase.auth.getUser()
 
     if (error) {
-      console.error("Supabase error:", error)
+      const isNoSession =
+        error.message?.includes("Auth session missing") ||
+        error.status === 401
+
+      if (!isNoSession) {
+        console.error("[getServerSession] Supabase error:", {
+          message: error.message,
+          status: error.status,
+        })
+      }
+
       return null
     }
 
     return data?.user ?? null
   } catch (e) {
-    console.error("Server session crash:", e)
+    console.error("[getServerSession] Crash:", e)
     return null
   }
 })

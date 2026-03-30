@@ -478,7 +478,12 @@ const de = {
       preferencesError: "Fehler beim Speichern",
       noDefaultProfile: "Kein Standardprofil",
       languageLabel: "Sprache",
-      defaultProfileLabel: "Standardprofil"
+      defaultProfileLabel: "Standardprofil",
+      labelEn: "English",
+      labelEs: "Español",
+      labelPt: "Português",
+      labelFr: "Français",
+      labelDe: "Deutsch"
     },
     historyFilters: {
       workbenchFilters: "Filter",

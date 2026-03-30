@@ -478,7 +478,12 @@ const fr = {
       preferencesError: "Impossible de sauvegarder les préférences",
       noDefaultProfile: "Pas de profil par défaut",
       languageLabel: "Langue",
-      defaultProfileLabel: "Profil par défaut"
+      defaultProfileLabel: "Profil par défaut",
+      labelEn: "English",
+      labelEs: "Español",
+      labelPt: "Português",
+      labelFr: "Français",
+      labelDe: "Deutsch"
     },
     historyFilters: {
       workbenchFilters: "Filtres de travail",

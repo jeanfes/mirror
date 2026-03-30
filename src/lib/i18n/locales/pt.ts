@@ -472,13 +472,18 @@ const pt = {
       defaultsLabel: "Padrões",
       languageBaselineTitle: "Idioma e perfil base",
       languageBaselineDesc: "Configuração inicial antes de cada geração.",
-      whyMattersTitle: "Preferências",
+      whyMattersTitle: "Preferencias",
       whyMattersDesc: "Configure o Mirror para melhor se ajustar ao seu estilo.",
       preferencesUpdated: "Preferências atualizadas",
       preferencesError: "Não foi possível salvar as preferências",
       noDefaultProfile: "Sem perfil padrão",
       languageLabel: "Idioma",
-      defaultProfileLabel: "Perfil padrão"
+      defaultProfileLabel: "Perfil padrão",
+      labelEn: "English",
+      labelEs: "Español",
+      labelPt: "Português",
+      labelFr: "Français",
+      labelDe: "Deutsch"
     },
     historyFilters: {
       workbenchFilters: "Filtros de trabalho",
