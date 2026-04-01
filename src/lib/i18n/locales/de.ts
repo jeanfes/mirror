@@ -476,6 +476,7 @@ const de = {
       behaviorQualityDesc: "Automatisierung und Verlauf steuern.",
       savePreferences: "Speichern",
       autoInsertLabel: "Auto-Einfügen",
+      confirmBeforeApplyLabel: "Vor dem Anwenden bestätigen",
       autoSaveLabel: "Verlauf speichern",
       requireStrictLabel: "Strenger Ton",
       showConfidenceLabel: "Konfidenz zeigen",

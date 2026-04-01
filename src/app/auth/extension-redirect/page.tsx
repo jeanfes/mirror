@@ -15,6 +15,12 @@ type ExtensionBridgeMessage = {
     refreshToken: string
     theme: string
     language: string
+    plan: "Free" | "Pro" | "Elite"
+    creditsRemaining: number
+    renewalDate?: string
+    defaultEmojis: boolean
+    autoInsert: boolean
+    confirmBeforeApply: boolean
 }
 
 type ExtensionRuntimeBridge = {
@@ -52,15 +58,49 @@ function RedirectContent() {
 
             if (session?.access_token && session.user?.id) {
                 const browserWindow = window as WindowWithExtensionBridge
+                const userId = session.user.id
+
+                const [
+                    { data: userSettings },
+                    { data: account }
+                ] = await Promise.all([
+                    supabase
+                        .from("user_settings")
+                        .select("theme, language, default_emojis, auto_insert, confirm_before_apply")
+                        .eq("user_id", userId)
+                        .maybeSingle(),
+                    supabase
+                        .from("user_account")
+                        .select("plan, credits_remaining, renewal_date")
+                        .eq("user_id", userId)
+                        .maybeSingle()
+                ])
 
                 if (browserWindow.chrome?.runtime?.sendMessage) {
                     try {
+                        const theme = userSettings?.theme === "auto" ? "system" : userSettings?.theme || "light"
+                        const language = userSettings?.language || "es"
+                        const plan = (account?.plan || "Free") as "Free" | "Pro" | "Elite"
+                        const creditsRemaining = account?.credits_remaining || 0
+                        const renewalDate = account?.renewal_date || undefined
+                        const defaultEmojis = typeof userSettings?.default_emojis === "boolean" ? userSettings.default_emojis : true
+                        const autoInsert = typeof userSettings?.auto_insert === "boolean" ? userSettings.auto_insert : false
+                        const confirmBeforeApply = typeof userSettings?.confirm_before_apply === "boolean"
+                            ? userSettings.confirm_before_apply
+                            : false
+
                         const message: ExtensionBridgeMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
                             refreshToken: session.refresh_token || "",
-                            theme: session.user?.user_metadata?.theme || "light",
-                            language: session.user?.user_metadata?.language || "es"
+                            theme,
+                            language,
+                            plan,
+                            creditsRemaining,
+                            renewalDate,
+                            defaultEmojis,
+                            autoInsert,
+                            confirmBeforeApply
                         }
 
                         setStatus("Sending secure tokens to Mirror...")
@@ -71,7 +111,7 @@ function RedirectContent() {
                                 setIsSuccess(true)
                             } else {
                                 setStatus("Direct sync blocked. Attempting classic handshake...")
-                                const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}&theme=${message.theme}&language=${message.language}`
+                                const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}&theme=${message.theme}&language=${message.language}&plan=${message.plan}&creditsRemaining=${message.creditsRemaining}&defaultEmojis=${message.defaultEmojis}&autoInsert=${message.autoInsert}&confirmBeforeApply=${message.confirmBeforeApply}`
                                 window.location.replace(finalUrl)
                             }
                         })

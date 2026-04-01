@@ -476,6 +476,7 @@ const fr = {
       behaviorQualityDesc: "Contrôlez l'automatisation et la rigueur du ton.",
       savePreferences: "Enregistrer les préférences",
       autoInsertLabel: "Auto-insérer les commentaires",
+      confirmBeforeApplyLabel: "Confirmer avant d'appliquer",
       autoSaveLabel: "Enregistrer l'historique",
       requireStrictLabel: "Ton plus strict",
       showConfidenceLabel: "Afficher la confiance",

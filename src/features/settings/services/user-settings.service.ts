@@ -2,9 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { UserSettings } from "@/types/database.types"
 
 const defaultUserSettings: UserSettings = {
-  language: "en",
+  language: "es",
   theme: "auto",
   defaultProfileId: null,
+  defaultEmojis: true,
+  autoInsert: false,
+  confirmBeforeApply: false,
   desktopAlertsEnabled: false,
   notificationsEnabled: true,
   onboardingCompleted: false,
@@ -14,6 +17,9 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const language = row.language
   const theme = row.theme
   const defaultProfileId = row.default_profile_id
+  const defaultEmojis = row.default_emojis
+  const autoInsert = row.auto_insert
+  const confirmBeforeApply = row.confirm_before_apply
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
   const onboardingCompleted = row.onboarding_completed
@@ -33,6 +39,12 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
         : defaultUserSettings.theme,
     defaultProfileId:
       typeof defaultProfileId === "string" ? defaultProfileId : null,
+    defaultEmojis:
+      typeof defaultEmojis === "boolean" ? defaultEmojis : true,
+    autoInsert:
+      typeof autoInsert === "boolean" ? autoInsert : false,
+    confirmBeforeApply:
+      typeof confirmBeforeApply === "boolean" ? confirmBeforeApply : false,
     desktopAlertsEnabled:
       typeof desktopAlertsEnabled === "boolean" ? desktopAlertsEnabled : false,
     notificationsEnabled:
@@ -82,6 +94,12 @@ export async function updateUserSettings(
   if (input.theme !== undefined) payload.theme = input.theme
   if (input.defaultProfileId !== undefined)
     payload.default_profile_id = input.defaultProfileId
+  if (input.defaultEmojis !== undefined)
+    payload.default_emojis = input.defaultEmojis
+  if (input.autoInsert !== undefined)
+    payload.auto_insert = input.autoInsert
+  if (input.confirmBeforeApply !== undefined)
+    payload.confirm_before_apply = input.confirmBeforeApply
   if (input.desktopAlertsEnabled !== undefined)
     payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined)

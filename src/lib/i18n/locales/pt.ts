@@ -476,6 +476,7 @@ const pt = {
       behaviorQualityDesc: "Controle a automação e o histórico.",
       savePreferences: "Salvar preferências",
       autoInsertLabel: "Auto-inserir comentários",
+      confirmBeforeApplyLabel: "Confirmar antes de aplicar",
       autoSaveLabel: "Salvar histórico",
       requireStrictLabel: "Tom mais rigoroso",
       showConfidenceLabel: "Mostrar confiança na extensão",

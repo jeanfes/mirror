@@ -476,6 +476,7 @@ const es = {
       behaviorQualityDesc: "Controla la automatización y la rigidez del tono.",
       savePreferences: "Guardar preferencias",
       autoInsertLabel: "Auto-insertar comentarios",
+      confirmBeforeApplyLabel: "Confirmar antes de aplicar",
       autoSaveLabel: "Guardar historial",
       requireStrictLabel: "Tono más estricto",
       showConfidenceLabel: "Mostrar confianza en la extensión",

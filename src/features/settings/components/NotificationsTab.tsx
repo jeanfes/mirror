@@ -27,14 +27,14 @@ export const NotificationsTab = memo(function NotificationsTab({
     <div className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
       <SectionHeader title={title} description={description} />
       <Card className="p-4 space-y-4">
-        <Toggle 
-          label={t.app.settingsModal.emailUpdates} 
-          checked={settings?.notificationsEnabled ?? true} 
+        <Toggle
+          label={t.app.settingsModal.emailUpdates}
+          checked={settings?.notificationsEnabled ?? true}
           onChange={(v) => onToggleChange('notificationsEnabled', v)}
         />
-        <Toggle 
-          label={t.app.settingsModal.desktopAlerts} 
-          checked={settings?.desktopAlertsEnabled ?? false} 
+        <Toggle
+          label={t.app.settingsModal.desktopAlerts}
+          checked={settings?.desktopAlertsEnabled ?? false}
           onChange={(v) => onToggleChange('desktopAlertsEnabled', v)}
         />
       </Card>

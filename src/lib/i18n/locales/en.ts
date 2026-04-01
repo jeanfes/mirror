@@ -476,6 +476,7 @@ const en = {
       behaviorQualityDesc: "Control automation and tone strictness.",
       savePreferences: "Save preferences",
       autoInsertLabel: "Auto-insert comments",
+      confirmBeforeApplyLabel: "Confirm before applying",
       autoSaveLabel: "Save history",
       requireStrictLabel: "Stricter tone",
       showConfidenceLabel: "Show confidence in extension",

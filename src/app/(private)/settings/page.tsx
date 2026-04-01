@@ -17,12 +17,11 @@ import type { UserSettings } from "@/types/database.types"
 type UpdateUserSettingsInput = Omit<UserSettings, "theme">
 
 const defaultDraft: UpdateUserSettingsInput = {
-    language: "en",
-    defaultProfileId: "",
-    autoInsertComments: false,
-    autoSaveDrafts: true,
-    requireStrictTone: true,
-    showConfidenceHints: true,
+    language: "es",
+    defaultProfileId: null,
+    defaultEmojis: true,
+    autoInsert: false,
+    confirmBeforeApply: false,
     desktopAlertsEnabled: false,
     notificationsEnabled: true,
     onboardingCompleted: false
@@ -42,10 +41,9 @@ export default function SettingsPage() {
         return {
             language: settings.language,
             defaultProfileId: settings.defaultProfileId,
-            autoInsertComments: settings.autoInsertComments,
-            autoSaveDrafts: settings.autoSaveDrafts,
-            requireStrictTone: settings.requireStrictTone,
-            showConfidenceHints: settings.showConfidenceHints,
+            defaultEmojis: settings.defaultEmojis,
+            autoInsert: settings.autoInsert,
+            confirmBeforeApply: settings.confirmBeforeApply,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
             notificationsEnabled: settings.notificationsEnabled,
             onboardingCompleted: settings.onboardingCompleted
@@ -144,10 +142,24 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="mt-6 grid gap-4 md:grid-cols-2">
-                        <Toggle checked={resolvedSettings.autoInsertComments} onChange={(value) => updateDraft("autoInsertComments", value)} label={t.app.settings.autoInsertLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.autoSaveDrafts} onChange={(value) => updateDraft("autoSaveDrafts", value)} label={t.app.settings.autoSaveLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.requireStrictTone} onChange={(value) => updateDraft("requireStrictTone", value)} label={t.app.settings.requireStrictLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
-                        <Toggle checked={resolvedSettings.showConfidenceHints} onChange={(value) => updateDraft("showConfidenceHints", value)} label={t.app.settings.showConfidenceLabel} className="min-h-14 rounded-2xl px-4 text-[13px]" />
+                        <Toggle
+                            checked={resolvedSettings.defaultEmojis}
+                            onChange={(value) => updateDraft("defaultEmojis", value)}
+                            label={t.app.profileForm.allowEmojis}
+                            className="min-h-14 rounded-2xl px-4 text-[13px]"
+                        />
+                        <Toggle
+                            checked={resolvedSettings.autoInsert}
+                            onChange={(value) => updateDraft("autoInsert", value)}
+                            label={t.app.settings.autoInsertLabel}
+                            className="min-h-14 rounded-2xl px-4 text-[13px]"
+                        />
+                        <Toggle
+                            checked={resolvedSettings.confirmBeforeApply}
+                            onChange={(value) => updateDraft("confirmBeforeApply", value)}
+                            label={t.app.settings.confirmBeforeApplyLabel}
+                            className="min-h-14 rounded-2xl px-4 text-[13px]"
+                        />
                     </div>
                 </Card>
 
@@ -186,6 +198,7 @@ export default function SettingsPage() {
                     </div>
                 </Card>
             </section>
+
         </div>
     )
 }

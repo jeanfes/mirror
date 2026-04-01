@@ -102,6 +102,9 @@ export interface UserSettings {
   language: "es" | "en" | "pt" | "fr" | "de"
   theme: "light" | "dark" | "auto"
   defaultProfileId: string | null
+  defaultEmojis: boolean
+  autoInsert: boolean
+  confirmBeforeApply: boolean
   notificationsEnabled: boolean
   desktopAlertsEnabled: boolean
   onboardingCompleted: boolean
