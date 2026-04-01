@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/Input"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { createChangePasswordSchema, type ChangePasswordValues } from "../schemas"
 import { useRecovery } from "../hooks/useRecovery"
+import { usePasswordVisibility } from "../hooks/usePasswordVisibility"
 
 interface ChangePasswordFormProps {
   onCancel?: () => void
@@ -22,7 +23,7 @@ export function ChangePasswordForm({ onCancel }: ChangePasswordFormProps) {
     [t.auth.errors]
   )
   const { resetPassword, isPending } = useRecovery()
-  const [showPassword, setShowPassword] = useState(false)
+  const { showPassword, togglePasswordVisibility } = usePasswordVisibility()
 
   const {
     register,
@@ -76,7 +77,7 @@ export function ChangePasswordForm({ onCancel }: ChangePasswordFormProps) {
           <button
             type="button"
             className="flex items-center justify-center p-1 text-secondary-text hover:text-primary-text transition-colors"
-            onClick={() => setShowPassword((prev) => !prev)}
+            onClick={togglePasswordVisibility}
             disabled={isPending}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}

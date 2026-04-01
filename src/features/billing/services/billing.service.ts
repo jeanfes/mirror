@@ -1,5 +1,6 @@
 import { addDays } from "date-fns"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { callEdgeFunction } from "@/lib/supabase/edge-functions"
 import type {
   UserAccount,
   Invoice,
@@ -64,20 +65,40 @@ export const planDefinitions: PlanDefinition[] = [
   },
 ]
 
-export async function setPlan(
+export async function startCheckout(
   supabase: SupabaseClient,
-  userId: string,
   planName: PlanName
 ) {
-  const { data, error } = await supabase
-    .from("user_account")
-    .update({ plan: planName })
-    .eq("user_id", userId)
-    .select("*")
-    .single()
+  type CheckoutResponse = {
+    checkout_url?: string
+    checkoutUrl?: string
+    url?: string
+    data?: {
+      checkout_url?: string
+      checkoutUrl?: string
+      url?: string
+    }
+  }
 
-  if (error) throw error
-  return mapRowToAccountStatus(data as UserAccountRow)
+  const payload = await callEdgeFunction<CheckoutResponse>(
+    supabase,
+    "create-checkout",
+    { plan: planName }
+  )
+
+  const checkoutUrl =
+    payload.checkout_url ||
+    payload.checkoutUrl ||
+    payload.url ||
+    payload.data?.checkout_url ||
+    payload.data?.checkoutUrl ||
+    payload.data?.url
+
+  if (!checkoutUrl) {
+    throw new Error("Checkout URL was not returned")
+  }
+
+  return checkoutUrl
 }
 
 function mapRowToAccountStatus(row: UserAccountRow): UserAccount {
@@ -175,42 +196,22 @@ interface BillingInfoResponse {
   portal_url?: string
 }
 
+export async function cancelSubscription(supabase: SupabaseClient) {
+  await callEdgeFunction<Record<string, unknown>>(
+    supabase,
+    "cancel-subscription",
+    {}
+  )
+}
+
 export async function getBillingInfo(supabase: SupabaseClient) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-
-  if (!user || !supabaseUrl) {
-    return { paymentMethod: null, updateUrl: null, portalUrl: null }
-  }
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  const accessToken = session?.access_token
-
-  if (!accessToken) {
-    return { paymentMethod: null, updateUrl: null, portalUrl: null }
-  }
-
   let payload: BillingInfoResponse
   try {
-    const response = await fetch(`${supabaseUrl}/functions/v1/billing-info`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    })
-
-    if (!response.ok) {
-      return { paymentMethod: null, updateUrl: null, portalUrl: null }
-    }
-
-    payload = (await response.json()) as BillingInfoResponse
+    payload = await callEdgeFunction<BillingInfoResponse>(
+      supabase,
+      "billing-info",
+      {}
+    )
   } catch {
     return { paymentMethod: null, updateUrl: null, portalUrl: null }
   }

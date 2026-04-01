@@ -1,15 +1,26 @@
 import { type PaymentMethod } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { Card } from "@/components/ui/Card"
-import { CreditCard} from "lucide-react"
+import { Button } from "@/components/ui/Button"
+import { CreditCard } from "lucide-react"
 
 interface PaymentMethodsProps {
   methods: PaymentMethod[]
+  updateUrl?: string | null
+  portalUrl?: string | null
+  onCancelSubscription?: () => void
+  isCancelling?: boolean
 }
 
-export function PaymentMethods({ methods }: PaymentMethodsProps) {
+export function PaymentMethods({
+  methods,
+  updateUrl,
+  portalUrl,
+  onCancelSubscription,
+  isCancelling = false,
+}: PaymentMethodsProps) {
   const { t } = useLanguageStore()
-  const method = methods[0] 
+  const method = methods[0]
 
   if (!method) {
     return (
@@ -29,6 +40,17 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
           <p className="max-w-60 text-[14px] font-medium text-secondary-text leading-relaxed">
             {t.app.billing.noPaymentMethodsDesc}
           </p>
+          {(portalUrl || updateUrl) ? (
+            <div className="mt-5 w-full max-w-72">
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => window.open(portalUrl || updateUrl || "", "_blank", "noopener,noreferrer")}
+              >
+                {t.app.billing.manageSubscription}
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
     )
@@ -58,6 +80,28 @@ export function PaymentMethods({ methods }: PaymentMethodsProps) {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-5 grid gap-2">
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={() => window.open(updateUrl || portalUrl || "", "_blank", "noopener,noreferrer")}
+            disabled={!updateUrl && !portalUrl}
+          >
+            {t.app.billing.managePaymentMethod}
+          </Button>
+
+          <Button
+            variant="dangerSoft"
+            className="w-full"
+            onClick={() => onCancelSubscription?.()}
+            loading={isCancelling}
+            loadingLabel={t.app.common.working}
+            disabled={!onCancelSubscription}
+          >
+            {t.app.billing.cancelSubscription}
+          </Button>
         </div>
       </Card>
     </div>

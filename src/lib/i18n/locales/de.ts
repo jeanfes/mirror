@@ -253,6 +253,15 @@ const de = {
       profileStatusError: "Status-Update fehlgeschlagen",
       profileDeleted: "Profil entfernt",
       profileDeleteError: "Entfernen fehlgeschlagen",
+      checkoutError: "Checkout konnte nicht gestartet werden",
+      exportStarted: "Export gestartet. Überprüfen Sie Ihre Downloads.",
+      exportError: "Export konnte nicht gestartet werden",
+      accountDeleted: "Konto gelöscht",
+      accountDeleteError: "Konto konnte nicht gelöscht werden",
+      sessionClosed: "Sitzung beendet",
+      sessionCloseError: "Sitzung konnte nicht beendet werden",
+      subscriptionCancelled: "Kündigungsanfrage eingereicht",
+      subscriptionCancelError: "Kündigung konnte nicht durchgeführt werden",
       cancel: "Abbrechen",
       confirm: "Bestätigen",
       delete: "Löschen",
@@ -283,7 +292,8 @@ const de = {
       expires: "Läuft ab",
       updateCard: "Aktualisieren",
       managePaymentMethod: "Verwalten",
-      manageSubscription: "Abo verwalten"
+      manageSubscription: "Abo verwalten",
+      cancelSubscription: "Abo kündigen"
     },
     navigation: {
       profiles: "Profile",

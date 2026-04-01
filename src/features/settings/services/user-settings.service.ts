@@ -5,10 +5,6 @@ const defaultUserSettings: UserSettings = {
   language: "en",
   theme: "auto",
   defaultProfileId: null,
-  autoInsertComments: false,
-  autoSaveDrafts: true,
-  requireStrictTone: true,
-  showConfidenceHints: true,
   desktopAlertsEnabled: false,
   notificationsEnabled: true,
   onboardingCompleted: false,
@@ -18,10 +14,6 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const language = row.language
   const theme = row.theme
   const defaultProfileId = row.default_profile_id
-  const autoInsertComments = row.auto_insert_comments
-  const autoSaveDrafts = row.auto_save_drafts
-  const requireStrictTone = row.require_strict_tone
-  const showConfidenceHints = row.show_confidence_hints
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
   const onboardingCompleted = row.onboarding_completed
@@ -41,14 +33,6 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
         : defaultUserSettings.theme,
     defaultProfileId:
       typeof defaultProfileId === "string" ? defaultProfileId : null,
-    autoInsertComments:
-      typeof autoInsertComments === "boolean" ? autoInsertComments : false,
-    autoSaveDrafts:
-      typeof autoSaveDrafts === "boolean" ? autoSaveDrafts : true,
-    requireStrictTone:
-      typeof requireStrictTone === "boolean" ? requireStrictTone : true,
-    showConfidenceHints:
-      typeof showConfidenceHints === "boolean" ? showConfidenceHints : true,
     desktopAlertsEnabled:
       typeof desktopAlertsEnabled === "boolean" ? desktopAlertsEnabled : false,
     notificationsEnabled:
@@ -98,14 +82,6 @@ export async function updateUserSettings(
   if (input.theme !== undefined) payload.theme = input.theme
   if (input.defaultProfileId !== undefined)
     payload.default_profile_id = input.defaultProfileId
-  if (input.autoInsertComments !== undefined)
-    payload.auto_insert_comments = input.autoInsertComments
-  if (input.autoSaveDrafts !== undefined)
-    payload.auto_save_drafts = input.autoSaveDrafts
-  if (input.requireStrictTone !== undefined)
-    payload.require_strict_tone = input.requireStrictTone
-  if (input.showConfidenceHints !== undefined)
-    payload.show_confidence_hints = input.showConfidenceHints
   if (input.desktopAlertsEnabled !== undefined)
     payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined)

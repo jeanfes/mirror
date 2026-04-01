@@ -27,6 +27,12 @@ import {
 import { useLogout } from "@/features/auth/hooks/useLogout"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { ROUTES } from "@/lib/routes"
+import { createClient } from "@/lib/supabase/client"
+import {
+  deleteAccount,
+  startDataExport,
+} from "@/features/settings/services/account-data.service"
 import { useTheme } from "../providers/ThemeProvider"
 import { ChangePasswordModal } from "@/features/auth/components/ChangePasswordModal"
 import type { ThemePreference } from "@/lib/theme"
@@ -59,8 +65,11 @@ const SettingsModal = memo(function SettingsModal({
   const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false)
+  const [isExportingData, setIsExportingData] = useState(false)
 
   const { logout, isPending: isLogoutPending } = useLogout()
+  const supabase = createClient()
   const { themePreference, setThemePreference } = useTheme()
   const t = useLanguageStore((state) => state.t)
   const language = useLanguageStore((state) => state.language)
@@ -114,9 +123,40 @@ const SettingsModal = memo(function SettingsModal({
     await logout()
   }, [logout])
 
+  const handleExportData = useCallback(async () => {
+    try {
+      setIsExportingData(true)
+      const downloadUrl = await startDataExport(supabase)
+      if (downloadUrl) {
+        window.open(downloadUrl, "_blank", "noopener,noreferrer")
+      }
+      toast.success(t.app.settingsModal.backupStarted)
+    } catch {
+      toast.error(t.app.common.exportError)
+    } finally {
+      setIsExportingData(false)
+    }
+  }, [supabase, t.app.settingsModal.backupStarted, t.app.common.exportError])
+
+  const handleDeleteAccount = useCallback(async () => {
+    try {
+      setIsDeletingAccount(true)
+      await deleteAccount(supabase)
+      setIsDeleteAccountConfirmOpen(false)
+      await logout()
+      toast.success(t.app.common.accountDeleted)
+    } catch {
+      toast.error(t.app.common.accountDeleteError)
+    } finally {
+      setIsDeletingAccount(false)
+    }
+  }, [logout, supabase, t.app.common.accountDeleted, t.app.common.accountDeleteError])
+
   const handleDialogOpenChange = useCallback((nextOpen: boolean) => {
-    if (!isLogoutPending && !isUpdating) onOpenChange?.(nextOpen)
-  }, [isLogoutPending, isUpdating, onOpenChange])
+    if (!isLogoutPending && !isUpdating && !isDeletingAccount && !isExportingData) {
+      onOpenChange?.(nextOpen)
+    }
+  }, [isDeleteAccountConfirmOpen, isExportingData, isLogoutPending, isUpdating, onOpenChange, isDeletingAccount])
 
   return (
     <>
@@ -126,13 +166,13 @@ const SettingsModal = memo(function SettingsModal({
           <DialogTitle className="sr-only">{t.app.settingsModal.title}</DialogTitle>
           <DialogDescription className="sr-only">{t.app.settingsModal.subtitle}</DialogDescription>
 
-          <Tabs 
-            value={activeTab} 
-            onValueChange={setActiveTab} 
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
             className="flex-1 flex flex-col overflow-hidden"
           >
             <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
-              
+
               <aside className="w-full sm:w-64 shrink-0 border-b sm:border-b-0 sm:border-r border-border-soft bg-surface-overlay p-4 sm:p-5 flex flex-col z-10">
                 <div className="hidden sm:flex items-center gap-3 px-2 mb-8 mt-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated border border-border-soft text-primary-text shadow-sm">
@@ -167,12 +207,12 @@ const SettingsModal = memo(function SettingsModal({
               </aside>
 
               <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-base p-5 sm:px-10 sm:py-10">
-                
+
                 <TabsContent value="general" className="mt-0 b-none">
                   {activeTab === "general" && (
-                    <GeneralTab 
-                      user={user} 
-                      language={language} 
+                    <GeneralTab
+                      user={user}
+                      language={language}
                       onLanguageChange={handleLanguageChange}
                       t={{
                         generalInfoTitle: t.app.settingsModal.generalInfoTitle,
@@ -187,7 +227,7 @@ const SettingsModal = memo(function SettingsModal({
 
                 <TabsContent value="appearance" className="mt-0">
                   {activeTab === "appearance" && (
-                    <AppearanceTab 
+                    <AppearanceTab
                       themePreference={themePreference}
                       onThemeChange={handleThemeChange}
                       title={t.app.settingsModal.appearanceTitle}
@@ -199,7 +239,7 @@ const SettingsModal = memo(function SettingsModal({
 
                 <TabsContent value="security" className="mt-0">
                   {activeTab === "security" && (
-                    <SecurityTab 
+                    <SecurityTab
                       onUpdatePassword={() => setIsChangePasswordOpen(true)}
                       title={t.app.settingsModal.securityTitle}
                       description={t.app.settingsModal.securityDesc}
@@ -209,7 +249,7 @@ const SettingsModal = memo(function SettingsModal({
 
                 <TabsContent value="notifications" className="mt-0">
                   {activeTab === "notifications" && (
-                    <NotificationsTab 
+                    <NotificationsTab
                       settings={settings}
                       onToggleChange={handleToggleChange}
                       title={t.app.settingsModal.notificationsTitle}
@@ -220,8 +260,10 @@ const SettingsModal = memo(function SettingsModal({
 
                 <TabsContent value="data" className="mt-0">
                   {activeTab === "data" && (
-                    <DataTab 
+                    <DataTab
                       onDeleteAccount={() => setIsDeleteAccountConfirmOpen(true)}
+                      onExportData={handleExportData}
+                      isExporting={isExportingData}
                       title={t.app.settingsModal.dataControlsTitle}
                       description={t.app.settingsModal.dataControlsDesc}
                     />
@@ -234,9 +276,9 @@ const SettingsModal = memo(function SettingsModal({
 
           <footer className="flex h-14 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 shrink-0">
             <div className="flex gap-5">
-              <FooterLink href="#" label={t.app.settingsModal.status} />
-              <FooterLink href="#" label={t.app.settingsModal.docs} />
-              <FooterLink href="#" label={t.app.settingsModal.changelog} />
+              <FooterLink href={ROUTES.public.faq} label={t.app.settingsModal.status} />
+              <FooterLink href={ROUTES.public.features} label={t.app.settingsModal.docs} />
+              <FooterLink href={ROUTES.public.pricing} label={t.app.settingsModal.changelog} />
             </div>
             <div className="flex items-center gap-2 opacity-50">
               <span className="text-[10px] font-bold">{t.app.settingsModal.poweredBy} MIRROR</span>
@@ -262,12 +304,16 @@ const SettingsModal = memo(function SettingsModal({
         description={t.app.settingsModal.deleteConfirmDesc}
         confirmLabel={t.app.settingsModal.deleteAccount}
         cancelLabel={t.app.common.cancel}
-        onConfirm={() => setIsDeleteAccountConfirmOpen(false)}
+        isPending={isDeletingAccount}
+        onConfirm={handleDeleteAccount}
         onCancel={() => setIsDeleteAccountConfirmOpen(false)}
       />
 
       <ChangePasswordModal open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} />
-      <LoadingOverlay show={isLogoutPending || isUpdating} label={isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.savingChanges} />
+      <LoadingOverlay
+        show={isLogoutPending || isUpdating || isDeletingAccount || isExportingData}
+        label={isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.savingChanges}
+      />
     </>
   )
 })
@@ -280,7 +326,7 @@ const SettingsTabTrigger = ({ value, icon, label }: { value: string, icon: React
 )
 
 const FooterLink = ({ href, label }: { href: string, label: string }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="settings-footer-link flex items-center gap-1">
+  <a href={href} className="settings-footer-link flex items-center gap-1">
     {label} <ExternalLink className="h-2.5 w-2.5" />
   </a>
 )

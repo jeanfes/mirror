@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { createLoginSchema, type LoginValues } from "../schemas"
 import { useLogin } from "../hooks/useLogin"
+import { usePasswordVisibility } from "../hooks/usePasswordVisibility"
 import { Input } from "@/components/ui/Input"
 import { IconGoogle } from "@/components/icons/IconGoogle"
 
@@ -18,7 +19,7 @@ export function LoginForm() {
     const schema = useMemo(() => createLoginSchema(t.auth.errors), [t.auth.errors])
     const { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating } = useLogin()
     const isAnyLocked = isPending || isPendingGoogle || isNavigating
-    const [showPassword, setShowPassword] = useState(false)
+    const { showPassword, togglePasswordVisibility } = usePasswordVisibility()
 
     const {
         register,
@@ -87,14 +88,14 @@ export function LoginForm() {
                         <button
                             type="button"
                             className="flex items-center justify-center p-1 text-secondary-text hover:text-primary-text transition-colors"
-                            onClick={() => setShowPassword((prev) => !prev)}
+                            onClick={togglePasswordVisibility}
                             disabled={isAnyLocked}
                         >
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                     }
                     bottomRight={
-                        <Link 
+                        <Link
                             href={ROUTES.auth.forgotPassword}
                             className="text-[13px] font-medium text-secondary-text hover:text-accent-blue transition-colors"
                         >

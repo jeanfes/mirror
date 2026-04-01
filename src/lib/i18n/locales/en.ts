@@ -253,6 +253,15 @@ const en = {
       profileStatusError: "Could not update profile status",
       profileDeleted: "Profile deleted",
       profileDeleteError: "Could not delete profile",
+      checkoutError: "Could not start checkout",
+      exportStarted: "Export started. Check your downloads.",
+      exportError: "Could not start export",
+      accountDeleted: "Account deleted",
+      accountDeleteError: "Could not delete account",
+      sessionClosed: "Session closed",
+      sessionCloseError: "Could not close your session",
+      subscriptionCancelled: "Subscription cancellation requested",
+      subscriptionCancelError: "Could not cancel subscription",
       cancel: "Cancel",
       confirm: "Confirm",
       delete: "Delete",
@@ -283,7 +292,8 @@ const en = {
       expires: "Expires",
       updateCard: "Update",
       managePaymentMethod: "Manage payment method",
-      manageSubscription: "Manage subscription"
+      manageSubscription: "Manage subscription",
+      cancelSubscription: "Cancel subscription"
     },
     navigation: {
       profiles: "Profiles",

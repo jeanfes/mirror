@@ -12,16 +12,16 @@ import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function PlansPage() {
-    const { data: account, setPlan, isMutating, isLoading, isError } = useAccount()
+    const { data: account, startCheckout, isMutating, isLoading, isError } = useAccount()
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading || !account)
 
     const handleSelectPlan = async (planName: "Free" | "Pro" | "Elite") => {
         try {
-            await setPlan(planName)
-            toast.success(`Plan updated to ${planName}`)
+            const checkoutUrl = await startCheckout(planName)
+            window.location.assign(checkoutUrl)
         } catch {
-            toast.error("Could not update plan")
+            toast.error(t.app.common.checkoutError)
         }
     }
 

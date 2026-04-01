@@ -9,28 +9,59 @@ function RedirectContent() {
     const searchParams = useSearchParams()
     const nextUrl = searchParams.get("next")
     const [status, setStatus] = useState("Initializing secure handshake...")
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [isError, setIsError] = useState(false)
 
     useEffect(() => {
         const proceedToExtension = async () => {
             if (!nextUrl || !nextUrl.startsWith("chrome-extension://")) {
                 setStatus("Invalid extension gateway.")
+                setIsError(true)
                 return
             }
 
+            const extensionId = new URL(nextUrl).hostname
             const supabase = createClient()
-            
             const { data: { session } } = await supabase.auth.getSession()
 
             if (session?.access_token && session.user?.id) {
-                const theme = session.user?.user_metadata?.theme || "light"
-                const language = session.user?.user_metadata?.language || "es"
-                const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}&theme=${theme}&language=${language}`
-                window.location.replace(finalUrl)
+                if (typeof window !== "undefined" && (window as any).chrome?.runtime?.sendMessage) {
+                    try {
+                        const message = {
+                            type: "SET_SESSION",
+                            token: session.access_token,
+                            refreshToken: session.refresh_token || "",
+                            theme: session.user?.user_metadata?.theme || "light",
+                            language: session.user?.user_metadata?.language || "es"
+                        }
+
+                        setStatus("Sending secure tokens to Mirror...")
+                        
+                        ;(window as any).chrome.runtime.sendMessage(extensionId, message, (response: any) => {
+                            if (response?.ok) {
+                                setStatus("Successfully synchronized!")
+                                setIsSuccess(true)
+                            } else {
+                                setStatus("Direct sync blocked. Attempting classic handshake...")
+                                const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}&theme=${message.theme}&language=${message.language}`
+                                window.location.replace(finalUrl)
+                            }
+                        })
+                    } catch (err) {
+                        console.error("Messaging failed", err)
+                        setStatus("Unexpected connection error.")
+                        setIsError(true)
+                    }
+                } else {
+                    // Classic fallback if chrome.runtime is missing
+                    const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}`
+                    window.location.replace(finalUrl)
+                }
             } else {
                 setStatus("Session expired. Redirecting to login...")
                 setTimeout(() => {
                     window.location.href = `/auth/login?next=${encodeURIComponent(nextUrl)}`
-                }, 1000)
+                }, 1500)
             }
         }
 
@@ -71,9 +102,35 @@ function RedirectContent() {
                         </div>
 
                         <div className="flex flex-col items-center gap-6">
-                            <p className="text-[16px] font-medium text-secondary-text dark:text-gray-400 leading-relaxed max-w-[320px] animate-pulse">
+                            <p className={`text-[16px] font-medium ${isSuccess ? "text-success" : isError ? "text-danger" : "text-secondary-text dark:text-gray-400"} leading-relaxed max-w-[320px] ${!isSuccess && !isError ? "animate-pulse" : ""}`}>
                                 {status}
                             </p>
+
+                            {isSuccess && (
+                                <div className="space-y-4 w-full animate-premium-fade delay-300">
+                                    <button 
+                                        onClick={() => window.close()}
+                                        className="w-full h-14 bg-primary-dark dark:bg-white text-white dark:text-primary-dark rounded-2xl font-bold text-[15px] shadow-premium-md hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                    >
+                                        Listo, cerrar pestaña
+                                    </button>
+                                    <button 
+                                        onClick={() => window.location.href = "/profiles"}
+                                        className="w-full h-12 bg-transparent text-secondary-text rounded-2xl font-semibold text-[13px] hover:text-primary-text transition-colors"
+                                    >
+                                        Ir al Dashboard
+                                    </button>
+                                </div>
+                            )}
+
+                            {isError && (
+                                <button 
+                                    onClick={() => window.location.reload()}
+                                    className="w-full h-14 bg-danger text-white rounded-2xl font-bold text-[15px] shadow-premium-md"
+                                >
+                                    Reintentar sincronización
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

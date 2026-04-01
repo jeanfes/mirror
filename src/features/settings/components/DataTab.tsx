@@ -4,17 +4,20 @@ import { memo } from "react"
 import { Download, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { toast } from "sonner"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 interface DataTabProps {
   onDeleteAccount: () => void
+  onExportData: () => void
+  isExporting: boolean
   title: string
   description: string
 }
 
 export const DataTab = memo(function DataTab({
   onDeleteAccount,
+  onExportData,
+  isExporting,
   title,
   description
 }: DataTabProps) {
@@ -29,9 +32,11 @@ export const DataTab = memo(function DataTab({
             <Download className="h-5 w-5 text-blue-500" />
             <p className="text-sm font-bold">{t.app.settingsModal.exportLibrary}</p>
           </div>
-          <Button variant="secondary" className="w-full" onClick={() => toast.success(t.app.settingsModal.backupStarted)}>{t.app.settingsModal.startBackup}</Button>
+          <Button variant="secondary" className="w-full" onClick={onExportData} disabled={isExporting}>
+            {isExporting ? t.app.settingsModal.savingChanges : t.app.settingsModal.startBackup}
+          </Button>
         </Card>
-        <Card className="className=p-6 space-y-4">
+        <Card className="p-6 space-y-4">
           <div className="flex items-center gap-3">
             <Trash2 className="h-5 w-5 text-red-500" />
             <p className="text-sm font-bold text-red-600">{t.app.settingsModal.dangerZone}</p>

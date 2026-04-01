@@ -1,12 +1,11 @@
 "use client"
 
-import { getAccount, setPlan, type PlanName } from "@/features/billing/services/billing.service"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { getAccount, startCheckout, type PlanName } from "@/features/billing/services/billing.service"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useSession } from "@/lib/supabase/useSession"
 import { createClient } from "@/lib/supabase/client"
 
 export function useAccount() {
-  const queryClient = useQueryClient()
 const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
   const accountKey = ["account", userId]
@@ -21,16 +20,13 @@ const supabase = createClient()
   })
 
   const mutation = useMutation({
-    mutationFn: (plan: PlanName) => setPlan(supabase, userId!, plan),
-    onSuccess: (next) => {
-      queryClient.setQueryData(accountKey, next)
-    }
+    mutationFn: (plan: PlanName) => startCheckout(supabase, plan),
   })
 
   return {
     ...query,
     isLoading: query.isLoading || isAuthenticating,
-    setPlan: mutation.mutateAsync,
+    startCheckout: mutation.mutateAsync,
     isMutating: mutation.isPending,
     isUpdatingPlan: mutation.isPending
   }

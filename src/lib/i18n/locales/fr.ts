@@ -253,6 +253,15 @@ const fr = {
       profileStatusError: "Impossible de mettre à jour le statut du profil",
       profileDeleted: "Profil supprimé",
       profileDeleteError: "Impossible de supprimer le profil",
+      checkoutError: "Impossible de commencer le paiement",
+      exportStarted: "Exportation lancée. Vérifiez vos téléchargements.",
+      exportError: "Impossible de démarrer l'exportation",
+      accountDeleted: "Compte supprimé",
+      accountDeleteError: "Impossible de supprimer le compte",
+      sessionClosed: "Session fermée",
+      sessionCloseError: "Impossible de fermer la session",
+      subscriptionCancelled: "Annulation d'un abonnement demandée",
+      subscriptionCancelError: "Impossible d'annuler l'abonnement",
       cancel: "Annuler",
       confirm: "Confirmer",
       delete: "Supprimer",
@@ -283,7 +292,8 @@ const fr = {
       expires: "Expire le",
       updateCard: "Mettre à jour",
       managePaymentMethod: "Gérer le mode de paiement",
-      manageSubscription: "Gérer l'abonnement"
+      manageSubscription: "Gérer l'abonnement",
+      cancelSubscription: "Annuler l'abonnement"
     },
     navigation: {
       profiles: "Profils",

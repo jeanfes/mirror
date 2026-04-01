@@ -34,12 +34,12 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
 
   if (invoices.length === 0) {
     return (
-      <div 
+      <div
         className="flex flex-col items-center justify-center py-20 px-6 text-center neo-card rounded-3xl border border-border-soft bg-surface-base/30 backdrop-blur-sm shadow-premium-sm"
       >
         <div className="relative mb-6">
-          <div 
-            className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full opacity-10" 
+          <div
+            className="absolute -inset-8 bg-accent-blue/20 blur-3xl rounded-full opacity-10"
           />
           <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-elevated text-secondary-text shadow-sm ring-1 ring-border-soft">
             <FileText className="h-8 w-8 text-primary-text/40" strokeWidth={1.5} />
@@ -86,8 +86,10 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <button
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-secondary-text hover:bg-surface-elevated hover:text-primary-text transition-all active:scale-95"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-secondary-text hover:bg-surface-elevated hover:text-primary-text transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     title={t.app.billing.invoiceDownload}
+                    onClick={() => window.open(invoice.downloadUrl, "_blank", "noopener,noreferrer")}
+                    disabled={!invoice.downloadUrl || invoice.downloadUrl === "#"}
                   >
                     <Download className="h-4 w-4" />
                   </button>

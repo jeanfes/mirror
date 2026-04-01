@@ -5,6 +5,11 @@ export interface VoiceProfileRow {
   name: string
   description: string | null
   tone: string | null
+  // Note: The following fields are stored for future feature expansion but not currently exposed in the UI.
+  // Consider implementing advanced profile customization in v2:
+  // - preferred_phrases: Phrases to encourage in generated text
+  // - banned_phrases: Phrases to avoid in generated text
+  // - target_length: Desired output length (in words or characters)
   preferred_phrases: string[] | null
   banned_phrases: string[] | null
   target_length: number | null
@@ -37,6 +42,10 @@ export interface GenerationHistoryRow {
   generated_text: string
   goal: string | null
   origin: "web" | "extension"
+  // Note: The following fields are reserved for analytics and future metrics features.
+  // They store structured data about generation context and results but are not exposed in the current UI.
+  // - input_context: Context passed to the AI model (author sentiment, audience, tone hints, etc.)
+  // - output_meta: Metadata about the generated text (token count, confidence scores, alternative count, etc.)
   input_context: Record<string, unknown> | null
   output_meta: Record<string, unknown> | null
   created_at: string
@@ -94,10 +103,6 @@ export interface UserSettings {
   theme: "light" | "dark" | "auto"
   defaultProfileId: string | null
   notificationsEnabled: boolean
-  autoSaveDrafts: boolean
-  autoInsertComments: boolean
-  requireStrictTone: boolean
-  showConfidenceHints: boolean
   desktopAlertsEnabled: boolean
   onboardingCompleted: boolean
 }

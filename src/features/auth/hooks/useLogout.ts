@@ -7,12 +7,14 @@ import { useQueryClient } from "@tanstack/react-query"
 import { ROUTES } from "@/lib/routes"
 import { signOut } from "@/features/auth/services/auth.service"
 import { clearAuthContext } from "@/lib/supabase/auth-context"
+import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserStore } from "@/store/useUserStore"
 
 export const useLogout = () => {
   const [isPending, setIsPending] = useState(false)
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { t } = useLanguageStore()
 
   const logout = useCallback(async () => {
     setIsPending(true)
@@ -21,7 +23,7 @@ export const useLogout = () => {
       const { error } = await signOut()
 
       if (error) {
-        toast.error("Could not close your session")
+        toast.error(t.app.common.sessionCloseError)
         return
       }
 
@@ -29,15 +31,15 @@ export const useLogout = () => {
       useUserStore.getState().clearUser()
       queryClient.clear()
 
-      toast.success("Session closed")
+      toast.success(t.app.common.sessionClosed)
       router.refresh()
       router.replace(ROUTES.auth.login)
     } catch {
-      toast.error("Could not close your session")
+      toast.error(t.app.common.sessionCloseError)
     } finally {
       setIsPending(false)
     }
-  }, [queryClient, router])
+  }, [queryClient, router, t.app.common.sessionCloseError, t.app.common.sessionClosed])
 
   return { logout, isPending }
 }

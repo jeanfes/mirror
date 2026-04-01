@@ -4,6 +4,7 @@ import { format, formatDistanceToNow } from "date-fns"
 import { BarChart3, CreditCard, Layers3 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useMemo, useState } from "react"
+import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
@@ -31,7 +32,13 @@ export default function AccountPage() {
   const { data: account, isLoading: isAccountLoading, isError } = useAccount()
 
   // ── True lazy loading — only fetch when the tab is actually open ─────────────
-  const { invoices, paymentMethods } = useBilling({ enabled: activeTab === "billing" })
+  const {
+    invoices,
+    paymentMethods,
+    billingInfo,
+    cancelSubscription,
+    isCancellingSubscription,
+  } = useBilling({ enabled: activeTab === "billing" })
   const { data: history } = useHistory(undefined, { enabled: activeTab === "usage" })
   const { data: profiles } = useProfiles({ enabled: activeTab !== "billing" })
   // ─────────────────────────────────────────────────────────────────────────────
@@ -97,6 +104,15 @@ export default function AccountPage() {
     creditUsage,
     latestHistoryItem,
   } = stats
+
+  const handleCancelSubscription = async () => {
+    try {
+      await cancelSubscription()
+      toast.success(t.app.common.subscriptionCancelled)
+    } catch {
+      toast.error(t.app.common.subscriptionCancelError)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -256,9 +272,9 @@ export default function AccountPage() {
                 {historyItems.length === 0
                   ? t.app.account.noUsageYet
                   : t.app.account.adoptionMetrix.replace(
-                      "{0}",
-                      Math.round((appliedCount / historyItems.length) * 100).toString()
-                    )}
+                    "{0}",
+                    Math.round((appliedCount / historyItems.length) * 100).toString()
+                  )}
               </p>
               <p className="mt-2 body-muted">{t.app.account.adoptionDesc}</p>
             </Card>
@@ -270,9 +286,9 @@ export default function AccountPage() {
               <p className="mt-2 body-muted">
                 {latestHistoryItem
                   ? t.app.account.latestCommentAdded.replace(
-                      "{0}",
-                      formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })
-                    )
+                    "{0}",
+                    formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })
+                  )
                   : t.app.account.generateToSeeMomentum}
               </p>
             </Card>
@@ -287,7 +303,13 @@ export default function AccountPage() {
             </div>
             <div className="space-y-3 px-1">
               <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.paymentMethods}</h3>
-              <PaymentMethods methods={paymentMethods} />
+              <PaymentMethods
+                methods={paymentMethods}
+                updateUrl={billingInfo?.updateUrl}
+                portalUrl={billingInfo?.portalUrl}
+                onCancelSubscription={handleCancelSubscription}
+                isCancelling={isCancellingSubscription}
+              />
             </div>
           </div>
         </TabsContent>

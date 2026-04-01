@@ -253,6 +253,15 @@ const es = {
       profileStatusError: "No se pudo actualizar el estado del perfil",
       profileDeleted: "Perfil eliminado",
       profileDeleteError: "No se pudo eliminar el perfil",
+      checkoutError: "No se pudo iniciar el proceso de pago",
+      exportStarted: "Exportación iniciada. Revisa tus descargas.",
+      exportError: "No se pudo iniciar la exportación",
+      accountDeleted: "Cuenta eliminada",
+      accountDeleteError: "No se pudo eliminar la cuenta",
+      sessionClosed: "Sesión cerrada",
+      sessionCloseError: "No se pudo cerrar la sesión",
+      subscriptionCancelled: "Cancelación de suscripción solicitada",
+      subscriptionCancelError: "No se pudo cancelar la suscripción",
       cancel: "Cancelar",
       confirm: "Confirmar",
       delete: "Eliminar",
@@ -283,7 +292,8 @@ const es = {
       expires: "Expira",
       updateCard: "Actualizar",
       managePaymentMethod: "Gestionar método de pago",
-      manageSubscription: "Gestionar suscripción"
+      manageSubscription: "Gestionar suscripción",
+      cancelSubscription: "Cancelar suscripción"
     },
     navigation: {
       profiles: "Perfiles",

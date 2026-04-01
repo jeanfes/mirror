@@ -1,11 +1,16 @@
 "use client"
 
-import { getInvoices, getBillingInfo } from "@/features/billing/services/billing.service"
+import {
+  cancelSubscription,
+  getBillingInfo,
+  getInvoices,
+} from "@/features/billing/services/billing.service"
 import { useSession } from "@/lib/supabase/useSession"
 import { createClient } from "@/lib/supabase/client"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export function useBilling(options?: { enabled?: boolean }) {
+  const queryClient = useQueryClient()
   const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
   const isEnabled = options?.enabled !== false && !!userId
@@ -31,6 +36,16 @@ export function useBilling(options?: { enabled?: boolean }) {
     enabled: isEnabled
   })
 
+  const cancelSubscriptionMutation = useMutation({
+    mutationFn: () => cancelSubscription(supabase),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: billingInfoKey }),
+        queryClient.invalidateQueries({ queryKey: ["account", userId] })
+      ])
+    }
+  })
+
   return {
     invoices: invoicesQuery.data ?? [],
     isLoadingInvoices: invoicesQuery.isPending || isAuthenticating,
@@ -40,7 +55,9 @@ export function useBilling(options?: { enabled?: boolean }) {
     isLoadingSettings: billingInfoQuery.isPending || isAuthenticating,
     isErrorSettings: billingInfoQuery.isError,
     refetchInvoices: invoicesQuery.refetch,
-    refetchBillingInfo: billingInfoQuery.refetch
+    refetchBillingInfo: billingInfoQuery.refetch,
+    cancelSubscription: cancelSubscriptionMutation.mutateAsync,
+    isCancellingSubscription: cancelSubscriptionMutation.isPending
   }
 
 }

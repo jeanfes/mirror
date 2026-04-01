@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { createResetPasswordSchema, type ResetPasswordValues } from "../schemas"
 import { useRecovery } from "../hooks/useRecovery"
+import { usePasswordVisibility } from "../hooks/usePasswordVisibility"
 import { Input } from "@/components/ui/Input"
 
 export function ResetPasswordForm() {
@@ -17,7 +18,7 @@ export function ResetPasswordForm() {
     const schema = useMemo(() => createResetPasswordSchema(t.auth.errors), [t.auth.errors])
     const { resetPassword, isPending } = useRecovery()
     const [isSubmitted, setIsSubmitted] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
+    const { showPassword, togglePasswordVisibility } = usePasswordVisibility()
 
     const {
         register,
@@ -83,7 +84,7 @@ export function ResetPasswordForm() {
                     <button
                         type="button"
                         className="flex items-center justify-center p-1 text-secondary-text hover:text-primary-text transition-colors"
-                        onClick={() => setShowPassword((prev) => !prev)}
+                        onClick={togglePasswordVisibility}
                         disabled={isPending}
                     >
                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
