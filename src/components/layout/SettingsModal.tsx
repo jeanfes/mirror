@@ -156,7 +156,7 @@ const SettingsModal = memo(function SettingsModal({
     if (!isLogoutPending && !isUpdating && !isDeletingAccount && !isExportingData) {
       onOpenChange?.(nextOpen)
     }
-  }, [isDeleteAccountConfirmOpen, isExportingData, isLogoutPending, isUpdating, onOpenChange, isDeletingAccount])
+  }, [isExportingData, isLogoutPending, isUpdating, onOpenChange, isDeletingAccount])
 
   return (
     <>

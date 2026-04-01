@@ -42,18 +42,20 @@ export async function GET(request: NextRequest) {
       )
       
       if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("theme_preference, language_preference")
-          .eq("id", user.id)
+        const { data: settings } = await supabase
+          .from("user_settings")
+          .select("theme, language")
+          .eq("user_id", user.id)
           .single()
 
-        if (profile) {
-          if (profile.theme_preference) {
-            response.cookies.set("mirror-theme-preference", profile.theme_preference, { path: "/", maxAge: 31536000, sameSite: "lax" })
+        if (settings) {
+          const themePreference = settings.theme === "auto" ? "system" : settings.theme
+
+          if (themePreference) {
+            response.cookies.set("mirror-theme-preference", themePreference, { path: "/", maxAge: 31536000, sameSite: "lax" })
           }
-          if (profile.language_preference) {
-            response.cookies.set("NEXT_LOCALE", profile.language_preference, { path: "/", maxAge: 31536000, sameSite: "lax" })
+          if (settings.language) {
+            response.cookies.set("NEXT_LOCALE", settings.language, { path: "/", maxAge: 31536000, sameSite: "lax" })
           }
         }
       }

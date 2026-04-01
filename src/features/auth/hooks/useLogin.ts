@@ -38,18 +38,20 @@ export const useLogin = () => {
                 const { data: { user } } = await supabase.auth.getUser()
                 
                 if (user) {
-                    const { data: profile } = await supabase
-                        .from("profiles")
-                        .select("theme_preference, language_preference")
-                        .eq("id", user.id)
+                    const { data: settings } = await supabase
+                        .from("user_settings")
+                        .select("theme, language")
+                        .eq("user_id", user.id)
                         .single()
                         
-                    if (profile) {
-                        if (profile.theme_preference) {
-                            document.cookie = `mirror-theme-preference=${profile.theme_preference}; path=/; max-age=31536000; SameSite=Lax`
+                    if (settings) {
+                        const themePreference = settings.theme === "auto" ? "system" : settings.theme
+
+                        if (themePreference) {
+                            document.cookie = `mirror-theme-preference=${themePreference}; path=/; max-age=31536000; SameSite=Lax`
                         }
-                        if (profile.language_preference) {
-                            document.cookie = `NEXT_LOCALE=${profile.language_preference}; path=/; max-age=31536000; SameSite=Lax`
+                        if (settings.language) {
+                            document.cookie = `NEXT_LOCALE=${settings.language}; path=/; max-age=31536000; SameSite=Lax`
                         }
                     }
                 }

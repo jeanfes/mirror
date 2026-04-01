@@ -5,6 +5,32 @@ import { createClient } from "@/lib/supabase/client"
 import { useSearchParams } from "next/navigation"
 import { ShieldCheck } from "lucide-react"
 
+type ExtensionSyncResponse = {
+    ok?: boolean
+}
+
+type ExtensionBridgeMessage = {
+    type: "SET_SESSION"
+    token: string
+    refreshToken: string
+    theme: string
+    language: string
+}
+
+type ExtensionRuntimeBridge = {
+    sendMessage: (
+        extensionId: string,
+        message: ExtensionBridgeMessage,
+        callback: (response: ExtensionSyncResponse | undefined) => void
+    ) => void
+}
+
+type WindowWithExtensionBridge = Window & {
+    chrome?: {
+        runtime?: ExtensionRuntimeBridge
+    }
+}
+
 function RedirectContent() {
     const searchParams = useSearchParams()
     const nextUrl = searchParams.get("next")
@@ -25,9 +51,11 @@ function RedirectContent() {
             const { data: { session } } = await supabase.auth.getSession()
 
             if (session?.access_token && session.user?.id) {
-                if (typeof window !== "undefined" && (window as any).chrome?.runtime?.sendMessage) {
+                const browserWindow = window as WindowWithExtensionBridge
+
+                if (browserWindow.chrome?.runtime?.sendMessage) {
                     try {
-                        const message = {
+                        const message: ExtensionBridgeMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
                             refreshToken: session.refresh_token || "",
@@ -36,8 +64,8 @@ function RedirectContent() {
                         }
 
                         setStatus("Sending secure tokens to Mirror...")
-                        
-                        ;(window as any).chrome.runtime.sendMessage(extensionId, message, (response: any) => {
+
+                        browserWindow.chrome.runtime.sendMessage(extensionId, message, (response) => {
                             if (response?.ok) {
                                 setStatus("Successfully synchronized!")
                                 setIsSuccess(true)
@@ -73,17 +101,17 @@ function RedirectContent() {
             {/* Premium Background Glows */}
             <div className="absolute top-[-10%] left-[-10%] size-[50%] bg-accent-blue/10 blur-[120px] rounded-full animate-pulse" />
             <div className="absolute bottom-[-10%] right-[-10%] size-[50%] bg-accent-purple/10 blur-[120px] rounded-full animate-pulse delay-700" />
-            
+
             <div className="absolute inset-x-0 bottom-0 h-100 bg-linear-to-t from-[#fdfdff] dark:from-[#050505] via-[#fdfdff]/80 dark:via-[#050505]/80 to-transparent z-1 pointer-events-none" />
 
             <div className="w-full max-w-115 p-1.5 pt-1.5 bg-linear-to-b from-white/30 to-transparent dark:from-white/10 dark:to-transparent rounded-[44px] shadow-premium-lg relative z-10 animate-premium-fade">
                 <div className="bg-white/70 dark:bg-[#0a0a0b]/70 backdrop-blur-3xl p-12 md:p-16 flex flex-col items-center text-center border border-white/50 dark:border-white/5 rounded-[40px] saturate-[1.8] shadow-inner">
                     <div className="mb-12 relative flex items-center justify-center">
                         <div className="size-24 rounded-4xl rotate-10 absolute inset-0 bg-primary-dark blur-2xl opacity-20 animate-pulse" />
-                        
+
                         <div className="size-20 rounded-[30px] bg-primary-dark flex items-center justify-center shadow-premium-md relative z-10 border border-white/10 overflow-hidden -rotate-6 transition-transform hover:rotate-0 duration-700">
-                             <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
-                             <ShieldCheck className="size-10 text-white animate-premium-fade" strokeWidth={2.5} />
+                            <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
+                            <ShieldCheck className="size-10 text-white animate-premium-fade" strokeWidth={2.5} />
                         </div>
                     </div>
 
@@ -108,13 +136,13 @@ function RedirectContent() {
 
                             {isSuccess && (
                                 <div className="space-y-4 w-full animate-premium-fade delay-300">
-                                    <button 
+                                    <button
                                         onClick={() => window.close()}
                                         className="w-full h-14 bg-primary-dark dark:bg-white text-white dark:text-primary-dark rounded-2xl font-bold text-[15px] shadow-premium-md hover:scale-[1.02] active:scale-[0.98] transition-all"
                                     >
                                         Listo, cerrar pestaña
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => window.location.href = "/profiles"}
                                         className="w-full h-12 bg-transparent text-secondary-text rounded-2xl font-semibold text-[13px] hover:text-primary-text transition-colors"
                                     >
@@ -124,7 +152,7 @@ function RedirectContent() {
                             )}
 
                             {isError && (
-                                <button 
+                                <button
                                     onClick={() => window.location.reload()}
                                     className="w-full h-14 bg-danger text-white rounded-2xl font-bold text-[15px] shadow-premium-md"
                                 >
