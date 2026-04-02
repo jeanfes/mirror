@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/lib/routes";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -26,7 +27,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                     </div>
                 </header>
             )}
-            <div className="mx-auto flex min-h-dvh w-full max-w-6xl items-center justify-center px-4 py-8 md:px-6 relative z-10">
+            <div className={cn(
+                "flex min-h-dvh w-full items-center justify-center relative z-10",
+                !isRedirectPage && "mx-auto max-w-6xl px-4 py-8 md:px-6"
+            )}>
                 {children}
             </div>
         </div>

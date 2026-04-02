@@ -3,16 +3,18 @@
 import { useEffect, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useSearchParams } from "next/navigation"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
+import Image from "next/image"
 
 type ExtensionSyncResponse = {
     ok?: boolean
 }
 
-type ExtensionBridgeMessage = {
+type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
     refreshToken: string
+    openOptions: boolean
     theme: string
     language: string
     plan: "Free" | "Pro" | "Elite"
@@ -23,7 +25,16 @@ type ExtensionBridgeMessage = {
     confirmBeforeApply: boolean
 }
 
+type ExtensionPingMessage = {
+    type: "PING"
+}
+
+type ExtensionBridgeMessage = ExtensionSetSessionMessage | ExtensionPingMessage
+
 type ExtensionRuntimeBridge = {
+    lastError?: {
+        message?: string
+    }
     sendMessage: (
         extensionId: string,
         message: ExtensionBridgeMessage,
@@ -40,14 +51,61 @@ type WindowWithExtensionBridge = Window & {
 function RedirectContent() {
     const searchParams = useSearchParams()
     const nextUrl = searchParams.get("next")
-    const [status, setStatus] = useState("Initializing secure handshake...")
+    const [status, setStatus] = useState("Estableciendo conexión segura...")
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
+    const [manualExtensionUrl, setManualExtensionUrl] = useState<string | null>(null)
+
+    const isManualFallback = !isSuccess && !isError && Boolean(manualExtensionUrl)
+
+    const title = isManualFallback
+        ? "¡Conexión lista!"
+        : isSuccess
+            ? "Sincronización completada"
+            : isError
+                ? "Error de conexión"
+                : "Conectando extensión"
+
+    const helperText = isManualFallback
+        ? "La conexión está lista. Abre la extensión para completar el inicio de sesión."
+        : isSuccess
+            ? "La sesión quedó sincronizada con la extensión."
+            : isError
+                ? status
+                : ""
 
     useEffect(() => {
+        const sendWithRetry = (
+            runtime: ExtensionRuntimeBridge,
+            extensionId: string,
+            message: ExtensionBridgeMessage,
+            attempts = 2
+        ): Promise<ExtensionSyncResponse | undefined> => {
+            return new Promise((resolve, reject) => {
+                const attempt = (remaining: number) => {
+                    runtime.sendMessage(extensionId, message, (response) => {
+                        const lastError = runtime.lastError
+                        if (lastError?.message) {
+                            if (remaining > 1) {
+                                setTimeout(() => attempt(remaining - 1), 350)
+                                return
+                            }
+
+                            reject(new Error(lastError.message))
+                            return
+                        }
+
+                        resolve(response)
+                    })
+                }
+
+                attempt(attempts)
+            })
+        }
+
         const proceedToExtension = async () => {
             if (!nextUrl || !nextUrl.startsWith("chrome-extension://")) {
-                setStatus("Invalid extension gateway.")
+                setStatus("Acceso inválido a la extensión.")
                 setIsError(true)
                 return
             }
@@ -78,6 +136,7 @@ function RedirectContent() {
 
                 if (browserWindow.chrome?.runtime?.sendMessage) {
                     try {
+                        const runtime = browserWindow.chrome.runtime
                         const theme = userSettings?.theme === "auto" ? "system" : userSettings?.theme || "light"
                         const language = userSettings?.language || "es"
                         const plan = (account?.plan || "Free") as "Free" | "Pro" | "Elite"
@@ -89,10 +148,11 @@ function RedirectContent() {
                             ? userSettings.confirm_before_apply
                             : false
 
-                        const message: ExtensionBridgeMessage = {
+                        const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
                             refreshToken: session.refresh_token || "",
+                            openOptions: true,
                             theme,
                             language,
                             plan,
@@ -103,30 +163,44 @@ function RedirectContent() {
                             confirmBeforeApply
                         }
 
-                        setStatus("Sending secure tokens to Mirror...")
+                        const finalUrl = `${nextUrl}#access_token=${encodeURIComponent(session.access_token)}&refresh_token=${encodeURIComponent(session.refresh_token || "")}&theme=${encodeURIComponent(theme)}&language=${encodeURIComponent(language)}&plan=${encodeURIComponent(plan)}&creditsRemaining=${encodeURIComponent(String(creditsRemaining))}&defaultEmojis=${encodeURIComponent(String(defaultEmojis))}&autoInsert=${encodeURIComponent(String(autoInsert))}&confirmBeforeApply=${encodeURIComponent(String(confirmBeforeApply))}`
 
-                        browserWindow.chrome.runtime.sendMessage(extensionId, message, (response) => {
-                            if (response?.ok) {
-                                setStatus("Successfully synchronized!")
-                                setIsSuccess(true)
-                            } else {
-                                setStatus("Direct sync blocked. Attempting classic handshake...")
-                                const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}&theme=${message.theme}&language=${message.language}&plan=${message.plan}&creditsRemaining=${message.creditsRemaining}&defaultEmojis=${message.defaultEmojis}&autoInsert=${message.autoInsert}&confirmBeforeApply=${message.confirmBeforeApply}`
-                                window.location.replace(finalUrl)
-                            }
-                        })
+                        setStatus("Transfiriendo credenciales a la extensión...")
+
+                        const pingResponse = await sendWithRetry(runtime, extensionId, { type: "PING" }, 2)
+                        if (!pingResponse?.ok) {
+                            setManualExtensionUrl(finalUrl)
+                            setStatus("Autorización lista")
+                            return
+                        }
+
+                        const response = await sendWithRetry(runtime, extensionId, message)
+                        if (response?.ok) {
+                            setStatus("Sesión sincronizada correctamente.")
+                            setIsSuccess(true)
+                        } else {
+                            setManualExtensionUrl(finalUrl)
+                            setStatus("Autorización lista")
+                        }
                     } catch (err) {
-                        console.error("Messaging failed", err)
-                        setStatus("Unexpected connection error.")
+                        const { data: { session: latestSession } } = await supabase.auth.getSession()
+                        if (latestSession?.access_token) {
+                            const fallbackUrl = `${nextUrl}#access_token=${encodeURIComponent(latestSession.access_token)}&refresh_token=${encodeURIComponent(latestSession.refresh_token || "")}`
+                            setManualExtensionUrl(fallbackUrl)
+                            setStatus("Autorización lista")
+                            return
+                        }
+
+                        setStatus("No pudimos completar la sincronización en este intento.")
                         setIsError(true)
                     }
                 } else {
-                    // Classic fallback if chrome.runtime is missing
-                    const finalUrl = `${nextUrl}#access_token=${session.access_token}&refresh_token=${session.refresh_token || ""}`
-                    window.location.replace(finalUrl)
+                    const fallbackUrl = `${nextUrl}#access_token=${encodeURIComponent(session.access_token)}&refresh_token=${encodeURIComponent(session.refresh_token || "")}`
+                    setManualExtensionUrl(fallbackUrl)
+                    setStatus("Autorización lista")
                 }
             } else {
-                setStatus("Session expired. Redirecting to login...")
+                setStatus("Sesión expirada. Redirigiendo al login...")
                 setTimeout(() => {
                     window.location.href = `/auth/login?next=${encodeURIComponent(nextUrl)}`
                 }, 1500)
@@ -137,78 +211,84 @@ function RedirectContent() {
     }, [nextUrl])
 
     return (
-        <div className="relative flex h-screen w-full flex-col items-center justify-center bg-[#fdfdff] dark:bg-[#050505] selection:bg-accent-purple/30 overflow-hidden px-6">
-            {/* Premium Background Glows */}
-            <div className="absolute top-[-10%] left-[-10%] size-[50%] bg-accent-blue/10 blur-[120px] rounded-full animate-pulse" />
-            <div className="absolute bottom-[-10%] right-[-10%] size-[50%] bg-accent-purple/10 blur-[120px] rounded-full animate-pulse delay-700" />
+        <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-bg-main p-6 overflow-hidden">
 
-            <div className="absolute inset-x-0 bottom-0 h-100 bg-linear-to-t from-[#fdfdff] dark:from-[#050505] via-[#fdfdff]/80 dark:via-[#050505]/80 to-transparent z-1 pointer-events-none" />
+            {/* Background decorations for a subtle premium feel */}
+            <div className="absolute top-0 inset-x-0 h-64 bg-linear-to-b from-primary-light/5 dark:from-white/5 to-transparent pointer-events-none" />
 
-            <div className="w-full max-w-115 p-1.5 pt-1.5 bg-linear-to-b from-white/30 to-transparent dark:from-white/10 dark:to-transparent rounded-[44px] shadow-premium-lg relative z-10 animate-premium-fade">
-                <div className="bg-white/70 dark:bg-[#0a0a0b]/70 backdrop-blur-3xl p-12 md:p-16 flex flex-col items-center text-center border border-white/50 dark:border-white/5 rounded-[40px] saturate-[1.8] shadow-inner">
-                    <div className="mb-12 relative flex items-center justify-center">
-                        <div className="size-24 rounded-4xl rotate-10 absolute inset-0 bg-primary-dark blur-2xl opacity-20 animate-pulse" />
+            {/* Main Box */}
+            <div className="w-full max-w-100 flex flex-col items-center text-center bg-surface-base dark:bg-[#0a0a0a] border border-border-soft dark:border-white/10 rounded-4xl p-10 shadow-premium-md relative z-10">
 
-                        <div className="size-20 rounded-[30px] bg-primary-dark flex items-center justify-center shadow-premium-md relative z-10 border border-white/10 overflow-hidden -rotate-6 transition-transform hover:rotate-0 duration-700">
-                            <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
-                            <ShieldCheck className="size-10 text-white animate-premium-fade" strokeWidth={2.5} />
+                {/* Icon Container */}
+                <div className="mb-8 relative flex items-center justify-center">
+                    {(isSuccess || isManualFallback) ? (
+                        <div className="size-16 rounded-full bg-success-soft-bg dark:bg-success/10 border border-success-soft-border dark:border-success/20 text-success flex items-center justify-center animate-premium-fade shadow-premium-sm">
+                            <ShieldCheck className="size-7" strokeWidth={2.5} />
                         </div>
+                    ) : isError ? (
+                        <div className="size-16 rounded-full bg-danger-soft-bg dark:bg-danger/10 border border-danger-soft-border dark:border-danger/20 text-danger flex items-center justify-center animate-premium-fade shadow-premium-sm">
+                            <AlertCircle className="size-7" strokeWidth={2.5} />
+                        </div>
+                    ) : (
+                        <div className="size-16 rounded-full bg-surface-elevated border border-border-soft dark:border-white/10 text-primary-text flex items-center justify-center shadow-premium-sm">
+                            <Loader2 className="size-6 text-primary-dark dark:text-white animate-spin opacity-80" strokeWidth={2.5} />
+                        </div>
+                    )}
+                </div>
+
+                {/* Text Content */}
+                <div className="space-y-6 w-full">
+                    <div className="space-y-2 relative">
+                        <h1 className="text-[22px] font-bold tracking-[-0.02em] text-primary-dark">
+                            {title}
+                        </h1>
+                        <p className="text-[14px] font-medium text-secondary-text">
+                            {isSuccess || isManualFallback ? helperText : status}
+                        </p>
                     </div>
 
-                    <div className="space-y-10 w-full">
-                        <div className="space-y-4">
-                            <h1 className="text-4xl font-black tracking-[-0.04em] text-primary-dark dark:text-white uppercase select-none leading-none">
-                                Mirror <span className="text-mirror pb-1">Sync</span>
-                            </h1>
-                            <div className="flex items-center justify-center gap-2">
-                                <span className="h-px w-6 bg-border-soft" />
-                                <p className="text-[11px] font-black text-muted-text uppercase tracking-[0.3em] leading-none opacity-80">
-                                    Authenticating
-                                </p>
-                                <span className="h-px w-6 bg-border-soft" />
+                    {/* Actions */}
+                    <div className="pt-4 min-h-12.5 flex flex-col justify-end w-full">
+                        {isSuccess ? (
+                            <div className="space-y-3 w-full animate-premium-fade">
+                                <button
+                                    onClick={() => window.location.href = "/profiles"}
+                                    className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-sm flex items-center justify-center focus:outline-none"
+                                >
+                                    Ir al Dashboard
+                                </button>
                             </div>
-                        </div>
-
-                        <div className="flex flex-col items-center gap-6">
-                            <p className={`text-[16px] font-medium ${isSuccess ? "text-success" : isError ? "text-danger" : "text-secondary-text dark:text-gray-400"} leading-relaxed max-w-[320px] ${!isSuccess && !isError ? "animate-pulse" : ""}`}>
-                                {status}
-                            </p>
-
-                            {isSuccess && (
-                                <div className="space-y-4 w-full animate-premium-fade delay-300">
-                                    <button
-                                        onClick={() => window.close()}
-                                        className="w-full h-14 bg-primary-dark dark:bg-white text-white dark:text-primary-dark rounded-2xl font-bold text-[15px] shadow-premium-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-                                    >
-                                        Listo, cerrar pestaña
-                                    </button>
-                                    <button
-                                        onClick={() => window.location.href = "/profiles"}
-                                        className="w-full h-12 bg-transparent text-secondary-text rounded-2xl font-semibold text-[13px] hover:text-primary-text transition-colors"
-                                    >
-                                        Ir al Dashboard
-                                    </button>
-                                </div>
-                            )}
-
-                            {isError && (
+                        ) : isManualFallback ? (
+                            <div className="w-full animate-premium-fade">
+                                <button
+                                    onClick={() => {
+                                        if (manualExtensionUrl) {
+                                            window.location.href = manualExtensionUrl
+                                        }
+                                    }}
+                                    className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-premium-sm flex items-center justify-center focus:outline-none"
+                                >
+                                    Abrir extensión
+                                </button>
+                            </div>
+                        ) : isError ? (
+                            <div className="w-full animate-premium-fade">
                                 <button
                                     onClick={() => window.location.reload()}
-                                    className="w-full h-14 bg-danger text-white rounded-2xl font-bold text-[15px] shadow-premium-md"
+                                    className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-premium-sm flex items-center justify-center focus:outline-none"
                                 >
-                                    Reintentar sincronización
+                                    Reintentar conexión
                                 </button>
-                            )}
-                        </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>
 
-            {/* Brand Footer */}
-            <div className="fixed bottom-12 flex items-center gap-5 opacity-20 transition-all pointer-events-none hover:opacity-100 z-10 scale-95">
-                <div className="size-2 bg-primary-dark dark:bg-white rounded-full scale-150 animate-pulse" />
-                <span className="text-[18px] font-black uppercase tracking-[0.5em] text-primary-dark dark:text-white">Mirror</span>
-                <div className="size-2 bg-primary-dark dark:bg-white rounded-full scale-150 animate-pulse delay-300" />
+            {/* Minimal Footer */}
+            <div className="absolute bottom-10 flex items-center justify-center opacity-40 gap-1.5 align-middle">
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-dark leading-none -mb-0.5">Mirror</span>
+                <Image src="/icon.png" alt="Logo" width={14} height={14} priority />
             </div>
         </div>
     )
@@ -217,8 +297,8 @@ function RedirectContent() {
 export default function ExtensionRedirectPage() {
     return (
         <Suspense fallback={
-            <div className="flex h-screen w-full items-center justify-center bg-bg-main text-secondary-text">
-                Cargando pasarela segura...
+            <div className="flex min-h-screen w-full items-center justify-center bg-bg-main text-secondary-text text-[14px] font-medium">
+                Cargando pasarela...
             </div>
         }>
             <RedirectContent />
