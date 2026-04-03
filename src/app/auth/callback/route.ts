@@ -10,6 +10,17 @@ function sanitizeNextPath(value: string | null) {
   return value
 }
 
+function redirectToLoginWithError(request: NextRequest, errorCode: string, nextPath: string) {
+  const loginUrl = new URL(ROUTES.auth.login, request.url)
+  loginUrl.searchParams.set("error", errorCode)
+
+  if (nextPath !== DEFAULT_AUTHENTICATED_ROUTE) {
+    loginUrl.searchParams.set("next", nextPath)
+  }
+
+  return NextResponse.redirect(loginUrl)
+}
+
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
@@ -22,7 +33,7 @@ export async function GET(request: NextRequest) {
   nextPath = sanitizeNextPath(nextPath)
 
   if (error) {
-    return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_failed`, request.url))
+    return redirectToLoginWithError(request, "oauth_failed", nextPath)
   }
 
   if (code) {
@@ -31,13 +42,13 @@ export async function GET(request: NextRequest) {
       const { data: { session }, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
       if (exchangeError) {
-        return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=oauth_exchange_failed`, request.url))
+        return redirectToLoginWithError(request, "oauth_exchange_failed", nextPath)
       }
 
       const user = session?.user
       const response = NextResponse.redirect(
         nextPath.startsWith("chrome-extension://") 
-          ? new URL(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextPath)}`, request.url)
+          ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
           : new URL(nextPath, request.url)
       )
       
@@ -64,7 +75,7 @@ export async function GET(request: NextRequest) {
 
       return response
     } catch {
-      return NextResponse.redirect(new URL(`${ROUTES.auth.login}?error=supabase_config_missing`, request.url))
+      return redirectToLoginWithError(request, "supabase_config_missing", nextPath)
     }
   }
 

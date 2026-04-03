@@ -17,6 +17,10 @@ export const useLogin = () => {
     const searchParams = useSearchParams()
     const nextParam = searchParams.get("next")
     const authErrors = useLanguageStore((state) => state.t.auth.errors)
+    const isExtensionNext = Boolean(nextParam && nextParam.startsWith("chrome-extension://"))
+    const extensionRedirectTarget = isExtensionNext && nextParam
+        ? `${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextParam)}`
+        : null
 
     const login = useCallback(async (data: LoginValues): Promise<LoginError | null> => {
         setIsPending(true)
@@ -62,8 +66,8 @@ export const useLogin = () => {
             setIsPending(false)
             setIsNavigating(true)
             
-            if (nextParam && nextParam.startsWith("chrome-extension://")) {
-                router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextParam)}`)
+            if (extensionRedirectTarget) {
+                router.push(extensionRedirectTarget)
             } else {
                 router.push(nextParam || DEFAULT_AUTHENTICATED_ROUTE)
             }
@@ -74,7 +78,7 @@ export const useLogin = () => {
             setIsPending(false)
             return "connection_error"
         }
-    }, [router, nextParam])
+    }, [router, nextParam, extensionRedirectTarget])
 
     const loginWithGoogle = useCallback(async () => {
         setIsPendingGoogle(true)

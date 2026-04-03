@@ -14,7 +14,8 @@ export const ROUTES = {
     register: "/auth/register",
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
-    callback: "/auth/callback"
+    callback: "/auth/callback",
+    extensionRedirect: "/auth/extension-redirect"
   },
   private: {
     profiles: "/profiles",

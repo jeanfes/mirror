@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user) {
-        const redirectUrl = new URL(ROUTES.auth.login.replace("/login", "/extension-redirect"), request.url)
+        const redirectUrl = new URL(ROUTES.auth.extensionRedirect, request.url)
         redirectUrl.searchParams.set("next", nextParam)
         return NextResponse.redirect(redirectUrl)
     }
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     
     const response = NextResponse.redirect(loginUrl)
     if (nextParam) {
-        response.cookies.set("mirror_extension_sync", nextParam, { maxAge: 60 * 10, path: "/", sameSite: "lax" })
+        response.cookies.set("mirror_extension_sync", nextParam, { maxAge: 60 * 60, path: "/", sameSite: "lax" })
     }
     
     return response

@@ -2,9 +2,15 @@
 
 import { useEffect, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { ROUTES } from "@/lib/routes"
 import { useSearchParams } from "next/navigation"
 import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
 import Image from "next/image"
+
+const BRIDGE_TIMEOUT_MS = 7000
+const BRIDGE_RETRY_DELAY_MS = 320
+const BRIDGE_ATTEMPTS = 1
+const BRIDGE_PING_TIMEOUT_MS = 1800
 
 type ExtensionSyncResponse = {
     ok?: boolean
@@ -54,53 +60,121 @@ function RedirectContent() {
     const [status, setStatus] = useState("Estableciendo conexión segura...")
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
-    const [manualExtensionUrl, setManualExtensionUrl] = useState<string | null>(null)
+    const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
 
-    const isManualFallback = !isSuccess && !isError && Boolean(manualExtensionUrl)
+    const isFallbackActive = !isSuccess && !isError && Boolean(fallbackUrl)
 
-    const title = isManualFallback
-        ? "¡Conexión lista!"
-        : isSuccess
-            ? "Sincronización completada"
-            : isError
-                ? "Error de conexión"
+    const title = isSuccess
+        ? "Sincronización completada"
+        : isError
+            ? "Error de conexión"
+            : isFallbackActive
+                ? "Abriendo extensión"
                 : "Conectando extensión"
 
-    const helperText = isManualFallback
-        ? "La conexión está lista. Abre la extensión para completar el inicio de sesión."
-        : isSuccess
-            ? "La sesión quedó sincronizada con la extensión."
-            : isError
-                ? status
+    const helperText = isSuccess
+        ? "La sesión quedó sincronizada con la extensión."
+        : isError
+            ? status
+            : isFallbackActive
+                ? "Si la redirección automática se bloquea, usa el botón para continuar."
                 : ""
 
     useEffect(() => {
+        let cancelled = false
+
         const sendWithRetry = (
             runtime: ExtensionRuntimeBridge,
             extensionId: string,
             message: ExtensionBridgeMessage,
-            attempts = 2
+            attempts = BRIDGE_ATTEMPTS,
+            timeoutMs = BRIDGE_TIMEOUT_MS
         ): Promise<ExtensionSyncResponse | undefined> => {
             return new Promise((resolve, reject) => {
                 const attempt = (remaining: number) => {
-                    runtime.sendMessage(extensionId, message, (response) => {
-                        const lastError = runtime.lastError
-                        if (lastError?.message) {
-                            if (remaining > 1) {
-                                setTimeout(() => attempt(remaining - 1), 350)
-                                return
-                            }
+                    let settled = false
+                    const timeoutId = window.setTimeout(() => {
+                        if (settled) return
+                        settled = true
 
-                            reject(new Error(lastError.message))
+                        if (remaining > 1) {
+                            window.setTimeout(() => attempt(remaining - 1), BRIDGE_RETRY_DELAY_MS)
                             return
                         }
 
-                        resolve(response)
-                    })
+                        reject(new Error("BRIDGE_TIMEOUT"))
+                    }, timeoutMs)
+
+                    try {
+                        runtime.sendMessage(extensionId, message, (response) => {
+                            if (settled) return
+                            settled = true
+                            window.clearTimeout(timeoutId)
+
+                            const lastError = runtime.lastError
+                            if (lastError?.message) {
+                                if (remaining > 1) {
+                                    window.setTimeout(() => attempt(remaining - 1), BRIDGE_RETRY_DELAY_MS)
+                                    return
+                                }
+
+                                reject(new Error(lastError.message))
+                                return
+                            }
+
+                            resolve(response)
+                        })
+                    } catch (error) {
+                        if (settled) return
+                        settled = true
+                        window.clearTimeout(timeoutId)
+
+                        if (remaining > 1) {
+                            window.setTimeout(() => attempt(remaining - 1), BRIDGE_RETRY_DELAY_MS)
+                            return
+                        }
+
+                        reject(error instanceof Error ? error : new Error("BRIDGE_SEND_FAILED"))
+                    }
                 }
 
                 attempt(attempts)
             })
+        }
+
+        const createHashFallbackUrl = (baseNextUrl: string, payload: {
+            accessToken: string
+            refreshToken: string
+            theme: string
+            language: string
+            plan: "Free" | "Pro" | "Elite"
+            creditsRemaining: number
+            defaultEmojis: boolean
+            autoInsert: boolean
+            confirmBeforeApply: boolean
+        }) => {
+            return `${baseNextUrl}#access_token=${encodeURIComponent(payload.accessToken)}&refresh_token=${encodeURIComponent(payload.refreshToken)}&theme=${encodeURIComponent(payload.theme)}&language=${encodeURIComponent(payload.language)}&plan=${encodeURIComponent(payload.plan)}&creditsRemaining=${encodeURIComponent(String(payload.creditsRemaining))}&defaultEmojis=${encodeURIComponent(String(payload.defaultEmojis))}&autoInsert=${encodeURIComponent(String(payload.autoInsert))}&confirmBeforeApply=${encodeURIComponent(String(payload.confirmBeforeApply))}`
+        }
+
+        const fallbackToHash = (url: string, reason: string) => {
+            console.warn("[extension-redirect] fallback_to_hash", reason)
+            if (cancelled) return
+
+            setFallbackUrl(url)
+            setStatus("No pudimos sincronizar por mensaje directo. Abriendo extensión...")
+
+            window.setTimeout(() => {
+                if (cancelled) return
+                window.location.href = url
+            }, 260)
+        }
+
+        const redirectToLogin = () => {
+            const loginUrl = new URL(ROUTES.auth.login, window.location.origin)
+            if (nextUrl) {
+                loginUrl.searchParams.set("next", nextUrl)
+            }
+            window.location.href = loginUrl.toString()
         }
 
         const proceedToExtension = async () => {
@@ -115,6 +189,16 @@ function RedirectContent() {
             const { data: { session } } = await supabase.auth.getSession()
 
             if (session?.access_token && session.user?.id) {
+                if (!session.refresh_token) {
+                    setStatus("No pudimos validar la sesión completa. Redirigiendo al login...")
+                    setIsError(true)
+                    window.setTimeout(() => {
+                        if (cancelled) return
+                        redirectToLogin()
+                    }, 1200)
+                    return
+                }
+
                 const browserWindow = window as WindowWithExtensionBridge
                 const userId = session.user.id
 
@@ -134,24 +218,37 @@ function RedirectContent() {
                         .maybeSingle()
                 ])
 
+                const theme = userSettings?.theme === "auto" ? "system" : userSettings?.theme || "light"
+                const language = userSettings?.language || "es"
+                const plan = (account?.plan || "Free") as "Free" | "Pro" | "Elite"
+                const creditsRemaining = account?.credits_remaining || 0
+                const renewalDate = account?.renewal_date || undefined
+                const defaultEmojis = typeof userSettings?.default_emojis === "boolean" ? userSettings.default_emojis : true
+                const autoInsert = typeof userSettings?.auto_insert === "boolean" ? userSettings.auto_insert : false
+                const confirmBeforeApply = typeof userSettings?.confirm_before_apply === "boolean"
+                    ? userSettings.confirm_before_apply
+                    : false
+
+                const finalUrl = createHashFallbackUrl(nextUrl, {
+                    accessToken: session.access_token,
+                    refreshToken: session.refresh_token,
+                    theme,
+                    language,
+                    plan,
+                    creditsRemaining,
+                    defaultEmojis,
+                    autoInsert,
+                    confirmBeforeApply
+                })
+
                 if (browserWindow.chrome?.runtime?.sendMessage) {
                     try {
                         const runtime = browserWindow.chrome.runtime
-                        const theme = userSettings?.theme === "auto" ? "system" : userSettings?.theme || "light"
-                        const language = userSettings?.language || "es"
-                        const plan = (account?.plan || "Free") as "Free" | "Pro" | "Elite"
-                        const creditsRemaining = account?.credits_remaining || 0
-                        const renewalDate = account?.renewal_date || undefined
-                        const defaultEmojis = typeof userSettings?.default_emojis === "boolean" ? userSettings.default_emojis : true
-                        const autoInsert = typeof userSettings?.auto_insert === "boolean" ? userSettings.auto_insert : false
-                        const confirmBeforeApply = typeof userSettings?.confirm_before_apply === "boolean"
-                            ? userSettings.confirm_before_apply
-                            : false
 
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
-                            refreshToken: session.refresh_token || "",
+                            refreshToken: session.refresh_token,
                             openOptions: true,
                             theme,
                             language,
@@ -163,15 +260,15 @@ function RedirectContent() {
                             confirmBeforeApply
                         }
 
-                        const finalUrl = `${nextUrl}#access_token=${encodeURIComponent(session.access_token)}&refresh_token=${encodeURIComponent(session.refresh_token || "")}&theme=${encodeURIComponent(theme)}&language=${encodeURIComponent(language)}&plan=${encodeURIComponent(plan)}&creditsRemaining=${encodeURIComponent(String(creditsRemaining))}&defaultEmojis=${encodeURIComponent(String(defaultEmojis))}&autoInsert=${encodeURIComponent(String(autoInsert))}&confirmBeforeApply=${encodeURIComponent(String(confirmBeforeApply))}`
-
                         setStatus("Transfiriendo credenciales a la extensión...")
 
-                        const pingResponse = await sendWithRetry(runtime, extensionId, { type: "PING" }, 2)
-                        if (!pingResponse?.ok) {
-                            setManualExtensionUrl(finalUrl)
-                            setStatus("Autorización lista")
-                            return
+                        try {
+                            const pingResponse = await sendWithRetry(runtime, extensionId, { type: "PING" }, 1, BRIDGE_PING_TIMEOUT_MS)
+                            if (!pingResponse?.ok) {
+                                console.warn("[extension-redirect] ping_non_ok")
+                            }
+                        } catch (pingError) {
+                            console.warn("[extension-redirect] ping_failed", pingError)
                         }
 
                         const response = await sendWithRetry(runtime, extensionId, message)
@@ -179,35 +276,58 @@ function RedirectContent() {
                             setStatus("Sesión sincronizada correctamente.")
                             setIsSuccess(true)
                         } else {
-                            setManualExtensionUrl(finalUrl)
-                            setStatus("Autorización lista")
+                            fallbackToHash(finalUrl, "set_session_non_ok")
                         }
                     } catch (err) {
                         const { data: { session: latestSession } } = await supabase.auth.getSession()
-                        if (latestSession?.access_token) {
-                            const fallbackUrl = `${nextUrl}#access_token=${encodeURIComponent(latestSession.access_token)}&refresh_token=${encodeURIComponent(latestSession.refresh_token || "")}`
-                            setManualExtensionUrl(fallbackUrl)
-                            setStatus("Autorización lista")
+
+                        if (latestSession?.access_token && latestSession.refresh_token) {
+                            const fallbackUrl = createHashFallbackUrl(nextUrl, {
+                                accessToken: latestSession.access_token,
+                                refreshToken: latestSession.refresh_token,
+                                theme,
+                                language,
+                                plan,
+                                creditsRemaining,
+                                defaultEmojis,
+                                autoInsert,
+                                confirmBeforeApply
+                            })
+                            fallbackToHash(fallbackUrl, err instanceof Error ? err.message : "set_session_exception")
                             return
                         }
 
-                        setStatus("No pudimos completar la sincronización en este intento.")
+                        setStatus("No pudimos completar la sincronización en este intento. Vuelve a iniciar sesión.")
                         setIsError(true)
                     }
                 } else {
-                    const fallbackUrl = `${nextUrl}#access_token=${encodeURIComponent(session.access_token)}&refresh_token=${encodeURIComponent(session.refresh_token || "")}`
-                    setManualExtensionUrl(fallbackUrl)
-                    setStatus("Autorización lista")
+                    const fallbackUrl = createHashFallbackUrl(nextUrl, {
+                        accessToken: session.access_token,
+                        refreshToken: session.refresh_token,
+                        theme,
+                        language,
+                        plan,
+                        creditsRemaining,
+                        defaultEmojis,
+                        autoInsert,
+                        confirmBeforeApply
+                    })
+                    fallbackToHash(fallbackUrl, "runtime_unavailable")
                 }
             } else {
                 setStatus("Sesión expirada. Redirigiendo al login...")
                 setTimeout(() => {
-                    window.location.href = `/auth/login?next=${encodeURIComponent(nextUrl)}`
+                    if (cancelled) return
+                    redirectToLogin()
                 }, 1500)
             }
         }
 
         void proceedToExtension()
+
+        return () => {
+            cancelled = true
+        }
     }, [nextUrl])
 
     return (
@@ -221,7 +341,7 @@ function RedirectContent() {
 
                 {/* Icon Container */}
                 <div className="mb-8 relative flex items-center justify-center">
-                    {(isSuccess || isManualFallback) ? (
+                    {isSuccess ? (
                         <div className="size-16 rounded-full bg-success-soft-bg dark:bg-success/10 border border-success-soft-border dark:border-success/20 text-success flex items-center justify-center animate-premium-fade shadow-premium-sm">
                             <ShieldCheck className="size-7" strokeWidth={2.5} />
                         </div>
@@ -243,7 +363,7 @@ function RedirectContent() {
                             {title}
                         </h1>
                         <p className="text-[14px] font-medium text-secondary-text">
-                            {isSuccess || isManualFallback ? helperText : status}
+                            {isSuccess || isFallbackActive ? helperText : status}
                         </p>
                     </div>
 
@@ -258,12 +378,12 @@ function RedirectContent() {
                                     Ir al Dashboard
                                 </button>
                             </div>
-                        ) : isManualFallback ? (
+                        ) : isFallbackActive ? (
                             <div className="w-full animate-premium-fade">
                                 <button
                                     onClick={() => {
-                                        if (manualExtensionUrl) {
-                                            window.location.href = manualExtensionUrl
+                                        if (fallbackUrl) {
+                                            window.location.href = fallbackUrl
                                         }
                                     }}
                                     className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-premium-sm flex items-center justify-center focus:outline-none"
