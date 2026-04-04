@@ -7,10 +7,9 @@ import { useSearchParams } from "next/navigation"
 import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
 import Image from "next/image"
 
-const BRIDGE_TIMEOUT_MS = 7000
-const BRIDGE_RETRY_DELAY_MS = 320
-const BRIDGE_ATTEMPTS = 1
-const BRIDGE_PING_TIMEOUT_MS = 1800
+const BRIDGE_TIMEOUT_MS = 800
+const BRIDGE_RETRY_DELAY_MS = 50
+const BRIDGE_ATTEMPTS = 2
 
 type ExtensionSyncResponse = {
     ok?: boolean
@@ -21,21 +20,9 @@ type ExtensionSetSessionMessage = {
     token: string
     refreshToken: string
     openOptions: boolean
-    theme: string
-    language: string
-    plan: "Free" | "Pro" | "Elite"
-    creditsRemaining: number
-    renewalDate?: string
-    defaultEmojis: boolean
-    autoInsert: boolean
-    confirmBeforeApply: boolean
 }
 
-type ExtensionPingMessage = {
-    type: "PING"
-}
-
-type ExtensionBridgeMessage = ExtensionSetSessionMessage | ExtensionPingMessage
+type ExtensionBridgeMessage = ExtensionSetSessionMessage
 
 type ExtensionRuntimeBridge = {
     lastError?: {
@@ -145,15 +132,8 @@ function RedirectContent() {
         const createHashFallbackUrl = (baseNextUrl: string, payload: {
             accessToken: string
             refreshToken: string
-            theme: string
-            language: string
-            plan: "Free" | "Pro" | "Elite"
-            creditsRemaining: number
-            defaultEmojis: boolean
-            autoInsert: boolean
-            confirmBeforeApply: boolean
         }) => {
-            return `${baseNextUrl}#access_token=${encodeURIComponent(payload.accessToken)}&refresh_token=${encodeURIComponent(payload.refreshToken)}&theme=${encodeURIComponent(payload.theme)}&language=${encodeURIComponent(payload.language)}&plan=${encodeURIComponent(payload.plan)}&creditsRemaining=${encodeURIComponent(String(payload.creditsRemaining))}&defaultEmojis=${encodeURIComponent(String(payload.defaultEmojis))}&autoInsert=${encodeURIComponent(String(payload.autoInsert))}&confirmBeforeApply=${encodeURIComponent(String(payload.confirmBeforeApply))}`
+            return `${baseNextUrl}#access_token=${encodeURIComponent(payload.accessToken)}&refresh_token=${encodeURIComponent(payload.refreshToken)}`
         }
 
         const fallbackToHash = (url: string, reason: string) => {
@@ -163,10 +143,7 @@ function RedirectContent() {
             setFallbackUrl(url)
             setStatus("No pudimos sincronizar por mensaje directo. Abriendo extensión...")
 
-            window.setTimeout(() => {
-                if (cancelled) return
-                window.location.href = url
-            }, 260)
+            window.location.href = url
         }
 
         const redirectToLogin = () => {
@@ -200,45 +177,10 @@ function RedirectContent() {
                 }
 
                 const browserWindow = window as WindowWithExtensionBridge
-                const userId = session.user.id
-
-                const [
-                    { data: userSettings },
-                    { data: account }
-                ] = await Promise.all([
-                    supabase
-                        .from("user_settings")
-                        .select("theme, language, default_emojis, auto_insert, confirm_before_apply")
-                        .eq("user_id", userId)
-                        .maybeSingle(),
-                    supabase
-                        .from("user_account")
-                        .select("plan, credits_remaining, renewal_date")
-                        .eq("user_id", userId)
-                        .maybeSingle()
-                ])
-
-                const theme = userSettings?.theme === "auto" ? "system" : userSettings?.theme || "light"
-                const language = userSettings?.language || "es"
-                const plan = (account?.plan || "Free") as "Free" | "Pro" | "Elite"
-                const creditsRemaining = account?.credits_remaining || 0
-                const renewalDate = account?.renewal_date || undefined
-                const defaultEmojis = typeof userSettings?.default_emojis === "boolean" ? userSettings.default_emojis : true
-                const autoInsert = typeof userSettings?.auto_insert === "boolean" ? userSettings.auto_insert : false
-                const confirmBeforeApply = typeof userSettings?.confirm_before_apply === "boolean"
-                    ? userSettings.confirm_before_apply
-                    : false
 
                 const finalUrl = createHashFallbackUrl(nextUrl, {
                     accessToken: session.access_token,
-                    refreshToken: session.refresh_token,
-                    theme,
-                    language,
-                    plan,
-                    creditsRemaining,
-                    defaultEmojis,
-                    autoInsert,
-                    confirmBeforeApply
+                    refreshToken: session.refresh_token
                 })
 
                 if (browserWindow.chrome?.runtime?.sendMessage) {
@@ -249,27 +191,10 @@ function RedirectContent() {
                             type: "SET_SESSION",
                             token: session.access_token,
                             refreshToken: session.refresh_token,
-                            openOptions: true,
-                            theme,
-                            language,
-                            plan,
-                            creditsRemaining,
-                            renewalDate,
-                            defaultEmojis,
-                            autoInsert,
-                            confirmBeforeApply
+                            openOptions: true
                         }
 
                         setStatus("Transfiriendo credenciales a la extensión...")
-
-                        try {
-                            const pingResponse = await sendWithRetry(runtime, extensionId, { type: "PING" }, 1, BRIDGE_PING_TIMEOUT_MS)
-                            if (!pingResponse?.ok) {
-                                console.warn("[extension-redirect] ping_non_ok")
-                            }
-                        } catch (pingError) {
-                            console.warn("[extension-redirect] ping_failed", pingError)
-                        }
 
                         const response = await sendWithRetry(runtime, extensionId, message)
                         if (response?.ok) {
@@ -279,38 +204,12 @@ function RedirectContent() {
                             fallbackToHash(finalUrl, "set_session_non_ok")
                         }
                     } catch (err) {
-                        const { data: { session: latestSession } } = await supabase.auth.getSession()
-
-                        if (latestSession?.access_token && latestSession.refresh_token) {
-                            const fallbackUrl = createHashFallbackUrl(nextUrl, {
-                                accessToken: latestSession.access_token,
-                                refreshToken: latestSession.refresh_token,
-                                theme,
-                                language,
-                                plan,
-                                creditsRemaining,
-                                defaultEmojis,
-                                autoInsert,
-                                confirmBeforeApply
-                            })
-                            fallbackToHash(fallbackUrl, err instanceof Error ? err.message : "set_session_exception")
-                            return
-                        }
-
-                        setStatus("No pudimos completar la sincronización en este intento. Vuelve a iniciar sesión.")
-                        setIsError(true)
+                        fallbackToHash(finalUrl, err instanceof Error ? err.message : "set_session_exception")
                     }
                 } else {
                     const fallbackUrl = createHashFallbackUrl(nextUrl, {
                         accessToken: session.access_token,
-                        refreshToken: session.refresh_token,
-                        theme,
-                        language,
-                        plan,
-                        creditsRemaining,
-                        defaultEmojis,
-                        autoInsert,
-                        confirmBeforeApply
+                        refreshToken: session.refresh_token
                     })
                     fallbackToHash(fallbackUrl, "runtime_unavailable")
                 }
@@ -337,7 +236,7 @@ function RedirectContent() {
             <div className="absolute top-0 inset-x-0 h-64 bg-linear-to-b from-primary-light/5 dark:from-white/5 to-transparent pointer-events-none" />
 
             {/* Main Box */}
-            <div className="w-full max-w-100 flex flex-col items-center text-center bg-surface-base dark:bg-[#0a0a0a] border border-border-soft dark:border-white/10 rounded-4xl p-10 shadow-premium-md relative z-10">
+            <div className="w-full max-w-100 flex flex-col items-center text-center bg-surface-elevated border border-border-soft rounded-4xl p-10 shadow-premium-md relative z-10 transition-all duration-300">
 
                 {/* Icon Container */}
                 <div className="mb-8 relative flex items-center justify-center">
@@ -346,12 +245,12 @@ function RedirectContent() {
                             <ShieldCheck className="size-7" strokeWidth={2.5} />
                         </div>
                     ) : isError ? (
-                        <div className="size-16 rounded-full bg-danger-soft-bg dark:bg-danger/10 border border-danger-soft-border dark:border-danger/20 text-danger flex items-center justify-center animate-premium-fade shadow-premium-sm">
+                        <div className="size-16 rounded-full bg-danger-soft-bg border border-danger-soft-border text-danger flex items-center justify-center animate-premium-fade shadow-premium-sm transition-colors duration-300">
                             <AlertCircle className="size-7" strokeWidth={2.5} />
                         </div>
                     ) : (
-                        <div className="size-16 rounded-full bg-surface-elevated border border-border-soft dark:border-white/10 text-primary-text flex items-center justify-center shadow-premium-sm">
-                            <Loader2 className="size-6 text-primary-dark dark:text-white animate-spin opacity-80" strokeWidth={2.5} />
+                        <div className="size-16 rounded-full bg-surface-subtle border border-border-soft text-primary-text flex items-center justify-center shadow-premium-sm transition-colors duration-300">
+                            <Loader2 className="size-6 text-primary-dark animate-spin opacity-80" strokeWidth={2.5} />
                         </div>
                     )}
                 </div>
@@ -406,7 +305,7 @@ function RedirectContent() {
             </div>
 
             {/* Minimal Footer */}
-            <div className="absolute bottom-10 flex items-center justify-center opacity-40 gap-1.5 align-middle">
+            <div className="absolute bottom-10 flex items-center justify-center opacity-40 gap-1.5 align-middle select-none">
                 <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-dark leading-none -mb-0.5">Mirror</span>
                 <Image src="/icon.png" alt="Logo" width={14} height={14} priority />
             </div>

@@ -8,11 +8,14 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
 import { useAccount } from "@/features/billing/hooks/useAccount"
+import { usePlanDefinitions } from "@/features/billing/hooks/usePlanDefinitions"
 import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function PlansPage() {
     const { data: account, startCheckout, isMutating, isLoading, isError } = useAccount()
+    const { data: fetchedPlanDefinitions } = usePlanDefinitions()
+    const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading || !account)
 
@@ -41,7 +44,7 @@ export default function PlansPage() {
 
     const resolvedAccount = account!
 
-    const currentPlanDefinition = planDefinitions.find((plan) => plan.name === resolvedAccount.plan)
+    const currentPlanDefinition = resolvedPlanDefinitions.find((plan) => plan.name === resolvedAccount.plan)
     const monthlyUsagePercent = currentPlanDefinition
         ? Math.max(0, Math.min(100, Math.round((resolvedAccount.creditsRemaining / currentPlanDefinition.credits) * 100)))
         : 0
@@ -129,7 +132,7 @@ export default function PlansPage() {
                 </div>
 
                 <div className="grid gap-4 xl:grid-cols-3">
-                    {planDefinitions.map((plan) => (
+                    {resolvedPlanDefinitions.map((plan) => (
                         <PlanCard
                             key={plan.name}
                             plan={plan}

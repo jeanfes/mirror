@@ -5,6 +5,7 @@ import type {
   UserAccount,
   Invoice,
   PaymentMethod,
+  PlanQuotasRow,
   UserAccountRow,
   InvoiceRow,
 } from "@/types/database.types"
@@ -64,6 +65,105 @@ export const planDefinitions: PlanDefinition[] = [
     ],
   },
 ]
+
+const PLAN_PRICES: Record<PlanName, string> = {
+  Free: "$0",
+  Pro: "$19",
+  Elite: "$49",
+}
+
+const PLAN_ORDER: PlanName[] = ["Free", "Pro", "Elite"]
+
+function normalizePlanName(value: unknown): PlanName | null {
+  if (value === "Free" || value === "Pro" || value === "Elite") {
+    return value
+  }
+
+  return null
+}
+
+function formatProfilesFeature(maxProfiles: number) {
+  if (maxProfiles >= 999) {
+    return "Unlimited voice profiles"
+  }
+
+  return `${maxProfiles.toLocaleString()} voice profiles`
+}
+
+function formatHistoryRetentionFeature(days: number) {
+  if (days >= 3650) {
+    return "Unlimited history retention"
+  }
+
+  return `${days.toLocaleString()} days history retention`
+}
+
+function mapAllowedFeature(rawFeature: string): string {
+  return rawFeature
+    .split(/[\s_\-]+/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase())
+    .join(" ")
+}
+
+function buildPlanSummary(quota: PlanQuotasRow): string {
+  const profileText = quota.max_profiles >= 999
+    ? "unlimited profiles"
+    : `${quota.max_profiles.toLocaleString()} profiles`
+
+  return `${quota.monthly_generations.toLocaleString()} generations per month with ${profileText}.`
+}
+
+export async function getPlanDefinitions(
+  supabase: SupabaseClient
+): Promise<PlanDefinition[]> {
+  const { data, error } = await supabase
+    .from("plan_quotas")
+    .select("plan, monthly_generations, max_profiles, max_history_retention_days, features_allowed")
+
+  if (error) {
+    throw error
+  }
+
+  const quotas: PlanDefinition[] = []
+
+  for (const row of (data ?? []) as PlanQuotasRow[]) {
+    const normalizedPlan = normalizePlanName(row.plan)
+    if (!normalizedPlan) {
+      continue
+    }
+
+    const allowedFeatures = Array.isArray(row.features_allowed)
+      ? row.features_allowed.map(mapAllowedFeature)
+      : []
+
+    const features = [
+      `${row.monthly_generations.toLocaleString()} monthly generations`,
+      formatProfilesFeature(row.max_profiles),
+      formatHistoryRetentionFeature(row.max_history_retention_days),
+      ...allowedFeatures,
+    ]
+
+    quotas.push({
+      name: normalizedPlan,
+      price: PLAN_PRICES[normalizedPlan],
+      credits: row.monthly_generations,
+      summary: buildPlanSummary(row),
+      features: Array.from(new Set(features)),
+      recommended: normalizedPlan === "Pro",
+    })
+  }
+
+  if (quotas.length === 0) {
+    return planDefinitions
+  }
+
+  const orderedQuotas = PLAN_ORDER
+    .map((planName) => quotas.find((quota) => quota.name === planName))
+    .filter((plan): plan is PlanDefinition => plan !== undefined)
+
+  return orderedQuotas.length > 0 ? orderedQuotas : planDefinitions
+}
 
 export async function startCheckout(
   supabase: SupabaseClient,

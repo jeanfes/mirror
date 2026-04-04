@@ -11,6 +11,7 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { useAccount } from "@/features/billing/hooks/useAccount"
+import { usePlanDefinitions } from "@/features/billing/hooks/usePlanDefinitions"
 import { useBilling } from "@/features/billing/hooks/useBilling"
 import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useHistory } from "@/features/history/hooks/useHistory"
@@ -30,6 +31,8 @@ export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("overview")
 
   const { data: account, isLoading: isAccountLoading, isError } = useAccount()
+  const { data: fetchedPlanDefinitions } = usePlanDefinitions()
+  const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
 
   // ── True lazy loading — only fetch when the tab is actually open ─────────────
   const {
@@ -58,7 +61,7 @@ export default function AccountPage() {
     const generatedThisMonth = historyItems.filter(
       (i) => new Date(i.createdAt).getMonth() === currentMonth
     ).length
-    const currentPlan = planDefinitions.find((p) => p.name === account.plan)
+    const currentPlan = resolvedPlanDefinitions.find((p) => p.name === account.plan)
     const totalCredits = currentPlan?.credits ?? account.creditsRemaining
     const usedCredits = Math.max(totalCredits - account.creditsRemaining, 0)
     const creditUsage = totalCredits > 0 ? Math.min((usedCredits / totalCredits) * 100, 100) : 0
@@ -76,7 +79,7 @@ export default function AccountPage() {
       creditUsage,
       latestHistoryItem,
     }
-  }, [account, history, profiles])
+  }, [account, history, profiles, resolvedPlanDefinitions])
 
   if (showLoading) return <LoadingOverlay show={true} />
 

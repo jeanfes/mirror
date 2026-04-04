@@ -38,6 +38,10 @@ Next.js app for the Mirror product web experience.
 pnpm install
 ```
 
+2. Configure environment variables:
+
+Create `.env.local` from `.env.example` and set your Supabase project values.
+
 3. Start dev server:
 
 ```bash
