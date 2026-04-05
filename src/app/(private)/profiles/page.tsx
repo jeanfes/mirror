@@ -103,7 +103,6 @@ export default function ProfilesPage() {
 
     const list = profiles ?? []
     const activeProfiles = list.filter((profile) => profile.enabled).length
-    const emojiReadyProfiles = list.filter((profile) => profile.allowEmojis).length
 
     return (
         <div className="space-y-6">
@@ -148,20 +147,13 @@ export default function ProfilesPage() {
                             </Button>
                         </div>
 
-                        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                        <div className="mt-6">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">{t.app.profiles.activeNow}</p>
                                 <p className="mt-2 text-2xl font-black tracking-[-0.03em]">{activeProfiles}</p>
                             </div>
-                            <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">{t.app.profiles.emojiReady}</p>
-                                <p className="mt-2 text-2xl font-black tracking-[-0.03em]">{emojiReadyProfiles}</p>
-                            </div>
                         </div>
 
-                        <p className="mt-5 text-[13px] leading-6 text-white/68">
-                            {t.app.profiles.coverageDesc}
-                        </p>
                     </div>
                 </div>
             </section>

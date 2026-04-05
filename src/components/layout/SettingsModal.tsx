@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import {
   Bell,
   Download,
-  ExternalLink,
+  // ExternalLink,
   LogOut,
   Shield,
   Settings,
@@ -27,7 +27,7 @@ import {
 import { useLogout } from "@/features/auth/hooks/useLogout"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
-import { ROUTES } from "@/lib/routes"
+// import { ROUTES } from "@/lib/routes"
 import { createClient } from "@/lib/supabase/client"
 import {
   deleteAccount,
@@ -184,7 +184,7 @@ const SettingsModal = memo(function SettingsModal({
                   </div>
                 </div>
 
-                <TabsList className="flex-row sm:flex-col h-auto items-center sm:items-stretch justify-start rounded-none bg-transparent p-0 gap-2 sm:gap-1.5 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 border-0">
+                <TabsList className="h-full flex-row sm:flex-col items-center sm:items-stretch justify-start rounded-none bg-transparent p-0 gap-2 sm:gap-1.5 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 border-0">
                   <SettingsTabTrigger value="general" icon={<User className="h-4 w-4" />} label={t.app.settingsModal.tabGeneral} />
                   <SettingsTabTrigger value="appearance" icon={<Palette className="h-4 w-4" />} label={t.app.settingsModal.tabAppearance} />
                   <SettingsTabTrigger value="security" icon={<Shield className="h-4 w-4" />} label={t.app.settingsModal.tabSecurity} />
@@ -201,7 +201,7 @@ const SettingsModal = memo(function SettingsModal({
                       <LogOut className="h-4 w-4 stroke-[2.2]" />
                       <span>{isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.logOut}</span>
                     </Button>
-                    <p className="px-4 py-4 text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.4</p>
+                    <p className="pt-4 text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.0</p>
                   </div>
                 </TabsList>
               </aside>
@@ -276,12 +276,12 @@ const SettingsModal = memo(function SettingsModal({
 
           <footer className="flex h-14 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 shrink-0">
             <div className="flex gap-5">
-              <FooterLink href={ROUTES.public.faq} label={t.app.settingsModal.status} />
+              {/* <FooterLink href={ROUTES.public.faq} label={t.app.settingsModal.status} />
               <FooterLink href={ROUTES.public.features} label={t.app.settingsModal.docs} />
-              <FooterLink href={ROUTES.public.pricing} label={t.app.settingsModal.changelog} />
+              <FooterLink href={ROUTES.public.pricing} label={t.app.settingsModal.changelog} /> */}
             </div>
             <div className="flex items-center gap-2 opacity-50">
-              <span className="text-[10px] font-bold">{t.app.settingsModal.poweredBy} MIRROR</span>
+              <span className="text-[10px] font-bold">{t.app.settingsModal.poweredBy} STAR HOLDINGS</span>
             </div>
           </footer>
         </DialogContent>
@@ -325,10 +325,10 @@ const SettingsTabTrigger = ({ value, icon, label }: { value: string, icon: React
   </TabsTrigger>
 )
 
-const FooterLink = ({ href, label }: { href: string, label: string }) => (
-  <a href={href} className="settings-footer-link flex items-center gap-1">
-    {label} <ExternalLink className="h-2.5 w-2.5" />
-  </a>
-)
+// const FooterLink = ({ href, label }: { href: string, label: string }) => (
+//   <a href={href} className="settings-footer-link flex items-center gap-1">
+//     {label} <ExternalLink className="h-2.5 w-2.5" />
+//   </a>
+// )
 
 export default SettingsModal

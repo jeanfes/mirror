@@ -36,7 +36,7 @@ export function ProfileCard({
   onDelete,
 }: ProfileCardProps) {
   const t = useLanguageStore((state) => state.t)
-  
+
   return (
     <Card className="relative overflow-hidden rounded-[28px] border border-border-soft p-0 shadow-premium-md">
       <div
@@ -95,9 +95,6 @@ export function ProfileCard({
         <div className="mt-5 flex flex-wrap items-center gap-2">
           <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
             {profile.enabled ? t.app.profiles.enabled : t.app.profiles.disabled}
-          </span>
-          <span className="rounded-full border border-border-soft bg-surface-elevated px-2.5 py-1 text-[11px] font-semibold text-secondary-text">
-            {profile.allowEmojis ? t.app.profiles.emojiReady : t.app.profiles.noEmojis}
           </span>
           <span className="text-[12px] font-medium text-secondary-text">
             {t.app.profiles.updatedPrefix} {formatDistanceToNow(profile.updatedAt, { addSuffix: true })}

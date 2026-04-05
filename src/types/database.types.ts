@@ -100,6 +100,7 @@ export interface UserProfile {
 
 export interface UserSettings {
   language: "es" | "en" | "pt" | "fr" | "de"
+  commentLanguageMode: "post" | "account"
   theme: "light" | "dark" | "auto"
   defaultProfileId: string | null
   defaultEmojis: boolean

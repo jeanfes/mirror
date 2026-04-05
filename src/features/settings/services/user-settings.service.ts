@@ -3,6 +3,7 @@ import type { UserSettings } from "@/types/database.types"
 
 const defaultUserSettings: UserSettings = {
   language: "es",
+  commentLanguageMode: "account",
   theme: "auto",
   defaultProfileId: null,
   defaultEmojis: true,
@@ -20,6 +21,7 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const defaultEmojis = row.default_emojis
   const autoInsert = row.auto_insert
   const confirmBeforeApply = row.confirm_before_apply
+  const commentLanguageMode = row.comment_language_mode
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
   const onboardingCompleted = row.onboarding_completed
@@ -33,6 +35,10 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
       language === "de"
         ? language
         : defaultUserSettings.language,
+    commentLanguageMode:
+      commentLanguageMode === "post" || commentLanguageMode === "account"
+        ? commentLanguageMode
+        : defaultUserSettings.commentLanguageMode,
     theme:
       theme === "light" || theme === "dark" || theme === "auto"
         ? theme
@@ -91,6 +97,8 @@ export async function updateUserSettings(
   }
 
   if (input.language !== undefined) payload.language = input.language
+  if (input.commentLanguageMode !== undefined)
+    payload.comment_language_mode = input.commentLanguageMode
   if (input.theme !== undefined) payload.theme = input.theme
   if (input.defaultProfileId !== undefined)
     payload.default_profile_id = input.defaultProfileId

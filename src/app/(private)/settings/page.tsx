@@ -1,9 +1,8 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Globe, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
 import { Toggle } from "@/components/ui/Toggle"
@@ -16,8 +15,11 @@ import type { UserSettings } from "@/types/database.types"
 
 type UpdateUserSettingsInput = Omit<UserSettings, "theme">
 
+const AUTO_SAVE_DEBOUNCE_MS = 450
+
 const defaultDraft: UpdateUserSettingsInput = {
     language: "es",
+    commentLanguageMode: "account",
     defaultProfileId: null,
     defaultEmojis: true,
     autoInsert: false,
@@ -27,12 +29,52 @@ const defaultDraft: UpdateUserSettingsInput = {
     onboardingCompleted: false
 }
 
+function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettingsInput): boolean {
+    return (
+        left.language === right.language &&
+        left.commentLanguageMode === right.commentLanguageMode &&
+        left.defaultProfileId === right.defaultProfileId &&
+        left.defaultEmojis === right.defaultEmojis &&
+        left.autoInsert === right.autoInsert &&
+        left.confirmBeforeApply === right.confirmBeforeApply &&
+        left.desktopAlertsEnabled === right.desktopAlertsEnabled &&
+        left.notificationsEnabled === right.notificationsEnabled &&
+        left.onboardingCompleted === right.onboardingCompleted
+    )
+}
+
+function buildChangedPayload(
+    next: UpdateUserSettingsInput,
+    base: UpdateUserSettingsInput
+): Partial<UpdateUserSettingsInput> {
+    const payload: Partial<UpdateUserSettingsInput> = {}
+
+    if (next.language !== base.language) payload.language = next.language
+    if (next.commentLanguageMode !== base.commentLanguageMode)
+        payload.commentLanguageMode = next.commentLanguageMode
+    if (next.defaultProfileId !== base.defaultProfileId) payload.defaultProfileId = next.defaultProfileId
+    if (next.defaultEmojis !== base.defaultEmojis) payload.defaultEmojis = next.defaultEmojis
+    if (next.autoInsert !== base.autoInsert) payload.autoInsert = next.autoInsert
+    if (next.confirmBeforeApply !== base.confirmBeforeApply)
+        payload.confirmBeforeApply = next.confirmBeforeApply
+    if (next.desktopAlertsEnabled !== base.desktopAlertsEnabled)
+        payload.desktopAlertsEnabled = next.desktopAlertsEnabled
+    if (next.notificationsEnabled !== base.notificationsEnabled)
+        payload.notificationsEnabled = next.notificationsEnabled
+    if (next.onboardingCompleted !== base.onboardingCompleted)
+        payload.onboardingCompleted = next.onboardingCompleted
+
+    return payload
+}
+
 export default function SettingsPage() {
     const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
     const { data: profiles } = useProfiles()
     const { setLanguage: setAppLanguage, t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading)
     const [draft, setDraft] = useState<UpdateUserSettingsInput | null>(null)
+    const draftRef = useRef<UpdateUserSettingsInput | null>(null)
+    const saveTimeoutRef = useRef<number | null>(null)
 
     const resolvedSettings = useMemo<UpdateUserSettingsInput>(() => {
         if (draft) return draft
@@ -40,6 +82,7 @@ export default function SettingsPage() {
 
         return {
             language: settings.language,
+            commentLanguageMode: settings.commentLanguageMode,
             defaultProfileId: settings.defaultProfileId,
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
@@ -49,6 +92,24 @@ export default function SettingsPage() {
             onboardingCompleted: settings.onboardingCompleted
         }
     }, [draft, settings])
+
+    const baseSettings = useMemo<UpdateUserSettingsInput>(() => {
+        if (!settings) {
+            return defaultDraft
+        }
+
+        return {
+            language: settings.language,
+            commentLanguageMode: settings.commentLanguageMode,
+            defaultProfileId: settings.defaultProfileId,
+            defaultEmojis: settings.defaultEmojis,
+            autoInsert: settings.autoInsert,
+            confirmBeforeApply: settings.confirmBeforeApply,
+            desktopAlertsEnabled: settings.desktopAlertsEnabled,
+            notificationsEnabled: settings.notificationsEnabled,
+            onboardingCompleted: settings.onboardingCompleted
+        }
+    }, [settings])
 
     const updateDraft = <K extends keyof UpdateUserSettingsInput>(
         key: K,
@@ -69,16 +130,59 @@ export default function SettingsPage() {
         return [...baseOption, ...profileItems]
     }, [profiles, t])
 
-    const handleSave = async () => {
-        try {
-            const saved = await updateSettings(resolvedSettings)
-            setDraft(null)
-            setAppLanguage(saved.language as "es" | "en" | "pt" | "fr" | "de")
-            toast.success(t.app.settings.preferencesUpdated)
-        } catch {
-            toast.error(t.app.settings.preferencesError)
+    useEffect(() => {
+        draftRef.current = draft
+    }, [draft])
+
+    useEffect(() => {
+        if (!draft) {
+            return
         }
-    }
+
+        const initialPayload = buildChangedPayload(draft, baseSettings)
+        if (Object.keys(initialPayload).length === 0) {
+            return
+        }
+
+        if (saveTimeoutRef.current !== null) {
+            window.clearTimeout(saveTimeoutRef.current)
+        }
+
+        saveTimeoutRef.current = window.setTimeout(() => {
+            if (isMutating) {
+                return
+            }
+
+            const snapshot = draftRef.current
+            if (!snapshot) {
+                return
+            }
+
+            const payload = buildChangedPayload(snapshot, baseSettings)
+            if (Object.keys(payload).length === 0) {
+                return
+            }
+
+            void (async () => {
+                try {
+                    const saved = await updateSettings(payload)
+                    setAppLanguage(saved.language)
+                    setDraft((current) =>
+                        current && areSettingsEqual(current, snapshot) ? null : current
+                    )
+                } catch {
+                    toast.error(t.app.settings.preferencesError)
+                }
+            })()
+        }, AUTO_SAVE_DEBOUNCE_MS)
+
+        return () => {
+            if (saveTimeoutRef.current !== null) {
+                window.clearTimeout(saveTimeoutRef.current)
+                saveTimeoutRef.current = null
+            }
+        }
+    }, [baseSettings, draft, isMutating, setAppLanguage, t.app.settings.preferencesError, updateSettings])
 
     if (showLoading) {
         return <LoadingOverlay show={true} />
@@ -132,13 +236,12 @@ export default function SettingsPage() {
 
             <section className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_420px]">
                 <Card className="dashboard-card-xl">
-                    <div className="flex items-start justify-between gap-4">
+                    <div>
                         <div>
                             <p className="dashboard-overline">{t.app.settings.controlsLabel}</p>
                             <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.settings.behaviorQualityTitle}</h2>
                             <p className="mt-2 max-w-2xl body-muted">{t.app.settings.behaviorQualityDesc}</p>
                         </div>
-                        <Button type="button" onClick={handleSave} loading={isMutating}>{t.app.settings.savePreferences}</Button>
                     </div>
 
                     <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -164,28 +267,34 @@ export default function SettingsPage() {
                 </Card>
 
                 <Card className="dashboard-card-xl">
-                    <p className="dashboard-overline">{t.app.settings.defaultsLabel}</p>
-                    <h2 className="mt-3 section-heading">{t.app.settings.languageBaselineTitle}</h2>
-                    <p className="mt-2 body-muted">{t.app.settings.languageBaselineDesc}</p>
+                    <div>
+                        <div>
+                            <p className="dashboard-overline">{t.app.settings.defaultsLabel}</p>
+                            <h2 className="mt-3 section-heading">{t.app.settings.languageBaselineTitle}</h2>
+                            <p className="mt-2 body-muted">{t.app.settings.languageBaselineDesc}</p>
+                        </div>
+                    </div>
 
                     <div className="mt-5 space-y-4">
                         <Select
-                            value={resolvedSettings.language}
-                            onChange={(value) => updateDraft("language", value as UpdateUserSettingsInput["language"])}
-                            label={t.app.settings.languageLabel}
+                            value={resolvedSettings.commentLanguageMode}
+                            onChange={(value) =>
+                                updateDraft(
+                                    "commentLanguageMode",
+                                    value as UpdateUserSettingsInput["commentLanguageMode"]
+                                )
+                            }
+                            label={t.app.settings.commentLanguageModeLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={[
-                                { label: t.app.settings.labelEn, value: "en" },
-                                { label: t.app.settings.labelEs, value: "es" },
-                                { label: t.app.settings.labelPt, value: "pt" },
-                                { label: t.app.settings.labelFr, value: "fr" },
-                                { label: t.app.settings.labelDe, value: "de" }
+                                { label: t.app.settings.commentLanguageModePost, value: "post" },
+                                { label: t.app.settings.commentLanguageModeAccount, value: "account" }
                             ]}
                         />
 
                         <Select
                             value={resolvedSettings.defaultProfileId ?? ""}
-                            onChange={(value) => updateDraft("defaultProfileId", value)}
+                            onChange={(value) => updateDraft("defaultProfileId", value === "" ? null : value)}
                             label={t.app.settings.defaultProfileLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={profileOptions}
