@@ -6,6 +6,7 @@ function mapRowToHistoryItem(row: GenerationHistoryRow & { profileName?: string 
     id: row.id,
     profileId: row.profile_id,
     profileName: row.profileName,
+    syncFingerprint: row.sync_fingerprint ?? undefined,
     kind: row.kind,
     source: row.source,
     status: row.status,

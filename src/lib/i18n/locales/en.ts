@@ -510,6 +510,7 @@ const en = {
       statusAll: "All statuses",
       statusApplied: "Applied",
       statusPending: "Pending",
+      statusDismissed: "Dismissed",
       activeFilters: "Active filters",
       noFiltersActive: "No filters active"
     },

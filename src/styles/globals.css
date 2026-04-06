@@ -188,6 +188,8 @@ html[data-theme="dark"] {
 }
 
 html {
+  width: 100dvw;
+  height: 100dvh;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--secondary-text) 42%, transparent) transparent;

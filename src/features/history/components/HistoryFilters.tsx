@@ -9,13 +9,13 @@ import { Input } from "@/components/ui/Input"
 
 interface HistoryFiltersProps {
     profileValue: string
-    appliedValue: "all" | "applied" | "pending"
+    appliedValue: "all" | "applied" | "pending" | "dismissed"
     searchValue: string
     resultsCount: number
     totalCount: number
     profileOptions: Array<{ label: string; value: string }>
     onProfileChange: (value: string) => void
-    onAppliedChange: (value: "all" | "applied" | "pending") => void
+    onAppliedChange: (value: "all" | "applied" | "pending" | "dismissed") => void
     onSearchChange: (value: string) => void
     onReset: () => void
 }
@@ -38,6 +38,12 @@ export const HistoryFilters = memo(function HistoryFilters({
     const hasStatusFilter = appliedValue !== "all"
     const hasActiveFilters = hasSearch || hasProfileFilter || hasStatusFilter
     const t = useLanguageStore((state) => state.t)
+    const statusLabelMap: Record<HistoryFiltersProps["appliedValue"], string> = {
+        all: t.app.historyFilters.statusAll,
+        applied: t.app.historyFilters.statusApplied,
+        pending: t.app.historyFilters.statusPending,
+        dismissed: t.app.historyFilters.statusDismissed
+    }
 
     return (
         <div className="feature-glass-panel">
@@ -84,12 +90,13 @@ export const HistoryFilters = memo(function HistoryFilters({
 
                 <Select
                     value={appliedValue}
-                    onChange={(value) => onAppliedChange(value as "all" | "applied" | "pending")}
+                    onChange={(value) => onAppliedChange(value as "all" | "applied" | "pending" | "dismissed")}
                     label={t.app.historyFilters.statusLabel}
                     options={[
                         { label: t.app.historyFilters.statusAll, value: "all" },
                         { label: t.app.historyFilters.statusApplied, value: "applied" },
-                        { label: t.app.historyFilters.statusPending, value: "pending" }
+                        { label: t.app.historyFilters.statusPending, value: "pending" },
+                        { label: t.app.historyFilters.statusDismissed, value: "dismissed" }
                     ]}
                     className="rounded-2xl"
                     triggerClassName="h-12 rounded-2xl"
@@ -127,7 +134,7 @@ export const HistoryFilters = memo(function HistoryFilters({
                         onClick={() => onAppliedChange("all")}
                         className="feature-pill-sm"
                     >
-                        {t.app.historyFilters.statusLabel}: {appliedValue}
+                        {t.app.historyFilters.statusLabel}: {statusLabelMap[appliedValue]}
                         <X className="h-3.5 w-3.5" />
                     </button>
                 ) : null}

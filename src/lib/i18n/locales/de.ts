@@ -510,6 +510,7 @@ const de = {
       statusAll: "Alle",
       statusApplied: "Angewendet",
       statusPending: "Offen",
+      statusDismissed: "Verworfen",
       activeFilters: "Aktive Filter",
       noFiltersActive: "Keine Filter"
     },

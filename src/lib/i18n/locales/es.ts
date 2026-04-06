@@ -510,6 +510,7 @@ const es = {
       statusAll: "Todos los estados",
       statusApplied: "Aplicado",
       statusPending: "Pendiente",
+      statusDismissed: "Descartado",
       activeFilters: "Filtros activos",
       noFiltersActive: "No hay filtros activos"
     },

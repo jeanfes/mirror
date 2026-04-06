@@ -28,6 +28,18 @@ export function useHistory(
     filters?.search ?? "",
   ]
 
+  const resolveNextStatus = (status: GenerationHistory["status"] | undefined): "pending" | "applied" => {
+    if (status === "applied") {
+      return "pending"
+    }
+
+    if (status === "dismissed") {
+      return "pending"
+    }
+
+    return "applied"
+  }
+
   const query = useQuery({
     queryKey: historyKey,
     queryFn: () => listHistory(supabase, userId!, filters),
@@ -41,7 +53,7 @@ export function useHistory(
     mutationFn: async (id: string) => {
       const items = queryClient.getQueryData<GenerationHistory[]>(historyKey)
       const current = items?.find((h) => h.id === id)
-      const nextStatus = current?.status === "applied" ? "pending" : "applied"
+      const nextStatus = resolveNextStatus(current?.status)
       await updateHistoryStatus(supabase, userId!, id, nextStatus)
       return { id, nextStatus }
     },
@@ -51,7 +63,7 @@ export function useHistory(
       queryClient.setQueryData<GenerationHistory[]>(historyKey, (prev) =>
         (prev ?? []).map((h) =>
           h.id === id
-            ? { ...h, status: h.status === "applied" ? "pending" : "applied" }
+            ? { ...h, status: resolveNextStatus(h.status) }
             : h
         )
       )

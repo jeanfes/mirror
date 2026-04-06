@@ -14,7 +14,7 @@ import { useHistoryUIStore } from "@/store/useHistoryUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function HistoryPage() {
-    const { data: history, isLoading, isError, toggleHistoryApplied, reuseHistoryItem } = useHistory()
+    const { data: history, isLoading, isError, toggleHistoryApplied, reuseHistoryItem, moveToTrash } = useHistory()
     const { data: profiles } = useProfiles()
     const {
         selectedProfileId,
@@ -48,9 +48,7 @@ export default function HistoryPage() {
 
         return (history ?? []).filter((item) => {
             if (selectedProfileId !== "all" && item.profileId !== selectedProfileId) return false
-            const isApplied = item.status === "applied"
-            if (appliedFilter === "applied" && !isApplied) return false
-            if (appliedFilter === "pending" && isApplied) return false
+            if (appliedFilter !== "all" && item.status !== appliedFilter) return false
 
             if (!normalizedSearch) return true
 
@@ -69,7 +67,7 @@ export default function HistoryPage() {
         return {
             total: items.length,
             applied: items.filter((item) => item.status === "applied").length,
-            pending: items.filter((item) => item.status !== "applied").length,
+            pending: items.filter((item) => item.status === "pending").length,
             reused: items.filter((item) => item.source === "history_reuse").length
         }
     }, [history])
@@ -95,6 +93,15 @@ export default function HistoryPage() {
     const handleToggleApplied = async (id: string) => {
         try {
             await toggleHistoryApplied(id)
+            toast.success(t.app.common.historyUpdated || "History item updated")
+        } catch {
+            toast.error(t.app.common.historyUpdateError || "Could not update history item")
+        }
+    }
+
+    const handleMoveToTrash = async (id: string) => {
+        try {
+            await moveToTrash(id)
             toast.success(t.app.common.historyUpdated || "History item updated")
         } catch {
             toast.error(t.app.common.historyUpdateError || "Could not update history item")
@@ -209,7 +216,7 @@ export default function HistoryPage() {
                         <p className="body-muted">{t.app.history.recentOutputsDesc}</p>
                     </div>
                     <p className="text-[13px] font-medium text-secondary-text">
-                        {filteredHistory.length === 1 
+                        {filteredHistory.length === 1
                             ? t.app.history.resultsCount.replace("{0}", "1")
                             : t.app.history.resultsCountPlural.replace("{0}", filteredHistory.length.toString())}
                     </p>
@@ -234,6 +241,7 @@ export default function HistoryPage() {
                             onCopy={handleCopy}
                             onReuse={handleReuse}
                             onToggleApplied={handleToggleApplied}
+                            onMoveToTrash={handleMoveToTrash}
                         />
                     ))}
                 </div>

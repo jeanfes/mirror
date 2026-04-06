@@ -510,6 +510,7 @@ const pt = {
       statusAll: "Todos os status",
       statusApplied: "Aplicado",
       statusPending: "Pendente",
+      statusDismissed: "Descartado",
       activeFilters: "Filtros ativos",
       noFiltersActive: "Nenhum filtro ativo"
     },

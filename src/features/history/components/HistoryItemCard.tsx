@@ -1,7 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
-import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw } from "lucide-react"
+import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/Tooltip"
@@ -13,6 +13,7 @@ interface HistoryItemCardProps {
     onCopy: (comment: string) => void
     onReuse: (id: string) => void
     onToggleApplied: (id: string) => void
+    onMoveToTrash: (id: string) => void
 }
 
 const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
@@ -29,8 +30,14 @@ const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
     manual_edit: "Manual edit"
 }
 
-export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleApplied }: HistoryItemCardProps) {
+export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleApplied, onMoveToTrash }: HistoryItemCardProps) {
+    const statusMeta = item.status === "applied"
+        ? { label: "Applied", className: "badge-success" }
+        : item.status === "dismissed"
+            ? { label: "Dismissed", className: "badge-accent" }
+            : { label: "Pending", className: "badge-warning" }
     const isApplied = item.status === "applied"
+    const toggleLabel = isApplied || item.status === "dismissed" ? "Mark pending" : "Mark applied"
 
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
@@ -42,8 +49,8 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                             <span className="feature-pill">
                                 {profileName}
                             </span>
-                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${isApplied ? "badge-success" : "badge-warning"}`}>
-                                {isApplied ? "Applied" : "Pending"}
+                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusMeta.className}`}>
+                                {statusMeta.label}
                             </span>
                             {item.source ? (
                                 <span className="feature-pill">
@@ -98,7 +105,13 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
                         <Tooltip text="Toggle whether this comment was already used">
                             <Button type="button" onClick={() => onToggleApplied(item.id)}>
                                 <CheckCircle2 className="h-4 w-4" />
-                                {isApplied ? "Mark pending" : "Mark applied"}
+                                {toggleLabel}
+                            </Button>
+                        </Tooltip>
+                        <Tooltip text="Move this history item to trash">
+                            <Button type="button" variant="dangerSoft" onClick={() => onMoveToTrash(item.id)}>
+                                <Trash2 className="h-4 w-4" />
+                                Move to trash
                             </Button>
                         </Tooltip>
                     </div>

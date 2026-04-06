@@ -48,6 +48,7 @@ export interface GenerationHistoryRow {
   // - output_meta: Metadata about the generated text (token count, confidence scores, alternative count, etc.)
   input_context: Record<string, unknown> | null
   output_meta: Record<string, unknown> | null
+  sync_fingerprint: string | null
   created_at: string
   updated_at: string
   deleted_at: string | null
@@ -130,6 +131,7 @@ export interface GenerationHistory {
   id: string
   profileId: string | null
   profileName?: string 
+  syncFingerprint?: string
   kind: "comment" | "post" | "rewrite"
   source: "generated" | "alternative" | "manual_edit" | "history_reuse"
   status: "pending" | "applied" | "dismissed"
