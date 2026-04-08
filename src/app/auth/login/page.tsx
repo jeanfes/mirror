@@ -3,17 +3,20 @@ import { Suspense } from "react"
 import { getServerSession } from "@/lib/auth"
 import { LoginForm } from "@/features/auth/components/LoginForm"
 import { AuthHeader } from "@/features/auth/components/AuthHeader"
-import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
+import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES, normalizeExtensionNext, normalizeSafeInternalRoute } from "@/lib/routes"
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
     const user = await getServerSession()
     const { next } = await searchParams
 
     if (user) {
-        if (next?.startsWith("chrome-extension://")) {
-            redirect(`/auth/extension-redirect?next=${encodeURIComponent(next)}`)
+        const extensionNext = normalizeExtensionNext(next)
+        if (extensionNext) {
+            redirect(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(extensionNext)}`)
         }
-        redirect(DEFAULT_AUTHENTICATED_ROUTE)
+
+        const internalNext = normalizeSafeInternalRoute(next)
+        redirect(internalNext || DEFAULT_AUTHENTICATED_ROUTE)
     }
 
     return (

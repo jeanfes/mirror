@@ -2,14 +2,15 @@
 
 import { useEffect, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { ROUTES } from "@/lib/routes"
+import { ROUTES, normalizeExtensionNext } from "@/lib/routes"
 import { useSearchParams } from "next/navigation"
 import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
 import Image from "next/image"
 
-const BRIDGE_TIMEOUT_MS = 800
-const BRIDGE_RETRY_DELAY_MS = 50
-const BRIDGE_ATTEMPTS = 2
+const BRIDGE_TIMEOUT_MS = 2600
+const BRIDGE_RETRY_DELAY_MS = 150
+const BRIDGE_ATTEMPTS = 4
+const EXTENSION_ID_PATTERN = /^[a-p]{32}$/
 
 type ExtensionSyncResponse = {
     ok?: boolean
@@ -19,7 +20,6 @@ type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
     refreshToken: string
-    openOptions: boolean
 }
 
 type ExtensionBridgeMessage = ExtensionSetSessionMessage
@@ -41,31 +41,42 @@ type WindowWithExtensionBridge = Window & {
     }
 }
 
+function isValidExtensionSyncUrl(value: string | null | undefined): value is string {
+    if (!value) return false
+
+    let parsed: URL
+    try {
+        parsed = new URL(value)
+    } catch {
+        return false
+    }
+
+    if (parsed.protocol !== "chrome-extension:") return false
+    if (!EXTENSION_ID_PATTERN.test(parsed.hostname)) return false
+    if (parsed.pathname !== "/sync.html") return false
+    if (parsed.username || parsed.password || parsed.port) return false
+
+    return true
+}
+
 function RedirectContent() {
     const searchParams = useSearchParams()
-    const nextUrl = searchParams.get("next")
+    const nextUrl = normalizeExtensionNext(searchParams.get("next"))
     const [status, setStatus] = useState("Estableciendo conexión segura...")
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
-    const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
-
-    const isFallbackActive = !isSuccess && !isError && Boolean(fallbackUrl)
 
     const title = isSuccess
         ? "Sincronización completada"
         : isError
             ? "Error de conexión"
-            : isFallbackActive
-                ? "Abriendo extensión"
-                : "Conectando extensión"
+            : "Conectando extensión"
 
     const helperText = isSuccess
-        ? "La sesión quedó sincronizada con la extensión."
+        ? "La sesión quedó sincronizada con la extensión. Esta pestaña se cerrará automáticamente."
         : isError
             ? status
-            : isFallbackActive
-                ? "Si la redirección automática se bloquea, usa el botón para continuar."
-                : ""
+            : ""
 
     useEffect(() => {
         let cancelled = false
@@ -129,21 +140,12 @@ function RedirectContent() {
             })
         }
 
-        const createHashFallbackUrl = (baseNextUrl: string, payload: {
-            accessToken: string
-            refreshToken: string
-        }) => {
-            return `${baseNextUrl}#access_token=${encodeURIComponent(payload.accessToken)}&refresh_token=${encodeURIComponent(payload.refreshToken)}`
-        }
-
-        const fallbackToHash = (url: string, reason: string) => {
-            console.warn("[extension-redirect] fallback_to_hash", reason)
+        const markBridgeError = (reason: string) => {
+            console.warn("[extension-redirect] bridge_error", reason)
             if (cancelled) return
 
-            setFallbackUrl(url)
-            setStatus("No pudimos sincronizar por mensaje directo. Abriendo extensión...")
-
-            window.location.href = url
+            setStatus("No se pudo conectar con la extensión. Recarga la extensión e intenta de nuevo.")
+            setIsError(true)
         }
 
         const redirectToLogin = () => {
@@ -155,7 +157,7 @@ function RedirectContent() {
         }
 
         const proceedToExtension = async () => {
-            if (!nextUrl || !nextUrl.startsWith("chrome-extension://")) {
+            if (!isValidExtensionSyncUrl(nextUrl)) {
                 setStatus("Acceso inválido a la extensión.")
                 setIsError(true)
                 return
@@ -178,11 +180,6 @@ function RedirectContent() {
 
                 const browserWindow = window as WindowWithExtensionBridge
 
-                const finalUrl = createHashFallbackUrl(nextUrl, {
-                    accessToken: session.access_token,
-                    refreshToken: session.refresh_token
-                })
-
                 if (browserWindow.chrome?.runtime?.sendMessage) {
                     try {
                         const runtime = browserWindow.chrome.runtime
@@ -190,8 +187,7 @@ function RedirectContent() {
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
-                            refreshToken: session.refresh_token,
-                            openOptions: true
+                            refreshToken: session.refresh_token
                         }
 
                         setStatus("Transfiriendo credenciales a la extensión...")
@@ -200,18 +196,20 @@ function RedirectContent() {
                         if (response?.ok) {
                             setStatus("Sesión sincronizada correctamente.")
                             setIsSuccess(true)
+                            window.setTimeout(() => {
+                                if (cancelled) return
+                                try {
+                                    window.close()
+                                } catch { }
+                            }, 700)
                         } else {
-                            fallbackToHash(finalUrl, "set_session_non_ok")
+                            markBridgeError("set_session_non_ok")
                         }
                     } catch (err) {
-                        fallbackToHash(finalUrl, err instanceof Error ? err.message : "set_session_exception")
+                        markBridgeError(err instanceof Error ? err.message : "set_session_exception")
                     }
                 } else {
-                    const fallbackUrl = createHashFallbackUrl(nextUrl, {
-                        accessToken: session.access_token,
-                        refreshToken: session.refresh_token
-                    })
-                    fallbackToHash(fallbackUrl, "runtime_unavailable")
+                    markBridgeError("runtime_unavailable")
                 }
             } else {
                 setStatus("Sesión expirada. Redirigiendo al login...")
@@ -262,7 +260,7 @@ function RedirectContent() {
                             {title}
                         </h1>
                         <p className="text-[14px] font-medium text-secondary-text">
-                            {isSuccess || isFallbackActive ? helperText : status}
+                            {isSuccess ? helperText : status}
                         </p>
                     </div>
 
@@ -275,19 +273,6 @@ function RedirectContent() {
                                     className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-sm flex items-center justify-center focus:outline-none"
                                 >
                                     Ir al Dashboard
-                                </button>
-                            </div>
-                        ) : isFallbackActive ? (
-                            <div className="w-full animate-premium-fade">
-                                <button
-                                    onClick={() => {
-                                        if (fallbackUrl) {
-                                            window.location.href = fallbackUrl
-                                        }
-                                    }}
-                                    className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-premium-sm flex items-center justify-center focus:outline-none"
-                                >
-                                    Abrir extensión
                                 </button>
                             </div>
                         ) : isError ? (

@@ -1,13 +1,32 @@
 import { NextRequest, NextResponse } from "next/server"
-import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import {
+  DEFAULT_AUTHENTICATED_ROUTE,
+  ROUTES,
+  normalizeExtensionNext,
+  normalizeSafeInternalRoute
+} from "@/lib/routes"
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
 
-function sanitizeNextPath(value: string | null) {
-  if (!value) return DEFAULT_AUTHENTICATED_ROUTE
-  if (value.startsWith("chrome-extension://")) return value
-  if (!value.startsWith("/")) return DEFAULT_AUTHENTICATED_ROUTE
-  if (value.startsWith("//")) return DEFAULT_AUTHENTICATED_ROUTE
-  return value
+function isExtensionTarget(value: string) {
+  return value.startsWith("chrome-extension://")
+}
+
+function resolveNextTarget(request: NextRequest) {
+  const requestUrl = new URL(request.url)
+  const queryNext = requestUrl.searchParams.get("next")
+  const cookieNext = request.cookies.get("mirror_extension_sync")?.value ?? null
+
+  const extensionNext =
+    normalizeExtensionNext(queryNext) ??
+    normalizeExtensionNext(cookieNext)
+
+  if (extensionNext) return extensionNext
+
+  return (
+    normalizeSafeInternalRoute(queryNext) ??
+    normalizeSafeInternalRoute(cookieNext) ??
+    DEFAULT_AUTHENTICATED_ROUTE
+  )
 }
 
 function redirectToLoginWithError(request: NextRequest, errorCode: string, nextPath: string) {
@@ -25,12 +44,7 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
   const error = requestUrl.searchParams.get("error")
-  
-  let nextPath = requestUrl.searchParams.get("next")
-  if (!nextPath) {
-    nextPath = request.cookies.get("mirror_extension_sync")?.value || null
-  }
-  nextPath = sanitizeNextPath(nextPath)
+  const nextPath = resolveNextTarget(request)
 
   if (error) {
     return redirectToLoginWithError(request, "oauth_failed", nextPath)
@@ -47,7 +61,7 @@ export async function GET(request: NextRequest) {
 
       const user = session?.user
       const response = NextResponse.redirect(
-        nextPath.startsWith("chrome-extension://") 
+        isExtensionTarget(nextPath)
           ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
           : new URL(nextPath, request.url)
       )
@@ -79,5 +93,9 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(new URL(nextPath, request.url))
+  return NextResponse.redirect(
+    isExtensionTarget(nextPath)
+      ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
+      : new URL(nextPath, request.url)
+  )
 }
