@@ -3,10 +3,20 @@ import { getServerSession } from "@/lib/auth"
 import { RegisterForm } from "@/features/auth/components/RegisterForm"
 import { AuthHeader } from "@/features/auth/components/AuthHeader"
 import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
+import { sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 
-export default async function RegisterPage() {
+export default async function RegisterPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
     const user = await getServerSession()
-    if (user) redirect(DEFAULT_AUTHENTICATED_ROUTE)
+    const { next } = await searchParams
+    const sanitizedNext = sanitizeAuthNext(next ?? null)
+    const extensionNext = sanitizeExtensionNext(sanitizedNext)
+
+    if (user) {
+        if (extensionNext) {
+            redirect(`/auth/extension-redirect?next=${encodeURIComponent(extensionNext)}`)
+        }
+        redirect(sanitizedNext || DEFAULT_AUTHENTICATED_ROUTE)
+    }
 
     return (
         <div className="neo-panel relative z-20 w-full max-w-md rounded-3xl p-8 shadow-premium-md sm:p-10">

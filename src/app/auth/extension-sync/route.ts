@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
 import { ROUTES } from "@/lib/routes"
+import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 
 export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url)
-    const nextParam = requestUrl.searchParams.get("next")
+    const nextParam = sanitizeExtensionNext(requestUrl.searchParams.get("next"))
 
-    if (!nextParam || !nextParam.startsWith("chrome-extension://")) {
+    if (!nextParam) {
         return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
     }
 

@@ -4,6 +4,7 @@ import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
+import { sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { signUpWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { RegisterValues } from "../schemas"
@@ -15,6 +16,8 @@ export const useRegister = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const nextParam = searchParams.get("next")
+    const sanitizedNext = sanitizeAuthNext(nextParam)
+    const extensionNext = sanitizeExtensionNext(sanitizedNext)
     const registerSuccessMessage = useLanguageStore((state) => state.t.auth.registerSuccess)
 
     const register = useCallback(async (data: RegisterValues): Promise<RegisterError | null> => {
@@ -35,10 +38,10 @@ export const useRegister = () => {
             setIsNavigating(true)
             toast.success(registerSuccessMessage)
             
-            if (nextParam && nextParam.startsWith("chrome-extension://")) {
-                router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(nextParam)}`)
+            if (extensionNext) {
+                router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(extensionNext)}`)
             } else {
-                router.push(nextParam || DEFAULT_AUTHENTICATED_ROUTE)
+                router.push(sanitizedNext || DEFAULT_AUTHENTICATED_ROUTE)
             }
             
             router.refresh()
@@ -47,7 +50,7 @@ export const useRegister = () => {
             setIsPending(false)
             return "connection_error"
         }
-    }, [registerSuccessMessage, router, nextParam])
+    }, [registerSuccessMessage, router, sanitizedNext, extensionNext])
 
     return { register, isPending, isNavigating }
 }

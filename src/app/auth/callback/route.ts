@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
+import { isExtensionNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 
 function sanitizeNextPath(value: string | null) {
   if (!value) return DEFAULT_AUTHENTICATED_ROUTE
-  if (value.startsWith("chrome-extension://")) return value
+
+  const extensionNext = sanitizeExtensionNext(value)
+  if (extensionNext) return extensionNext
+
   if (!value.startsWith("/")) return DEFAULT_AUTHENTICATED_ROUTE
   if (value.startsWith("//")) return DEFAULT_AUTHENTICATED_ROUTE
   return value
@@ -47,7 +51,7 @@ export async function GET(request: NextRequest) {
 
       const user = session?.user
       const response = NextResponse.redirect(
-        nextPath.startsWith("chrome-extension://") 
+        isExtensionNext(nextPath)
           ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
           : new URL(nextPath, request.url)
       )

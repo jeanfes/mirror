@@ -4,16 +4,19 @@ import { getServerSession } from "@/lib/auth"
 import { LoginForm } from "@/features/auth/components/LoginForm"
 import { AuthHeader } from "@/features/auth/components/AuthHeader"
 import { DEFAULT_AUTHENTICATED_ROUTE } from "@/lib/routes"
+import { sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
     const user = await getServerSession()
     const { next } = await searchParams
+    const sanitizedNext = sanitizeAuthNext(next ?? null)
+    const extensionNext = sanitizeExtensionNext(sanitizedNext)
 
     if (user) {
-        if (next?.startsWith("chrome-extension://")) {
-            redirect(`/auth/extension-redirect?next=${encodeURIComponent(next)}`)
+        if (extensionNext) {
+            redirect(`/auth/extension-redirect?next=${encodeURIComponent(extensionNext)}`)
         }
-        redirect(DEFAULT_AUTHENTICATED_ROUTE)
+        redirect(sanitizedNext || DEFAULT_AUTHENTICATED_ROUTE)
     }
 
     return (

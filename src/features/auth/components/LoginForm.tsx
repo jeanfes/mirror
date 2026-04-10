@@ -2,10 +2,12 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { ROUTES } from "@/lib/routes"
+import { sanitizeAuthNext } from "@/lib/extension-handoff"
 import { Button } from "@/components/ui/Button"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { createLoginSchema, type LoginValues } from "../schemas"
@@ -16,6 +18,11 @@ import { IconGoogle } from "@/components/icons/IconGoogle"
 
 export function LoginForm() {
     const { t } = useLanguageStore()
+    const searchParams = useSearchParams()
+    const sanitizedNext = sanitizeAuthNext(searchParams.get("next"))
+    const registerHref = sanitizedNext
+        ? `${ROUTES.auth.register}?next=${encodeURIComponent(sanitizedNext)}`
+        : ROUTES.auth.register
     const schema = useMemo(() => createLoginSchema(t.auth.errors), [t.auth.errors])
     const { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating } = useLogin()
     const isAnyLocked = isPending || isPendingGoogle || isNavigating
@@ -117,7 +124,7 @@ export function LoginForm() {
 
                 <p className="text-center text-[14px] text-secondary-text pt-4">
                     {t.auth.noAccount}{" "}
-                    <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href={ROUTES.auth.register}>
+                    <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href={registerHref}>
                         {t.auth.registerLink}
                     </Link>
                 </p>

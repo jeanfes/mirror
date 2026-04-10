@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { ROUTES } from "@/lib/routes"
+import { sanitizeAuthNext } from "@/lib/extension-handoff"
 import { Button } from "@/components/ui/Button"
 import { LoadingOverlay } from "@/components/ui/Loading"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -36,6 +38,11 @@ const STRENGTH_STYLES: Record<1 | 2 | 3, { badge: string; fill: string; text: st
 
 export function RegisterForm() {
     const { t } = useLanguageStore()
+    const searchParams = useSearchParams()
+    const sanitizedNext = sanitizeAuthNext(searchParams.get("next"))
+    const loginHref = sanitizedNext
+        ? `${ROUTES.auth.login}?next=${encodeURIComponent(sanitizedNext)}`
+        : ROUTES.auth.login
     const schema = useMemo(() => createRegisterSchema(t.auth.errors), [t.auth.errors])
     const { register: registerUser, isPending, isNavigating } = useRegister()
     const { loginWithGoogle, isPendingGoogle } = useLogin()
@@ -198,7 +205,7 @@ export function RegisterForm() {
 
                 <p className="text-center text-[14px] text-secondary-text pt-4">
                     {t.auth.hasAccount}{" "}
-                    <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href={ROUTES.auth.login}>
+                    <Link className="font-semibold text-primary-dark hover:text-accent-blue transition-colors" href={loginHref}>
                         {t.auth.loginLink}
                     </Link>
                 </p>

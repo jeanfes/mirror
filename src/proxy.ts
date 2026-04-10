@@ -6,6 +6,7 @@ import {
   isAuthPath,
   isPrivatePath
 } from "@/lib/routes"
+import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { getSupabasePublicEnv } from "@/lib/supabase/env"
 
 export async function proxy(request: NextRequest) {
@@ -61,14 +62,15 @@ export async function proxy(request: NextRequest) {
   
   const pathname = request.nextUrl.pathname
   const nextParam = request.nextUrl.searchParams.get("next")
+  const extensionNext = sanitizeExtensionNext(nextParam)
 
   if (user && (pathname === ROUTES.public.index || isAuthPath(pathname))) {
     if (pathname === "/auth/extension-redirect" || pathname === "/auth/extension-sync") {
       return response
     }
-    if (nextParam?.startsWith("chrome-extension://")) {
+    if (extensionNext) {
       const redirectUrl = new URL(ROUTES.auth.login.replace("/login", "/extension-redirect"), request.url)
-      redirectUrl.searchParams.set("next", nextParam)
+      redirectUrl.searchParams.set("next", extensionNext)
       return NextResponse.redirect(redirectUrl)
     }
     return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
