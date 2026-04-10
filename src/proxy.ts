@@ -4,7 +4,8 @@ import {
   DEFAULT_AUTHENTICATED_ROUTE,
   ROUTES,
   isAuthPath,
-  isPrivatePath
+  isPrivatePath,
+  normalizeExtensionNext
 } from "@/lib/routes"
 import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { getSupabasePublicEnv } from "@/lib/supabase/env"

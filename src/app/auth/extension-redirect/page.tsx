@@ -30,7 +30,6 @@ type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
     refreshToken: string
-    openOptions: boolean
 }
 
 type ExtensionBridgeMessage = ExtensionSetSessionMessage
@@ -82,7 +81,7 @@ function getBridgeErrorMessage(reason: ExtensionSyncFailureReason) {
 
 function RedirectContent() {
     const searchParams = useSearchParams()
-    const nextUrl = searchParams.get("next")
+    const nextUrl = normalizeExtensionNext(searchParams.get("next"))
     const [status, setStatus] = useState("Estableciendo conexión segura...")
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -94,7 +93,7 @@ function RedirectContent() {
             : "Conectando extensión"
 
     const helperText = isSuccess
-        ? "La sesión quedó sincronizada con la extensión."
+        ? "La sesión quedó sincronizada con la extensión. Esta pestaña se cerrará automáticamente."
         : isError
             ? status
             : ""
@@ -207,8 +206,7 @@ function RedirectContent() {
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
-                            refreshToken: session.refresh_token,
-                            openOptions: true
+                            refreshToken: session.refresh_token
                         }
 
                         setStatus("Conectando tu sesión con la extensión...")
@@ -217,6 +215,12 @@ function RedirectContent() {
                         if (response?.ok) {
                             setStatus("Sesión conectada correctamente.")
                             setIsSuccess(true)
+                            window.setTimeout(() => {
+                                if (cancelled) return
+                                try {
+                                    window.close()
+                                } catch { }
+                            }, 700)
                         } else {
                             markBridgeFailure(response?.reason ?? "set_session_non_ok")
                         }
@@ -272,6 +276,7 @@ function RedirectContent() {
                             {title}
                         </h1>
                         <p className="text-[14px] font-medium text-secondary-text">
+                            {isSuccess ? helperText : status}
                             {isSuccess ? helperText : status}
                         </p>
                     </div>

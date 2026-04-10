@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const nextParam = sanitizeExtensionNext(requestUrl.searchParams.get("next"))
 
     if (!nextParam) {
+    if (!nextParam) {
         return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
     }
 
@@ -21,14 +22,10 @@ export async function GET(request: NextRequest) {
     }
 
     const loginUrl = new URL(ROUTES.auth.login, request.url)
-    if (nextParam) {
-        loginUrl.searchParams.set("next", nextParam)
-    }
+    loginUrl.searchParams.set("next", nextParam)
     
     const response = NextResponse.redirect(loginUrl)
-    if (nextParam) {
-        response.cookies.set("mirror_extension_sync", nextParam, { maxAge: 60 * 60, path: "/", sameSite: "lax" })
-    }
+    response.cookies.set("mirror_extension_sync", nextParam, { maxAge: 60 * 60, path: "/", sameSite: "lax" })
     
     return response
 }
