@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useMemo, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { ROUTES } from "@/lib/routes"
 import { parseExtensionNext } from "@/lib/extension-handoff"
@@ -81,7 +81,8 @@ function getBridgeErrorMessage(reason: ExtensionSyncFailureReason) {
 
 function RedirectContent() {
     const searchParams = useSearchParams()
-    const nextUrl = normalizeExtensionNext(searchParams.get("next"))
+    const parsedNext = useMemo(() => parseExtensionNext(searchParams.get("next")), [searchParams])
+    const nextUrl = parsedNext?.normalized ?? null
     const [status, setStatus] = useState("Estableciendo conexión segura...")
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -100,9 +101,8 @@ function RedirectContent() {
 
     const redirectToLogin = () => {
         const loginUrl = new URL(ROUTES.auth.login, window.location.origin)
-        const parsedNext = parseExtensionNext(nextUrl)
-        if (parsedNext) {
-            loginUrl.searchParams.set("next", parsedNext.normalized)
+        if (nextUrl) {
+            loginUrl.searchParams.set("next", nextUrl)
         }
 
         window.location.href = loginUrl.toString()
@@ -179,8 +179,7 @@ function RedirectContent() {
         }
 
         const proceedToExtension = async () => {
-            const parsedNext = parseExtensionNext(nextUrl)
-            if (!parsedNext) {
+            if (!parsedNext || !nextUrl) {
                 setStatus("El enlace de conexión no es válido. Vuelve a iniciar sesión desde la extensión.")
                 setIsError(true)
                 return
@@ -241,7 +240,7 @@ function RedirectContent() {
         return () => {
             cancelled = true
         }
-    }, [nextUrl])
+    }, [nextUrl, parsedNext])
 
     return (
         <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-bg-main p-6 overflow-hidden">
@@ -276,7 +275,6 @@ function RedirectContent() {
                             {title}
                         </h1>
                         <p className="text-[14px] font-medium text-secondary-text">
-                            {isSuccess ? helperText : status}
                             {isSuccess ? helperText : status}
                         </p>
                     </div>

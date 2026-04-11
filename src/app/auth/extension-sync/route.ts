@@ -8,7 +8,6 @@ export async function GET(request: NextRequest) {
     const nextParam = sanitizeExtensionNext(requestUrl.searchParams.get("next"))
 
     if (!nextParam) {
-    if (!nextParam) {
         return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
     }
 

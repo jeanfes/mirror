@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import {
   DEFAULT_AUTHENTICATED_ROUTE,
   ROUTES,
-  normalizeExtensionNext,
-  normalizeSafeInternalRoute
 } from "@/lib/routes"
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
-import { isExtensionNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
+import { isExtensionNext, sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 
 function sanitizeNextPath(value: string | null) {
   if (!value) return DEFAULT_AUTHENTICATED_ROUTE
@@ -17,6 +15,18 @@ function sanitizeNextPath(value: string | null) {
   if (!value.startsWith("/")) return DEFAULT_AUTHENTICATED_ROUTE
   if (value.startsWith("//")) return DEFAULT_AUTHENTICATED_ROUTE
   return value
+}
+
+function resolveNextTarget(request: NextRequest) {
+  const requestUrl = new URL(request.url)
+  const nextFromQuery = sanitizeNextPath(requestUrl.searchParams.get("next"))
+
+  if (nextFromQuery !== DEFAULT_AUTHENTICATED_ROUTE) {
+    return nextFromQuery
+  }
+
+  const nextFromCookie = sanitizeAuthNext(request.cookies.get("mirror_extension_sync")?.value ?? null)
+  return nextFromCookie ?? DEFAULT_AUTHENTICATED_ROUTE
 }
 
 function redirectToLoginWithError(request: NextRequest, errorCode: string, nextPath: string) {
@@ -84,7 +94,7 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(
-    isExtensionTarget(nextPath)
+    isExtensionNext(nextPath)
       ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
       : new URL(nextPath, request.url)
   )
