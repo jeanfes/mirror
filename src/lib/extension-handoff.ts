@@ -2,6 +2,31 @@ const EXTENSION_PROTOCOL = "chrome-extension:"
 const EXTENSION_ID_PATTERN = /^[a-p]{32}$/
 
 const ALLOWED_EXTENSION_PATHS = new Set(["/sync.html"])
+const ALLOWED_INTERNAL_PATH_PREFIXES = [
+  "/profiles",
+  "/history",
+  "/settings",
+  "/account",
+  "/plans",
+  "/trash",
+  "/landing",
+  "/features",
+  "/pricing",
+  "/faq",
+  "/contact",
+  "/terms",
+  "/privacy"
+]
+
+function isAllowedInternalPath(pathname: string): boolean {
+  if (pathname === "/") {
+    return true
+  }
+
+  return ALLOWED_INTERNAL_PATH_PREFIXES.some((prefix) => {
+    return pathname === prefix || pathname.startsWith(`${prefix}/`)
+  })
+}
 
 export interface ParsedExtensionNext {
   extensionId: string
@@ -74,7 +99,22 @@ export function sanitizeAuthNext(value: string | null): string | null {
     return null
   }
 
-  return candidate
+  let parsed: URL
+  try {
+    parsed = new URL(candidate, "http://mirror.local")
+  } catch {
+    return null
+  }
+
+  if (parsed.origin !== "http://mirror.local") {
+    return null
+  }
+
+  if (!isAllowedInternalPath(parsed.pathname)) {
+    return null
+  }
+
+  return `${parsed.pathname}${parsed.search}${parsed.hash}`
 }
 
 export function isExtensionNext(value: string | null): boolean {

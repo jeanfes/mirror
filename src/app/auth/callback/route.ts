@@ -4,25 +4,13 @@ import {
   ROUTES,
 } from "@/lib/routes"
 import { createClient as createSupabaseServerClient } from "@/lib/supabase/server"
-import { isExtensionNext, sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
-
-function sanitizeNextPath(value: string | null) {
-  if (!value) return DEFAULT_AUTHENTICATED_ROUTE
-
-  const extensionNext = sanitizeExtensionNext(value)
-  if (extensionNext) return extensionNext
-
-  if (!value.startsWith("/")) return DEFAULT_AUTHENTICATED_ROUTE
-  if (value.startsWith("//")) return DEFAULT_AUTHENTICATED_ROUTE
-  return value
-}
+import { isExtensionNext, sanitizeAuthNext } from "@/lib/extension-handoff"
 
 function resolveNextTarget(request: NextRequest) {
   const requestUrl = new URL(request.url)
-  const nextFromQuery = sanitizeNextPath(requestUrl.searchParams.get("next"))
-
-  if (nextFromQuery !== DEFAULT_AUTHENTICATED_ROUTE) {
-    return nextFromQuery
+  const queryNext = requestUrl.searchParams.get("next")
+  if (queryNext !== null) {
+    return sanitizeAuthNext(queryNext) ?? DEFAULT_AUTHENTICATED_ROUTE
   }
 
   const nextFromCookie = sanitizeAuthNext(request.cookies.get("mirror_extension_sync")?.value ?? null)

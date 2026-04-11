@@ -5,10 +5,15 @@ import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 
 export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url)
-    const nextParam = sanitizeExtensionNext(requestUrl.searchParams.get("next"))
+    const rawNextParam = requestUrl.searchParams.get("next")
+    const nextParam = sanitizeExtensionNext(rawNextParam)
 
     if (!nextParam) {
-        return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
+        const loginUrl = new URL(ROUTES.auth.login, request.url)
+        if (rawNextParam !== null) {
+            loginUrl.searchParams.set("error", "invalid_next")
+        }
+        return NextResponse.redirect(loginUrl)
     }
 
     const supabase = await createSupabaseServerClient()
@@ -24,7 +29,13 @@ export async function GET(request: NextRequest) {
     loginUrl.searchParams.set("next", nextParam)
     
     const response = NextResponse.redirect(loginUrl)
-    response.cookies.set("mirror_extension_sync", nextParam, { maxAge: 60 * 60, path: "/", sameSite: "lax" })
+    response.cookies.set("mirror_extension_sync", nextParam, {
+        maxAge: 60 * 60,
+        path: "/",
+        sameSite: "lax",
+        httpOnly: true,
+        secure: requestUrl.protocol === "https:"
+    })
     
     return response
 }
