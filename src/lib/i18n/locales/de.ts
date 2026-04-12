@@ -9,7 +9,7 @@ const de = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interagieren Sie auf LinkedIn",
+    title1: "Interagieren Sie auf professionellen Plattformen",
     title2: "mit",
     titleSpan: "Intelligenz",
     subtitle: "Generieren Sie relevante Kommentare, stiften Sie Mehrwert und verwalten Sie mehrere Profile mit Ihrem privaten KI-Assistenten. Direkt in Ihrem Browser.",
@@ -20,7 +20,7 @@ const de = {
     title: "Alles an einem Ort",
     subtitle: "Effizienz und Produktivität nur einen Klick entfernt. Steigern Sie Ihr Networking mit diesen Tools.",
     f1Title: "Intelligente Automatisierung",
-    f1Desc: "Erkennt automatisch Kommentarfelder auf LinkedIn und zeigt unseren schwebenden Launcher an, der bereit ist zu helfen.",
+    f1Desc: "Erkennt automatisch Antwortfelder auf kompatiblen Plattformen und zeigt unseren schwebenden Launcher an, der bereit ist zu helfen.",
     f2Title: "Mehrere Profile",
     f2Desc: "Konfigurieren Sie verschiedene Töne und Ziele (Networking, Debatte, Frage), damit die KI jedes Mal die perfekte Nachricht generiert.",
     f3Title: "Lokaler Datenschutz",
@@ -28,7 +28,7 @@ const de = {
   },
   cta: {
     title: "Transformieren Sie heute Ihr Networking.",
-    subtitle: "Starten Sie kostenlos und erleben Sie die Zukunft der professionellen Interaktionen auf LinkedIn. Sparen Sie jede Woche Stunden.",
+    subtitle: "Starten Sie kostenlos und erleben Sie die Zukunft professioneller Interaktionen auf kompatiblen Plattformen. Sparen Sie jede Woche Stunden.",
     button: "Kostenloses Konto erstellen"
   },
   pricing: {
@@ -66,7 +66,7 @@ const de = {
     ]
   },
   footer: {
-    description: "Ihr intelligenter Assistent für LinkedIn Networking.",
+    description: "Ihr intelligenter Assistent für professionelles Networking auf kompatiblen Plattformen.",
     product: "Produkt",
     contactTitle: "Kontakt",
     helpCenter: "Hilfe-Center",
@@ -149,8 +149,8 @@ const de = {
     contactSupport: "Support kontaktieren",
     questions: [
       {
-        q: "Ist Mirror sicher für mein LinkedIn-Konto?",
-        a: "Absolut. Mirror fragt nicht nach Ihren LinkedIn-Zugangsdaten..."
+        q: "Ist Mirror sicher für mein Konto auf kompatiblen Plattformen?",
+        a: "Absolut. Mirror fragt nicht nach Ihren Plattform-Zugangsdaten und nutzt keine riskante Bot-Automatisierung. Aktiver Support heute: LinkedIn. Progressiver Rollout: X (Twitter), Reddit, YouTube und Upwork."
       },
       {
         q: "Wo werden meine Daten gespeichert?",
@@ -191,7 +191,7 @@ const de = {
   featuresPage: {
     title1: "Maximale",
     titleSpan: "Automatisierung",
-    subtitle: "Entdecken Sie alle Mirror-Tools für Ihr LinkedIn-Networking.",
+    subtitle: "Entdecken Sie alle Mirror-Tools für Ihr professionelles Networking.",
     f1Title: "Dynamischer Floating Launcher",
     f1Desc: "Unsere Erweiterung injiziert einen eleganten Launcher...",
     f2Title: "Präzises Prompt Engineering",
@@ -205,7 +205,7 @@ const de = {
     title: "Wie funktioniert Mirror?",
     subtitle: "In 3 einfachen Schritten zum Erfolg",
     s1Title: "1. Erweiterung installieren",
-    s1Desc: "Fügen Sie Mirror zu Chrome hinzu. Keine LinkedIn-Passwörter nötig.",
+    s1Desc: "Fügen Sie Mirror zu Chrome hinzu. Keine Plattform-Passwörter nötig.",
     s2Title: "2. Profile erstellen",
     s2Desc: "Definieren Sie Ihren Ton. Analytisch, locker oder Experten-Modus?",
     s3Title: "3. Sofort kommentieren",

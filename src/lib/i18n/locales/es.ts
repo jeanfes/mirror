@@ -9,7 +9,7 @@ const es = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interactúa en LinkedIn",
+    title1: "Interactua en plataformas profesionales",
     title2: "con",
     titleSpan: "Inteligencia",
     subtitle: "Genera comentarios relevantes, aporta valor y gestiona múltiples perfiles con tu asistente privado impulsado por IA. Directamente en tu navegador.",
@@ -20,7 +20,7 @@ const es = {
     title: "Todo en un solo lugar",
     subtitle: "Eficiencia y productividad al alcance de un clic. Potencia tu networking con estas herramientas.",
     f1Title: "Smart Automation",
-    f1Desc: "Detecta automáticamente las cajas de comentarios en LinkedIn und muestra nuestro launcher flotante listos para asistir.",
+    f1Desc: "Detecta automaticamente cajas de respuesta en plataformas compatibles y muestra nuestro launcher flotante listo para asistir.",
     f2Title: "Múltiples Perfiles",
     f2Desc: "Configura distintos tonos y objetivos (Networking, Debatir, Pregunta) para que la IA genere el mensaje perfecto cada vez.",
     f3Title: "Privacidad Local",
@@ -28,7 +28,7 @@ const es = {
   },
   cta: {
     title: "Transforma tu manera de hacer networking hoy.",
-    subtitle: "Empieza gratis y experimenta el futuro de las interacciones profesionales en LinkedIn. Ahorra horas cada semana.",
+    subtitle: "Empieza gratis y experimenta el futuro de las interacciones profesionales en plataformas compatibles. Ahorra horas cada semana.",
     button: "Crear tu cuenta gratis"
   },
   pricing: {
@@ -66,7 +66,7 @@ const es = {
     ]
   },
   footer: {
-    description: "Tu asistente inteligente para dominar el networking en LinkedIn.",
+    description: "Tu asistente inteligente para dominar el networking profesional en plataformas compatibles.",
     product: "Producto",
     contactTitle: "Contacto",
     helpCenter: "Centro de Ayuda",
@@ -149,8 +149,8 @@ const es = {
     contactSupport: "Contactar Soporte",
     questions: [
       {
-        q: "¿Es Mirror seguro para mi cuenta de LinkedIn?",
-        a: "Absolutamente. Mirror no requiere las credenciales de tu cuenta de LinkedIn ni usa automatización 'robot' riesgosa..."
+        q: "¿Es Mirror seguro para mi cuenta en plataformas compatibles?",
+        a: "Absolutamente. Mirror no requiere credenciales de plataformas ni usa automatizacion tipo bot riesgosa. El soporte activo hoy es LinkedIn, con despliegue progresivo en X (Twitter), Reddit, YouTube y Upwork."
       },
       {
         q: "¿Dónde se guardan mis datos y borradores?",
@@ -191,9 +191,9 @@ const es = {
   featuresPage: {
     title1: "Automatización",
     titleSpan: "al máximo",
-    subtitle: "Descubre todas las herramientas incluidas en Mirror para llevar tu networking en LinkedIn a otro nivel sin comprometer tu privacidad ni tu tiempo.",
+    subtitle: "Descubre todas las herramientas incluidas en Mirror para llevar tu networking profesional a otro nivel sin comprometer tu privacidad ni tu tiempo.",
     f1Title: "Floating Launcher Dinámico",
-    f1Desc: "Nuestra extensión inyecta un launcher elegante justo debajo de la caja de comentarios en cualquier perfil de LinkedIn...",
+    f1Desc: "Nuestra extension inyecta un launcher elegante justo debajo de las cajas de respuesta en plataformas compatibles...",
     f2Title: "Prompt Engineering Preciso",
     f2Desc: "En el fondo de Mirror vive un motor de prompting contextual. Analiza sutilmente la publicación que estás comentando...",
     f3Title: "Múltiples Perfiles",
@@ -205,7 +205,7 @@ const es = {
     title: "¿Cómo funciona Mirror?",
     subtitle: "Impulsa tu networking en 3 simples pasos",
     s1Title: "1. Instala la Extensión",
-    s1Desc: "Añade Mirror a Chrome y ancla la extensión. No requiere contraseñas de LinkedIn.",
+    s1Desc: "Anade Mirror a Chrome y ancla la extension. No requiere contrasenas de plataformas.",
     s2Title: "2. Crea tus Perfiles",
     s2Desc: "Define tus perfiles. ¿Quieres sonar analítico, casual o como un experto interrumpiendo el debate?",
     s3Title: "3. Comenta al Instante",
@@ -464,7 +464,7 @@ const es = {
       heroTitle: "Configuracion",
       heroDesc: "Personaliza el comportamiento de la extensión y las preferencias de tu cuenta.",
       behaviorTitle: "Comportamiento",
-      behaviorDesc: "Ajusta cómo interactúa la IA con LinkedIn.",
+      behaviorDesc: "Ajusta como interactua la IA con plataformas compatibles.",
       languageProfileTitle: "Idioma y perfil",
       languageProfileDesc: "Valores predeterminados para tus generaciones.",
       securityTitle: "Seguridad y Contraseña",

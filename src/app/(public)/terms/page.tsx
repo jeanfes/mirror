@@ -33,7 +33,7 @@ export default async function TermsPage() {
       <section>
         <h2 className="text-2xl font-black tracking-tight text-primary-dark mb-4">ARTÍCULO 2 — OBJETO DEL CONTRATO</h2>
         <p>
-          Mirror presta un servicio de asistencia de escritura basado en inteligencia artificial que permite al Usuario crear perfiles de voz personalizados y generar, mediante dichos perfiles, comentarios y publicaciones para la red social LinkedIn. El Servicio no constituye, en ningún caso, una herramienta de automatización masiva, bot o sistema de publicación automática en LinkedIn.
+          Mirror presta un servicio de asistencia de escritura basado en inteligencia artificial que permite al Usuario crear perfiles de voz personalizados y generar, mediante dichos perfiles, respuestas, comentarios y publicaciones para plataformas profesionales compatibles. El Servicio no constituye, en ningún caso, una herramienta de automatización masiva, bot o sistema de publicación automática en dichas plataformas.
         </p>
       </section>
 

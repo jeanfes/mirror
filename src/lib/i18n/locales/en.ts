@@ -9,7 +9,7 @@ const en = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interact on LinkedIn",
+    title1: "Interact on professional platforms",
     title2: "with",
     titleSpan: "Intelligence",
     subtitle: "Generate relevant comments, add value, and manage multiple profiles with your private AI-powered assistant. Directly in your browser.",
@@ -20,7 +20,7 @@ const en = {
     title: "Everything in one place",
     subtitle: "Efficiency and productivity just a click away. Supercharge your networking with these tools.",
     f1Title: "Smart Automation",
-    f1Desc: "Automatically detects comment boxes on LinkedIn and displays our floating launcher ready to assist you.",
+    f1Desc: "Automatically detects response boxes on supported platforms and displays our floating launcher ready to assist you.",
     f2Title: "Multiple Profiles",
     f2Desc: "Set different tones and goals (Networking, Debate, Question) so the AI generates the perfect message every time.",
     f3Title: "Local Privacy",
@@ -28,7 +28,7 @@ const en = {
   },
   cta: {
     title: "Transform the way you network today.",
-    subtitle: "Start for free and experience the future of professional interactions on LinkedIn. Save hours every week.",
+    subtitle: "Start for free and experience the future of professional interactions across supported platforms. Save hours every week.",
     button: "Create your free account"
   },
   pricing: {
@@ -66,7 +66,7 @@ const en = {
     ]
   },
   footer: {
-    description: "Your smart assistant to master networking on LinkedIn.",
+    description: "Your smart assistant to master professional networking across supported platforms.",
     product: "Product",
     contactTitle: "Contact",
     helpCenter: "Help Center",
@@ -149,8 +149,8 @@ const en = {
     contactSupport: "Contact Support",
     questions: [
       {
-        q: "Is Mirror safe for my LinkedIn account?",
-        a: "Absolutely. Mirror does not require your LinkedIn credentials or use risky 'bot' automation..."
+        q: "Is Mirror safe for my account on supported platforms?",
+        a: "Absolutely. Mirror does not require platform credentials or use risky bot-style automation. Active support today is LinkedIn, with progressive rollout underway for X (Twitter), Reddit, YouTube, and Upwork."
       },
       {
         q: "Where are my data and drafts saved?",
@@ -191,9 +191,9 @@ const en = {
   featuresPage: {
     title1: "Maximum",
     titleSpan: "Automation",
-    subtitle: "Discover all the tools included in Mirror to take your LinkedIn networking to another level without compromising privacy or time.",
+    subtitle: "Discover all the tools included in Mirror to elevate your professional networking without compromising privacy or time.",
     f1Title: "Dynamic Floating Launcher",
-    f1Desc: "Our extension injects an elegant launcher right below the comment box on any LinkedIn profile...",
+    f1Desc: "Our extension injects an elegant launcher right below relevant response boxes on supported platforms...",
     f2Title: "Precise Prompt Engineering",
     f2Desc: "Deep down inside Mirror lives a contextual prompting engine. It subtly analyzes the post you're commenting on...",
     f3Title: "Multiple Profiles",
@@ -205,7 +205,7 @@ const en = {
     title: "How does Mirror work?",
     subtitle: "Boost your networking in 3 simple steps",
     s1Title: "1. Install the Extension",
-    s1Desc: "Add Mirror to Chrome and pin the extension. No LinkedIn passwords required.",
+    s1Desc: "Add Mirror to Chrome and pin the extension. No platform passwords required.",
     s2Title: "2. Create your Profiles",
     s2Desc: "Define your profiles. Want to sound analytical, casual, or like an expert entering the debate?",
     s3Title: "3. Comment Instantly",
@@ -464,7 +464,7 @@ const en = {
       heroTitle: "Settings",
       heroDesc: "Customize extension behavior and account preferences.",
       behaviorTitle: "Behavior",
-      behaviorDesc: "Adjust how the AI interacts with LinkedIn.",
+      behaviorDesc: "Adjust how the AI interacts with supported platforms.",
       languageProfileTitle: "Language and Profile",
       languageProfileDesc: "Default values for your generations.",
       securityTitle: "Security and Password",
@@ -517,7 +517,7 @@ const en = {
     profileForm: {
       refineVoice: "Refine this voice",
       createNewVoice: "Create a new voice",
-      voiceDesc: "Good profiles are specific enough to guide tone and flexible enough to work across different LinkedIn posts.",
+      voiceDesc: "Good profiles are specific enough to guide tone and flexible enough to work across different posts and discussions.",
       strongProfileTitle: "What makes a strong profile",
       strongProfileL1: "Choose one clear posture, not three mixed personalities.",
       strongProfileL2: "Use examples that sound publishable right away.",

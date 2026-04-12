@@ -9,7 +9,7 @@ const fr = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interagissez sur LinkedIn",
+    title1: "Interagissez sur des plateformes professionnelles",
     title2: "avec",
     titleSpan: "Intelligence",
     subtitle: "Générez des commentaires pertinents, apportez de la valeur et gérez plusieurs profils avec votre assistant privé propulsé par l'IA. Directement dans votre navigateur.",
@@ -20,7 +20,7 @@ const fr = {
     title: "Tout au même endroit",
     subtitle: "Efficacité et productivité à portée de clic. Boostez votre réseautage avec ces outils.",
     f1Title: "Automatisation Intelligente",
-    f1Desc: "Détecte automatiquement les zones de commentaires sur LinkedIn et affiche notre lanceur flottant prêt à vous aider.",
+    f1Desc: "Détecte automatiquement les zones de réponse sur les plateformes compatibles et affiche notre lanceur flottant prêt à vous aider.",
     f2Title: "Profils Multiples",
     f2Desc: "Configurez différents tons et objectifs (Networking, Débat, Question) pour que l'IA génère le message parfait à chaque fois.",
     f3Title: "Confidentialité Locale",
@@ -28,7 +28,7 @@ const fr = {
   },
   cta: {
     title: "Transformez votre façon de réseauter dès aujourd'hui.",
-    subtitle: "Commencez gratuitement et découvrez le futur des interactions professionnelles sur LinkedIn. Gagnez des heures chaque semaine.",
+    subtitle: "Commencez gratuitement et découvrez le futur des interactions professionnelles sur les plateformes compatibles. Gagnez des heures chaque semaine.",
     button: "Créer votre compte gratuit"
   },
   pricing: {
@@ -66,7 +66,7 @@ const fr = {
     ]
   },
   footer: {
-    description: "Votre assistant intelligent pour maîtriser le réseautage sur LinkedIn.",
+    description: "Votre assistant intelligent pour maîtriser le réseautage professionnel sur les plateformes compatibles.",
     product: "Produit",
     contactTitle: "Contact",
     helpCenter: "Centre d'Aide",
@@ -149,8 +149,8 @@ const fr = {
     contactSupport: "Contacter le Support",
     questions: [
       {
-        q: "Mirror est-il sûr pour mon compte LinkedIn ?",
-        a: "Absolument. Mirror ne requiert pas vos identifiants LinkedIn et n'utilise pas d'automatisation 'robot' risquée..."
+        q: "Mirror est-il sûr pour mon compte sur les plateformes compatibles ?",
+        a: "Absolument. Mirror ne requiert pas vos identifiants de plateforme et n'utilise pas d'automatisation type robot risquée. Le support actif aujourd'hui est LinkedIn, avec un déploiement progressif sur X (Twitter), Reddit, YouTube et Upwork."
       },
       {
         q: "Où sont sauvegardés mes données et mes brouillons ?",
@@ -191,9 +191,9 @@ const fr = {
   featuresPage: {
     title1: "Automatisation",
     titleSpan: "au maximum",
-    subtitle: "Découvrez tous les outils inclus dans Mirror pour porter votre réseautage LinkedIn à un autre niveau sans compromettre votre confidentialité ni votre temps.",
+    subtitle: "Découvrez tous les outils inclus dans Mirror pour porter votre réseautage professionnel à un autre niveau sans compromettre votre confidentialité ni votre temps.",
     f1Title: "Lanceur Flottant Dynamique",
-    f1Desc: "Notre extension injecte un lanceur élégant juste sous la zone de commentaire sur n'importe quel profil LinkedIn...",
+    f1Desc: "Notre extension injecte un lanceur élégant juste sous les zones de réponse sur les plateformes compatibles...",
     f2Title: "Prompt Engineering Précis",
     f2Desc: "Au cœur de Mirror vit un moteur de prompting contextuel. Il analyse subtilement la publication que vous commentez...",
     f3Title: "Profils Multiples",
@@ -205,7 +205,7 @@ const fr = {
     title: "Comment fonctionne Mirror ?",
     subtitle: "Boostez votre réseautage en 3 étapes simples",
     s1Title: "1. Installez l'Extension",
-    s1Desc: "Ajoutez Mirror à Chrome et épinglez l'extension. Aucun mot de passe LinkedIn requis.",
+    s1Desc: "Ajoutez Mirror à Chrome et épinglez l'extension. Aucun mot de passe de plateforme requis.",
     s2Title: "2. Créez vos Profils",
     s2Desc: "Définissez vos profils. Voulez-vous paraître analytique, décontracté ou comme un expert entrant dans le débat ?",
     s3Title: "3. Commentez Instantanément",
@@ -464,7 +464,7 @@ const fr = {
       heroTitle: "Paramètres",
       heroDesc: "Personnalisez le comportement de l'extension et vos préférences.",
       behaviorTitle: "Comportement",
-      behaviorDesc: "Ajustez l'interaction de l'IA avec LinkedIn.",
+      behaviorDesc: "Ajustez l'interaction de l'IA avec les plateformes compatibles.",
       languageProfileTitle: "Langue et profil",
       languageProfileDesc: "Valeurs par défaut pour vos générations.",
       securityTitle: "Sécurité et Mot de passe",

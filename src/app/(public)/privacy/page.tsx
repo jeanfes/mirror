@@ -48,7 +48,7 @@ export default async function PrivacyPage() {
           <h3 className="text-[14px] font-black uppercase tracking-wider text-accent-blue mb-3 italic">Lo que NO recopilamos</h3>
           <ul className="text-[14px] space-y-2 list-disc pl-5 mb-0 text-secondary-text font-medium italic">
             <li>Datos de tarjetas de crédito o CVV</li>
-            <li>Credenciales de acceso a LinkedIn</li>
+            <li>Credenciales de acceso a plataformas de terceros</li>
             <li>Contenido completo de tu perfil</li>
             <li>Historial de navegación externo</li>
           </ul>
