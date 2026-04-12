@@ -51,7 +51,7 @@ export const useLogin = () => {
                         .single()
                         
                     if (settings) {
-                        const themePreference = settings.theme === "auto" ? "system" : settings.theme
+                        const themePreference = settings.theme
 
                         if (themePreference) {
                             document.cookie = `mirror-theme-preference=${themePreference}; path=/; max-age=31536000; SameSite=Lax`

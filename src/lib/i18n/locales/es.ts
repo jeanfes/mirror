@@ -519,6 +519,8 @@ const es = {
       heroDesc: "Define tu objetivo base por plataforma y crea objetivos personalizados asignables según tu estrategia.",
       modeTitle: "Modo de generación",
       modeDesc: "Controla si Mirror recomienda objetivos automáticamente o si prefieres selección manual.",
+      extensionPanelHintTitle: "Cómo se muestra en la extensión",
+      extensionPanelHintDesc: "Al abrir la extensión, el panel mostrará los objetivos aplicables a la plataforma actual (base y personalizados activos). En modo auto verás también el objetivo detectado como sugerencia editable.",
       baseByPlatformTitle: "Base por plataforma",
       baseByPlatformDesc: "Cada plataforma tiene expectativas distintas. Mantén un objetivo base para cada una.",
       assignmentTitle: "Asignación personalizada",

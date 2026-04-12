@@ -12,6 +12,28 @@ const BRIDGE_TIMEOUT_MS = 1800
 const BRIDGE_RETRY_DELAY_MS = 50
 const BRIDGE_ATTEMPTS = 3
 
+type ExtensionTheme = "light" | "dark" | "system"
+type ExtensionLanguage = "es" | "en" | "pt" | "fr" | "de"
+type ExtensionCommentLanguageMode = "post" | "account"
+type ExtensionGoalMode = "manual" | "auto"
+type ExtensionGoalType = "Add Value" | "Challenge" | "Networking" | "Question"
+type ExtensionPlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
+type ExtensionObjectiveSource = "platform_base" | "user_custom" | "imported_pack"
+type ExtensionPlatformDefaultObjectiveIds = Record<ExtensionPlatformId, string | null>
+
+interface ExtensionObjectiveProfile {
+    id: string
+    name: string
+    canonicalGoal: ExtensionGoalType
+    description: string
+    strategyPrompt: string
+    scope: ExtensionPlatformId[]
+    source: ExtensionObjectiveSource
+    active: boolean
+    createdAt: number
+    updatedAt: number
+}
+
 type ExtensionSyncFailureReason =
     | "invalid_message"
     | "sender_not_allowed"
@@ -30,6 +52,20 @@ type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
     refreshToken: string
+    plan?: "Free" | "Pro" | "Elite"
+    creditsRemaining?: number
+    renewalDate?: string
+    theme?: ExtensionTheme
+    language?: ExtensionLanguage
+    commentLanguageMode?: ExtensionCommentLanguageMode
+    defaultProfileId?: string | null
+    defaultEmojis?: boolean
+    autoInsert?: boolean
+    confirmBeforeApply?: boolean
+    goalMode?: ExtensionGoalMode
+    goalModelVersion?: number
+    objectiveLibrary?: ExtensionObjectiveProfile[]
+    platformDefaultObjectiveIds?: Partial<ExtensionPlatformDefaultObjectiveIds>
 }
 
 type ExtensionBridgeMessage = ExtensionSetSessionMessage
@@ -77,6 +113,62 @@ function getBridgeErrorMessage(reason: ExtensionSyncFailureReason) {
     }
 
     return "No pudimos completar la sincronización con la extensión. Reintenta o vuelve a iniciar sesión."
+}
+
+function normalizeThemeForExtension(value: unknown): ExtensionTheme | undefined {
+    if (value === "light" || value === "dark" || value === "system") {
+        return value
+    }
+
+    if (value === "auto") {
+        return "system"
+    }
+
+    return undefined
+}
+
+function normalizeLanguage(value: unknown): ExtensionLanguage | undefined {
+    if (value === "es" || value === "en" || value === "pt" || value === "fr" || value === "de") {
+        return value
+    }
+
+    return undefined
+}
+
+function normalizeCommentLanguageMode(value: unknown): ExtensionCommentLanguageMode | undefined {
+    if (value === "post" || value === "account") {
+        return value
+    }
+
+    return undefined
+}
+
+function normalizeGoalMode(value: unknown): ExtensionGoalMode | undefined {
+    if (value === "manual" || value === "auto") {
+        return value
+    }
+
+    return undefined
+}
+
+function normalizePlan(value: unknown): "Free" | "Pro" | "Elite" | undefined {
+    if (value === "Free" || value === "Pro" || value === "Elite") {
+        return value
+    }
+
+    return undefined
+}
+
+function normalizeDefaultProfileId(value: unknown): string | null | undefined {
+    if (value === null) {
+        return null
+    }
+
+    if (typeof value === "string" && value.trim().length > 0) {
+        return value.trim()
+    }
+
+    return undefined
 }
 
 function RedirectContent() {
@@ -202,10 +294,74 @@ function RedirectContent() {
                     try {
                         const runtime = browserWindow.chrome.runtime
 
+                        const [settingsQuery, accountQuery] = await Promise.all([
+                            supabase
+                                .from("user_settings")
+                                .select("theme, language, comment_language_mode, default_profile_id, default_emojis, auto_insert, confirm_before_apply, goal_mode, goal_model_version, objective_library, platform_default_objective_ids")
+                                .eq("user_id", session.user.id)
+                                .maybeSingle(),
+                            supabase
+                                .from("user_account")
+                                .select("plan, credits_remaining, renewal_date")
+                                .eq("user_id", session.user.id)
+                                .maybeSingle()
+                        ])
+
+                        const settingsRow =
+                            settingsQuery.data && typeof settingsQuery.data === "object"
+                                ? (settingsQuery.data as Record<string, unknown>)
+                                : null
+
+                        const accountRow =
+                            accountQuery.data && typeof accountQuery.data === "object"
+                                ? (accountQuery.data as Record<string, unknown>)
+                                : null
+
+                        const objectiveLibrary = Array.isArray(settingsRow?.objective_library)
+                            ? (settingsRow.objective_library as ExtensionObjectiveProfile[])
+                            : undefined
+
+                        const platformDefaultObjectiveIds =
+                            settingsRow?.platform_default_objective_ids && typeof settingsRow.platform_default_objective_ids === "object"
+                                ? (settingsRow.platform_default_objective_ids as Partial<ExtensionPlatformDefaultObjectiveIds>)
+                                : undefined
+
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
-                            refreshToken: session.refresh_token
+                            refreshToken: session.refresh_token,
+                            plan: normalizePlan(accountRow?.plan),
+                            creditsRemaining:
+                                typeof accountRow?.credits_remaining === "number"
+                                    ? Math.max(0, accountRow.credits_remaining)
+                                    : undefined,
+                            renewalDate:
+                                typeof accountRow?.renewal_date === "string" && accountRow.renewal_date.trim().length > 0
+                                    ? accountRow.renewal_date
+                                    : undefined,
+                            theme: normalizeThemeForExtension(settingsRow?.theme),
+                            language: normalizeLanguage(settingsRow?.language),
+                            commentLanguageMode: normalizeCommentLanguageMode(settingsRow?.comment_language_mode),
+                            defaultProfileId: normalizeDefaultProfileId(settingsRow?.default_profile_id),
+                            defaultEmojis:
+                                typeof settingsRow?.default_emojis === "boolean"
+                                    ? settingsRow.default_emojis
+                                    : undefined,
+                            autoInsert:
+                                typeof settingsRow?.auto_insert === "boolean"
+                                    ? settingsRow.auto_insert
+                                    : undefined,
+                            confirmBeforeApply:
+                                typeof settingsRow?.confirm_before_apply === "boolean"
+                                    ? settingsRow.confirm_before_apply
+                                    : undefined,
+                            goalMode: normalizeGoalMode(settingsRow?.goal_mode),
+                            goalModelVersion:
+                                typeof settingsRow?.goal_model_version === "number"
+                                    ? Math.max(2, settingsRow.goal_model_version)
+                                    : undefined,
+                            objectiveLibrary,
+                            platformDefaultObjectiveIds
                         }
 
                         setStatus("Conectando tu sesión con la extensión...")

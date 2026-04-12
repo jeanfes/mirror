@@ -313,11 +313,11 @@ function normalizePlatformDefaultObjectiveIds(
   objectiveLibrary: ObjectiveProfile[]
 ): PlatformDefaultObjectiveIds {
   const normalized: PlatformDefaultObjectiveIds = {
-    linkedin: null,
-    twitter: null,
-    reddit: null,
-    youtube: null,
-    upwork: null
+    linkedin: "base-linkedin-authority",
+    twitter: "base-twitter-hot-take",
+    reddit: "base-reddit-question",
+    youtube: "base-youtube-insight",
+    upwork: "base-upwork-proposal"
   }
 
   const candidate =
@@ -353,7 +353,7 @@ const defaultPlatformDefaultObjectiveIds = normalizePlatformDefaultObjectiveIds(
 const defaultUserSettings: UserSettings = {
   language: "es",
   commentLanguageMode: "account",
-  theme: "auto",
+  theme: "system",
   defaultProfileId: null,
   defaultEmojis: true,
   autoInsert: false,
@@ -399,8 +399,8 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
         ? commentLanguageMode
         : defaultUserSettings.commentLanguageMode,
     theme:
-      theme === "light" || theme === "dark" || theme === "auto"
-        ? theme
+      theme === "light" || theme === "dark" || theme === "system" || theme === "auto"
+        ? theme === "auto" ? "system" : theme
         : defaultUserSettings.theme,
     defaultProfileId:
       typeof defaultProfileId === "string" ? defaultProfileId : null,

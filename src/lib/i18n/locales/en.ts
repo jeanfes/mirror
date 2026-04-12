@@ -519,6 +519,8 @@ const en = {
       heroDesc: "Pick the best default objective for each platform from curated strategy sets, then layer your custom objectives.",
       modeTitle: "Generation mode",
       modeDesc: "Control whether Mirror recommends objectives automatically or lets you pick manually.",
+      extensionPanelHintTitle: "How this appears in the extension",
+      extensionPanelHintDesc: "When opening the extension, the panel shows objectives that apply to the current platform (base and active custom). In auto mode, it also surfaces a detected objective as an editable suggestion.",
       baseByPlatformTitle: "Platform objective sets",
       baseByPlatformDesc: "Each platform works differently. Choose a default objective from its strategy set.",
       assignmentTitle: "Custom assignment",

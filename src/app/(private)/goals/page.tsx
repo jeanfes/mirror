@@ -22,11 +22,11 @@ import type {
 const PLATFORM_ORDER: PlatformId[] = ["linkedin", "upwork", "twitter", "reddit", "youtube"]
 
 const DEFAULT_PLATFORM_DEFAULT_OBJECTIVE_IDS: PlatformDefaultObjectiveIds = {
-    linkedin: null,
-    twitter: null,
-    reddit: null,
-    youtube: null,
-    upwork: null
+    linkedin: "base-linkedin-authority",
+    twitter: "base-twitter-hot-take",
+    reddit: "base-reddit-question",
+    youtube: "base-youtube-insight",
+    upwork: "base-upwork-proposal"
 }
 
 function isObjectiveApplicable(objective: ObjectiveProfile, platformId: PlatformId): boolean {
@@ -416,6 +416,15 @@ export default function GoalsPage() {
                                     )
                                 })}
                             </div>
+                        </div>
+
+                        <div className="rounded-2xl border border-accent-purple/20 bg-accent-purple/5 p-3.5">
+                            <p className="text-[12px] font-semibold text-primary-text">
+                                {t.app.goals.extensionPanelHintTitle}
+                            </p>
+                            <p className="mt-1 text-[12px] leading-6 text-secondary-text">
+                                {t.app.goals.extensionPanelHintDesc}
+                            </p>
                         </div>
                     </div>
                 </Card>

@@ -519,6 +519,8 @@ const de = {
       heroDesc: "Definieren Sie Basisziele pro Plattform und erstellen Sie benutzerdefinierte Ziele, die Sie je nach Strategie zuweisen können.",
       modeTitle: "Generierungsmodus",
       modeDesc: "Steuern Sie, ob Mirror Ziele automatisch empfiehlt oder ob Sie manuell auswählen.",
+      extensionPanelHintTitle: "So erscheint es in der Erweiterung",
+      extensionPanelHintDesc: "Beim Öffnen der Erweiterung zeigt das Panel die Ziele der aktuellen Plattform (Basis und aktive benutzerdefinierte Ziele). Im Auto-Modus wird zusätzlich ein erkanntes Ziel als bearbeitbare Empfehlung angezeigt.",
       baseByPlatformTitle: "Basis pro Plattform",
       baseByPlatformDesc: "Jede Plattform hat andere Erwartungen. Halten Sie ein Basisziel für jede Plattform fest.",
       assignmentTitle: "Benutzerdefinierte Zuordnung",

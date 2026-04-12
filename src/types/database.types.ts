@@ -122,7 +122,7 @@ export interface ObjectiveProfile {
 export interface UserSettings {
   language: "es" | "en" | "pt" | "fr" | "de"
   commentLanguageMode: "post" | "account"
-  theme: "light" | "dark" | "auto"
+  theme: "light" | "dark" | "system"
   defaultProfileId: string | null
   defaultEmojis: boolean
   autoInsert: boolean

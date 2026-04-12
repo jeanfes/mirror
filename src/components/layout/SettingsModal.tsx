@@ -88,7 +88,7 @@ const SettingsModal = memo(function SettingsModal({
     const prev = themeRef.current
     setThemePreference(nextPref)
     try {
-      await updateSettings({ theme: nextPref === "system" ? "auto" : nextPref })
+      await updateSettings({ theme: nextPref })
     } catch {
       setThemePreference(prev)
       toast.error(t.app.settingsModal.themeSaveError)

@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           .single()
 
         if (settings) {
-          const themePreference = settings.theme === "auto" ? "system" : settings.theme
+          const themePreference = settings.theme
 
           if (themePreference) {
             response.cookies.set("mirror-theme-preference", themePreference, { path: "/", maxAge: 31536000, sameSite: "lax" })
