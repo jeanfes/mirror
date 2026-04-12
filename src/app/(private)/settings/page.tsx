@@ -1,19 +1,33 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import Link from "next/link"
 import { Globe, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
 import { Toggle } from "@/components/ui/Toggle"
+import { Button } from "@/components/ui/Button"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { ROUTES } from "@/lib/routes"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { UserSettings } from "@/types/database.types"
 
-type UpdateUserSettingsInput = Omit<UserSettings, "theme">
+type UpdateUserSettingsInput = Pick<
+    UserSettings,
+    | "language"
+    | "commentLanguageMode"
+    | "defaultProfileId"
+    | "defaultEmojis"
+    | "autoInsert"
+    | "confirmBeforeApply"
+    | "desktopAlertsEnabled"
+    | "notificationsEnabled"
+    | "onboardingCompleted"
+>
 
 const AUTO_SAVE_DEBOUNCE_MS = 450
 
@@ -299,6 +313,20 @@ export default function SettingsPage() {
                             triggerClassName="h-11 rounded-2xl"
                             options={profileOptions}
                         />
+
+                        <div className="rounded-2xl border border-border-soft bg-surface-elevated p-3.5">
+                            <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">
+                                {t.app.goals.title}
+                            </p>
+                            <p className="mt-2 body-muted">{t.app.settings.goalsSettingsMoved}</p>
+                            <div className="mt-3">
+                                <Link href={ROUTES.private.goals}>
+                                    <Button className="h-9 rounded-xl px-4 text-[12px]">
+                                        {t.app.settings.manageGoalsCta}
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="mt-5 rounded-3xl border border-border-soft bg-surface-base p-4">

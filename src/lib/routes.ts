@@ -20,6 +20,7 @@ export const ROUTES = {
   private: {
     profiles: "/profiles",
     history: "/history",
+    goals: "/goals",
     settings: "/settings",
     account: "/account",
     plans: "/plans",
