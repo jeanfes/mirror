@@ -9,7 +9,7 @@ const pt = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interaja em plataformas profissionais",
+    title1: "Networking profissional",
     title2: "com",
     titleSpan: "Inteligência",
     subtitle: "Gere comentários relevantes, agregue valor e gerencie múltiplos perfis com seu assistente privado movido por IA. Diretamente no seu navegador.",
@@ -66,7 +66,7 @@ const pt = {
     ]
   },
   footer: {
-    description: "Seu assistente inteligente para dominar o networking profissional em plataformas compatíveis.",
+    description: "Seu assistente inteligente para dominar o networking profissional.",
     product: "Produto",
     contactTitle: "Contato",
     helpCenter: "Centro de Ajuda",
@@ -199,7 +199,7 @@ const pt = {
     f3Title: "Múltiplos Perfis",
     f3Desc: "Precisa soar corporativo um dia e mais casual no outro? O Mirror permite salvar Perfis com seus próprios tons...",
     f4Title: "Editor Preview e Rascunhos",
-    f4Desc: "A IA nunca comenta automaticamente. Toda mensagem passa por um painel de Preview onde você pode ajustá-la..."
+    f4Desc: "Revise e ajuste suas mensagens no painel de Preview antes de lançá-las ou ative a inserção automática."
   },
   howItWorks: {
     title: "Como o Mirror funciona?",

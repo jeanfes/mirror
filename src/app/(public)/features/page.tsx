@@ -6,7 +6,7 @@ export default async function FeaturesPage() {
     const { t } = await getDictionary();
 
     return (
-        <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden pt-10 pb-20">
+        <main className="relative flex flex-col items-center overflow-x-hidden pt-10 pb-20">
             <section className="w-full max-w-5xl px-6 pt-20 pb-16 text-center z-10">
                 <h1 className="text-5xl font-black tracking-tighter text-primary-dark sm:text-6xl md:text-[4.5rem] leading-[1.1] mb-6">
                     <span className="text-mirror pb-2 font-extrabold">{t.featuresPage.title1}</span> {t.featuresPage.titleSpan}

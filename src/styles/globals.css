@@ -188,8 +188,7 @@ html[data-theme="dark"] {
 }
 
 html {
-  width: 100dvw;
-  height: 100dvh;
+  min-height: 100%;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--secondary-text) 42%, transparent) transparent;
@@ -237,21 +236,17 @@ input[type="reset"]:disabled {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   color: var(--primary-text);
   font-family: var(--font-space-grotesk), "Segoe UI", sans-serif !important;
-  background: var(--shell-shared-bg);
-  transition: background-color 180ms ease, color 180ms ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-.shell-shared-bg {
   background: var(--shell-shared-bg);
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
+  transition: background-color 180ms ease, color 180ms ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 @keyframes shimmer-slide {

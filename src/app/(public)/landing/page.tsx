@@ -9,7 +9,7 @@ export default async function LandingPage() {
     const { t } = await getDictionary();
 
     return (
-        <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden pt-10">
+        <main className="relative flex flex-col items-center overflow-x-hidden pt-10">
             <HeroSection t={t} routes={ROUTES} />
             <HowItWorksSection t={t} />
             <FeaturesSection t={t} />

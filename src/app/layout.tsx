@@ -75,21 +75,21 @@ export default async function RootLayout({
         </Script>
       </head>
       <body
-        className={`${spaceGrotesk.className} font-sans bg-bg-main text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
+        className={`${spaceGrotesk.className} font-sans text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
       >
         <AppProviders
           initialThemePreference={initialThemePreference}
           initialResolvedTheme={initialResolvedTheme}
         >
           {children}
-          <Toaster 
-            position="top-right" 
+          <Toaster
+            position="top-right"
             closeButton={true}
             expand={false}
             visibleToasts={3}
             toastOptions={{
               className: 'sonner-toast-custom',
-            }} 
+            }}
           />
         </AppProviders>
         <SpeedInsights />

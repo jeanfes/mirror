@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     const isRedirectPage = pathname === ROUTES.auth.login.replace("/login", "/extension-redirect") || pathname === ROUTES.auth.callback;
 
     return (
-        <div className="dashboard-shell relative min-h-dvh w-full bg-bg-main overflow-hidden">
+        <div className="dashboard-shell relative min-h-dvh w-full overflow-hidden">
             {!isRedirectPage && (
                 <header className="absolute top-0 left-0 w-full p-6 z-100 pointer-events-none">
                     <div className="mx-auto flex max-w-6xl items-center justify-between">

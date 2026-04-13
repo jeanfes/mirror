@@ -9,7 +9,7 @@ const en = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interact on professional platforms",
+    title1: "Professional networking",
     title2: "with",
     titleSpan: "Intelligence",
     subtitle: "Generate relevant comments, add value, and manage multiple profiles with your private AI-powered assistant. Directly in your browser.",
@@ -66,7 +66,7 @@ const en = {
     ]
   },
   footer: {
-    description: "Your smart assistant to master professional networking across supported platforms.",
+    description: "Your smart assistant to master professional networking.",
     product: "Product",
     contactTitle: "Contact",
     helpCenter: "Help Center",
@@ -199,7 +199,7 @@ const en = {
     f3Title: "Multiple Profiles",
     f3Desc: "Need to sound corporate one day and more casual the next? Mirror lets you save Profiles with custom tones...",
     f4Title: "Preview Editor and Drafts",
-    f4Desc: "Our AI never comments automatically. Every message goes through a Preview panel where you can adjust it..."
+    f4Desc: "Review and adjust your messages in the Preview panel before launching them, or enable auto-insertion."
   },
   howItWorks: {
     title: "How does Mirror work?",

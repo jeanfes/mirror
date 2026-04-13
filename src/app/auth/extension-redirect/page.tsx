@@ -399,7 +399,7 @@ function RedirectContent() {
     }, [nextUrl, parsedNext])
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-bg-main p-6 overflow-hidden">
+        <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-6 overflow-hidden">
 
             {/* Background decorations for a subtle premium feel */}
             <div className="absolute top-0 inset-x-0 h-64 bg-linear-to-b from-primary-light/5 dark:from-white/5 to-transparent pointer-events-none" />
@@ -479,7 +479,7 @@ function RedirectContent() {
 export default function ExtensionRedirectPage() {
     return (
         <Suspense fallback={
-            <div className="flex min-h-screen w-full items-center justify-center bg-bg-main text-secondary-text text-[14px] font-medium">
+            <div className="flex min-h-screen w-full items-center justify-center text-secondary-text text-[14px] font-medium">
                 Cargando pasarela...
             </div>
         }>

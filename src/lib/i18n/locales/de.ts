@@ -9,7 +9,7 @@ const de = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interagieren Sie auf professionellen Plattformen",
+    title1: "Professionelles Networking",
     title2: "mit",
     titleSpan: "Intelligenz",
     subtitle: "Generieren Sie relevante Kommentare, stiften Sie Mehrwert und verwalten Sie mehrere Profile mit Ihrem privaten KI-Assistenten. Direkt in Ihrem Browser.",
@@ -66,7 +66,7 @@ const de = {
     ]
   },
   footer: {
-    description: "Ihr intelligenter Assistent für professionelles Networking auf kompatiblen Plattformen.",
+    description: "Ihr intelligenter Assistent für professionelles Networking.",
     product: "Produkt",
     contactTitle: "Kontakt",
     helpCenter: "Hilfe-Center",
@@ -199,7 +199,7 @@ const de = {
     f3Title: "Mehrere Profile",
     f3Desc: "Speichern Sie Profile mit eigenen Tönen...",
     f4Title: "Vorschau-Editor & Entwürfe",
-    f4Desc: "Die KI kommentiert nie automatisch. Jede Nachricht geht durch die Vorschau..."
+    f4Desc: "Überprüfen und passen Sie Ihre Nachrichten im Vorschau-Panel an, bevor Sie sie senden, oder aktivieren Sie das automatische Einfügen."
   },
   howItWorks: {
     title: "Wie funktioniert Mirror?",

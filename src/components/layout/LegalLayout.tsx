@@ -12,9 +12,9 @@ interface LegalLayoutProps {
 
 export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLayoutProps) {
   return (
-    <div className="bg-surface-base min-h-screen pt-12 pb-20 px-6">
+    <div className="pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
-        
+
         <div
           className="mb-8"
         >
@@ -29,7 +29,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
           </Link>
         </div>
 
-        
+
         <header className="mb-16">
           <div>
             <span className="inline-block px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue text-[11px] font-black uppercase tracking-[0.15em] mb-4">
@@ -48,7 +48,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
           </div>
         </header>
 
-        
+
         <div
           className="legal-content prose prose-slate max-w-none 
             prose-headings:text-primary-dark prose-headings:font-black prose-headings:tracking-tight 

@@ -9,7 +9,7 @@ const fr = {
   },
   hero: {
     badge: "Mirror",
-    title1: "Interagissez sur des plateformes professionnelles",
+    title1: "Réseautage professionnel",
     title2: "avec",
     titleSpan: "Intelligence",
     subtitle: "Générez des commentaires pertinents, apportez de la valeur et gérez plusieurs profils avec votre assistant privé propulsé par l'IA. Directement dans votre navigateur.",
@@ -66,7 +66,7 @@ const fr = {
     ]
   },
   footer: {
-    description: "Votre assistant intelligent pour maîtriser le réseautage professionnel sur les plateformes compatibles.",
+    description: "Votre assistant intelligent pour maîtriser le réseautage professionnel.",
     product: "Produit",
     contactTitle: "Contact",
     helpCenter: "Centre d'Aide",
@@ -199,7 +199,7 @@ const fr = {
     f3Title: "Profils Multiples",
     f3Desc: "Besoin de paraître corporate un jour et plus décontracté le lendemain ? Mirror vous permet de sauvegarder des Profils avec vos propres tons...",
     f4Title: "Éditeur Preview et Brouillons",
-    f4Desc: "L'IA ne commente jamais automatiquement. Chaque message passe par un panneau Preview où vous pouvez l'ajuster..."
+    f4Desc: "Révisez et ajustez vos messages dans le panneau Preview avant de les lancer ou activez l'insertion automatique."
   },
   howItWorks: {
     title: "Comment fonctionne Mirror ?",
