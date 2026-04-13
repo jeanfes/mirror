@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "supabase:status": "supabase status --workdir ./supabase",
+    "supabase:migrations:list": "supabase migration list --workdir ./supabase",
+    "supabase:db:push": "supabase db push --linked --workdir ./supabase"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

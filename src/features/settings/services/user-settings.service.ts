@@ -354,7 +354,7 @@ const defaultUserSettings: UserSettings = {
   language: "es",
   commentLanguageMode: "account",
   theme: "system",
-  defaultProfileId: null,
+  activeProfileId: null,
   defaultEmojis: true,
   autoInsert: false,
   confirmBeforeApply: false,
@@ -370,7 +370,7 @@ const defaultUserSettings: UserSettings = {
 function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const language = row.language
   const theme = row.theme
-  const defaultProfileId = row.default_profile_id
+  const activeProfileId = row.active_profile_id
   const defaultEmojis = row.default_emojis
   const autoInsert = row.auto_insert
   const confirmBeforeApply = row.confirm_before_apply
@@ -402,8 +402,8 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
       theme === "light" || theme === "dark" || theme === "system" || theme === "auto"
         ? theme === "auto" ? "system" : theme
         : defaultUserSettings.theme,
-    defaultProfileId:
-      typeof defaultProfileId === "string" ? defaultProfileId : null,
+    activeProfileId:
+      typeof activeProfileId === "string" ? activeProfileId : null,
     defaultEmojis:
       typeof defaultEmojis === "boolean" ? defaultEmojis : defaultUserSettings.defaultEmojis,
     autoInsert:
@@ -478,7 +478,7 @@ export async function updateUserSettings(
   if (input.language !== undefined) payload.language = input.language
   if (input.commentLanguageMode !== undefined) payload.comment_language_mode = input.commentLanguageMode
   if (input.theme !== undefined) payload.theme = input.theme
-  if (input.defaultProfileId !== undefined) payload.default_profile_id = input.defaultProfileId
+  if (input.activeProfileId !== undefined) payload.active_profile_id = input.activeProfileId
   if (input.defaultEmojis !== undefined) payload.default_emojis = input.defaultEmojis
   if (input.autoInsert !== undefined) payload.auto_insert = input.autoInsert
   if (input.confirmBeforeApply !== undefined) payload.confirm_before_apply = input.confirmBeforeApply

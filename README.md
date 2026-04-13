@@ -48,6 +48,23 @@ Create `.env.local` from `.env.example` and set your Supabase project values.
 pnpm dev
 ```
 
+## Supabase Migrations
+
+Local migration files are stored in `web/supabase/migrations`.
+
+Useful commands:
+
+```bash
+pnpm supabase:migrations:list
+pnpm supabase:db:push
+```
+
+If the project is not linked yet:
+
+```bash
+supabase link --project-ref <project-ref> --workdir ./supabase
+```
+
 ## Auth Notes
 
 - Auth is handled with Supabase clients (`@supabase/ssr` + `@supabase/supabase-js`).

@@ -123,7 +123,7 @@ export interface UserSettings {
   language: "es" | "en" | "pt" | "fr" | "de"
   commentLanguageMode: "post" | "account"
   theme: "light" | "dark" | "system"
-  defaultProfileId: string | null
+  activeProfileId: string | null
   defaultEmojis: boolean
   autoInsert: boolean
   confirmBeforeApply: boolean

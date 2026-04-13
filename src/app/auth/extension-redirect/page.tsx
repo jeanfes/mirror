@@ -58,10 +58,13 @@ type ExtensionSetSessionMessage = {
     theme?: ExtensionTheme
     language?: ExtensionLanguage
     commentLanguageMode?: ExtensionCommentLanguageMode
-    defaultProfileId?: string | null
+    activeProfileId?: string | null
     defaultEmojis?: boolean
     autoInsert?: boolean
     confirmBeforeApply?: boolean
+    notificationsEnabled?: boolean
+    desktopAlertsEnabled?: boolean
+    onboardingCompleted?: boolean
     goalMode?: ExtensionGoalMode
     goalModelVersion?: number
     objectiveLibrary?: ExtensionObjectiveProfile[]
@@ -159,7 +162,7 @@ function normalizePlan(value: unknown): "Free" | "Pro" | "Elite" | undefined {
     return undefined
 }
 
-function normalizeDefaultProfileId(value: unknown): string | null | undefined {
+function normalizeActiveProfileId(value: unknown): string | null | undefined {
     if (value === null) {
         return null
     }
@@ -297,7 +300,7 @@ function RedirectContent() {
                         const [settingsQuery, accountQuery] = await Promise.all([
                             supabase
                                 .from("user_settings")
-                                .select("theme, language, comment_language_mode, default_profile_id, default_emojis, auto_insert, confirm_before_apply, goal_mode, goal_model_version, objective_library, platform_default_objective_ids")
+                                .select("theme, language, comment_language_mode, active_profile_id, default_emojis, auto_insert, confirm_before_apply, notifications_enabled, desktop_alerts_enabled, onboarding_completed, goal_mode, goal_model_version, objective_library, platform_default_objective_ids")
                                 .eq("user_id", session.user.id)
                                 .maybeSingle(),
                             supabase
@@ -342,7 +345,7 @@ function RedirectContent() {
                             theme: normalizeThemeForExtension(settingsRow?.theme),
                             language: normalizeLanguage(settingsRow?.language),
                             commentLanguageMode: normalizeCommentLanguageMode(settingsRow?.comment_language_mode),
-                            defaultProfileId: normalizeDefaultProfileId(settingsRow?.default_profile_id),
+                            activeProfileId: normalizeActiveProfileId(settingsRow?.active_profile_id),
                             defaultEmojis:
                                 typeof settingsRow?.default_emojis === "boolean"
                                     ? settingsRow.default_emojis
@@ -354,6 +357,18 @@ function RedirectContent() {
                             confirmBeforeApply:
                                 typeof settingsRow?.confirm_before_apply === "boolean"
                                     ? settingsRow.confirm_before_apply
+                                    : undefined,
+                            notificationsEnabled:
+                                typeof settingsRow?.notifications_enabled === "boolean"
+                                    ? settingsRow.notifications_enabled
+                                    : undefined,
+                            desktopAlertsEnabled:
+                                typeof settingsRow?.desktop_alerts_enabled === "boolean"
+                                    ? settingsRow.desktop_alerts_enabled
+                                    : undefined,
+                            onboardingCompleted:
+                                typeof settingsRow?.onboarding_completed === "boolean"
+                                    ? settingsRow.onboarding_completed
                                     : undefined,
                             goalMode: normalizeGoalMode(settingsRow?.goal_mode),
                             goalModelVersion:

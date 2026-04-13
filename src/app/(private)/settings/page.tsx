@@ -20,7 +20,7 @@ type UpdateUserSettingsInput = Pick<
     UserSettings,
     | "language"
     | "commentLanguageMode"
-    | "defaultProfileId"
+    | "activeProfileId"
     | "defaultEmojis"
     | "autoInsert"
     | "confirmBeforeApply"
@@ -34,7 +34,7 @@ const AUTO_SAVE_DEBOUNCE_MS = 450
 const defaultDraft: UpdateUserSettingsInput = {
     language: "es",
     commentLanguageMode: "account",
-    defaultProfileId: null,
+    activeProfileId: null,
     defaultEmojis: true,
     autoInsert: false,
     confirmBeforeApply: false,
@@ -47,7 +47,7 @@ function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettin
     return (
         left.language === right.language &&
         left.commentLanguageMode === right.commentLanguageMode &&
-        left.defaultProfileId === right.defaultProfileId &&
+        left.activeProfileId === right.activeProfileId &&
         left.defaultEmojis === right.defaultEmojis &&
         left.autoInsert === right.autoInsert &&
         left.confirmBeforeApply === right.confirmBeforeApply &&
@@ -66,7 +66,7 @@ function buildChangedPayload(
     if (next.language !== base.language) payload.language = next.language
     if (next.commentLanguageMode !== base.commentLanguageMode)
         payload.commentLanguageMode = next.commentLanguageMode
-    if (next.defaultProfileId !== base.defaultProfileId) payload.defaultProfileId = next.defaultProfileId
+    if (next.activeProfileId !== base.activeProfileId) payload.activeProfileId = next.activeProfileId
     if (next.defaultEmojis !== base.defaultEmojis) payload.defaultEmojis = next.defaultEmojis
     if (next.autoInsert !== base.autoInsert) payload.autoInsert = next.autoInsert
     if (next.confirmBeforeApply !== base.confirmBeforeApply)
@@ -97,7 +97,7 @@ export default function SettingsPage() {
         return {
             language: settings.language,
             commentLanguageMode: settings.commentLanguageMode,
-            defaultProfileId: settings.defaultProfileId,
+            activeProfileId: settings.activeProfileId,
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
             confirmBeforeApply: settings.confirmBeforeApply,
@@ -115,7 +115,7 @@ export default function SettingsPage() {
         return {
             language: settings.language,
             commentLanguageMode: settings.commentLanguageMode,
-            defaultProfileId: settings.defaultProfileId,
+            activeProfileId: settings.activeProfileId,
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
             confirmBeforeApply: settings.confirmBeforeApply,
@@ -136,7 +136,7 @@ export default function SettingsPage() {
     }
 
     const profileOptions = useMemo(() => {
-        const baseOption = [{ label: t.app.settings.noDefaultProfile, value: "" }]
+        const baseOption = [{ label: t.app.settings.noActiveProfile, value: "" }]
         const profileItems = (profiles ?? []).map((profile) => ({
             label: profile.name,
             value: profile.id
@@ -307,9 +307,9 @@ export default function SettingsPage() {
                         />
 
                         <Select
-                            value={resolvedSettings.defaultProfileId ?? ""}
-                            onChange={(value) => updateDraft("defaultProfileId", value === "" ? null : value)}
-                            label={t.app.settings.defaultProfileLabel}
+                            value={resolvedSettings.activeProfileId ?? ""}
+                            onChange={(value) => updateDraft("activeProfileId", value === "" ? null : value)}
+                            label={t.app.settings.activeProfileLabel}
                             triggerClassName="h-11 rounded-2xl"
                             options={profileOptions}
                         />
