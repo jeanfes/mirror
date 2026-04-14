@@ -485,7 +485,6 @@ const de = {
       whyMattersTitle: "Präferenzen",
       whyMattersDesc: "Mirror an Ihren Schreibstil anpassen.",
       goalsSettingsMoved: "Die Zielkonfiguration wurde in einen eigenen Bereich verschoben.",
-      manageGoalsCta: "Zielbereich öffnen",
       preferencesUpdated: "Gespeichert",
       preferencesError: "Fehler beim Speichern",
       noActiveProfile: "Kein aktives Profil",

@@ -14,6 +14,8 @@ const GOAL_SET = new Set<GoalType>(["Add Value", "Challenge", "Networking", "Que
 const OBJECTIVE_NAME_MAX = 64
 const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200
+const USER_SETTINGS_SELECT_COLUMNS =
+  "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, confirm_before_apply, goal_mode, goal_model_version, objective_library, platform_default_objective_ids, desktop_alerts_enabled, notifications_enabled, onboarding_completed, updated_at"
 
 const baseObjectiveSeeds: Array<
   Omit<ObjectiveProfile, "active" | "createdAt" | "updatedAt">
@@ -440,7 +442,7 @@ export async function getUserSettings(
 ): Promise<UserSettings> {
   const { data, error } = await supabase
     .from("user_settings")
-    .select("*")
+    .select(USER_SETTINGS_SELECT_COLUMNS)
     .eq("user_id", userId)
     .maybeSingle()
 
@@ -452,7 +454,7 @@ export async function getUserSettings(
     const { data: created, error: createError } = await supabase
       .from("user_settings")
       .insert({ user_id: userId })
-      .select("*")
+      .select(USER_SETTINGS_SELECT_COLUMNS)
       .single()
 
     if (createError) {
@@ -501,7 +503,7 @@ export async function updateUserSettings(
   const { data, error } = await supabase
     .from("user_settings")
     .upsert(payload, { onConflict: "user_id" })
-    .select("*")
+    .select(USER_SETTINGS_SELECT_COLUMNS)
     .single()
 
   if (error) {

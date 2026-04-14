@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useCallback, useDeferredValue, useMemo } from "react"
 import { Archive, CheckCircle2, Clock3, WandSparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
@@ -27,6 +27,7 @@ export default function HistoryPage() {
     } = useHistoryUIStore()
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading)
+    const deferredSearch = useDeferredValue(search)
 
     const hasActiveFilters = useMemo(() => {
         return search.trim().length > 0 || selectedProfileId !== "all" || appliedFilter !== "all"
@@ -43,70 +44,93 @@ export default function HistoryPage() {
         ]
     }, [profiles, t])
 
-    const filteredHistory = useMemo(() => {
-        const normalizedSearch = search.trim().toLowerCase()
-
-        return (history ?? []).filter((item) => {
-            if (selectedProfileId !== "all" && item.profileId !== selectedProfileId) return false
-            if (appliedFilter !== "all" && item.status !== appliedFilter) return false
-
-            if (!normalizedSearch) return true
-
-            const haystack = [item.postAuthor, item.postHeadline, item.postSnippet, item.generatedText]
+    const indexedHistory = useMemo(() => {
+        return (history ?? []).map((item) => ({
+            item,
+            searchText: [item.postAuthor, item.postHeadline, item.postSnippet, item.generatedText]
                 .filter(Boolean)
                 .join(" ")
                 .toLowerCase()
+        }))
+    }, [history])
 
-            return haystack.includes(normalizedSearch)
-        })
-    }, [history, selectedProfileId, appliedFilter, search])
+    const filteredHistory = useMemo(() => {
+        const normalizedSearch = deferredSearch.trim().toLowerCase()
+
+        return indexedHistory
+            .filter(({ item, searchText }) => {
+                if (selectedProfileId !== "all" && item.profileId !== selectedProfileId) return false
+                if (appliedFilter !== "all" && item.status !== appliedFilter) return false
+
+                if (!normalizedSearch) return true
+                return searchText.includes(normalizedSearch)
+            })
+            .map(({ item }) => item)
+    }, [indexedHistory, selectedProfileId, appliedFilter, deferredSearch])
 
     const summary = useMemo(() => {
         const items = history ?? []
+        let applied = 0
+        let pending = 0
+        let reused = 0
+
+        for (const item of items) {
+            if (item.status === "applied") {
+                applied += 1
+            }
+
+            if (item.status === "pending") {
+                pending += 1
+            }
+
+            if (item.source === "history_reuse") {
+                reused += 1
+            }
+        }
 
         return {
             total: items.length,
-            applied: items.filter((item) => item.status === "applied").length,
-            pending: items.filter((item) => item.status === "pending").length,
-            reused: items.filter((item) => item.source === "history_reuse").length
+            applied,
+            pending,
+            reused
         }
     }, [history])
 
-    const handleCopy = async (comment: string) => {
+    const handleCopy = useCallback(async (comment: string) => {
         try {
             await navigator.clipboard.writeText(comment)
             toast.success(t.app.common.commentCopied || "Comment copied")
         } catch {
             toast.error(t.app.common.commentCopyError || "Could not copy comment")
         }
-    }
+    }, [t])
 
-    const handleReuse = async (id: string) => {
+    const handleReuse = useCallback(async (id: string) => {
         try {
             await reuseHistoryItem(id)
             toast.success(t.app.common.commentDuplicated || "Comment duplicated in history")
         } catch {
             toast.error(t.app.common.commentReuseError || "Could not reuse comment")
         }
-    }
+    }, [reuseHistoryItem, t])
 
-    const handleToggleApplied = async (id: string) => {
+    const handleToggleApplied = useCallback(async (id: string) => {
         try {
             await toggleHistoryApplied(id)
             toast.success(t.app.common.historyUpdated || "History item updated")
         } catch {
             toast.error(t.app.common.historyUpdateError || "Could not update history item")
         }
-    }
+    }, [toggleHistoryApplied, t])
 
-    const handleMoveToTrash = async (id: string) => {
+    const handleMoveToTrash = useCallback(async (id: string) => {
         try {
             await moveToTrash(id)
             toast.success(t.app.common.historyUpdated || "History item updated")
         } catch {
             toast.error(t.app.common.historyUpdateError || "Could not update history item")
         }
-    }
+    }, [moveToTrash, t])
 
     if (showLoading) {
         return <LoadingOverlay show={true} />

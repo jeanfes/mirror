@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
@@ -30,7 +31,14 @@ const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
     manual_edit: "Manual edit"
 }
 
-export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleApplied, onMoveToTrash }: HistoryItemCardProps) {
+export const HistoryItemCard = memo(function HistoryItemCard({
+    item,
+    profileName,
+    onCopy,
+    onReuse,
+    onToggleApplied,
+    onMoveToTrash
+}: HistoryItemCardProps) {
     const statusMeta = item.status === "applied"
         ? { label: "Applied", className: "badge-success" }
         : item.status === "dismissed"
@@ -119,4 +127,4 @@ export function HistoryItemCard({ item, profileName, onCopy, onReuse, onToggleAp
             </div>
         </Card>
     )
-}
+})

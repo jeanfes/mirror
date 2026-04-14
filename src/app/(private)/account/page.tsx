@@ -54,13 +54,32 @@ export default function AccountPage() {
 
     const historyItems = history ?? []
     const profileItems = profiles ?? []
-    const activeProfiles = profileItems.filter((p) => p.enabled).length
-    const appliedCount = historyItems.filter((i) => i.status === "applied").length
-    const reusableCount = historyItems.filter((i) => i.source === "history_reuse").length
+    let activeProfiles = 0
+    for (const profile of profileItems) {
+      if (profile.enabled) {
+        activeProfiles += 1
+      }
+    }
+
+    let appliedCount = 0
+    let reusableCount = 0
     const currentMonth = new Date().getMonth()
-    const generatedThisMonth = historyItems.filter(
-      (i) => new Date(i.createdAt).getMonth() === currentMonth
-    ).length
+    let generatedThisMonth = 0
+
+    for (const item of historyItems) {
+      if (item.status === "applied") {
+        appliedCount += 1
+      }
+
+      if (item.source === "history_reuse") {
+        reusableCount += 1
+      }
+
+      if (new Date(item.createdAt).getMonth() === currentMonth) {
+        generatedThisMonth += 1
+      }
+    }
+
     const currentPlan = resolvedPlanDefinitions.find((p) => p.name === account.plan)
     const totalCredits = currentPlan?.credits ?? account.creditsRemaining
     const usedCredits = Math.max(totalCredits - account.creditsRemaining, 0)

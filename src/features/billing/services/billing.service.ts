@@ -72,6 +72,10 @@ const PLAN_PRICES: Record<PlanName, string> = {
   Elite: "$49",
 }
 
+const USER_ACCOUNT_SELECT_COLUMNS =
+  "plan, credits_remaining, credits_used_this_month, renewal_date, subscription_status, last_generation_at"
+const INVOICES_SELECT_COLUMNS = "id, created_at, currency, amount_paid, status, invoice_url"
+
 const PLAN_ORDER: PlanName[] = ["Free", "Pro", "Elite"]
 
 function normalizePlanName(value: unknown): PlanName | null {
@@ -201,7 +205,12 @@ export async function startCheckout(
   return checkoutUrl
 }
 
-function mapRowToAccountStatus(row: UserAccountRow): UserAccount {
+function mapRowToAccountStatus(
+  row: Pick<
+    UserAccountRow,
+    "plan" | "credits_remaining" | "credits_used_this_month" | "renewal_date" | "subscription_status" | "last_generation_at"
+  >
+): UserAccount {
   return {
     plan: row.plan,
     creditsRemaining: row.credits_remaining,
@@ -243,7 +252,7 @@ export async function getAccount(
 ): Promise<UserAccount> {
   const { data, error } = await supabase
     .from("user_account")
-    .select("*")
+    .select(USER_ACCOUNT_SELECT_COLUMNS)
     .eq("user_id", userId)
     .maybeSingle()
 
@@ -269,7 +278,7 @@ export async function getInvoices(
 ): Promise<Invoice[]> {
   const { data, error } = await supabase
     .from("invoices")
-    .select("*")
+    .select(INVOICES_SELECT_COLUMNS)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
 

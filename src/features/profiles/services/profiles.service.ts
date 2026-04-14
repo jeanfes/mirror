@@ -1,6 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type { VoiceProfile, VoiceProfileRow, StyleTrainingRow } from "@/types/database.types"
 
+const VOICE_PROFILE_SELECT_COLUMNS =
+  "id, user_id, name, description, tone, preferred_phrases, banned_phrases, target_length, allow_emojis, enabled, created_at, updated_at, deleted_at"
+const STYLE_TRAINING_SELECT_COLUMNS = "id, profile_id, kind, content, display_order, questionnaire_answers"
+
 export interface CreateProfileInput {
   name: string
   description: string
@@ -42,7 +46,7 @@ export async function listProfiles(
 ): Promise<VoiceProfile[]> {
   const { data, error } = await supabase
     .from("voice_profiles")
-    .select("*, style_training(*)")
+    .select(`${VOICE_PROFILE_SELECT_COLUMNS}, style_training(${STYLE_TRAINING_SELECT_COLUMNS})`)
     .eq("user_id", userId)
     .is("deleted_at", null)
     .order("updated_at", { ascending: false })
@@ -78,7 +82,7 @@ export async function createProfile(
       allow_emojis: input.allowEmojis,
       enabled: input.enabled,
     })
-    .select("*")
+    .select(VOICE_PROFILE_SELECT_COLUMNS)
     .single()
 
   if (createError) throw createError
@@ -120,7 +124,7 @@ export async function updateProfile(
     })
     .eq("id", input.id)
     .eq("user_id", userId)
-    .select("*")
+    .select(VOICE_PROFILE_SELECT_COLUMNS)
     .single()
 
   if (updateError) throw updateError

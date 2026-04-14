@@ -1,7 +1,15 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
-function mapRowToHistoryItem(row: GenerationHistoryRow & { profileName?: string }): GenerationHistory {
+const HISTORY_SELECT_COLUMNS =
+  "id, profile_id, sync_fingerprint, kind, source, status, post_author, post_headline, post_snippet, generated_text, goal, origin, created_at"
+
+type HistoryRowProjection = Pick<
+  GenerationHistoryRow,
+  "id" | "profile_id" | "sync_fingerprint" | "kind" | "source" | "status" | "post_author" | "post_headline" | "post_snippet" | "generated_text" | "goal" | "origin" | "created_at"
+>
+
+function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string }): GenerationHistory {
   return {
     id: row.id,
     profileId: row.profile_id,
@@ -29,7 +37,7 @@ export interface ListHistoryFilters {
 export async function listHistory(supabase: SupabaseClient, userId: string, filters?: ListHistoryFilters): Promise<GenerationHistory[]> {
   let query = supabase
     .from("generation_history")
-    .select("*, voice_profiles(name)")
+    .select(`${HISTORY_SELECT_COLUMNS}, voice_profiles(name)`)
     .eq("user_id", userId)
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
@@ -53,8 +61,15 @@ export async function listHistory(supabase: SupabaseClient, userId: string, filt
     throw error
   }
 
-  const rows = (data ?? []) as Array<GenerationHistoryRow & { voice_profiles?: { name?: string } | null }>
-  return rows.map((row) => mapRowToHistoryItem({ ...row, profileName: row.voice_profiles?.name }))
+  const rows = (data ?? []) as Array<HistoryRowProjection & { voice_profiles?: { name?: string }[] | { name?: string } | null }>
+  return rows.map((row) => {
+    const profileRelation = row.voice_profiles
+    const profileName = Array.isArray(profileRelation)
+      ? profileRelation[0]?.name
+      : profileRelation?.name
+
+    return mapRowToHistoryItem({ ...row, profileName })
+  })
 }
 
 export async function updateHistoryStatus(

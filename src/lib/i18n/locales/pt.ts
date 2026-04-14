@@ -485,7 +485,6 @@ const pt = {
       whyMattersTitle: "Preferencias",
       whyMattersDesc: "Configure o Mirror para melhor se ajustar ao seu estilo.",
       goalsSettingsMoved: "A configuração de objetivos foi movida para uma tela dedicada.",
-      manageGoalsCta: "Abrir espaço de objetivos",
       preferencesUpdated: "Preferências atualizadas",
       preferencesError: "Não foi possível salvar as preferências",
       noActiveProfile: "Sem perfil ativo",

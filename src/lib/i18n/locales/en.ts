@@ -485,7 +485,6 @@ const en = {
       whyMattersTitle: "Preferences",
       whyMattersDesc: "Configure Mirror to best fit your writing style.",
       goalsSettingsMoved: "Goals configuration has moved to a dedicated screen.",
-      manageGoalsCta: "Open goals workspace",
       preferencesUpdated: "Preferences updated",
       preferencesError: "Could not save preferences",
       noActiveProfile: "No active profile",
