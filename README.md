@@ -48,22 +48,13 @@ Create `.env.local` from `.env.example` and set your Supabase project values.
 pnpm dev
 ```
 
-## Supabase Migrations
+## Schema Management (MCP-only)
 
-Local migration files are stored in `web/supabase/migrations`.
+This repository uses Supabase MCP as the operational source of truth for schema updates.
 
-Useful commands:
-
-```bash
-pnpm supabase:migrations:list
-pnpm supabase:db:push
-```
-
-If the project is not linked yet:
-
-```bash
-supabase link --project-ref <project-ref> --workdir ./supabase
-```
+- Do not rely on local `web/supabase` migration files from this web app folder.
+- Apply schema changes directly in Supabase using MCP tools.
+- Keep the contract aligned in `contracts/settings-contract.v1.json` whenever schema-related settings fields change.
 
 ## Auth Notes
 
