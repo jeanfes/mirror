@@ -4,6 +4,7 @@ import React, { memo } from "react"
 import { Shield } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
+import { useLanguageStore } from "@/store/useLanguageStore"
 
 interface SecurityTabProps {
   onUpdatePassword: () => void
@@ -16,6 +17,8 @@ export const SecurityTab = memo(function SecurityTab({
   title,
   description
 }: SecurityTabProps) {
+  const { t } = useLanguageStore()
+
   return (
     <div className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
       <SectionHeader title={title} description={description} />
@@ -23,11 +26,11 @@ export const SecurityTab = memo(function SecurityTab({
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Shield className="h-5 w-5" /></div>
           <div>
-            <p className="text-sm font-bold text-primary-text">Contraseña Maestra</p>
-            <p className="text-[10px] text-secondary-text uppercase">Actualizada hace poco</p>
+            <p className="text-sm font-bold text-primary-text">{t.app.settingsModal.masterPassword}</p>
+            <p className="text-[10px] text-secondary-text uppercase">{t.app.settingsModal.lastUpdated}</p>
           </div>
         </div>
-        <Button variant="secondary" onClick={onUpdatePassword}>Actualizar</Button>
+        <Button variant="secondary" onClick={onUpdatePassword}>{t.app.settingsModal.update}</Button>
       </Card>
     </div>
   )

@@ -22,9 +22,9 @@ const fr = {
     f1Title: "Automatisation Intelligente",
     f1Desc: "Détecte automatiquement les zones de réponse sur les plateformes compatibles et affiche notre lanceur flottant prêt à vous aider.",
     f2Title: "Profils Multiples",
-    f2Desc: "Configurez différents tons et objectifs (Networking, Débat, Question) pour que l'IA génère le message parfait à chaque fois.",
+    f2Desc: "Configurez différents tons et objectifs de communication pour que l'IA génère le bon message selon le contexte.",
     f3Title: "Confidentialité Locale",
-    f3Desc: "Vos brouillons, votre historique et vos paramètres sont sauvegardés en toute sécurité dans le stockage de votre navigateur. Vous avez le contrôle total."
+    f3Desc: "Vos brouillons, votre historique et vos préférences sont stockés de manière sécurisée pour vous laisser le contrôle."
   },
   cta: {
     title: "Transformez votre façon de réseauter dès aujourd'hui.",
@@ -39,7 +39,7 @@ const fr = {
     perMonth: "/ mois",
     freeDesc: "Pour les utilisateurs occasionnels et les testeurs",
     freeFeatures: [
-      "120 autocomplétions par mois",
+      "120 générations par mois",
       "1 Profil de voix actif",
       "Paramètres de base",
       "Support communautaire"
@@ -50,16 +50,16 @@ const fr = {
     proDesc: "Pour les professionnels en croissance",
     proBtn: "Choisir Pro",
     proFeatures: [
-      "1 200 autocomplétions par mois",
+      "1 200 générations par mois",
       "10 Profils de voix actifs",
-      "Modes interactifs avancés",
+      "Contrôles avancés de personnalisation",
       "Support prioritaire"
     ],
     elitePlan: "Plan Elite",
     eliteDesc: "Pour les leaders et les agences",
     eliteBtn: "Choisir Elite",
     eliteFeatures: [
-      "4 000 autocomplétions par mois",
+      "4 000 générations par mois",
       "Profils illimités",
       "Accès anticipé aux fonctions",
       "Support VIP 24/7"
@@ -265,7 +265,33 @@ const fr = {
       cancel: "Annuler",
       confirm: "Confirmer",
       delete: "Supprimer",
-      working: "Traitement..."
+      working: "Traitement...",
+      globalErrorTitle: "Erreur inattendue",
+      globalErrorDesc: "Impossible d'afficher cette vue pour le moment. Veuillez réessayer.",
+      tryAgain: "Réessayer"
+    },
+    extensionRedirect: {
+      secureConnectionStatus: "Établissement d'une connexion sécurisée...",
+      syncCompletedTitle: "Synchronisation terminée",
+      connectionErrorTitle: "Erreur de connexion",
+      connectingTitle: "Connexion de l'extension",
+      syncCompletedDesc: "Votre session a été synchronisée avec l'extension. Cet onglet se fermera automatiquement.",
+      invalidLink: "Le lien de connexion est invalide. Relancez la connexion depuis l'extension.",
+      incompleteSession: "Impossible de valider une session complète. Reconnectez-vous puis réessayez.",
+      syncSessionConnecting: "Connexion de votre session avec l'extension...",
+      syncSessionConnected: "Session connectée avec succès.",
+      sessionExpired: "Session expirée. Reconnectez-vous pour continuer.",
+      goToDashboard: "Aller au Dashboard",
+      retryConnection: "Réessayer",
+      backToLogin: "Retour à la connexion",
+      gatewayLoading: "Chargement de la passerelle...",
+      bridgeReceivingEndMissing: "Impossible de se connecter à l'extension. Rechargez-la dans chrome://extensions puis réessayez.",
+      bridgeSenderNotAllowed: "Impossible d'autoriser la connexion à l'extension. Reconnectez-vous puis réessayez.",
+      bridgeSetSessionError: "Impossible d'enregistrer votre session dans l'extension. Réessayez dans quelques secondes.",
+      bridgeMissingTokens: "Votre session n'est plus valide pour la synchronisation. Reconnectez-vous.",
+      bridgeTimeout: "L'extension a mis trop de temps à répondre. Réessayez la connexion.",
+      bridgeRuntimeUnavailable: "Aucune extension active détectée. Rechargez-la puis réessayez.",
+      bridgeGenericError: "Impossible de finaliser la synchronisation avec l'extension. Réessayez ou reconnectez-vous."
     },
     billing: {
       title: "Facturation",
@@ -484,7 +510,7 @@ const fr = {
       languageBaselineDesc: "Configuration initiale avant chaque génération.",
       whyMattersTitle: "Préférences",
       whyMattersDesc: "Configurez Mirror pour qu'il s'adapte au mieux à votre style.",
-      goalsSettingsMoved: "La configuration des objectifs a été déplacée vers un écran dédié.",
+      goalsSettingsMoved: "La configuration des objectifs est gérée dans un espace dédié.",
       preferencesUpdated: "Préférences mises à jour",
       preferencesError: "Impossible de sauvegarder les préférences",
       noActiveProfile: "Aucun profil actif",
@@ -511,7 +537,7 @@ const fr = {
     goals: {
       title: "Objectifs",
       heroTitle: "Espace Objectifs",
-      heroDesc: "Définissez un objectif de base par plateforme et créez des objectifs personnalisés assignables selon votre stratégie.",
+      heroDesc: "Définissez des objectifs recommandés par plateforme et créez des objectifs personnalisés selon votre stratégie.",
       modeTitle: "Mode de génération",
       modeDesc: "Choisissez si Mirror recommande automatiquement les objectifs ou si vous préférez un choix manuel.",
       extensionPanelHintTitle: "Comment cela apparaît dans l'extension",
@@ -523,6 +549,14 @@ const fr = {
       useBaseObjective: "Utiliser l'objectif de base",
       customLibraryTitle: "Objectifs personnalisés",
       customLibraryDesc: "Créez des objectifs réutilisables pour votre propre stratégie.",
+      recommendedObjectivesTitle: "Recommandés par plateforme",
+      recommendedObjectivesDesc: "Comprenez pourquoi ces objectifs sont recommandés et leur performance récente.",
+      noRecommendedObjectives: "Aucun objectif recommandé pour cette plateforme pour le moment.",
+      metricGenerated: "Générés",
+      metricApplied: "Appliqués",
+      metricApplyRate: "Taux",
+      recommendationReasonBase: "Objectif de base aligné avec le comportement d'engagement de cette plateforme.",
+      recommendationReasonCustom: "Objectif personnalisé actif pour ce contexte de plateforme.",
       objectiveNamePlaceholder: "Nom de l'objectif (exemple : Ouvrir avec des données)",
       objectiveGoalLabel: "Intention de l'objectif",
       objectiveGoalHelp: "Définit l'angle de communication que l'assistant va utiliser.",
@@ -577,6 +611,24 @@ const fr = {
       statusDismissed: "Ignoré",
       activeFilters: "Filtros actifs",
       noFiltersActive: "Aucun filtre actif"
+    },
+    historyItem: {
+      sourceAlternative: "Alternative",
+      sourceGenerated: "Généré",
+      sourceReused: "Réutilisé",
+      sourceManualEdit: "Édition manuelle",
+      generatedAtLabel: "Généré",
+      sourcePostLabel: "Post source",
+      generatedCommentLabel: "Commentaire généré",
+      copyTooltip: "Copier ce commentaire dans le presse-papiers",
+      copyAction: "Copier",
+      reuseTooltip: "Créer un nouvel élément d'historique à partir de cet angle",
+      reuseAction: "Réutiliser",
+      toggleAppliedTooltip: "Basculer si ce commentaire a déjà été utilisé",
+      markPending: "Marquer en attente",
+      markApplied: "Marquer appliqué",
+      trashTooltip: "Déplacer cet élément d'historique vers la corbeille",
+      moveToTrash: "Déplacer vers la corbeille"
     },
     profileForm: {
       refineVoice: "Affiner cette voix",

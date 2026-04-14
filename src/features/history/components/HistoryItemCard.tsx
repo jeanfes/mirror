@@ -6,6 +6,7 @@ import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, Trash2 } from "lucid
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/Tooltip"
+import { useLanguageStore } from "@/store/useLanguageStore"
 import type { GenerationHistory } from "@/types/database.types"
 
 interface HistoryItemCardProps {
@@ -17,20 +18,6 @@ interface HistoryItemCardProps {
     onMoveToTrash: (id: string) => void
 }
 
-const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
-    add_value: "Add value",
-    challenge: "Challenge",
-    networking: "Networking",
-    question: "Question"
-}
-
-const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
-    alternative: "Alternative",
-    generated: "Generated",
-    history_reuse: "Reused",
-    manual_edit: "Manual edit"
-}
-
 export const HistoryItemCard = memo(function HistoryItemCard({
     item,
     profileName,
@@ -39,13 +26,31 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     onToggleApplied,
     onMoveToTrash
 }: HistoryItemCardProps) {
+    const { t } = useLanguageStore()
+
+    const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
+        add_value: t.app.settings.goalValue,
+        challenge: t.app.settings.goalChallenge,
+        networking: t.app.settings.goalConnect,
+        question: t.app.settings.goalQuestion
+    }
+
+    const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
+        alternative: t.app.historyItem.sourceAlternative,
+        generated: t.app.historyItem.sourceGenerated,
+        history_reuse: t.app.historyItem.sourceReused,
+        manual_edit: t.app.historyItem.sourceManualEdit
+    }
+
     const statusMeta = item.status === "applied"
-        ? { label: "Applied", className: "badge-success" }
+        ? { label: t.app.history.applied, className: "badge-success" }
         : item.status === "dismissed"
-            ? { label: "Dismissed", className: "badge-accent" }
-            : { label: "Pending", className: "badge-warning" }
+            ? { label: t.app.historyFilters.statusDismissed, className: "badge-accent" }
+            : { label: t.app.history.pending, className: "badge-warning" }
     const isApplied = item.status === "applied"
-    const toggleLabel = isApplied || item.status === "dismissed" ? "Mark pending" : "Mark applied"
+    const toggleLabel = isApplied || item.status === "dismissed"
+        ? t.app.historyItem.markPending
+        : t.app.historyItem.markApplied
 
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
@@ -75,7 +80,7 @@ export const HistoryItemCard = memo(function HistoryItemCard({
                     </div>
 
                     <div className="feature-soft-card-strong px-3 py-2 text-right shadow-premium-sm">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary-text">Generated</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary-text">{t.app.historyItem.generatedAtLabel}</p>
                         <p className="mt-1 text-[13px] font-medium text-secondary-text">{formatDistanceToNow(item.createdAt, { addSuffix: true })}</p>
                     </div>
                 </div>
@@ -84,13 +89,13 @@ export const HistoryItemCard = memo(function HistoryItemCard({
             <div className="p-5">
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="feature-soft-card-strong">
-                        <p className="text-[11px] font-semibold uppercase tracking-widest text-secondary-text">Source post</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-secondary-text">{t.app.historyItem.sourcePostLabel}</p>
                         <p className="mt-3 text-[15px] leading-7 text-secondary-text">{item.postSnippet}</p>
                     </div>
                     <div className="rounded-3xl border border-brand-dark bg-brand-dark p-4 text-white">
                         <div className="flex items-center gap-2 text-white/80">
                             <MessageSquareQuote className="h-4 w-4" />
-                            <p className="text-[11px] font-semibold uppercase tracking-widest">Generated comment</p>
+                            <p className="text-[11px] font-semibold uppercase tracking-widest">{t.app.historyItem.generatedCommentLabel}</p>
                         </div>
                         <p className="mt-3 text-[15px] leading-7 text-white/95">{item.generatedText}</p>
                     </div>
@@ -98,28 +103,28 @@ export const HistoryItemCard = memo(function HistoryItemCard({
 
                 <div className="feature-soft-card mt-4 flex flex-wrap items-center justify-end gap-3">
                     <div className="flex flex-wrap gap-2">
-                        <Tooltip text="Copy this generated comment to clipboard">
+                        <Tooltip text={t.app.historyItem.copyTooltip}>
                             <Button type="button" variant="secondary" onClick={() => onCopy(item.generatedText)}>
                                 <Copy className="h-4 w-4" />
-                                Copy
+                                {t.app.historyItem.copyAction}
                             </Button>
                         </Tooltip>
-                        <Tooltip text="Create a new history item from this angle">
+                        <Tooltip text={t.app.historyItem.reuseTooltip}>
                             <Button type="button" variant="secondary" onClick={() => onReuse(item.id)}>
                                 <RotateCcw className="h-4 w-4" />
-                                Reuse
+                                {t.app.historyItem.reuseAction}
                             </Button>
                         </Tooltip>
-                        <Tooltip text="Toggle whether this comment was already used">
+                        <Tooltip text={t.app.historyItem.toggleAppliedTooltip}>
                             <Button type="button" onClick={() => onToggleApplied(item.id)}>
                                 <CheckCircle2 className="h-4 w-4" />
                                 {toggleLabel}
                             </Button>
                         </Tooltip>
-                        <Tooltip text="Move this history item to trash">
+                        <Tooltip text={t.app.historyItem.trashTooltip}>
                             <Button type="button" variant="dangerSoft" onClick={() => onMoveToTrash(item.id)}>
                                 <Trash2 className="h-4 w-4" />
-                                Move to trash
+                                {t.app.historyItem.moveToTrash}
                             </Button>
                         </Tooltip>
                     </div>

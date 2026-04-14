@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/Select"
 import { Button } from "@/components/ui/Button"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
+import { useHistory } from "@/features/history/hooks/useHistory"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -21,12 +22,27 @@ import type {
 
 const PLATFORM_ORDER: PlatformId[] = ["linkedin", "upwork", "twitter", "reddit", "youtube"]
 
+const GOAL_TYPE_TO_HISTORY_VALUE: Record<GoalType, string> = {
+    "Add Value": "add_value",
+    Challenge: "challenge",
+    Networking: "networking",
+    Question: "question"
+}
+
+type GoalMetrics = {
+    generated: number
+    applied: number
+    dismissed: number
+    applyRate: number
+}
+
 function isObjectiveApplicable(objective: ObjectiveProfile, platformId: PlatformId): boolean {
     return objective.active && objective.scope.includes(platformId)
 }
 
 export default function GoalsPage() {
     const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
+    const { data: history } = useHistory()
     const { t } = useLanguageStore()
     const showLoading = useLoadingDelay(isLoading)
 
@@ -83,6 +99,99 @@ export default function GoalsPage() {
         () => objectiveLibrary.filter((item: ObjectiveProfile) => item.source !== "platform_base"),
         [objectiveLibrary]
     )
+
+    const goalMetricsByType = useMemo<Record<GoalType, GoalMetrics>>(() => {
+        const seed = (): GoalMetrics => ({
+            generated: 0,
+            applied: 0,
+            dismissed: 0,
+            applyRate: 0
+        })
+
+        const metrics: Record<GoalType, GoalMetrics> = {
+            "Add Value": seed(),
+            Challenge: seed(),
+            Networking: seed(),
+            Question: seed()
+        }
+
+        for (const item of history ?? []) {
+            const goalType = (Object.keys(GOAL_TYPE_TO_HISTORY_VALUE) as GoalType[])
+                .find((candidate) => GOAL_TYPE_TO_HISTORY_VALUE[candidate] === item.goal)
+
+            if (!goalType) {
+                continue
+            }
+
+            metrics[goalType].generated += 1
+            if (item.status === "applied") {
+                metrics[goalType].applied += 1
+            }
+
+            if (item.status === "dismissed") {
+                metrics[goalType].dismissed += 1
+            }
+        }
+
+        for (const goalType of Object.keys(metrics) as GoalType[]) {
+            const snapshot = metrics[goalType]
+            snapshot.applyRate =
+                snapshot.generated > 0
+                    ? Math.round((snapshot.applied / snapshot.generated) * 100)
+                    : 0
+        }
+
+        return metrics
+    }, [history])
+
+    const getObjectiveReason = useCallback((objective: ObjectiveProfile): string => {
+        const shortDescription = objective.description.trim()
+        if (shortDescription.length > 0) {
+            return shortDescription
+        }
+
+        const promptSummary = objective.strategyPrompt.trim()
+        if (promptSummary.length > 0) {
+            return promptSummary.slice(0, 96)
+        }
+
+        return objective.source === "platform_base"
+            ? t.app.goals.recommendationReasonBase
+            : t.app.goals.recommendationReasonCustom
+    }, [t])
+
+    const recommendedObjectivesByPlatform = useMemo(() => {
+        return PLATFORM_ORDER.map((platformId) => {
+            const rankedObjectives = activeObjectiveLibrary
+                .filter((objective) => isObjectiveApplicable(objective, platformId))
+                .map((objective) => {
+                    const metrics = goalMetricsByType[objective.canonicalGoal]
+                    const score = metrics.applied * 3 + metrics.generated
+
+                    return {
+                        objective,
+                        metrics,
+                        score
+                    }
+                })
+                .sort((left, right) => {
+                    if (right.score !== left.score) {
+                        return right.score - left.score
+                    }
+
+                    if (right.metrics.applyRate !== left.metrics.applyRate) {
+                        return right.metrics.applyRate - left.metrics.applyRate
+                    }
+
+                    return left.objective.name.localeCompare(right.objective.name)
+                })
+
+            return {
+                platformId,
+                topObjectives: rankedObjectives
+            }
+        })
+    }, [activeObjectiveLibrary, goalMetricsByType])
 
     const patchGoals = async (
         payload: Partial<UserSettings>,
@@ -275,8 +384,8 @@ export default function GoalsPage() {
 
             <section className="grid gap-4 lg:grid-cols-2">
                 <Card className="dashboard-card-xl">
-                    <p className="dashboard-overline">{t.app.goals.extensionPanelHintTitle}</p>
-                    <h2 className="mt-3 section-heading">{t.app.goals.customLibraryTitle}</h2>
+                    <p className="dashboard-overline">{t.app.goals.recommendedObjectivesTitle}</p>
+                    <h2 className="mt-3 section-heading">{t.app.goals.recommendedObjectivesDesc}</h2>
 
                     <div className="mt-5 space-y-4">
                         <p className="body-muted">{t.app.goals.extensionPanelHintDesc}</p>
@@ -286,14 +395,32 @@ export default function GoalsPage() {
                                 {t.app.goals.allPlatformsLabel}
                             </p>
                             <ul className="mt-3 space-y-2 text-[13px] text-primary-text">
-                                {PLATFORM_ORDER.map((platformId) => (
-                                    <li key={platformId} className="flex items-center justify-between gap-2 rounded-xl border border-border-soft bg-surface-base px-3 py-2">
-                                        <span>{platformLabelById[platformId]}</span>
-                                        <span className="text-[11px] font-semibold text-secondary-text">
-                                            {activeObjectiveLibrary.filter((objective) => isObjectiveApplicable(objective, platformId)).length}
-                                            {" "}
-                                            {t.app.goals.customLibraryTitle.toLowerCase()}
-                                        </span>
+                                {recommendedObjectivesByPlatform.map(({ platformId, topObjectives }) => (
+                                    <li key={platformId} className="rounded-xl border border-border-soft bg-surface-base px-3 py-2">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="font-semibold">{platformLabelById[platformId]}</span>
+                                            <span className="text-[11px] font-semibold text-secondary-text">
+                                                {topObjectives.length}
+                                            </span>
+                                        </div>
+
+                                        {topObjectives.length === 0 ? (
+                                            <p className="mt-1 text-[11px] text-secondary-text">{t.app.goals.noRecommendedObjectives}</p>
+                                        ) : (
+                                            <div className="mt-2 space-y-2">
+                                                {topObjectives.map(({ objective, metrics }) => (
+                                                    <div key={objective.id} className="rounded-lg border border-border-soft/70 bg-surface-elevated px-2.5 py-2">
+                                                        <p className="text-[12px] font-semibold text-primary-text">{getObjectiveDisplayName(objective)}</p>
+                                                        <p className="mt-0.5 text-[11px] leading-5 text-secondary-text">{getObjectiveReason(objective)}</p>
+                                                        <div className="mt-1.5 flex flex-wrap gap-2 text-[10px] font-semibold text-secondary-text">
+                                                            <span>{t.app.goals.metricGenerated}: {metrics.generated}</span>
+                                                            <span>{t.app.goals.metricApplied}: {metrics.applied}</span>
+                                                            <span>{t.app.goals.metricApplyRate}: {metrics.applyRate}%</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </li>
                                 ))}
                             </ul>

@@ -22,9 +22,9 @@ const en = {
     f1Title: "Smart Automation",
     f1Desc: "Automatically detects response boxes on supported platforms and displays our floating launcher ready to assist you.",
     f2Title: "Multiple Profiles",
-    f2Desc: "Set different tones and goals (Networking, Debate, Question) so the AI generates the perfect message every time.",
+    f2Desc: "Set different tones and communication objectives so AI can generate the right message for each context.",
     f3Title: "Local Privacy",
-    f3Desc: "Your drafts, history, and settings are securely saved in your browser's local storage. You have full control."
+    f3Desc: "Your drafts, history, and preferences are stored securely so you stay in control."
   },
   cta: {
     title: "Transform the way you network today.",
@@ -39,7 +39,7 @@ const en = {
     freeDesc: "For occasional users and testers",
     perMonth: "/ month",
     freeFeatures: [
-      "120 completions per month",
+      "120 generations per month",
       "1 Active Voice Profile",
       "Basic settings",
       "Community support"
@@ -50,16 +50,16 @@ const en = {
     proDesc: "For growing professionals",
     proBtn: "Choose Pro",
     proFeatures: [
-      "1,200 completions per month",
+      "1,200 generations per month",
       "10 Active Voice Profiles",
-      "Advanced interactive modes",
+      "Advanced customization controls",
       "Priority support"
     ],
     elitePlan: "Elite Plan",
     eliteDesc: "For leaders and agencies",
     eliteBtn: "Choose Elite",
     eliteFeatures: [
-      "4,000 completions per month",
+      "4,000 generations per month",
       "Unlimited profiles",
       "Early access to features",
       "24/7 VIP Support"
@@ -265,7 +265,33 @@ const en = {
       cancel: "Cancel",
       confirm: "Confirm",
       delete: "Delete",
-      working: "Working..."
+      working: "Working...",
+      globalErrorTitle: "Unexpected error",
+      globalErrorDesc: "We couldn't render this view right now. Please try again.",
+      tryAgain: "Try again"
+    },
+    extensionRedirect: {
+      secureConnectionStatus: "Establishing a secure connection...",
+      syncCompletedTitle: "Sync completed",
+      connectionErrorTitle: "Connection error",
+      connectingTitle: "Connecting extension",
+      syncCompletedDesc: "Your session was synced with the extension. This tab will close automatically.",
+      invalidLink: "The connection link is invalid. Start sign-in again from the extension.",
+      incompleteSession: "We could not validate a complete session. Sign in again and retry.",
+      syncSessionConnecting: "Connecting your session with the extension...",
+      syncSessionConnected: "Session connected successfully.",
+      sessionExpired: "Session expired. Sign in again to continue.",
+      goToDashboard: "Go to Dashboard",
+      retryConnection: "Retry connection",
+      backToLogin: "Back to login",
+      gatewayLoading: "Loading bridge...",
+      bridgeReceivingEndMissing: "We could not connect to the extension. Reload it in chrome://extensions and try again.",
+      bridgeSenderNotAllowed: "Could not authorize the extension connection. Sign in again and retry.",
+      bridgeSetSessionError: "Could not save your session in the extension. Try again in a few seconds.",
+      bridgeMissingTokens: "Your session is no longer valid for sync. Sign in again.",
+      bridgeTimeout: "The extension took too long to respond. Retry the connection.",
+      bridgeRuntimeUnavailable: "No active extension runtime detected. Reload it and try again.",
+      bridgeGenericError: "Could not complete sync with the extension. Retry or sign in again."
     },
     billing: {
       title: "Billing",
@@ -484,7 +510,7 @@ const en = {
       languageBaselineDesc: "These choices define how Mirror initializes before each generation.",
       whyMattersTitle: "Preferences",
       whyMattersDesc: "Configure Mirror to best fit your writing style.",
-      goalsSettingsMoved: "Goals configuration has moved to a dedicated screen.",
+      goalsSettingsMoved: "Objective setup is managed in a dedicated workspace.",
       preferencesUpdated: "Preferences updated",
       preferencesError: "Could not save preferences",
       noActiveProfile: "No active profile",
@@ -511,7 +537,7 @@ const en = {
     goals: {
       title: "Goals",
       heroTitle: "Goals Workspace",
-      heroDesc: "Pick the best default objective for each platform from curated strategy sets, then layer your custom objectives.",
+      heroDesc: "Define recommended objectives by platform and add custom objectives for your strategy.",
       modeTitle: "Generation mode",
       modeDesc: "Control whether Mirror recommends objectives automatically or lets you pick manually.",
       extensionPanelHintTitle: "How this appears in the extension",
@@ -522,7 +548,15 @@ const en = {
       assignmentDesc: "Optionally bind one active custom objective per platform. If none is selected, the base objective is used.",
       useBaseObjective: "Use base objective",
       customLibraryTitle: "Custom objectives",
-      customLibraryDesc: "Create reusable custom objectives for your own strategy.",
+      customLibraryDesc: "Create custom objectives when you need a different communication approach.",
+      recommendedObjectivesTitle: "Recommended by platform",
+      recommendedObjectivesDesc: "See why these objectives are recommended and how they are performing recently.",
+      noRecommendedObjectives: "No recommended objectives yet for this platform.",
+      metricGenerated: "Generated",
+      metricApplied: "Applied",
+      metricApplyRate: "Rate",
+      recommendationReasonBase: "Base objective aligned with typical engagement patterns on this platform.",
+      recommendationReasonCustom: "Active custom objective selected for this platform context.",
       objectiveNamePlaceholder: "Objective name (example: Lead with data)",
       objectiveGoalLabel: "Objective intent",
       objectiveGoalHelp: "This defines the communication angle used by the assistant.",
@@ -577,6 +611,24 @@ const en = {
       statusDismissed: "Dismissed",
       activeFilters: "Active filters",
       noFiltersActive: "No filters active"
+    },
+    historyItem: {
+      sourceAlternative: "Alternative",
+      sourceGenerated: "Generated",
+      sourceReused: "Reused",
+      sourceManualEdit: "Manual edit",
+      generatedAtLabel: "Generated",
+      sourcePostLabel: "Source post",
+      generatedCommentLabel: "Generated comment",
+      copyTooltip: "Copy this generated comment to your clipboard",
+      copyAction: "Copy",
+      reuseTooltip: "Create a new history item from this angle",
+      reuseAction: "Reuse",
+      toggleAppliedTooltip: "Toggle whether this comment was already used",
+      markPending: "Mark pending",
+      markApplied: "Mark applied",
+      trashTooltip: "Move this history item to trash",
+      moveToTrash: "Move to trash"
     },
     profileForm: {
       refineVoice: "Refine this voice",

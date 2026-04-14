@@ -22,9 +22,9 @@ const pt = {
     f1Title: "Automação Inteligente",
     f1Desc: "Detecta automaticamente caixas de resposta em plataformas compatíveis e exibe nosso launcher flutuante pronto para ajudar.",
     f2Title: "Múltiplos Perfis",
-    f2Desc: "Configure diferentes tons e objetivos (Networking, Debater, Pergunta) para que a IA gere a mensagem perfeita sempre.",
+    f2Desc: "Configure diferentes tons e objetivos de comunicação para que a IA gere a mensagem certa em cada contexto.",
     f3Title: "Privacidade Local",
-    f3Desc: "Seus rascunhos, histórico e configurações são salvos com segurança no armazenamento do seu navegador. Você tem o controle total."
+    f3Desc: "Seus rascunhos, histórico e preferências são salvos com segurança para que você mantenha o controle."
   },
   cta: {
     title: "Transforme sua maneira de fazer networking hoje.",
@@ -39,7 +39,7 @@ const pt = {
     perMonth: "/ mês",
     freeDesc: "Para usuários ocasionais e testers",
     freeFeatures: [
-      "120 autocompletados por mês",
+      "120 gerações por mês",
       "1 Perfil de voz ativo",
       "Configurações básicas",
       "Suporte comunitário"
@@ -50,16 +50,16 @@ const pt = {
     proDesc: "Para profissionais em crescimento",
     proBtn: "Escolher Pro",
     proFeatures: [
-      "1.200 autocompletados por mês",
+      "1.200 gerações por mês",
       "10 Perfis de voz ativos",
-      "Modos avançados interativos",
+      "Controles avançados de personalização",
       "Suporte prioritário"
     ],
     elitePlan: "Plano Elite",
     eliteDesc: "Para líderes e agências",
     eliteBtn: "Escolher Elite",
     eliteFeatures: [
-      "4.000 autocompletados por mês",
+      "4.000 gerações por mês",
       "Perfis ilimitados",
       "Acesso antecipado a funções",
       "Suporte VIP 24/7"
@@ -265,7 +265,33 @@ const pt = {
       cancel: "Cancelar",
       confirm: "Confirmar",
       delete: "Excluir",
-      working: "Processando..."
+      working: "Processando...",
+      globalErrorTitle: "Erro inesperado",
+      globalErrorDesc: "Não foi possível renderizar esta tela agora. Tente novamente.",
+      tryAgain: "Tentar novamente"
+    },
+    extensionRedirect: {
+      secureConnectionStatus: "Estabelecendo conexão segura...",
+      syncCompletedTitle: "Sincronização concluída",
+      connectionErrorTitle: "Erro de conexão",
+      connectingTitle: "Conectando extensão",
+      syncCompletedDesc: "Sua sessão foi sincronizada com a extensão. Esta aba será fechada automaticamente.",
+      invalidLink: "O link de conexão é inválido. Inicie o login novamente pela extensão.",
+      incompleteSession: "Não foi possível validar uma sessão completa. Faça login novamente e tente de novo.",
+      syncSessionConnecting: "Conectando sua sessão com a extensão...",
+      syncSessionConnected: "Sessão conectada com sucesso.",
+      sessionExpired: "Sessão expirada. Faça login novamente para continuar.",
+      goToDashboard: "Ir para o Dashboard",
+      retryConnection: "Tentar novamente",
+      backToLogin: "Voltar ao login",
+      gatewayLoading: "Carregando ponte...",
+      bridgeReceivingEndMissing: "Não conseguimos conectar à extensão. Recarregue em chrome://extensions e tente novamente.",
+      bridgeSenderNotAllowed: "Não foi possível autorizar a conexão com a extensão. Faça login novamente e tente de novo.",
+      bridgeSetSessionError: "Não foi possível salvar sua sessão na extensão. Tente novamente em alguns segundos.",
+      bridgeMissingTokens: "Sua sessão não é mais válida para sincronização. Faça login novamente.",
+      bridgeTimeout: "A extensão demorou para responder. Tente novamente a conexão.",
+      bridgeRuntimeUnavailable: "Nenhuma extensão ativa foi detectada. Recarregue e tente novamente.",
+      bridgeGenericError: "Não foi possível concluir a sincronização com a extensão. Tente novamente ou faça login de novo."
     },
     billing: {
       title: "Faturamento",
@@ -484,7 +510,7 @@ const pt = {
       languageBaselineDesc: "Configuração inicial antes de cada geração.",
       whyMattersTitle: "Preferencias",
       whyMattersDesc: "Configure o Mirror para melhor se ajustar ao seu estilo.",
-      goalsSettingsMoved: "A configuração de objetivos foi movida para uma tela dedicada.",
+      goalsSettingsMoved: "A configuração de objetivos é gerenciada em um espaço dedicado.",
       preferencesUpdated: "Preferências atualizadas",
       preferencesError: "Não foi possível salvar as preferências",
       noActiveProfile: "Sem perfil ativo",
@@ -511,7 +537,7 @@ const pt = {
     goals: {
       title: "Objetivos",
       heroTitle: "Espaço de Objetivos",
-      heroDesc: "Defina o objetivo base por plataforma e crie objetivos personalizados atribuíveis conforme sua estratégia.",
+      heroDesc: "Defina objetivos recomendados por plataforma e crie objetivos personalizados conforme sua estratégia.",
       modeTitle: "Modo de geração",
       modeDesc: "Controle se o Mirror recomenda objetivos automaticamente ou se você prefere seleção manual.",
       extensionPanelHintTitle: "Como isso aparece na extensão",
@@ -523,6 +549,14 @@ const pt = {
       useBaseObjective: "Usar objetivo base",
       customLibraryTitle: "Objetivos personalizados",
       customLibraryDesc: "Crie objetivos reutilizáveis para sua estratégia.",
+      recommendedObjectivesTitle: "Recomendados por plataforma",
+      recommendedObjectivesDesc: "Veja por que estes objetivos são recomendados e como performam recentemente.",
+      noRecommendedObjectives: "Ainda não há objetivos recomendados para esta plataforma.",
+      metricGenerated: "Gerados",
+      metricApplied: "Aplicados",
+      metricApplyRate: "Taxa",
+      recommendationReasonBase: "Objetivo base alinhado ao padrão de interação desta plataforma.",
+      recommendationReasonCustom: "Objetivo personalizado ativo para este contexto de plataforma.",
       objectiveNamePlaceholder: "Nome do objetivo (exemplo: Começar com dados)",
       objectiveGoalLabel: "Intencao do objetivo",
       objectiveGoalHelp: "Define o angulo de comunicacao que o assistente vai usar.",
@@ -577,6 +611,24 @@ const pt = {
       statusDismissed: "Descartado",
       activeFilters: "Filtros ativos",
       noFiltersActive: "Nenhum filtro ativo"
+    },
+    historyItem: {
+      sourceAlternative: "Alternativa",
+      sourceGenerated: "Gerado",
+      sourceReused: "Reutilizado",
+      sourceManualEdit: "Edição manual",
+      generatedAtLabel: "Gerado",
+      sourcePostLabel: "Post de origem",
+      generatedCommentLabel: "Comentário gerado",
+      copyTooltip: "Copiar este comentário para a área de transferência",
+      copyAction: "Copiar",
+      reuseTooltip: "Criar um novo item de histórico a partir deste ângulo",
+      reuseAction: "Reutilizar",
+      toggleAppliedTooltip: "Alternar se este comentário já foi usado",
+      markPending: "Marcar pendente",
+      markApplied: "Marcar aplicado",
+      trashTooltip: "Mover este item de histórico para a lixeira",
+      moveToTrash: "Mover para lixeira"
     },
     profileForm: {
       refineVoice: "Refine esta voz",

@@ -8,6 +8,8 @@ import { saveConnectedExtensionId } from "@/lib/extension-bridge"
 import { useSearchParams } from "next/navigation"
 import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
 import Image from "next/image"
+import { useLanguageStore } from "@/store/useLanguageStore"
+import type { Dictionary } from "@/lib/i18n/types"
 
 const BRIDGE_TIMEOUT_MS = 1800
 const BRIDGE_RETRY_DELAY_MS = 50
@@ -85,32 +87,34 @@ type WindowWithExtensionBridge = Window & {
     }
 }
 
-function getBridgeErrorMessage(reason: ExtensionSyncFailureReason) {
+type RedirectCopy = Dictionary["app"]["extensionRedirect"]
+
+function getBridgeErrorMessage(reason: ExtensionSyncFailureReason, copy: RedirectCopy) {
     if (reason.includes("Receiving end does not exist")) {
-        return "No logramos conectar con la extensión. Recárgala en chrome://extensions y vuelve a intentarlo."
+        return copy.bridgeReceivingEndMissing
     }
 
     if (reason === "sender_not_allowed") {
-        return "No fue posible autorizar la conexión con la extensión. Vuelve a iniciar sesión y reintenta."
+        return copy.bridgeSenderNotAllowed
     }
 
     if (reason === "set_session_error") {
-        return "No pudimos guardar tu sesión en la extensión. Intenta de nuevo en unos segundos."
+        return copy.bridgeSetSessionError
     }
 
     if (reason === "missing_tokens") {
-        return "Tu sesión ya no es válida para sincronizar. Inicia sesión nuevamente."
+        return copy.bridgeMissingTokens
     }
 
     if (reason === "BRIDGE_TIMEOUT") {
-        return "La extensión tardó en responder. Reintenta la conexión."
+        return copy.bridgeTimeout
     }
 
     if (reason === "runtime_unavailable") {
-        return "No detectamos la extensión activa. Recárgala y vuelve a intentarlo."
+        return copy.bridgeRuntimeUnavailable
     }
 
-    return "No pudimos completar la sincronización con la extensión. Reintenta o vuelve a iniciar sesión."
+    return copy.bridgeGenericError
 }
 
 function normalizeThemeForExtension(value: unknown): ExtensionTheme | undefined {
@@ -162,21 +166,23 @@ function normalizeActiveProfileId(value: unknown): string | null | undefined {
 }
 
 function RedirectContent() {
+    const t = useLanguageStore((state) => state.t)
+    const copy = t.app.extensionRedirect
     const searchParams = useSearchParams()
     const parsedNext = useMemo(() => parseExtensionNext(searchParams.get("next")), [searchParams])
     const nextUrl = parsedNext?.normalized ?? null
-    const [status, setStatus] = useState("Estableciendo conexión segura...")
+    const [status, setStatus] = useState(copy.secureConnectionStatus)
     const [isSuccess, setIsSuccess] = useState(false)
     const [isError, setIsError] = useState(false)
 
     const title = isSuccess
-        ? "Sincronización completada"
+        ? copy.syncCompletedTitle
         : isError
-            ? "Error de conexión"
-            : "Conectando extensión"
+            ? copy.connectionErrorTitle
+            : copy.connectingTitle
 
     const helperText = isSuccess
-        ? "La sesión quedó sincronizada con la extensión. Esta pestaña se cerrará automáticamente."
+        ? copy.syncCompletedDesc
         : isError
             ? status
             : ""
@@ -256,13 +262,13 @@ function RedirectContent() {
             console.warn("[extension-redirect] bridge_failed", reason)
             if (cancelled) return
 
-            setStatus(getBridgeErrorMessage(reason))
+            setStatus(getBridgeErrorMessage(reason, copy))
             setIsError(true)
         }
 
         const proceedToExtension = async () => {
             if (!parsedNext || !nextUrl) {
-                setStatus("El enlace de conexión no es válido. Vuelve a iniciar sesión desde la extensión.")
+                setStatus(copy.invalidLink)
                 setIsError(true)
                 return
             }
@@ -273,7 +279,7 @@ function RedirectContent() {
 
             if (session?.access_token && session.user?.id) {
                 if (!session.refresh_token) {
-                    setStatus("No pudimos validar la sesión completa. Inicia sesión nuevamente para reintentar.")
+                    setStatus(copy.incompleteSession)
                     setIsError(true)
                     return
                 }
@@ -351,12 +357,12 @@ function RedirectContent() {
                             objectiveLibrary
                         }
 
-                        setStatus("Conectando tu sesión con la extensión...")
+                        setStatus(copy.syncSessionConnecting)
 
                         const response = await sendWithRetry(runtime, extensionId, message)
                         if (response?.ok) {
                             saveConnectedExtensionId(extensionId)
-                            setStatus("Sesión conectada correctamente.")
+                            setStatus(copy.syncSessionConnected)
                             setIsSuccess(true)
                             window.setTimeout(() => {
                                 if (cancelled) return
@@ -374,7 +380,7 @@ function RedirectContent() {
                     markBridgeFailure("runtime_unavailable")
                 }
             } else {
-                setStatus("Sesión expirada. Inicia sesión nuevamente para continuar.")
+                setStatus(copy.sessionExpired)
                 setIsError(true)
             }
         }
@@ -384,7 +390,7 @@ function RedirectContent() {
         return () => {
             cancelled = true
         }
-    }, [nextUrl, parsedNext])
+    }, [copy, nextUrl, parsedNext])
 
     return (
         <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-6 overflow-hidden">
@@ -431,7 +437,7 @@ function RedirectContent() {
                                     onClick={() => window.location.href = "/profiles"}
                                     className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-sm flex items-center justify-center focus:outline-none"
                                 >
-                                    Ir al Dashboard
+                                    {copy.goToDashboard}
                                 </button>
                             </div>
                         ) : isError ? (
@@ -440,14 +446,14 @@ function RedirectContent() {
                                     onClick={() => window.location.reload()}
                                     className="neo-btn-primary w-full h-11 rounded-xl font-semibold text-[14px] shadow-premium-sm flex items-center justify-center focus:outline-none"
                                 >
-                                    Reintentar conexión
+                                    {copy.retryConnection}
                                 </button>
 
                                 <button
                                     onClick={redirectToLogin}
                                     className="w-full h-11 rounded-xl font-semibold text-[14px] border border-border-soft text-primary-dark hover:bg-surface-subtle transition-colors flex items-center justify-center focus:outline-none"
                                 >
-                                    Volver a login
+                                    {copy.backToLogin}
                                 </button>
                             </div>
                         ) : null}
@@ -465,10 +471,13 @@ function RedirectContent() {
 }
 
 export default function ExtensionRedirectPage() {
+    const t = useLanguageStore((state) => state.t)
+    const copy = t.app.extensionRedirect
+
     return (
         <Suspense fallback={
             <div className="flex min-h-screen w-full items-center justify-center text-secondary-text text-[14px] font-medium">
-                Cargando pasarela...
+                {copy.gatewayLoading}
             </div>
         }>
             <RedirectContent />
