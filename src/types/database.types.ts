@@ -100,9 +100,7 @@ export interface UserProfile {
 }
 
 export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question"
-export type GoalMode = "manual" | "auto"
 export type PlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
-export type PlatformDefaultObjectiveIds = Record<PlatformId, string | null>
 export type ObjectiveScope = PlatformId[]
 export type ObjectiveSource = "platform_base" | "user_custom" | "imported_pack"
 
@@ -127,13 +125,9 @@ export interface UserSettings {
   defaultEmojis: boolean
   autoInsert: boolean
   confirmBeforeApply: boolean
-  goalMode: GoalMode
-  goalModelVersion: number
   objectiveLibrary: ObjectiveProfile[]
-  platformDefaultObjectiveIds: PlatformDefaultObjectiveIds
   notificationsEnabled: boolean
   desktopAlertsEnabled: boolean
-  onboardingCompleted: boolean
 }
 
 export interface VoiceProfile {

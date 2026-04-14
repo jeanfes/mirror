@@ -13,6 +13,7 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { ROUTES } from "@/lib/routes"
+import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { UserSettings } from "@/types/database.types"
 
@@ -26,7 +27,6 @@ type UpdateUserSettingsInput = Pick<
     | "confirmBeforeApply"
     | "desktopAlertsEnabled"
     | "notificationsEnabled"
-    | "onboardingCompleted"
 >
 
 const AUTO_SAVE_DEBOUNCE_MS = 450
@@ -39,8 +39,7 @@ const defaultDraft: UpdateUserSettingsInput = {
     autoInsert: false,
     confirmBeforeApply: false,
     desktopAlertsEnabled: false,
-    notificationsEnabled: true,
-    onboardingCompleted: false
+    notificationsEnabled: true
 }
 
 function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettingsInput): boolean {
@@ -52,8 +51,7 @@ function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettin
         left.autoInsert === right.autoInsert &&
         left.confirmBeforeApply === right.confirmBeforeApply &&
         left.desktopAlertsEnabled === right.desktopAlertsEnabled &&
-        left.notificationsEnabled === right.notificationsEnabled &&
-        left.onboardingCompleted === right.onboardingCompleted
+        left.notificationsEnabled === right.notificationsEnabled
     )
 }
 
@@ -75,8 +73,6 @@ function buildChangedPayload(
         payload.desktopAlertsEnabled = next.desktopAlertsEnabled
     if (next.notificationsEnabled !== base.notificationsEnabled)
         payload.notificationsEnabled = next.notificationsEnabled
-    if (next.onboardingCompleted !== base.onboardingCompleted)
-        payload.onboardingCompleted = next.onboardingCompleted
 
     return payload
 }
@@ -102,8 +98,7 @@ export default function SettingsPage() {
             autoInsert: settings.autoInsert,
             confirmBeforeApply: settings.confirmBeforeApply,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
-            notificationsEnabled: settings.notificationsEnabled,
-            onboardingCompleted: settings.onboardingCompleted
+            notificationsEnabled: settings.notificationsEnabled
         }
     }, [draft, settings])
 
@@ -120,8 +115,7 @@ export default function SettingsPage() {
             autoInsert: settings.autoInsert,
             confirmBeforeApply: settings.confirmBeforeApply,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
-            notificationsEnabled: settings.notificationsEnabled,
-            onboardingCompleted: settings.onboardingCompleted
+            notificationsEnabled: settings.notificationsEnabled
         }
     }, [settings])
 
@@ -181,6 +175,7 @@ export default function SettingsPage() {
                 try {
                     const saved = await updateSettings(payload)
                     setAppLanguage(saved.language)
+                    void notifyExtensionSettingsChanged({ force: true })
                     setDraft((current) =>
                         current && areSettingsEqual(current, snapshot) ? null : current
                     )
@@ -318,6 +313,16 @@ export default function SettingsPage() {
                     <div className="mt-5 rounded-3xl border border-border-soft bg-surface-base p-4">
                         <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">{t.app.settings.whyMattersTitle}</p>
                         <p className="mt-2 body-muted">{t.app.settings.whyMattersDesc}</p>
+                    </div>
+
+                    <div className="mt-4 rounded-3xl border border-accent-purple/20 bg-accent-purple/6 p-4">
+                        <p className="text-[12px] font-semibold text-primary-text">{t.app.settings.goalsSettingsMoved}</p>
+                        <Link
+                            href={ROUTES.private.goals}
+                            className="mt-3 inline-flex h-9 items-center rounded-xl border border-border-soft bg-surface-elevated px-3.5 text-[12px] font-semibold text-primary-text transition-colors hover:bg-surface-hover"
+                        >
+                            {t.app.goals.title}
+                        </Link>
                     </div>
                 </Card>
             </section>

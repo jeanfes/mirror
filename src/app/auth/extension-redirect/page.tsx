@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { ROUTES } from "@/lib/routes"
 import { parseExtensionNext } from "@/lib/extension-handoff"
+import { saveConnectedExtensionId } from "@/lib/extension-bridge"
 import { useSearchParams } from "next/navigation"
 import { ShieldCheck, Loader2, AlertCircle } from "lucide-react"
 import Image from "next/image"
@@ -15,11 +16,9 @@ const BRIDGE_ATTEMPTS = 3
 type ExtensionTheme = "light" | "dark" | "system"
 type ExtensionLanguage = "es" | "en" | "pt" | "fr" | "de"
 type ExtensionCommentLanguageMode = "post" | "account"
-type ExtensionGoalMode = "manual" | "auto"
 type ExtensionGoalType = "Add Value" | "Challenge" | "Networking" | "Question"
 type ExtensionPlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 type ExtensionObjectiveSource = "platform_base" | "user_custom" | "imported_pack"
-type ExtensionPlatformDefaultObjectiveIds = Record<ExtensionPlatformId, string | null>
 
 interface ExtensionObjectiveProfile {
     id: string
@@ -64,11 +63,7 @@ type ExtensionSetSessionMessage = {
     confirmBeforeApply?: boolean
     notificationsEnabled?: boolean
     desktopAlertsEnabled?: boolean
-    onboardingCompleted?: boolean
-    goalMode?: ExtensionGoalMode
-    goalModelVersion?: number
     objectiveLibrary?: ExtensionObjectiveProfile[]
-    platformDefaultObjectiveIds?: Partial<ExtensionPlatformDefaultObjectiveIds>
 }
 
 type ExtensionBridgeMessage = ExtensionSetSessionMessage
@@ -140,14 +135,6 @@ function normalizeLanguage(value: unknown): ExtensionLanguage | undefined {
 
 function normalizeCommentLanguageMode(value: unknown): ExtensionCommentLanguageMode | undefined {
     if (value === "post" || value === "account") {
-        return value
-    }
-
-    return undefined
-}
-
-function normalizeGoalMode(value: unknown): ExtensionGoalMode | undefined {
-    if (value === "manual" || value === "auto") {
         return value
     }
 
@@ -300,7 +287,7 @@ function RedirectContent() {
                         const [settingsQuery, accountQuery] = await Promise.all([
                             supabase
                                 .from("user_settings")
-                                .select("theme, language, comment_language_mode, active_profile_id, default_emojis, auto_insert, confirm_before_apply, notifications_enabled, desktop_alerts_enabled, onboarding_completed, goal_mode, goal_model_version, objective_library, platform_default_objective_ids")
+                                .select("theme, language, comment_language_mode, active_profile_id, default_emojis, auto_insert, confirm_before_apply, notifications_enabled, desktop_alerts_enabled, objective_library")
                                 .eq("user_id", session.user.id)
                                 .maybeSingle(),
                             supabase
@@ -323,11 +310,6 @@ function RedirectContent() {
                         const objectiveLibrary = Array.isArray(settingsRow?.objective_library)
                             ? (settingsRow.objective_library as ExtensionObjectiveProfile[])
                             : undefined
-
-                        const platformDefaultObjectiveIds =
-                            settingsRow?.platform_default_objective_ids && typeof settingsRow.platform_default_objective_ids === "object"
-                                ? (settingsRow.platform_default_objective_ids as Partial<ExtensionPlatformDefaultObjectiveIds>)
-                                : undefined
 
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
@@ -366,23 +348,14 @@ function RedirectContent() {
                                 typeof settingsRow?.desktop_alerts_enabled === "boolean"
                                     ? settingsRow.desktop_alerts_enabled
                                     : undefined,
-                            onboardingCompleted:
-                                typeof settingsRow?.onboarding_completed === "boolean"
-                                    ? settingsRow.onboarding_completed
-                                    : undefined,
-                            goalMode: normalizeGoalMode(settingsRow?.goal_mode),
-                            goalModelVersion:
-                                typeof settingsRow?.goal_model_version === "number"
-                                    ? Math.max(2, settingsRow.goal_model_version)
-                                    : undefined,
-                            objectiveLibrary,
-                            platformDefaultObjectiveIds
+                            objectiveLibrary
                         }
 
                         setStatus("Conectando tu sesión con la extensión...")
 
                         const response = await sendWithRetry(runtime, extensionId, message)
                         if (response?.ok) {
+                            saveConnectedExtensionId(extensionId)
                             setStatus("Sesión conectada correctamente.")
                             setIsSuccess(true)
                             window.setTimeout(() => {

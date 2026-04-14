@@ -4,7 +4,6 @@ import type {
   ObjectiveProfile,
   ObjectiveScope,
   ObjectiveSource,
-  PlatformDefaultObjectiveIds,
   PlatformId,
   UserSettings
 } from "@/types/database.types"
@@ -15,7 +14,7 @@ const OBJECTIVE_NAME_MAX = 64
 const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200
 const USER_SETTINGS_SELECT_COLUMNS =
-  "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, confirm_before_apply, goal_mode, goal_model_version, objective_library, platform_default_objective_ids, desktop_alerts_enabled, notifications_enabled, onboarding_completed, updated_at"
+  "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, confirm_before_apply, objective_library, desktop_alerts_enabled, notifications_enabled, updated_at"
 
 const baseObjectiveSeeds: Array<
   Omit<ObjectiveProfile, "active" | "createdAt" | "updatedAt">
@@ -166,12 +165,6 @@ const baseObjectiveSeeds: Array<
   }
 ]
 
-function normalizeGoalMode(value: unknown): UserSettings["goalMode"] {
-  return value === "auto" || value === "manual"
-    ? value
-    : "manual"
-}
-
 function normalizeGoal(value: unknown): GoalType | null {
   return typeof value === "string" && GOAL_SET.has(value as GoalType)
     ? (value as GoalType)
@@ -224,25 +217,6 @@ function buildBaseObjectiveLibrary(now = nowMs()): ObjectiveProfile[] {
     createdAt: now,
     updatedAt: now
   }))
-}
-
-function isObjectiveApplicable(objective: ObjectiveProfile, platformId: PlatformId): boolean {
-  return objective.active && objective.scope.includes(platformId)
-}
-
-function findObjectiveById(library: ObjectiveProfile[], objectiveId: string | null | undefined): ObjectiveProfile | null {
-  if (!objectiveId) {
-    return null
-  }
-
-  return library.find((objective) => objective.id === objectiveId) ?? null
-}
-
-function findFallbackObjective(
-  library: ObjectiveProfile[],
-  platformId: PlatformId
-): ObjectiveProfile | null {
-  return library.find((objective) => isObjectiveApplicable(objective, platformId)) ?? null
 }
 
 function normalizeObjectiveProfile(value: unknown): ObjectiveProfile | null {
@@ -310,47 +284,7 @@ function normalizeObjectiveLibrary(value: unknown): ObjectiveProfile[] {
   return Array.from(byId.values())
 }
 
-function normalizePlatformDefaultObjectiveIds(
-  value: unknown,
-  objectiveLibrary: ObjectiveProfile[]
-): PlatformDefaultObjectiveIds {
-  const normalized: PlatformDefaultObjectiveIds = {
-    linkedin: "base-linkedin-authority",
-    twitter: "base-twitter-hot-take",
-    reddit: "base-reddit-question",
-    youtube: "base-youtube-insight",
-    upwork: "base-upwork-proposal"
-  }
-
-  const candidate =
-    value && typeof value === "object"
-      ? (value as Partial<Record<PlatformId, unknown>>)
-      : {}
-
-  for (const platformId of PLATFORM_IDS) {
-    const candidateId = candidate[platformId]
-    const candidateObjective =
-      typeof candidateId === "string"
-        ? findObjectiveById(objectiveLibrary, candidateId.trim())
-        : null
-
-    if (candidateObjective && isObjectiveApplicable(candidateObjective, platformId)) {
-      normalized[platformId] = candidateObjective.id
-      continue
-    }
-
-    const fallbackObjective = findFallbackObjective(objectiveLibrary, platformId)
-    normalized[platformId] = fallbackObjective?.id ?? null
-  }
-
-  return normalized
-}
-
 const defaultObjectiveLibrary = normalizeObjectiveLibrary(null)
-const defaultPlatformDefaultObjectiveIds = normalizePlatformDefaultObjectiveIds(
-  null,
-  defaultObjectiveLibrary
-)
 
 const defaultUserSettings: UserSettings = {
   language: "es",
@@ -360,13 +294,9 @@ const defaultUserSettings: UserSettings = {
   defaultEmojis: true,
   autoInsert: false,
   confirmBeforeApply: false,
-  goalMode: "manual",
-  goalModelVersion: 2,
   objectiveLibrary: defaultObjectiveLibrary,
-  platformDefaultObjectiveIds: defaultPlatformDefaultObjectiveIds,
   desktopAlertsEnabled: false,
-  notificationsEnabled: true,
-  onboardingCompleted: false
+  notificationsEnabled: true
 }
 
 function mapRowToSettings(row: Record<string, unknown>): UserSettings {
@@ -379,13 +309,8 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const commentLanguageMode = row.comment_language_mode
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
-  const onboardingCompleted = row.onboarding_completed
 
   const objectiveLibrary = normalizeObjectiveLibrary(row.objective_library)
-  const platformDefaultObjectiveIds = normalizePlatformDefaultObjectiveIds(
-    row.platform_default_objective_ids,
-    objectiveLibrary
-  )
 
   return {
     language:
@@ -414,13 +339,7 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
       typeof confirmBeforeApply === "boolean"
         ? confirmBeforeApply
         : defaultUserSettings.confirmBeforeApply,
-    goalMode: normalizeGoalMode(row.goal_mode),
-    goalModelVersion:
-      typeof row.goal_model_version === "number"
-        ? Math.max(2, row.goal_model_version)
-        : 2,
     objectiveLibrary,
-    platformDefaultObjectiveIds,
     desktopAlertsEnabled:
       typeof desktopAlertsEnabled === "boolean"
         ? desktopAlertsEnabled
@@ -428,11 +347,7 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
     notificationsEnabled:
       typeof notificationsEnabled === "boolean"
         ? notificationsEnabled
-        : defaultUserSettings.notificationsEnabled,
-    onboardingCompleted:
-      typeof onboardingCompleted === "boolean"
-        ? onboardingCompleted
-        : defaultUserSettings.onboardingCompleted
+        : defaultUserSettings.notificationsEnabled
   }
 }
 
@@ -484,21 +399,9 @@ export async function updateUserSettings(
   if (input.defaultEmojis !== undefined) payload.default_emojis = input.defaultEmojis
   if (input.autoInsert !== undefined) payload.auto_insert = input.autoInsert
   if (input.confirmBeforeApply !== undefined) payload.confirm_before_apply = input.confirmBeforeApply
-  if (input.goalMode !== undefined) payload.goal_mode = input.goalMode
-  if (input.goalModelVersion !== undefined) payload.goal_model_version = Math.max(2, input.goalModelVersion)
   if (input.objectiveLibrary !== undefined) payload.objective_library = input.objectiveLibrary
-  if (input.platformDefaultObjectiveIds !== undefined) payload.platform_default_objective_ids = input.platformDefaultObjectiveIds
   if (input.desktopAlertsEnabled !== undefined) payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined) payload.notifications_enabled = input.notificationsEnabled
-  if (input.onboardingCompleted !== undefined) payload.onboarding_completed = input.onboardingCompleted
-
-  const hasObjectivePatch =
-    input.objectiveLibrary !== undefined ||
-    input.platformDefaultObjectiveIds !== undefined
-
-  if (hasObjectivePatch && payload.goal_model_version === undefined) {
-    payload.goal_model_version = 2
-  }
 
   const { data, error } = await supabase
     .from("user_settings")

@@ -55,6 +55,7 @@ This repository uses Supabase MCP as the operational source of truth for schema 
 - Do not rely on local `web/supabase` migration files from this web app folder.
 - Apply schema changes directly in Supabase using MCP tools.
 - Keep the contract aligned in `contracts/settings-contract.v1.json` whenever schema-related settings fields change.
+- Operational note (2026-04-13): `public.user_settings.onboarding_completed` was removed in remote Supabase via MCP.
 
 ## Auth Notes
 

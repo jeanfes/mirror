@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { Check, Flag, Sparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
@@ -9,47 +9,20 @@ import { Button } from "@/components/ui/Button"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type {
     GoalType,
     ObjectiveProfile,
     ObjectiveScope,
-    PlatformDefaultObjectiveIds,
     PlatformId,
     UserSettings
 } from "@/types/database.types"
 
 const PLATFORM_ORDER: PlatformId[] = ["linkedin", "upwork", "twitter", "reddit", "youtube"]
 
-const DEFAULT_PLATFORM_DEFAULT_OBJECTIVE_IDS: PlatformDefaultObjectiveIds = {
-    linkedin: "base-linkedin-authority",
-    twitter: "base-twitter-hot-take",
-    reddit: "base-reddit-question",
-    youtube: "base-youtube-insight",
-    upwork: "base-upwork-proposal"
-}
-
 function isObjectiveApplicable(objective: ObjectiveProfile, platformId: PlatformId): boolean {
     return objective.active && objective.scope.includes(platformId)
-}
-
-function resolvePlatformDefaultObjectiveIds(
-    current: PlatformDefaultObjectiveIds,
-    objectiveLibrary: ObjectiveProfile[]
-): PlatformDefaultObjectiveIds {
-    const next = { ...current }
-
-    for (const platformId of PLATFORM_ORDER) {
-        const selected = objectiveLibrary.find((item) => item.id === next[platformId])
-        if (selected && isObjectiveApplicable(selected, platformId)) {
-            continue
-        }
-
-        const fallback = objectiveLibrary.find((item) => isObjectiveApplicable(item, platformId))
-        next[platformId] = fallback?.id ?? null
-    }
-
-    return next
 }
 
 export default function GoalsPage() {
@@ -62,8 +35,6 @@ export default function GoalsPage() {
     const [objectivePrompt, setObjectivePrompt] = useState("")
     const [objectiveGoal, setObjectiveGoal] = useState<GoalType>("Add Value")
     const [objectiveScope, setObjectiveScope] = useState<ObjectiveScope>([...PLATFORM_ORDER])
-    const [optimisticDefaults, setOptimisticDefaults] = useState<PlatformDefaultObjectiveIds | null>(null)
-    const [savingPlatformId, setSavingPlatformId] = useState<PlatformId | null>(null)
 
     const goalOptions = useMemo<Array<{ label: string; value: GoalType }>>(
         () => [
@@ -91,17 +62,6 @@ export default function GoalsPage() {
         [settings?.objectiveLibrary]
     )
 
-    const platformDefaultObjectiveIds = useMemo(
-        () => settings?.platformDefaultObjectiveIds ?? DEFAULT_PLATFORM_DEFAULT_OBJECTIVE_IDS,
-        [settings?.platformDefaultObjectiveIds]
-    )
-
-    useEffect(() => {
-        setOptimisticDefaults(platformDefaultObjectiveIds)
-    }, [platformDefaultObjectiveIds])
-
-    const effectivePlatformDefaultObjectiveIds = optimisticDefaults ?? platformDefaultObjectiveIds
-
     const localizedBaseObjectiveNames = useMemo<Record<string, string>>(() => {
         return (t.app.goals.baseObjectiveNames ?? {}) as Record<string, string>
     }, [t])
@@ -124,33 +84,13 @@ export default function GoalsPage() {
         [objectiveLibrary]
     )
 
-    const optionsByPlatform = useMemo(() => {
-        const result: Record<PlatformId, Array<{ label: string; value: string }>> = {
-            linkedin: [],
-            upwork: [],
-            twitter: [],
-            reddit: [],
-            youtube: []
-        }
-
-        for (const platformId of PLATFORM_ORDER) {
-            result[platformId] = activeObjectiveLibrary
-                .filter((objective: ObjectiveProfile) => isObjectiveApplicable(objective, platformId))
-                .map((objective: ObjectiveProfile) => ({
-                    value: objective.id,
-                    label: `${getObjectiveDisplayName(objective)} (${goalOptions.find((goal) => goal.value === objective.canonicalGoal)?.label ?? objective.canonicalGoal})`
-                }))
-        }
-
-        return result
-    }, [activeObjectiveLibrary, getObjectiveDisplayName, goalOptions])
-
     const patchGoals = async (
         payload: Partial<UserSettings>,
         options?: { successToast?: boolean; errorToast?: boolean }
     ) => {
         try {
             await updateSettings(payload)
+            void notifyExtensionSettingsChanged({ force: true })
             if (options?.successToast !== false) {
                 toast.success(t.app.goals.saved)
             }
@@ -165,53 +105,13 @@ export default function GoalsPage() {
 
     const applyObjectiveModelUpdate = async (
         nextObjectiveLibrary: ObjectiveProfile[],
-        nextPlatformDefaultObjectiveIds: PlatformDefaultObjectiveIds,
         extraPayload?: Partial<UserSettings>,
         options?: { successToast?: boolean; errorToast?: boolean }
     ) => {
-        const normalizedDefaults = resolvePlatformDefaultObjectiveIds(
-            nextPlatformDefaultObjectiveIds,
-            nextObjectiveLibrary
-        )
-
         return patchGoals({
-            goalModelVersion: 2,
             objectiveLibrary: nextObjectiveLibrary,
-            platformDefaultObjectiveIds: normalizedDefaults,
             ...(extraPayload ?? {})
         }, options)
-    }
-
-    const updatePlatformDefault = async (platformId: PlatformId, objectiveId: string) => {
-        if (!settings) return
-
-        if (savingPlatformId === platformId) return
-
-        const previousDefaults = effectivePlatformDefaultObjectiveIds
-        const nextDefaults = {
-            ...effectivePlatformDefaultObjectiveIds,
-            [platformId]: objectiveId || null
-        }
-
-        setOptimisticDefaults(nextDefaults)
-        setSavingPlatformId(platformId)
-
-        const success = await applyObjectiveModelUpdate(
-            settings.objectiveLibrary,
-            nextDefaults,
-            undefined,
-            { successToast: false, errorToast: false }
-        )
-
-        setSavingPlatformId(null)
-
-        if (!success) {
-            setOptimisticDefaults(previousDefaults)
-            toast.error(t.app.goals.saveError)
-            return
-        }
-
-        toast.success(t.app.goals.saved)
     }
 
     const isAllScopeSelected = objectiveScope.length === PLATFORM_ORDER.length
@@ -276,8 +176,7 @@ export default function GoalsPage() {
         }
 
         await applyObjectiveModelUpdate(
-            [...settings.objectiveLibrary, nextObjective],
-            effectivePlatformDefaultObjectiveIds
+            [...settings.objectiveLibrary, nextObjective]
         )
 
         setObjectiveName("")
@@ -300,14 +199,14 @@ export default function GoalsPage() {
                 : item
         )
 
-        await applyObjectiveModelUpdate(nextObjectiveLibrary, effectivePlatformDefaultObjectiveIds)
+        await applyObjectiveModelUpdate(nextObjectiveLibrary)
     }
 
     const removeObjective = async (objectiveId: string) => {
         if (!settings) return
 
         const nextObjectiveLibrary = settings.objectiveLibrary.filter((item: ObjectiveProfile) => item.id !== objectiveId)
-        await applyObjectiveModelUpdate(nextObjectiveLibrary, effectivePlatformDefaultObjectiveIds)
+        await applyObjectiveModelUpdate(nextObjectiveLibrary)
     }
 
     if (showLoading) {
@@ -354,10 +253,10 @@ export default function GoalsPage() {
                         <Flag className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">
-                        {t.app.goals.baseByPlatformTitle}
+                        {t.app.goals.extensionPanelHintTitle}
                     </h2>
                     <p className="mt-2 body-muted">
-                        {t.app.goals.baseByPlatformDesc}
+                        {t.app.goals.extensionPanelHintDesc}
                     </p>
                 </Card>
 
@@ -376,46 +275,28 @@ export default function GoalsPage() {
 
             <section className="grid gap-4 lg:grid-cols-2">
                 <Card className="dashboard-card-xl">
-                    <p className="dashboard-overline">{t.app.goals.modeTitle}</p>
-                    <h2 className="mt-3 section-heading">{t.app.goals.modeDesc}</h2>
+                    <p className="dashboard-overline">{t.app.goals.extensionPanelHintTitle}</p>
+                    <h2 className="mt-3 section-heading">{t.app.goals.customLibraryTitle}</h2>
 
                     <div className="mt-5 space-y-4">
-                        <Select
-                            value={settings.goalMode}
-                            onChange={(value) => {
-                                void patchGoals({ goalMode: value as UserSettings["goalMode"] })
-                            }}
-                            label={t.app.settings.goalModeLabel}
-                            triggerClassName="h-11 rounded-2xl"
-                            options={[
-                                { label: t.app.settings.goalModeManual, value: "manual" },
-                                { label: t.app.settings.goalModeAuto, value: "auto" }
-                            ]}
-                        />
+                        <p className="body-muted">{t.app.goals.extensionPanelHintDesc}</p>
 
-                        <div className="rounded-2xl border border-border-soft bg-surface-elevated p-3.5">
+                        <div className="rounded-2xl border border-border-soft bg-surface-elevated p-4">
                             <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-secondary-text">
-                                {t.app.settings.platformDefaultsLabel}
+                                {t.app.goals.allPlatformsLabel}
                             </p>
-                            <div className="mt-3 space-y-3">
-                                {PLATFORM_ORDER.map((platformId) => {
-                                    const options = optionsByPlatform[platformId]
-                                    const selectedId = effectivePlatformDefaultObjectiveIds[platformId] ?? options[0]?.value ?? ""
-
-                                    return (
-                                        <Select
-                                            key={platformId}
-                                            value={selectedId}
-                                            onChange={(value) => {
-                                                void updatePlatformDefault(platformId, value)
-                                            }}
-                                            label={platformLabelById[platformId]}
-                                            triggerClassName="h-10 rounded-xl"
-                                            options={options}
-                                        />
-                                    )
-                                })}
-                            </div>
+                            <ul className="mt-3 space-y-2 text-[13px] text-primary-text">
+                                {PLATFORM_ORDER.map((platformId) => (
+                                    <li key={platformId} className="flex items-center justify-between gap-2 rounded-xl border border-border-soft bg-surface-base px-3 py-2">
+                                        <span>{platformLabelById[platformId]}</span>
+                                        <span className="text-[11px] font-semibold text-secondary-text">
+                                            {activeObjectiveLibrary.filter((objective) => isObjectiveApplicable(objective, platformId)).length}
+                                            {" "}
+                                            {t.app.goals.customLibraryTitle.toLowerCase()}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
 
                         <div className="rounded-2xl border border-accent-purple/20 bg-accent-purple/5 p-3.5">
