@@ -24,7 +24,6 @@ type UpdateUserSettingsInput = Pick<
     | "activeProfileId"
     | "defaultEmojis"
     | "autoInsert"
-    | "confirmBeforeApply"
     | "desktopAlertsEnabled"
     | "notificationsEnabled"
 >
@@ -37,7 +36,6 @@ const defaultDraft: UpdateUserSettingsInput = {
     activeProfileId: null,
     defaultEmojis: true,
     autoInsert: false,
-    confirmBeforeApply: false,
     desktopAlertsEnabled: false,
     notificationsEnabled: true
 }
@@ -49,7 +47,6 @@ function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettin
         left.activeProfileId === right.activeProfileId &&
         left.defaultEmojis === right.defaultEmojis &&
         left.autoInsert === right.autoInsert &&
-        left.confirmBeforeApply === right.confirmBeforeApply &&
         left.desktopAlertsEnabled === right.desktopAlertsEnabled &&
         left.notificationsEnabled === right.notificationsEnabled
     )
@@ -67,8 +64,6 @@ function buildChangedPayload(
     if (next.activeProfileId !== base.activeProfileId) payload.activeProfileId = next.activeProfileId
     if (next.defaultEmojis !== base.defaultEmojis) payload.defaultEmojis = next.defaultEmojis
     if (next.autoInsert !== base.autoInsert) payload.autoInsert = next.autoInsert
-    if (next.confirmBeforeApply !== base.confirmBeforeApply)
-        payload.confirmBeforeApply = next.confirmBeforeApply
     if (next.desktopAlertsEnabled !== base.desktopAlertsEnabled)
         payload.desktopAlertsEnabled = next.desktopAlertsEnabled
     if (next.notificationsEnabled !== base.notificationsEnabled)
@@ -96,7 +91,6 @@ export default function SettingsPage() {
             activeProfileId: settings.activeProfileId,
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
-            confirmBeforeApply: settings.confirmBeforeApply,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
             notificationsEnabled: settings.notificationsEnabled
         }
@@ -113,7 +107,6 @@ export default function SettingsPage() {
             activeProfileId: settings.activeProfileId,
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
-            confirmBeforeApply: settings.confirmBeforeApply,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
             notificationsEnabled: settings.notificationsEnabled
         }
@@ -264,12 +257,6 @@ export default function SettingsPage() {
                             checked={resolvedSettings.autoInsert}
                             onChange={(value) => updateDraft("autoInsert", value)}
                             label={t.app.settings.autoInsertLabel}
-                            className="min-h-14 rounded-2xl px-4 text-[13px]"
-                        />
-                        <Toggle
-                            checked={resolvedSettings.confirmBeforeApply}
-                            onChange={(value) => updateDraft("confirmBeforeApply", value)}
-                            label={t.app.settings.confirmBeforeApplyLabel}
                             className="min-h-14 rounded-2xl px-4 text-[13px]"
                         />
                     </div>

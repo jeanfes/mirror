@@ -124,7 +124,6 @@ export interface UserSettings {
   activeProfileId: string | null
   defaultEmojis: boolean
   autoInsert: boolean
-  confirmBeforeApply: boolean
   objectiveLibrary: ObjectiveProfile[]
   notificationsEnabled: boolean
   desktopAlertsEnabled: boolean

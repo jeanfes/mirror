@@ -62,7 +62,6 @@ type ExtensionSetSessionMessage = {
     activeProfileId?: string | null
     defaultEmojis?: boolean
     autoInsert?: boolean
-    confirmBeforeApply?: boolean
     notificationsEnabled?: boolean
     desktopAlertsEnabled?: boolean
     objectiveLibrary?: ExtensionObjectiveProfile[]
@@ -401,7 +400,7 @@ function RedirectContent() {
                         const [settingsQuery, accountQuery] = await Promise.all([
                             supabase
                                 .from("user_settings")
-                                .select("theme, language, comment_language_mode, active_profile_id, default_emojis, auto_insert, confirm_before_apply, notifications_enabled, desktop_alerts_enabled, objective_library")
+                                .select("theme, language, comment_language_mode, active_profile_id, default_emojis, auto_insert, notifications_enabled, desktop_alerts_enabled, objective_library")
                                 .eq("user_id", session.user.id)
                                 .maybeSingle(),
                             supabase
@@ -439,10 +438,6 @@ function RedirectContent() {
                             autoInsert:
                                 typeof settingsRow?.auto_insert === "boolean"
                                     ? settingsRow.auto_insert
-                                    : undefined,
-                            confirmBeforeApply:
-                                typeof settingsRow?.confirm_before_apply === "boolean"
-                                    ? settingsRow.confirm_before_apply
                                     : undefined,
                             notificationsEnabled:
                                 typeof settingsRow?.notifications_enabled === "boolean"

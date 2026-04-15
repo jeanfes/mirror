@@ -14,7 +14,7 @@ const OBJECTIVE_NAME_MAX = 64
 const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200
 const USER_SETTINGS_SELECT_COLUMNS =
-  "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, confirm_before_apply, objective_library, desktop_alerts_enabled, notifications_enabled, updated_at"
+  "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, objective_library, desktop_alerts_enabled, notifications_enabled, updated_at"
 
 const baseObjectiveSeeds: Array<
   Omit<ObjectiveProfile, "active" | "createdAt" | "updatedAt">
@@ -293,7 +293,6 @@ const defaultUserSettings: UserSettings = {
   activeProfileId: null,
   defaultEmojis: true,
   autoInsert: false,
-  confirmBeforeApply: false,
   objectiveLibrary: defaultObjectiveLibrary,
   desktopAlertsEnabled: false,
   notificationsEnabled: true
@@ -305,7 +304,6 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const activeProfileId = row.active_profile_id
   const defaultEmojis = row.default_emojis
   const autoInsert = row.auto_insert
-  const confirmBeforeApply = row.confirm_before_apply
   const commentLanguageMode = row.comment_language_mode
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
@@ -335,10 +333,6 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
       typeof defaultEmojis === "boolean" ? defaultEmojis : defaultUserSettings.defaultEmojis,
     autoInsert:
       typeof autoInsert === "boolean" ? autoInsert : defaultUserSettings.autoInsert,
-    confirmBeforeApply:
-      typeof confirmBeforeApply === "boolean"
-        ? confirmBeforeApply
-        : defaultUserSettings.confirmBeforeApply,
     objectiveLibrary,
     desktopAlertsEnabled:
       typeof desktopAlertsEnabled === "boolean"
@@ -398,7 +392,6 @@ export async function updateUserSettings(
   if (input.activeProfileId !== undefined) payload.active_profile_id = input.activeProfileId
   if (input.defaultEmojis !== undefined) payload.default_emojis = input.defaultEmojis
   if (input.autoInsert !== undefined) payload.auto_insert = input.autoInsert
-  if (input.confirmBeforeApply !== undefined) payload.confirm_before_apply = input.confirmBeforeApply
   if (input.objectiveLibrary !== undefined) payload.objective_library = input.objectiveLibrary
   if (input.desktopAlertsEnabled !== undefined) payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined) payload.notifications_enabled = input.notificationsEnabled
