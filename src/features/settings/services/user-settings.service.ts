@@ -353,7 +353,9 @@ export async function updateUserSettings(
   if (input.activeProfileId !== undefined) payload.active_profile_id = input.activeProfileId
   if (input.defaultEmojis !== undefined) payload.default_emojis = input.defaultEmojis
   if (input.autoInsert !== undefined) payload.auto_insert = input.autoInsert
-  if (input.objectiveLibrary !== undefined) payload.objective_library = input.objectiveLibrary
+  if (input.objectiveLibrary !== undefined) {
+    payload.objective_library = mergeObjectiveLibraryWithBase(input.objectiveLibrary)
+  }
   if (input.desktopAlertsEnabled !== undefined) payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined) payload.notifications_enabled = input.notificationsEnabled
 
