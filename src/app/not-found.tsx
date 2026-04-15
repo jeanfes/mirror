@@ -1,13 +1,18 @@
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
+import { cookies } from "next/headers"
 import { getServerSession } from "@/lib/auth"
+import { getDictionarySync } from "@/lib/i18n"
 import { ROUTES } from "@/lib/routes"
 
 export default async function NotFound() {
     const user = await getServerSession()
+    const cookieStore = await cookies()
+    const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "es"
+    const { t } = await getDictionarySync(locale)
 
     const href = user ? ROUTES.private.profiles : ROUTES.public.index
-    const label = user ? "Go to Mirror" : "Go to Landing"
+    const label = user ? t.app.common.notFoundGoToApp : t.app.common.notFoundGoToLanding
 
     return (
         <div className="flex min-h-screen items-center justify-center px-4 selection:bg-primary-main/20">
@@ -28,11 +33,11 @@ export default async function NotFound() {
                     </div>
 
                     <h2 className="text-2xl font-bold text-primary-text sm:text-3xl">
-                        Page not found
+                        {t.app.common.notFoundTitle}
                     </h2>
 
                     <p className="mt-4 max-w-[320px] text-base leading-relaxed text-secondary-text">
-                        The route you requested does not exist in this workspace or you might not have access.
+                        {t.app.common.notFoundDesc}
                     </p>
 
                     <div

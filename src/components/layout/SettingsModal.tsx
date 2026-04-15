@@ -219,7 +219,12 @@ const SettingsModal = memo(function SettingsModal({
                         generalInfoDesc: t.app.settingsModal.generalInfoDesc,
                         fullName: t.app.settingsModal.fullName,
                         emailAddress: t.app.settingsModal.emailAddress,
-                        appLanguage: t.app.settingsModal.appLanguage
+                        appLanguage: t.app.settingsModal.appLanguage,
+                        labelEn: t.app.settings.labelEn,
+                        labelEs: t.app.settings.labelEs,
+                        labelPt: t.app.settings.labelPt,
+                        labelFr: t.app.settings.labelFr,
+                        labelDe: t.app.settings.labelDe
                       }}
                     />
                   )}

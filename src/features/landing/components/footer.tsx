@@ -39,8 +39,8 @@ export function LandingFooter() {
           </h4>
           <ul className="space-y-3">
             <li>
-              <a href="mailto:support@mirror.com" className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">
-                support@mirror.com
+              <a href={`mailto:${t.footer.supportEmail}`} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">
+                {t.footer.supportEmail}
               </a>
             </li>
             <li><Link href={ROUTES.public.faq} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.helpCenter}</Link></li>

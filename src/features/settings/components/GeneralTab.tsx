@@ -21,6 +21,11 @@ interface GeneralTabProps {
     fullName: string
     emailAddress: string
     appLanguage: string
+    labelEn: string
+    labelEs: string
+    labelPt: string
+    labelFr: string
+    labelDe: string
   }
 }
 
@@ -38,12 +43,12 @@ export const GeneralTab = memo(function GeneralTab({
           <div className="relative h-20 w-20 shrink-0">
             <div className="relative h-full w-full rounded-3xl bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white text-3xl font-bold shadow-lg overflow-hidden">
               {user.avatar ? (
-                <Image 
-                  src={user.avatar} 
-                  alt="Avatar" 
-                  fill 
+                <Image
+                  src={user.avatar}
+                  alt={user.name}
+                  fill
                   sizes="80px"
-                  className="rounded-3xl object-cover" 
+                  className="rounded-3xl object-cover"
                 />
               ) : (
                 user.name.charAt(0).toUpperCase()
@@ -68,9 +73,11 @@ export const GeneralTab = memo(function GeneralTab({
             value={language}
             onChange={onLanguageChange}
             options={[
-              { label: "English", value: "en" }, { label: "Español", value: "es" },
-              { label: "Português", value: "pt" }, { label: "Français", value: "fr" },
-              { label: "Deutsch", value: "de" },
+              { label: t.labelEn, value: "en" },
+              { label: t.labelEs, value: "es" },
+              { label: t.labelPt, value: "pt" },
+              { label: t.labelFr, value: "fr" },
+              { label: t.labelDe, value: "de" },
             ]}
           />
         </div>

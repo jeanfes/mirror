@@ -120,13 +120,17 @@ async function fetchBaseObjectivesFromSupabase(supabase: SupabaseClient): Promis
     }
 
     const now = nowMs()
-    return (data as ObjectiveRow[]).map((obj) => {
+    const objectives: ObjectiveProfile[] = []
+    const invalidGoals: string[] = []
+
+    for (const obj of data as ObjectiveRow[]) {
       const goal = normalizeGoal(obj.canonical_goal)
       if (!goal) {
-        throw new Error(`Invalid goal type from database: ${obj.canonical_goal}`)
+        invalidGoals.push(`${obj.id}:${String(obj.canonical_goal)}`)
+        continue
       }
 
-      return {
+      objectives.push({
         id: obj.id,
         name: obj.name,
         canonicalGoal: goal,
@@ -137,8 +141,17 @@ async function fetchBaseObjectivesFromSupabase(supabase: SupabaseClient): Promis
         active: true,
         createdAt: now,
         updatedAt: now
-      }
-    })
+      })
+    }
+
+    if (invalidGoals.length > 0) {
+      console.warn(
+        `[BaseObjectives] Skipped ${invalidGoals.length} rows with invalid canonical_goal`,
+        invalidGoals
+      )
+    }
+
+    return objectives
   } catch (error) {
     console.warn("Error fetching base objectives:", error)
     return []

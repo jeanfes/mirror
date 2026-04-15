@@ -8,9 +8,20 @@ interface LegalLayoutProps {
   title: string
   subtitle: string
   lastUpdated: string
+  backLabel: string
+  badgeLabel: string
+  lastUpdatedLabel: string
 }
 
-export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLayoutProps) {
+export function LegalLayout({
+  children,
+  title,
+  subtitle,
+  lastUpdated,
+  backLabel,
+  badgeLabel,
+  lastUpdatedLabel
+}: LegalLayoutProps) {
   return (
     <div className="pt-12 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
@@ -25,7 +36,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-subtle group-hover:bg-surface-elevated transition-colors">
               <ChevronLeft className="h-4 w-4" />
             </div>
-            Volver al inicio
+            {backLabel}
           </Link>
         </div>
 
@@ -33,7 +44,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
         <header className="mb-16">
           <div>
             <span className="inline-block px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue text-[11px] font-black uppercase tracking-[0.15em] mb-4">
-              Legal & Privacidad
+              {badgeLabel}
             </span>
             <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-primary-dark mb-4">
               {title}
@@ -43,7 +54,7 @@ export function LegalLayout({ children, title, subtitle, lastUpdated }: LegalLay
             </p>
             <div className="mt-8 flex items-center gap-3 text-[13px] font-bold text-secondary-text/60 uppercase tracking-wider">
               <div className="h-px w-8 bg-border-soft" />
-              Última actualización: {lastUpdated}
+              {lastUpdatedLabel}: {lastUpdated}
             </div>
           </div>
         </header>

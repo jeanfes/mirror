@@ -71,12 +71,29 @@ export default function GoalsPage() {
         return (t.app.goals.baseObjectiveNames ?? {}) as Record<string, string>
     }, [t])
 
+    const localizedBaseObjectiveDescriptions = useMemo<Record<string, string>>(() => {
+        return (t.app.goals.baseObjectiveDescriptions ?? {}) as Record<string, string>
+    }, [t])
+
     const getObjectiveDisplayName = useCallback((objective: ObjectiveProfile): string => {
         if (objective.source === "platform_base") {
             return localizedBaseObjectiveNames[objective.id] ?? objective.name
         }
         return objective.name
     }, [localizedBaseObjectiveNames])
+
+    const getObjectiveDisplayDescription = useCallback((objective: ObjectiveProfile): string => {
+        if (objective.source === "platform_base") {
+            return (
+                localizedBaseObjectiveDescriptions[objective.id] ||
+                objective.description ||
+                objective.strategyPrompt ||
+                ""
+            )
+        }
+
+        return objective.description || objective.strategyPrompt || ""
+    }, [localizedBaseObjectiveDescriptions])
 
     const activeObjectiveLibrary = useMemo<ObjectiveProfile[]>(
         () => objectiveLibrary.filter((item: ObjectiveProfile) => item.active),
@@ -291,7 +308,7 @@ export default function GoalsPage() {
                                             )}
                                         </div>
                                         <p className="mt-1 text-[12px] leading-relaxed text-secondary-text">
-                                            {objective.description || objective.strategyPrompt}
+                                            {getObjectiveDisplayDescription(objective)}
                                         </p>
                                     </div>
                                 ))}

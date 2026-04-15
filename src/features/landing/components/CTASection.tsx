@@ -16,7 +16,7 @@ export function CTASection({ t, routes }: CTASectionProps) {
                 <div className="absolute inset-0 bg-linear-to-br from-(--hero-surface-start) via-(--hero-surface-mid) to-(--hero-surface-end) transition-opacity group-hover:opacity-80" />
                 <div className="relative z-10 space-y-8">
                     <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.25rem] bg-surface-elevated text-primary-dark shadow-sm ring-1 ring-border-soft transition-transform hover:scale-110 duration-300">
-                        < Rocket className="h-10 w-10 text-primary-dark" strokeWidth={2} />
+                        <Rocket className="h-10 w-10 text-primary-dark" strokeWidth={2} />
                     </div>
                     <h2 className="text-4xl font-black tracking-tight text-primary-dark sm:text-5xl text-balance">
                         {t.cta.title}
@@ -36,3 +36,4 @@ export function CTASection({ t, routes }: CTASectionProps) {
         </section>
     );
 }
+

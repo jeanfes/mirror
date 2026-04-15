@@ -24,12 +24,12 @@ export default async function ContactPage() {
                     <div className="neo-card flex flex-col items-center rounded-2xl border border-border-soft bg-surface-card p-6 text-center backdrop-blur-sm shadow-premium-sm transition-shadow hover:shadow-premium-md">
                         <Mail className="h-8 w-8 text-accent-blue mb-4" />
                         <h3 className="font-bold text-primary-dark mb-1">{t.contactPage.supportTitle}</h3>
-                        <p className="text-secondary-text text-sm font-medium">support@mirror.com</p>
+                        <p className="text-secondary-text text-sm font-medium">{t.contactPage.supportEmail}</p>
                     </div>
                     <div className="neo-card flex flex-col items-center rounded-2xl border border-border-soft bg-surface-card p-6 text-center backdrop-blur-sm shadow-premium-sm transition-shadow hover:shadow-premium-md">
                         <MessageSquare className="h-8 w-8 text-accent-blue mb-4" />
                         <h3 className="font-bold text-primary-dark mb-1">{t.contactPage.socialTitle}</h3>
-                        <p className="text-secondary-text text-sm font-medium">@mirror_extension</p>
+                        <p className="text-secondary-text text-sm font-medium">{t.contactPage.socialHandle}</p>
                     </div>
                 </div>
             </section>

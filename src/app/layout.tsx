@@ -7,6 +7,7 @@ import { Toaster } from "sonner"
 
 import { AppProviders } from "@/components/providers/AppProviders"
 import { BaseObjectivesInitializer } from "@/components/providers/BaseObjectivesInitializer"
+import { getDictionarySync } from "@/lib/i18n"
 import {
   THEME_PREFERENCE_COOKIE,
   THEME_RESOLVED_COOKIE,
@@ -27,16 +28,22 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["300", "400", "500", "600", "700"],
 })
 
-export const metadata: Metadata = {
-  title: {
-    default: "Mirror",
-    template: "%s | Mirror",
-  },
-  description: "Workspace inteligente con IA local-first.",
-  icons: {
-    icon: "/icon.png",
-    apple: "/favicon.ico",
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies()
+  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "es"
+  const { t } = await getDictionarySync(locale)
+
+  return {
+    title: {
+      default: "Mirror",
+      template: "%s | Mirror",
+    },
+    description: t.app.common.metadataDescription,
+    icons: {
+      icon: "/icon.png",
+      apple: "/favicon.ico",
+    },
+  }
 }
 
 export const viewport: Viewport = {
