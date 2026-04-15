@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type { ResolvedTheme, ThemePreference } from "@/lib/theme"
+import { useLanguageStore } from "@/store/useLanguageStore"
 import { ThemeProvider } from "./ThemeProvider"
 
 interface AppProvidersProps {
@@ -39,6 +40,18 @@ function getQueryClient() {
   return browserQueryClient
 }
 
+function LanguageSync() {
+  const language = useLanguageStore((state) => state.language)
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = language
+    }
+  }, [language])
+
+  return null
+}
+
 export function AppProviders({
   children,
   initialThemePreference,
@@ -51,6 +64,7 @@ export function AppProviders({
       initialThemePreference={initialThemePreference}
       initialResolvedTheme={initialResolvedTheme}
     >
+      <LanguageSync />
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>

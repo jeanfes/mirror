@@ -51,6 +51,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const cookieStore = await cookies()
+  const initialLocale = cookieStore.get("NEXT_LOCALE")?.value ?? "es"
   const pref = cookieStore.get(THEME_PREFERENCE_COOKIE)?.value
   const res = cookieStore.get(THEME_RESOLVED_COOKIE)?.value
 
@@ -63,7 +64,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="es"
+      lang={initialLocale}
       className={spaceGrotesk.variable}
       data-theme={initialResolvedTheme}
       data-theme-preference={initialThemePreference}

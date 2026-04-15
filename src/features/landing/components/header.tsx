@@ -6,6 +6,7 @@ import { Globe } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { ROUTES } from "@/lib/routes";
+import { DownloadDropdown } from "@/components/ui/DownloadDropdown";
 
 export function LandingHeader() {
     const { language, setLanguage, t } = useLanguageStore();
@@ -27,16 +28,17 @@ export function LandingHeader() {
                 </div>
 
                 <div className="ml-2 flex shrink-0 items-center gap-1.5 sm:gap-2">
+                    <DownloadDropdown />
                     <ThemeToggle className="h-10" />
                     <div className="relative group hidden sm:block">
                         <button
-                            className="flex h-10 items-center justify-center gap-1.5 rounded-full px-3 lg:px-4 text-secondary-text transition-colors hover:bg-surface-hover hover:text-primary-dark"
+                            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border-soft bg-surface-subtle px-3 text-secondary-text transition-all duration-150 hover:bg-surface-hover hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/35 lg:px-4"
                         >
                             <Globe className="h-4 w-4" />
                             <span className="hidden md:inline text-[12px] font-bold uppercase tracking-wider">{language}</span>
                         </button>
 
-                        <div className="absolute top-full right-0 mt-3 w-40 rounded-2xl border border-white/10 bg-surface-base/85 p-1.5 shadow-2xl backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out origin-top-right group-hover:translate-y-0 translate-y-2 flex flex-col gap-0.5">
+                        <div className="absolute top-full right-0 mt-3 flex w-40 origin-top-right flex-col gap-0.5 rounded-[14px] border border-border-soft bg-surface-solid p-1.5 shadow-premium-lg opacity-0 invisible translate-y-2 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible">
                             {[
                                 { code: "es", label: "Español" },
                                 { code: "en", label: "English" },
@@ -47,11 +49,10 @@ export function LandingHeader() {
                                 <button
                                     key={lang.code}
                                     onClick={() => setLanguage(lang.code as "es" | "en" | "pt" | "fr" | "de")}
-                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
-                                        language === lang.code
-                                            ? "bg-surface-hover text-primary-dark shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
-                                            : "text-secondary-text hover:bg-surface-hover/50 hover:text-primary-dark"
-                                    }`}
+                                    className={`relative flex w-full items-center justify-between rounded-[10px] px-3 py-2 text-[13px] outline-none transition-colors ${language === lang.code
+                                            ? "border border-border-light bg-surface-elevated text-primary-dark shadow-premium-sm"
+                                            : "border border-transparent bg-transparent text-secondary-text hover:border-border-soft hover:bg-surface-hover hover:text-primary-dark"
+                                        }`}
                                 >
                                     {lang.label}
                                     {language === lang.code && (

@@ -44,12 +44,14 @@ export function LandingFooter() {
               </a>
             </li>
             <li><Link href={ROUTES.public.faq} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">{t.footer.helpCenter}</Link></li>
-            <li className="flex flex-col gap-2 pt-1">
-              <Link href={ROUTES.public.terms} className="text-[13px] font-bold text-secondary-text/80 hover:text-accent-blue transition-colors">
-                Términos de Uso
+            <li className="pt-1">
+              <Link href={ROUTES.public.terms} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">
+                {t.footer.termsOfUse}
               </Link>
-              <Link href={ROUTES.public.privacy} className="text-[13px] font-bold text-secondary-text/80 hover:text-accent-blue transition-colors">
-                Política de Privacidad
+            </li>
+            <li>
+              <Link href={ROUTES.public.privacy} className="text-[14px] font-medium text-secondary-text hover:text-accent-blue transition-colors">
+                {t.footer.privacyPolicy}
               </Link>
             </li>
           </ul>

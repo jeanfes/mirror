@@ -5,7 +5,14 @@ const es = {
     faq: "Preguntas",
     contact: "Contacto",
     login: "Iniciar sesión",
-    register: "Comenzar"
+    register: "Comenzar",
+    download: {
+      button: "Descargar",
+      availableFor: "Disponible para",
+      chrome: "Tienda Chrome",
+      edge: "Complementos de Edge",
+      safari: "App Store"
+    }
   },
   hero: {
     badge: "Mirror",
@@ -70,6 +77,8 @@ const es = {
     product: "Producto",
     contactTitle: "Contacto",
     helpCenter: "Centro de Ayuda",
+    termsOfUse: "Términos de Uso",
+    privacyPolicy: "Política de Privacidad",
     legal: "Privacidad y Condiciones",
     rights: "© {year} Mirror. Todos los derechos reservados."
   },

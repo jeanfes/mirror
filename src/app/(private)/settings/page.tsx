@@ -7,11 +7,11 @@ import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
 import { Toggle } from "@/components/ui/Toggle"
-import { Button } from "@/components/ui/Button"
 import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { isActiveProfileValidationError } from "@/features/settings/services/user-settings.service"
 import { ROUTES } from "@/lib/routes"
 import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -172,7 +172,13 @@ export default function SettingsPage() {
                     setDraft((current) =>
                         current && areSettingsEqual(current, snapshot) ? null : current
                     )
-                } catch {
+                } catch (error) {
+                    if (isActiveProfileValidationError(error)) {
+                        toast.error(t.app.settings.noActiveProfile)
+                        void notifyExtensionSettingsChanged({ force: true })
+                        return
+                    }
+
                     toast.error(t.app.settings.preferencesError)
                 }
             })()
@@ -184,7 +190,7 @@ export default function SettingsPage() {
                 saveTimeoutRef.current = null
             }
         }
-    }, [baseSettings, draft, isMutating, setAppLanguage, t.app.settings.preferencesError, updateSettings])
+    }, [baseSettings, draft, isMutating, setAppLanguage, t.app.settings.noActiveProfile, t.app.settings.preferencesError, updateSettings])
 
     if (showLoading) {
         return <LoadingOverlay show={true} />

@@ -15,6 +15,36 @@ const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200
 const USER_SETTINGS_SELECT_COLUMNS =
   "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, objective_library, desktop_alerts_enabled, notifications_enabled, updated_at"
+const ACTIVE_PROFILE_INVALID_CODE = "ACTIVE_PROFILE_INVALID"
+
+type DomainError = Error & { code?: string }
+
+function createActiveProfileInvalidError(): DomainError {
+  const error = new Error("active_profile_id must belong to current user and remain enabled") as DomainError
+  error.code = ACTIVE_PROFILE_INVALID_CODE
+  return error
+}
+
+function isActiveProfileConstraintError(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false
+  }
+
+  const candidate = error as { code?: unknown; message?: unknown }
+  const code = typeof candidate.code === "string" ? candidate.code : ""
+  const message = typeof candidate.message === "string" ? candidate.message.toLowerCase() : ""
+
+  return code === "P0001" && message.includes("active_profile_id")
+}
+
+export function isActiveProfileValidationError(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false
+  }
+
+  const candidate = error as { code?: unknown }
+  return candidate.code === ACTIVE_PROFILE_INVALID_CODE || isActiveProfileConstraintError(error)
+}
 
 const baseObjectiveSeeds: Array<
   Omit<ObjectiveProfile, "active" | "createdAt" | "updatedAt">
@@ -396,6 +426,25 @@ export async function updateUserSettings(
   if (input.desktopAlertsEnabled !== undefined) payload.desktop_alerts_enabled = input.desktopAlertsEnabled
   if (input.notificationsEnabled !== undefined) payload.notifications_enabled = input.notificationsEnabled
 
+  if (typeof input.activeProfileId === "string") {
+    const { data: profileRow, error: profileValidationError } = await supabase
+      .from("voice_profiles")
+      .select("id")
+      .eq("id", input.activeProfileId)
+      .eq("user_id", userId)
+      .eq("enabled", true)
+      .is("deleted_at", null)
+      .maybeSingle()
+
+    if (profileValidationError) {
+      throw profileValidationError
+    }
+
+    if (!profileRow) {
+      throw createActiveProfileInvalidError()
+    }
+  }
+
   const { data, error } = await supabase
     .from("user_settings")
     .upsert(payload, { onConflict: "user_id" })
@@ -403,6 +452,10 @@ export async function updateUserSettings(
     .single()
 
   if (error) {
+    if (isActiveProfileConstraintError(error)) {
+      throw createActiveProfileInvalidError()
+    }
+
     throw error
   }
 

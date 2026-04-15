@@ -10,6 +10,7 @@ import { useAccount } from "@/features/billing/hooks/useAccount"
 import { getNavItems } from "./nav-items"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useLoadingStore } from "@/store/useLoadingStore"
+import { DownloadDropdown } from "../ui/DownloadDropdown"
 
 export function Navbar() {
   const { data: account, isLoading: isAccountLoading } = useAccount()
@@ -36,19 +37,22 @@ export function Navbar() {
         </h1>
       </div>
 
-      {!isLoading && account?.plan === "Free" && (
-        <Link href={ROUTES.private.plans}>
-          <Button size="md" className="h-8.5 rounded-full px-4 text-[12px]">
-            {t.app.navigation.upgrade}
-          </Button>
-        </Link>
-      )}
-      {isLoading && (
-        <div className="h-8.5 w-20 animate-pulse rounded-full bg-surface-hover" />
-      )}
-      {!isLoading && account?.plan !== "Free" && (
-        <div className="h-8 w-22.5" aria-hidden="true" />
-      )}
+      <div className="flex items-center gap-2">
+        {!isLoading && account?.plan === "Free" && (
+          <Link href={ROUTES.private.plans}>
+            <Button size="md" className="h-8.5 rounded-full px-4 text-[12px]">
+              {t.app.navigation.upgrade}
+            </Button>
+          </Link>
+        )}
+        {isLoading && (
+          <div className="h-8.5 w-20 animate-pulse rounded-full bg-surface-hover" />
+        )}
+        {!isLoading && account?.plan !== "Free" && (
+          <div className="h-8 w-22.5" aria-hidden="true" />
+        )}
+        <DownloadDropdown className="h-8.5 w-8.5" />
+      </div>
     </header>
   )
 }
