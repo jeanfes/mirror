@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useQueryClient } from "@tanstack/react-query"
 import { ROUTES } from "@/lib/routes"
 import { signOut } from "@/features/auth/services/auth.service"
+import { notifyExtensionSignedOut } from "@/lib/extension-bridge"
 import { clearAuthContext } from "@/lib/supabase/auth-context"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserStore } from "@/store/useUserStore"
@@ -30,6 +31,7 @@ export const useLogout = () => {
       clearAuthContext()
       useUserStore.getState().clearUser()
       queryClient.clear()
+      void notifyExtensionSignedOut()
 
       toast.success(t.app.common.sessionClosed)
       router.refresh()

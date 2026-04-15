@@ -7,6 +7,10 @@ type ExtensionPullSyncMessage = {
   force?: boolean
 }
 
+type ExtensionSignOutMessage = {
+  type: "SIGN_OUT"
+}
+
 type ExtensionPullSyncResponse = {
   ok?: boolean
   reason?: string
@@ -18,7 +22,7 @@ type ExtensionRuntimeBridge = {
   }
   sendMessage: (
     extensionId: string,
-    message: ExtensionPullSyncMessage,
+    message: ExtensionPullSyncMessage | ExtensionSignOutMessage,
     callback: (response: ExtensionPullSyncResponse | undefined) => void
   ) => void
 }
@@ -63,6 +67,26 @@ export async function notifyExtensionSettingsChanged(options?: {
   extensionId?: string | null
   timeoutMs?: number
 }): Promise<{ ok: boolean; reason?: string }> {
+  return await sendExtensionMessage({
+    type: "SYNC_SETTINGS_PULL",
+    force: options?.force !== false
+  }, options)
+}
+
+export async function notifyExtensionSignedOut(options?: {
+  extensionId?: string | null
+  timeoutMs?: number
+}): Promise<{ ok: boolean; reason?: string }> {
+  return await sendExtensionMessage({ type: "SIGN_OUT" }, options)
+}
+
+async function sendExtensionMessage(
+  message: ExtensionPullSyncMessage | ExtensionSignOutMessage,
+  options?: {
+    extensionId?: string | null
+    timeoutMs?: number
+  }
+): Promise<{ ok: boolean; reason?: string }> {
   if (typeof window === "undefined") {
     return { ok: false, reason: "runtime_unavailable" }
   }
@@ -79,11 +103,6 @@ export async function notifyExtensionSettingsChanged(options?: {
   const runtime = (window as BrowserWindowWithChromeRuntime).chrome?.runtime
   if (!runtime?.sendMessage) {
     return { ok: false, reason: "runtime_unavailable" }
-  }
-
-  const message: ExtensionPullSyncMessage = {
-    type: "SYNC_SETTINGS_PULL",
-    force: options?.force !== false
   }
 
   const timeoutMs = Math.max(300, options?.timeoutMs ?? DEFAULT_SYNC_TIMEOUT_MS)

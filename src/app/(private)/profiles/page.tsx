@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Layers3, MessageSquareQuote, Plus, WandSparkles, Star } from "lucide-react"
 import { toast } from "sonner"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Card } from "@/components/ui/Card"
@@ -16,6 +17,9 @@ import { useProfilesUIStore } from "@/store/useProfilesUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function ProfilesPage() {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const pendingCreateFromQueryRef = useRef(false)
     const {
         data: profiles,
         isLoading,
@@ -42,6 +46,26 @@ export default function ProfilesPage() {
         if (!profiles || !editingProfileId) return null
         return profiles.find((profile) => profile.id === editingProfileId) ?? null
     }, [profiles, editingProfileId])
+
+    useEffect(() => {
+        if (searchParams.get("create") === "1") {
+            pendingCreateFromQueryRef.current = true
+        }
+    }, [searchParams])
+
+    useEffect(() => {
+        if (!pendingCreateFromQueryRef.current) {
+            return
+        }
+
+        if (isLoading || showLoading || isDialogOpen) {
+            return
+        }
+
+        pendingCreateFromQueryRef.current = false
+        openCreateDialog()
+        router.replace("/profiles")
+    }, [isDialogOpen, isLoading, openCreateDialog, router, showLoading])
 
     const handleSubmit = async (values: CreateProfileInput, profileId?: string) => {
         try {
