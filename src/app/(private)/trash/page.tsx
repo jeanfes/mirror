@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useMemo } from "react"
 import { formatDistanceToNow } from "date-fns"
+import type { Locale } from "date-fns"
+import { de, enUS, es, fr, ptBR } from "date-fns/locale"
 import { ArchiveRestore, Trash2, Undo2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
@@ -11,22 +12,35 @@ import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useTrash } from "@/features/trash/hooks/useTrash"
 import type { TrashItem } from "@/features/trash/services/trash.service"
+import type { Dictionary } from "@/lib/i18n/types"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 import { memo } from "react"
 
-const TrashItemCard = memo(({ 
-  item, 
-  onRestore, 
-  onDelete, 
-  isMutating, 
-  t 
-}: { 
+type AppLanguage = "es" | "en" | "pt" | "fr" | "de"
+
+const DATE_LOCALE_BY_LANGUAGE: Record<AppLanguage, Locale> = {
+  es,
+  en: enUS,
+  pt: ptBR,
+  fr,
+  de
+}
+
+const TrashItemCard = memo(({
+  item,
+  onRestore,
+  onDelete,
+  isMutating,
+  t,
+  language
+}: {
   item: TrashItem
   onRestore: (item: TrashItem) => void
   onDelete: (item: TrashItem) => void
   isMutating: boolean
-  t: any
+  t: Dictionary
+  language: AppLanguage
 }) => (
   <Card className="dashboard-card-xl">
     <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -43,7 +57,10 @@ const TrashItemCard = memo(({
         <p className="mt-3 text-[12px] font-medium text-secondary-text">
           {t.app.trash.deletedX.replace(
             "{0}",
-            formatDistanceToNow(item.deletedAt, { addSuffix: true })
+            formatDistanceToNow(item.deletedAt, {
+              addSuffix: true,
+              locale: DATE_LOCALE_BY_LANGUAGE[language]
+            })
           )}
         </p>
       </div>
@@ -82,7 +99,7 @@ export default function TrashPage() {
     deleteForever: deleteItem,
     isMutating,
   } = useTrash()
-  const { t } = useLanguageStore()
+  const { t, language } = useLanguageStore()
   const showLoading = useLoadingDelay(isLoading)
   const items = useMemo<TrashItem[]>(() => data ?? [], [data])
 
@@ -110,7 +127,7 @@ export default function TrashPage() {
       toast.success(t.app.common.itemDeleted)
     } catch {
       if (!isMutating) { // Prevent multiple error toasts if optimistic update failed
-         toast.error(t.app.common.itemDeleteError)
+        toast.error(t.app.common.itemDeleteError)
       }
     }
   }
@@ -241,6 +258,7 @@ export default function TrashPage() {
                 onDelete={deleteForever}
                 isMutating={isMutating}
                 t={t}
+                language={language}
               />
             ))}
           </div>

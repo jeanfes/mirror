@@ -89,6 +89,16 @@ type WindowWithExtensionBridge = Window & {
 
 type RedirectCopy = Dictionary["app"]["extensionRedirect"]
 
+const EXTENSION_OBJECTIVE_NAME_MAX = 64
+const EXTENSION_OBJECTIVE_DESCRIPTION_MAX = 300
+const EXTENSION_OBJECTIVE_PROMPT_MAX = 1200
+const EXTENSION_OBJECTIVE_LIBRARY_MAX_ITEMS = 200
+const EXTENSION_SUPPORTED_PLATFORMS: ExtensionPlatformId[] = ["linkedin", "twitter", "reddit", "youtube", "upwork"]
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+    return value && typeof value === "object" ? (value as Record<string, unknown>) : null
+}
+
 function getBridgeErrorMessage(reason: ExtensionSyncFailureReason, copy: RedirectCopy) {
     if (reason.includes("Receiving end does not exist")) {
         return copy.bridgeReceivingEndMissing
@@ -163,6 +173,104 @@ function normalizeActiveProfileId(value: unknown): string | null | undefined {
     }
 
     return undefined
+}
+
+function isExtensionPlatformId(value: unknown): value is ExtensionPlatformId {
+    return typeof value === "string" && EXTENSION_SUPPORTED_PLATFORMS.includes(value as ExtensionPlatformId)
+}
+
+function normalizeExtensionObjectiveScope(value: unknown): ExtensionPlatformId[] {
+    if (Array.isArray(value)) {
+        const unique = new Set<ExtensionPlatformId>()
+
+        for (const item of value) {
+            if (isExtensionPlatformId(item)) {
+                unique.add(item)
+            }
+        }
+
+        const normalized = EXTENSION_SUPPORTED_PLATFORMS.filter((platform) => unique.has(platform))
+        if (normalized.length > 0) {
+            return normalized
+        }
+    }
+
+    return [...EXTENSION_SUPPORTED_PLATFORMS]
+}
+
+function normalizeExtensionObjectiveSource(value: unknown): ExtensionObjectiveSource {
+    if (value === "platform_base" || value === "user_custom" || value === "imported_pack") {
+        return value
+    }
+
+    return "user_custom"
+}
+
+function normalizeExtensionObjectiveProfile(value: unknown): ExtensionObjectiveProfile | null {
+    const candidate = asRecord(value)
+    if (!candidate) {
+        return null
+    }
+
+    const id = typeof candidate.id === "string" ? candidate.id.trim() : ""
+    const name = typeof candidate.name === "string" ? candidate.name.trim() : ""
+
+    if (!id || !name) {
+        return null
+    }
+
+    const canonicalGoal = candidate.canonicalGoal
+    if (
+        canonicalGoal !== "Add Value" &&
+        canonicalGoal !== "Challenge" &&
+        canonicalGoal !== "Networking" &&
+        canonicalGoal !== "Question"
+    ) {
+        return null
+    }
+
+    const description = typeof candidate.description === "string"
+        ? candidate.description.trim().slice(0, EXTENSION_OBJECTIVE_DESCRIPTION_MAX)
+        : ""
+
+    const strategyPrompt = typeof candidate.strategyPrompt === "string"
+        ? candidate.strategyPrompt.trim().slice(0, EXTENSION_OBJECTIVE_PROMPT_MAX)
+        : ""
+
+    return {
+        id,
+        name: name.slice(0, EXTENSION_OBJECTIVE_NAME_MAX),
+        canonicalGoal,
+        description,
+        strategyPrompt,
+        scope: normalizeExtensionObjectiveScope(candidate.scope),
+        source: normalizeExtensionObjectiveSource(candidate.source),
+        active: candidate.active !== false,
+        createdAt: typeof candidate.createdAt === "number" ? candidate.createdAt : Date.now(),
+        updatedAt: typeof candidate.updatedAt === "number" ? candidate.updatedAt : Date.now()
+    }
+}
+
+function normalizeExtensionObjectiveLibrary(value: unknown): ExtensionObjectiveProfile[] | undefined {
+    if (!Array.isArray(value)) {
+        return undefined
+    }
+
+    const byId = new Map<string, ExtensionObjectiveProfile>()
+
+    for (const item of value) {
+        const objective = normalizeExtensionObjectiveProfile(item)
+        if (!objective) {
+            continue
+        }
+
+        byId.set(objective.id, objective)
+        if (byId.size >= EXTENSION_OBJECTIVE_LIBRARY_MAX_ITEMS) {
+            break
+        }
+    }
+
+    return Array.from(byId.values())
 }
 
 function RedirectContent() {
@@ -303,19 +411,9 @@ function RedirectContent() {
                                 .maybeSingle()
                         ])
 
-                        const settingsRow =
-                            settingsQuery.data && typeof settingsQuery.data === "object"
-                                ? (settingsQuery.data as Record<string, unknown>)
-                                : null
-
-                        const accountRow =
-                            accountQuery.data && typeof accountQuery.data === "object"
-                                ? (accountQuery.data as Record<string, unknown>)
-                                : null
-
-                        const objectiveLibrary = Array.isArray(settingsRow?.objective_library)
-                            ? (settingsRow.objective_library as ExtensionObjectiveProfile[])
-                            : undefined
+                        const settingsRow = asRecord(settingsQuery.data)
+                        const accountRow = asRecord(accountQuery.data)
+                        const objectiveLibrary = normalizeExtensionObjectiveLibrary(settingsRow?.objective_library)
 
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
