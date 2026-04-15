@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
 
   experimental: {
+    externalDir: true,
     optimizePackageImports: [
       "lucide-react",
       "date-fns",

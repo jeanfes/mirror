@@ -59,7 +59,10 @@ export async function listProfiles(
 
   return (data ?? []).map((row: ProfileWithTraining) => {
     const examples = (row.style_training ?? [])
-      .filter((t) => t.kind === "example" && t.content)
+      .filter(
+        (t): t is StyleTrainingRow & { content: string } =>
+          t.kind === "example" && typeof t.content === "string" && t.content.length > 0
+      )
       .sort((a, b) => a.display_order - b.display_order)
       .map((t) => t.content)
 

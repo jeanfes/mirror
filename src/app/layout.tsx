@@ -6,6 +6,7 @@ import Script from "next/script"
 import { Toaster } from "sonner"
 
 import { AppProviders } from "@/components/providers/AppProviders"
+import { BaseObjectivesInitializer } from "@/components/providers/BaseObjectivesInitializer"
 import {
   THEME_PREFERENCE_COOKIE,
   THEME_RESOLVED_COOKIE,
@@ -78,6 +79,7 @@ export default async function RootLayout({
       <body
         className={`${spaceGrotesk.className} font-sans text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}
       >
+        <BaseObjectivesInitializer />
         <AppProviders
           initialThemePreference={initialThemePreference}
           initialResolvedTheme={initialResolvedTheme}

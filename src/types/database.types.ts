@@ -24,7 +24,7 @@ export interface StyleTrainingRow {
   id: string
   profile_id: string
   kind: "example" | "questionnaire"
-  content: string
+  content: string | null
   questionnaire_answers: Record<string, unknown> | null
   display_order: number
 }
@@ -33,6 +33,7 @@ export interface GenerationHistoryRow {
   id: string
   user_id: string
   profile_id: string | null
+  platform: PlatformId
   kind: "comment" | "post" | "rewrite"
   source: "generated" | "alternative" | "manual_edit" | "history_reuse"
   status: "pending" | "applied" | "dismissed"
@@ -57,9 +58,9 @@ export interface GenerationHistoryRow {
 export interface PlanQuotasRow {
   plan: "Free" | "Pro" | "Elite"
   monthly_generations: number
-  max_profiles: number
+  max_profiles: number | null
   max_history_retention_days: number
-  features_allowed: string[] | null
+  features_allowed: string[]
 }
 
 export interface UserAccountRow {
@@ -148,6 +149,7 @@ export interface GenerationHistory {
   id: string
   profileId: string | null
   profileName?: string 
+  platform: PlatformId
   syncFingerprint?: string
   kind: "comment" | "post" | "rewrite"
   source: "generated" | "alternative" | "manual_edit" | "history_reuse"

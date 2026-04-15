@@ -19,6 +19,8 @@ const ACTIVE_PROFILE_INVALID_CODE = "ACTIVE_PROFILE_INVALID"
 
 type DomainError = Error & { code?: string }
 
+let cachedBaseObjectives: ObjectiveProfile[] | null = null
+
 function createActiveProfileInvalidError(): DomainError {
   const error = new Error("active_profile_id must belong to current user and remain enabled") as DomainError
   error.code = ACTIVE_PROFILE_INVALID_CODE
@@ -45,155 +47,6 @@ export function isActiveProfileValidationError(error: unknown): boolean {
   const candidate = error as { code?: unknown }
   return candidate.code === ACTIVE_PROFILE_INVALID_CODE || isActiveProfileConstraintError(error)
 }
-
-const baseObjectiveSeeds: Array<
-  Omit<ObjectiveProfile, "active" | "createdAt" | "updatedAt">
-> = [
-  {
-    id: "base-linkedin-job-search",
-    name: "Job search positioning",
-    canonicalGoal: "Networking",
-    description: "Construir credibilidad para atraer oportunidades laborales.",
-    strategyPrompt: "Write as a professional seeking opportunities: show fit, curiosity and business value.",
-    scope: ["linkedin"],
-    source: "platform_base"
-  },
-  {
-    id: "base-linkedin-networking",
-    name: "Strategic networking",
-    canonicalGoal: "Networking",
-    description: "Abrir conversaciones con pares y referentes.",
-    strategyPrompt: "Open a high-signal networking conversation with one practical angle and a clear follow-up invitation.",
-    scope: ["linkedin"],
-    source: "platform_base"
-  },
-  {
-    id: "base-linkedin-authority",
-    name: "Authority via insights",
-    canonicalGoal: "Add Value",
-    description: "Aportar un insight practico y aplicable.",
-    strategyPrompt: "Share one concrete insight and one actionable next step to position expertise.",
-    scope: ["linkedin"],
-    source: "platform_base"
-  },
-  {
-    id: "base-linkedin-conversation",
-    name: "Conversation starter",
-    canonicalGoal: "Question",
-    description: "Activar respuesta del autor y de la audiencia.",
-    strategyPrompt: "Ask a focused question that triggers practical discussion and invites a reply from the author.",
-    scope: ["linkedin"],
-    source: "platform_base"
-  },
-  {
-    id: "base-linkedin-followup",
-    name: "Professional follow-up",
-    canonicalGoal: "Challenge",
-    description: "Dar contrapunto respetuoso y elevar el debate.",
-    strategyPrompt: "Respectfully challenge one assumption and provide a constructive alternative viewpoint.",
-    scope: ["linkedin"],
-    source: "platform_base"
-  },
-  {
-    id: "base-upwork-proposal",
-    name: "Freelance proposal",
-    canonicalGoal: "Networking",
-    description: "Orientado a propuesta concreta de trabajo.",
-    strategyPrompt: "Respond like a freelancer proposal opener: prove relevance, reference scope and suggest a next step.",
-    scope: ["upwork"],
-    source: "platform_base"
-  },
-  {
-    id: "base-upwork-scope-discovery",
-    name: "Scope discovery",
-    canonicalGoal: "Question",
-    description: "Aclarar requerimientos antes de estimar.",
-    strategyPrompt: "Ask diagnostic questions that clarify deliverables, constraints and timeline before committing.",
-    scope: ["upwork"],
-    source: "platform_base"
-  },
-  {
-    id: "base-upwork-value-diff",
-    name: "Value differentiation",
-    canonicalGoal: "Add Value",
-    description: "Mostrar enfoque y valor diferencial.",
-    strategyPrompt: "Highlight a differentiated execution approach and measurable value for the client.",
-    scope: ["upwork"],
-    source: "platform_base"
-  },
-  {
-    id: "base-upwork-close-cta",
-    name: "Close with CTA",
-    canonicalGoal: "Networking",
-    description: "Cerrar con siguiente paso claro.",
-    strategyPrompt: "Close with a clear call to action (brief call, scope confirmation, or pilot step).",
-    scope: ["upwork"],
-    source: "platform_base"
-  },
-  {
-    id: "base-upwork-objections",
-    name: "Objection handling",
-    canonicalGoal: "Challenge",
-    description: "Responder objeciones con claridad y calma.",
-    strategyPrompt: "Address likely client objections directly with concise trade-offs and confidence.",
-    scope: ["upwork"],
-    source: "platform_base"
-  },
-  {
-    id: "base-twitter-hot-take",
-    name: "Constructive hot take",
-    canonicalGoal: "Challenge",
-    description: "Contrapunto corto con propuesta concreta.",
-    strategyPrompt: "Offer a concise challenge and one practical alternative in a sharp tone.",
-    scope: ["twitter"],
-    source: "platform_base"
-  },
-  {
-    id: "base-twitter-thread-value",
-    name: "Thread value add",
-    canonicalGoal: "Add Value",
-    description: "Agregar ejemplo o data en una respuesta corta.",
-    strategyPrompt: "Add one useful datapoint or mini-example that extends the thread's value.",
-    scope: ["twitter"],
-    source: "platform_base"
-  },
-  {
-    id: "base-reddit-context-help",
-    name: "Contextual help",
-    canonicalGoal: "Add Value",
-    description: "Responder utilmente segun contexto del sub.",
-    strategyPrompt: "Provide practical, context-aware help with clear reasoning and no fluff.",
-    scope: ["reddit"],
-    source: "platform_base"
-  },
-  {
-    id: "base-reddit-question",
-    name: "Clarifying question",
-    canonicalGoal: "Question",
-    description: "Pedir info clave para mejorar la respuesta.",
-    strategyPrompt: "Ask one clarifying question that unlocks a higher-quality answer.",
-    scope: ["reddit"],
-    source: "platform_base"
-  },
-  {
-    id: "base-youtube-insight",
-    name: "Insightful reaction",
-    canonicalGoal: "Add Value",
-    description: "Aportar insight a partir del video.",
-    strategyPrompt: "Add one insight that builds on the video and encourages deeper discussion.",
-    scope: ["youtube"],
-    source: "platform_base"
-  },
-  {
-    id: "base-youtube-engage-question",
-    name: "Engagement question",
-    canonicalGoal: "Question",
-    description: "Pregunta que invite comentarios de calidad.",
-    strategyPrompt: "Ask a thoughtful question that encourages viewers to share specific perspectives.",
-    scope: ["youtube"],
-    source: "platform_base"
-  }
-]
 
 function normalizeGoal(value: unknown): GoalType | null {
   return typeof value === "string" && GOAL_SET.has(value as GoalType)
@@ -240,13 +93,77 @@ function nowMs() {
   return Date.now()
 }
 
-function buildBaseObjectiveLibrary(now = nowMs()): ObjectiveProfile[] {
-  return baseObjectiveSeeds.map((seed) => ({
-    ...seed,
-    active: true,
-    createdAt: now,
-    updatedAt: now
-  }))
+async function fetchBaseObjectivesFromSupabase(supabase: SupabaseClient): Promise<ObjectiveProfile[]> {
+  try {
+    interface ObjectiveRow {
+      id: string
+      name: string
+      canonical_goal: string
+      description?: string
+      strategy_prompt?: string
+      scope?: string[]
+      source: ObjectiveSource
+    }
+
+    const { data, error } = await supabase
+      .from("objectives")
+      .select("id, name, canonical_goal, description, strategy_prompt, scope, source")
+      .eq("active", true)
+
+    if (error) {
+      console.warn("Failed to fetch base objectives from Supabase:", error)
+      return []
+    }
+
+    if (!data || data.length === 0) {
+      return []
+    }
+
+    const now = nowMs()
+    return (data as ObjectiveRow[]).map((obj) => {
+      const goal = normalizeGoal(obj.canonical_goal)
+      if (!goal) {
+        throw new Error(`Invalid goal type from database: ${obj.canonical_goal}`)
+      }
+
+      return {
+        id: obj.id,
+        name: obj.name,
+        canonicalGoal: goal,
+        description: obj.description || "",
+        strategyPrompt: obj.strategy_prompt || "",
+        scope: normalizeObjectiveScope(obj.scope),
+        source: obj.source as ObjectiveSource,
+        active: true,
+        createdAt: now,
+        updatedAt: now
+      }
+    })
+  } catch (error) {
+    console.warn("Error fetching base objectives:", error)
+    return []
+  }
+}
+
+async function ensureBaseObjectivesInitialized(supabase: SupabaseClient): Promise<void> {
+  if (cachedBaseObjectives !== null) {
+    return
+  }
+
+  cachedBaseObjectives = await fetchBaseObjectivesFromSupabase(supabase)
+}
+
+function getBaseObjectiveLibrary(): ObjectiveProfile[] {
+  return cachedBaseObjectives ?? []
+}
+
+export async function initializeBaseObjectives(supabase: SupabaseClient): Promise<void> {
+  try {
+    cachedBaseObjectives = await fetchBaseObjectivesFromSupabase(supabase)
+  } catch (error) {
+    console.warn("Failed to initialize base objectives:", error)
+    cachedBaseObjectives = []
+  }
 }
 
 function normalizeObjectiveProfile(value: unknown): ObjectiveProfile | null {
@@ -294,27 +211,39 @@ function normalizeObjectiveProfile(value: unknown): ObjectiveProfile | null {
 }
 
 function normalizeObjectiveLibrary(value: unknown): ObjectiveProfile[] {
-  const byId = new Map<string, ObjectiveProfile>()
-
-  for (const baseObjective of buildBaseObjectiveLibrary()) {
-    byId.set(baseObjective.id, baseObjective)
+  if (!Array.isArray(value)) {
+    return []
   }
 
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      const objective = normalizeObjectiveProfile(item)
-      if (!objective) {
-        continue
-      }
+  const byId = new Map<string, ObjectiveProfile>()
 
-      byId.set(objective.id, objective)
+  for (const item of value) {
+    const objective = normalizeObjectiveProfile(item)
+    if (!objective) {
+      continue
     }
+
+    byId.set(objective.id, objective)
   }
 
   return Array.from(byId.values())
 }
 
-const defaultObjectiveLibrary = normalizeObjectiveLibrary(null)
+function mergeObjectiveLibraryWithBase(value: unknown): ObjectiveProfile[] {
+  const byId = new Map<string, ObjectiveProfile>()
+
+  for (const baseObjective of getBaseObjectiveLibrary()) {
+    byId.set(baseObjective.id, baseObjective)
+  }
+
+  for (const objective of normalizeObjectiveLibrary(value)) {
+    byId.set(objective.id, objective)
+  }
+
+  return Array.from(byId.values())
+}
+
+const defaultObjectiveLibrary: ObjectiveProfile[] = []
 
 const defaultUserSettings: UserSettings = {
   language: "es",
@@ -338,7 +267,7 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
   const desktopAlertsEnabled = row.desktop_alerts_enabled
   const notificationsEnabled = row.notifications_enabled
 
-  const objectiveLibrary = normalizeObjectiveLibrary(row.objective_library)
+  const objectiveLibrary = mergeObjectiveLibraryWithBase(row.objective_library)
 
   return {
     language:
@@ -379,6 +308,8 @@ export async function getUserSettings(
   supabase: SupabaseClient,
   userId: string
 ): Promise<UserSettings> {
+  await ensureBaseObjectivesInitialized(supabase)
+
   const { data, error } = await supabase
     .from("user_settings")
     .select(USER_SETTINGS_SELECT_COLUMNS)

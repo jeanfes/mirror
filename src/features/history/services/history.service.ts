@@ -2,11 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
 const HISTORY_SELECT_COLUMNS =
-  "id, profile_id, sync_fingerprint, kind, source, status, post_author, post_headline, post_snippet, generated_text, goal, origin, created_at"
+  "id, profile_id, platform, sync_fingerprint, kind, source, status, post_author, post_headline, post_snippet, generated_text, goal, origin, created_at"
 
 type HistoryRowProjection = Pick<
   GenerationHistoryRow,
-  "id" | "profile_id" | "sync_fingerprint" | "kind" | "source" | "status" | "post_author" | "post_headline" | "post_snippet" | "generated_text" | "goal" | "origin" | "created_at"
+  "id" | "profile_id" | "platform" | "sync_fingerprint" | "kind" | "source" | "status" | "post_author" | "post_headline" | "post_snippet" | "generated_text" | "goal" | "origin" | "created_at"
 >
 
 function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string }): GenerationHistory {
@@ -14,6 +14,7 @@ function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string 
     id: row.id,
     profileId: row.profile_id,
     profileName: row.profileName,
+    platform: row.platform ?? "linkedin",
     syncFingerprint: row.sync_fingerprint ?? undefined,
     kind: row.kind,
     source: row.source,

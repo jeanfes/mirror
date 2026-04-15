@@ -86,7 +86,11 @@ function normalizePlanName(value: unknown): PlanName | null {
   return null
 }
 
-function formatProfilesFeature(maxProfiles: number) {
+function formatProfilesFeature(maxProfiles: number | null) {
+  if (maxProfiles === null) {
+    return "Unlimited voice profiles"
+  }
+
   if (maxProfiles >= 999) {
     return "Unlimited voice profiles"
   }
@@ -111,7 +115,7 @@ function mapAllowedFeature(rawFeature: string): string {
 }
 
 function buildPlanSummary(quota: PlanQuotasRow): string {
-  const profileText = quota.max_profiles >= 999
+  const profileText = quota.max_profiles === null || quota.max_profiles >= 999
     ? "unlimited profiles"
     : `${quota.max_profiles.toLocaleString()} profiles`
 

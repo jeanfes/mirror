@@ -2,10 +2,10 @@
 
 import { useEffect, memo, useMemo } from "react"
 import { z } from "zod"
-import { useForm, Controller } from "react-hook-form"
+import { useForm, Controller, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Sparkles, Check } from "lucide-react"
-import type { GoalType, ObjectiveProfile, PlatformId, ObjectiveScope } from "@/types/database.types"
+import type { ObjectiveProfile, PlatformId } from "@/types/database.types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Textarea } from "@/components/ui/Textarea"
@@ -84,7 +84,6 @@ export const GoalFormDialog = memo(function GoalFormDialog({
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
     setValue,
   } = useForm<GoalFormValues>({
     resolver: zodResolver(currentSchema),
@@ -112,7 +111,7 @@ export const GoalFormDialog = memo(function GoalFormDialog({
     if (!goal) reset(defaults)
   })
 
-  const currentScope = watch("scope")
+  const currentScope = useWatch({ control, name: "scope" })
 
   const togglePlatform = (id: PlatformId) => {
     const next: PlatformId[] = currentScope.includes(id)
@@ -190,8 +189,8 @@ export const GoalFormDialog = memo(function GoalFormDialog({
                         type="button"
                         onClick={() => togglePlatform(id)}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-all ${active
-                            ? "border-accent-purple bg-accent-purple/15 text-accent-purple"
-                            : "border-border-soft bg-surface-base text-secondary-text hover:text-primary-text"
+                          ? "border-accent-purple bg-accent-purple/15 text-accent-purple"
+                          : "border-border-soft bg-surface-base text-secondary-text hover:text-primary-text"
                           }`}
                       >
                         {active && <Check className="h-3 w-3" />}
