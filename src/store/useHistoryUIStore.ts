@@ -2,10 +2,10 @@ import { create } from "zustand"
 
 interface HistoryUIState {
   selectedProfileId: string
-  appliedFilter: "all" | "applied" | "pending" | "dismissed"
+  appliedFilter: "all" | "applied"
   search: string
   setSelectedProfileId: (value: string) => void
-  setAppliedFilter: (value: "all" | "applied" | "pending" | "dismissed") => void
+  setAppliedFilter: (value: "all" | "applied") => void
   setSearch: (value: string) => void
   resetFilters: () => void
 }

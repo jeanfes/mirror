@@ -14,7 +14,7 @@ import { useHistoryUIStore } from "@/store/useHistoryUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function HistoryPage() {
-    const { data: history, isLoading, isError, toggleHistoryApplied, reuseHistoryItem, moveToTrash } = useHistory()
+    const { data: history, isLoading, isError, moveToTrash } = useHistory()
     const { data: profiles } = useProfiles()
     const {
         selectedProfileId,
@@ -71,28 +71,16 @@ export default function HistoryPage() {
     const summary = useMemo(() => {
         const items = history ?? []
         let applied = 0
-        let pending = 0
-        let reused = 0
 
         for (const item of items) {
             if (item.status === "applied") {
                 applied += 1
             }
-
-            if (item.status === "pending") {
-                pending += 1
-            }
-
-            if (item.source === "history_reuse") {
-                reused += 1
-            }
         }
 
         return {
             total: items.length,
-            applied,
-            pending,
-            reused
+            applied
         }
     }, [history])
 
@@ -104,24 +92,6 @@ export default function HistoryPage() {
             toast.error(t.app.common.commentCopyError || "Could not copy comment")
         }
     }, [t])
-
-    const handleReuse = useCallback(async (id: string) => {
-        try {
-            await reuseHistoryItem(id)
-            toast.success(t.app.common.commentDuplicated || "Comment duplicated in history")
-        } catch {
-            toast.error(t.app.common.commentReuseError || "Could not reuse comment")
-        }
-    }, [reuseHistoryItem, t])
-
-    const handleToggleApplied = useCallback(async (id: string) => {
-        try {
-            await toggleHistoryApplied(id)
-            toast.success(t.app.common.historyUpdated || "History item updated")
-        } catch {
-            toast.error(t.app.common.historyUpdateError || "Could not update history item")
-        }
-    }, [toggleHistoryApplied, t])
 
     const handleMoveToTrash = useCallback(async (id: string) => {
         try {
@@ -180,14 +150,6 @@ export default function HistoryPage() {
                             <div className="dashboard-dark-stat">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.applied}</p>
                                 <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.applied}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.pending}</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.pending}</p>
-                            </div>
-                            <div className="dashboard-dark-stat">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">{t.app.history.reused}</p>
-                                <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{summary.reused}</p>
                             </div>
                         </div>
                     </Card>
@@ -263,8 +225,6 @@ export default function HistoryPage() {
                             item={item}
                             profileName={item.profileId ? (profileMap.get(item.profileId) ?? t.app.common.unknownProfile) : t.app.common.unknownProfile}
                             onCopy={handleCopy}
-                            onReuse={handleReuse}
-                            onToggleApplied={handleToggleApplied}
                             onMoveToTrash={handleMoveToTrash}
                         />
                     ))}

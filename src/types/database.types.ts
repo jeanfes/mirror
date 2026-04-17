@@ -35,8 +35,8 @@ export interface GenerationHistoryRow {
   profile_id: string | null
   platform: PlatformId
   kind: "comment" | "post" | "rewrite"
-  source: "generated" | "alternative" | "manual_edit" | "history_reuse"
-  status: "pending" | "applied" | "dismissed"
+  source: "generated" | "alternative" | "manual_edit"
+  status: "applied"
   post_author: string | null
   post_headline: string | null
   post_snippet: string | null
@@ -91,15 +91,6 @@ export interface InvoiceRow {
   created_at: string
 }
 
-export interface UserProfile {
-  id: string
-  name: string
-  avatarUrl: string | null
-  avatarSource: "google" | "upload" | null
-  passwordUpdatedAt: string | null
-  createdAt: string
-}
-
 export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question"
 export type PlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 export type ObjectiveScope = PlatformId[]
@@ -152,8 +143,8 @@ export interface GenerationHistory {
   platform: PlatformId
   syncFingerprint?: string
   kind: "comment" | "post" | "rewrite"
-  source: "generated" | "alternative" | "manual_edit" | "history_reuse"
-  status: "pending" | "applied" | "dismissed"
+  source: "generated" | "alternative" | "manual_edit"
+  status: "applied"
   postAuthor: string
   postHeadline: string | undefined
   postSnippet: string

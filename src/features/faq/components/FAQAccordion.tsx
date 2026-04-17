@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-export interface FAQItem {
+interface FAQItem {
   readonly q: string;
   readonly a: string;
 }

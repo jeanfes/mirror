@@ -9,13 +9,13 @@ import { Input } from "@/components/ui/Input"
 
 interface HistoryFiltersProps {
     profileValue: string
-    appliedValue: "all" | "applied" | "pending" | "dismissed"
+    appliedValue: "all" | "applied"
     searchValue: string
     resultsCount: number
     totalCount: number
     profileOptions: Array<{ label: string; value: string }>
     onProfileChange: (value: string) => void
-    onAppliedChange: (value: "all" | "applied" | "pending" | "dismissed") => void
+    onAppliedChange: (value: "all" | "applied") => void
     onSearchChange: (value: string) => void
     onReset: () => void
 }
@@ -40,9 +40,7 @@ export const HistoryFilters = memo(function HistoryFilters({
     const t = useLanguageStore((state) => state.t)
     const statusLabelMap: Record<HistoryFiltersProps["appliedValue"], string> = {
         all: t.app.historyFilters.statusAll,
-        applied: t.app.historyFilters.statusApplied,
-        pending: t.app.historyFilters.statusPending,
-        dismissed: t.app.historyFilters.statusDismissed
+        applied: t.app.historyFilters.statusApplied
     }
 
     return (
@@ -90,13 +88,11 @@ export const HistoryFilters = memo(function HistoryFilters({
 
                 <Select
                     value={appliedValue}
-                    onChange={(value) => onAppliedChange(value as "all" | "applied" | "pending" | "dismissed")}
+                    onChange={(value) => onAppliedChange(value as "all" | "applied")}
                     label={t.app.historyFilters.statusLabel}
                     options={[
                         { label: t.app.historyFilters.statusAll, value: "all" },
-                        { label: t.app.historyFilters.statusApplied, value: "applied" },
-                        { label: t.app.historyFilters.statusPending, value: "pending" },
-                        { label: t.app.historyFilters.statusDismissed, value: "dismissed" }
+                        { label: t.app.historyFilters.statusApplied, value: "applied" }
                     ]}
                     className="rounded-2xl"
                     triggerClassName="h-12 rounded-2xl"

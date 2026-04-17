@@ -62,17 +62,12 @@ export default function AccountPage() {
     }
 
     let appliedCount = 0
-    let reusableCount = 0
     const currentMonth = new Date().getMonth()
     let generatedThisMonth = 0
 
     for (const item of historyItems) {
       if (item.status === "applied") {
         appliedCount += 1
-      }
-
-      if (item.source === "history_reuse") {
-        reusableCount += 1
       }
 
       if (new Date(item.createdAt).getMonth() === currentMonth) {
@@ -90,7 +85,6 @@ export default function AccountPage() {
       historyItems,
       activeProfiles,
       appliedCount,
-      reusableCount,
       generatedThisMonth,
       currentPlan,
       totalCredits,
@@ -119,7 +113,6 @@ export default function AccountPage() {
     historyItems,
     activeProfiles,
     appliedCount,
-    reusableCount,
     generatedThisMonth,
     currentPlan,
     usedCredits,
@@ -281,9 +274,9 @@ export default function AccountPage() {
               <p className="mt-2 body-muted">{t.app.account.appliedDesc}</p>
             </Card>
             <Card className="dashboard-card-lg">
-              <p className="dashboard-overline">{t.app.account.reusedComments}</p>
-              <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{reusableCount}</p>
-              <p className="mt-2 body-muted">{t.app.account.reusedDesc}</p>
+              <p className="dashboard-overline">{t.app.history.archived}</p>
+              <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{historyItems.length}</p>
+              <p className="mt-2 body-muted">{t.app.history.archiveGlanceDesc}</p>
             </Card>
           </div>
 

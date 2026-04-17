@@ -2,7 +2,7 @@
 
 import { memo } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { CheckCircle2, Copy, MessageSquareQuote, RotateCcw, Trash2 } from "lucide-react"
+import { Copy, MessageSquareQuote, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Tooltip } from "@/components/ui/Tooltip"
@@ -13,8 +13,6 @@ interface HistoryItemCardProps {
     item: GenerationHistory
     profileName: string
     onCopy: (comment: string) => void
-    onReuse: (id: string) => void
-    onToggleApplied: (id: string) => void
     onMoveToTrash: (id: string) => void
 }
 
@@ -22,8 +20,6 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     item,
     profileName,
     onCopy,
-    onReuse,
-    onToggleApplied,
     onMoveToTrash
 }: HistoryItemCardProps) {
     const { t } = useLanguageStore()
@@ -38,19 +34,10 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     const sourceLabels: Record<NonNullable<GenerationHistory["source"]>, string> = {
         alternative: t.app.historyItem.sourceAlternative,
         generated: t.app.historyItem.sourceGenerated,
-        history_reuse: t.app.historyItem.sourceReused,
         manual_edit: t.app.historyItem.sourceManualEdit
     }
 
-    const statusMeta = item.status === "applied"
-        ? { label: t.app.history.applied, className: "badge-success" }
-        : item.status === "dismissed"
-            ? { label: t.app.historyFilters.statusDismissed, className: "badge-accent" }
-            : { label: t.app.history.pending, className: "badge-warning" }
-    const isApplied = item.status === "applied"
-    const toggleLabel = isApplied || item.status === "dismissed"
-        ? t.app.historyItem.markPending
-        : t.app.historyItem.markApplied
+    const statusMeta = { label: t.app.history.applied, className: "badge-success" }
 
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
@@ -107,18 +94,6 @@ export const HistoryItemCard = memo(function HistoryItemCard({
                             <Button type="button" variant="secondary" onClick={() => onCopy(item.generatedText)}>
                                 <Copy className="h-4 w-4" />
                                 {t.app.historyItem.copyAction}
-                            </Button>
-                        </Tooltip>
-                        <Tooltip text={t.app.historyItem.reuseTooltip}>
-                            <Button type="button" variant="secondary" onClick={() => onReuse(item.id)}>
-                                <RotateCcw className="h-4 w-4" />
-                                {t.app.historyItem.reuseAction}
-                            </Button>
-                        </Tooltip>
-                        <Tooltip text={t.app.historyItem.toggleAppliedTooltip}>
-                            <Button type="button" onClick={() => onToggleApplied(item.id)}>
-                                <CheckCircle2 className="h-4 w-4" />
-                                {toggleLabel}
                             </Button>
                         </Tooltip>
                         <Tooltip text={t.app.historyItem.trashTooltip}>

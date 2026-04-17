@@ -31,7 +31,7 @@ function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string 
 
 export interface ListHistoryFilters {
   profileId?: string
-  status?: "all" | "pending" | "applied" | "dismissed"
+  status?: "all" | "applied"
   search?: string
 }
 
@@ -71,33 +71,6 @@ export async function listHistory(supabase: SupabaseClient, userId: string, filt
 
     return mapRowToHistoryItem({ ...row, profileName })
   })
-}
-
-export async function updateHistoryStatus(
-  supabase: SupabaseClient,
-  userId: string,
-  id: string,
-  newStatus: "pending" | "applied" | "dismissed"
-): Promise<void> {
-  const { error } = await supabase
-    .from("generation_history")
-    .update({ status: newStatus, updated_at: new Date().toISOString() })
-    .eq("id", id)
-    .eq("user_id", userId)
-
-  if (error) {
-    throw error
-  }
-}
-
-export async function reuseHistoryItem(supabase: SupabaseClient, id: string): Promise<string> {
-  const { data: newId, error } = await supabase.rpc("reuse_generation", { p_history_id: id })
-
-  if (error) {
-    throw error
-  }
-
-  return String(newId)
 }
 
 export async function moveToTrash(supabase: SupabaseClient, userId: string, id: string): Promise<void> {

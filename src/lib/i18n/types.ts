@@ -9,8 +9,3 @@ type DeepString<T> = T extends string
       : T
 
 export type Dictionary = DeepString<typeof es>
-
-export interface DictionarySync {
-  t: Dictionary
-  lang: string
-}

@@ -33,7 +33,6 @@ const GOAL_TYPE_TO_HISTORY_VALUE: Record<GoalType, string> = {
 type GoalMetrics = {
     generated: number
     applied: number
-    dismissed: number
     applyRate: number
 }
 
@@ -106,7 +105,7 @@ export default function GoalsPage() {
     )
 
     const goalMetricsByType = useMemo<Record<GoalType, GoalMetrics>>(() => {
-        const seed = (): GoalMetrics => ({ generated: 0, applied: 0, dismissed: 0, applyRate: 0 })
+        const seed = (): GoalMetrics => ({ generated: 0, applied: 0, applyRate: 0 })
         const metrics: Record<GoalType, GoalMetrics> = {
             "Add Value": seed(),
             Challenge: seed(),
@@ -120,7 +119,6 @@ export default function GoalsPage() {
             if (!goalType) continue
             metrics[goalType].generated += 1
             if (item.status === "applied") metrics[goalType].applied += 1
-            if (item.status === "dismissed") metrics[goalType].dismissed += 1
         }
 
         for (const goalType of Object.keys(metrics) as GoalType[]) {
