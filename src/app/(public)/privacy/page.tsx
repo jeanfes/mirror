@@ -1,5 +1,6 @@
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { LegalLayout } from "@/components/layout/LegalLayout"
+import { ROUTES } from "@/lib/routes"
 
 type LegalLocale = "es" | "en" | "pt" | "fr" | "de"
 
@@ -310,17 +311,32 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
   }
 }
 
+const privateBackLabelByLocale: Record<LegalLocale, string> = {
+  es: "Volver a configuración",
+  en: "Back to settings",
+  pt: "Voltar às configurações",
+  fr: "Retour aux paramètres",
+  de: "Zurück zu Einstellungen",
+}
+
 export default async function PrivacyPage() {
-  const cookieStore = await cookies()
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()])
   const localeRaw = cookieStore.get("NEXT_LOCALE")?.value ?? "es"
-  const copy = privacyCopy[localeRaw as LegalLocale] ?? privacyCopy.es
+  const locale = localeRaw in privacyCopy ? (localeRaw as LegalLocale) : "es"
+  const copy = privacyCopy[locale]
+  const pathname = headerStore.get("x-pathname") ?? ""
+  const isPrivatePrivacyRoute = pathname === ROUTES.private.privacy
+  const resolvedBackLabel = isPrivatePrivacyRoute ? privateBackLabelByLocale[locale] : copy.backLabel
+  const resolvedBackHref = isPrivatePrivacyRoute ? ROUTES.private.settings : ROUTES.public.index
 
   return (
     <LegalLayout
       title={copy.title}
       subtitle={copy.subtitle}
       lastUpdated={copy.lastUpdated}
-      backLabel={copy.backLabel}
+      backLabel={resolvedBackLabel}
+      backHref={resolvedBackHref}
+      isPrivateView={isPrivatePrivacyRoute}
       badgeLabel={copy.badgeLabel}
       lastUpdatedLabel={copy.lastUpdatedLabel}
     >

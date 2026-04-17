@@ -1,5 +1,6 @@
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { LegalLayout } from "@/components/layout/LegalLayout"
+import { ROUTES } from "@/lib/routes"
 
 type LegalLocale = "es" | "en" | "pt" | "fr" | "de"
 
@@ -474,17 +475,32 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
   }
 }
 
+const privateBackLabelByLocale: Record<LegalLocale, string> = {
+  es: "Volver a configuración",
+  en: "Back to settings",
+  pt: "Voltar às configurações",
+  fr: "Retour aux paramètres",
+  de: "Zurück zu Einstellungen",
+}
+
 export default async function TermsPage() {
-  const cookieStore = await cookies()
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()])
   const localeRaw = cookieStore.get("NEXT_LOCALE")?.value ?? "es"
-  const copy = termsCopy[localeRaw as LegalLocale] ?? termsCopy.es
+  const locale = localeRaw in termsCopy ? (localeRaw as LegalLocale) : "es"
+  const copy = termsCopy[locale]
+  const pathname = headerStore.get("x-pathname") ?? ""
+  const isPrivateTermsRoute = pathname === ROUTES.private.terms
+  const resolvedBackLabel = isPrivateTermsRoute ? privateBackLabelByLocale[locale] : copy.backLabel
+  const resolvedBackHref = isPrivateTermsRoute ? ROUTES.private.settings : ROUTES.public.index
 
   return (
     <LegalLayout
       title={copy.title}
       subtitle={copy.subtitle}
       lastUpdated={copy.lastUpdated}
-      backLabel={copy.backLabel}
+      backLabel={resolvedBackLabel}
+      backHref={resolvedBackHref}
+      isPrivateView={isPrivateTermsRoute}
       badgeLabel={copy.badgeLabel}
       lastUpdatedLabel={copy.lastUpdatedLabel}
     >

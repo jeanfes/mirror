@@ -4,6 +4,7 @@ import {
   DEFAULT_AUTHENTICATED_ROUTE,
   ROUTES,
   isAuthPath,
+  isPublicPath,
   isPrivatePath
 } from "@/lib/routes"
 import { sanitizeExtensionNext } from "@/lib/extension-handoff"
@@ -64,7 +65,7 @@ export async function proxy(request: NextRequest) {
   const nextParam = request.nextUrl.searchParams.get("next")
   const extensionNext = sanitizeExtensionNext(nextParam)
 
-  if (user && (pathname === ROUTES.public.index || isAuthPath(pathname))) {
+  if (user && (isPublicPath(pathname) || isAuthPath(pathname))) {
     if (pathname === "/auth/extension-redirect" || pathname === "/auth/extension-sync") {
       return response
     }
@@ -73,6 +74,15 @@ export async function proxy(request: NextRequest) {
       redirectUrl.searchParams.set("next", extensionNext)
       return NextResponse.redirect(redirectUrl)
     }
+
+    if (pathname === ROUTES.public.terms) {
+      return NextResponse.redirect(new URL(ROUTES.private.terms, request.url))
+    }
+
+    if (pathname === ROUTES.public.privacy) {
+      return NextResponse.redirect(new URL(ROUTES.private.privacy, request.url))
+    }
+
     return NextResponse.redirect(new URL(DEFAULT_AUTHENTICATED_ROUTE, request.url))
   }
 

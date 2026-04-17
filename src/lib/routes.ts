@@ -22,6 +22,8 @@ export const ROUTES = {
     history: "/history",
     goals: "/goals",
     settings: "/settings",
+    terms: "/settings/terms",
+    privacy: "/settings/privacy",
     account: "/account",
     plans: "/plans",
     trash: "/trash"
@@ -32,11 +34,16 @@ export type Routes = typeof ROUTES
 
 export const DEFAULT_AUTHENTICATED_ROUTE = ROUTES.private.profiles
 
+const PUBLIC_PATHS = Object.values(ROUTES.public)
 const PRIVATE_PATHS = Object.values(ROUTES.private)
 const AUTH_PATHS = [ROUTES.auth.login, ROUTES.auth.register, ROUTES.auth.forgotPassword, ROUTES.auth.resetPassword]
 
 function isPathOrChild(pathname: string, basePath: string) {
   return pathname === basePath || pathname.startsWith(`${basePath}/`)
+}
+
+export function isPublicPath(pathname: string) {
+  return PUBLIC_PATHS.some((path) => isPathOrChild(pathname, path))
 }
 
 export function isPrivatePath(pathname: string) {

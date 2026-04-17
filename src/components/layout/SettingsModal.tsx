@@ -1,11 +1,11 @@
 "use client"
 
 import React, { memo, useCallback, useRef, useState } from "react"
+import Link from "next/link"
 import { toast } from "sonner"
 import {
   Bell,
   Download,
-  // ExternalLink,
   LogOut,
   Shield,
   Settings,
@@ -27,7 +27,7 @@ import {
 import { useLogout } from "@/features/auth/hooks/useLogout"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
-// import { ROUTES } from "@/lib/routes"
+import { ROUTES } from "@/lib/routes"
 import { createClient } from "@/lib/supabase/client"
 import {
   deleteAccount,
@@ -60,6 +60,8 @@ const SettingsModal = memo(function SettingsModal({
   onOpenChange,
   user = { name: "User", email: "" },
 }: SettingsModalProps) {
+  const isControlled = open !== undefined
+  const [internalOpen, setInternalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("general")
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
   const [isDeleteAccountConfirmOpen, setIsDeleteAccountConfirmOpen] = useState(false)
@@ -154,13 +156,22 @@ const SettingsModal = memo(function SettingsModal({
 
   const handleDialogOpenChange = useCallback((nextOpen: boolean) => {
     if (!isLogoutPending && !isUpdating && !isDeletingAccount && !isExportingData) {
+      if (!isControlled) {
+        setInternalOpen(nextOpen)
+      }
       onOpenChange?.(nextOpen)
     }
-  }, [isExportingData, isLogoutPending, isUpdating, onOpenChange, isDeletingAccount])
+  }, [isControlled, isExportingData, isLogoutPending, isUpdating, onOpenChange, isDeletingAccount])
+
+  const closeModal = useCallback(() => {
+    handleDialogOpenChange(false)
+  }, [handleDialogOpenChange])
+
+  const dialogOpen = isControlled ? open : internalOpen
 
   return (
     <>
-      <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+      <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="max-w-4xl p-0 h-[80vh] flex flex-col sm:h-162.5 overflow-hidden">
           <DialogTitle className="sr-only">{t.app.settingsModal.title}</DialogTitle>
@@ -281,9 +292,8 @@ const SettingsModal = memo(function SettingsModal({
 
           <footer className="flex h-14 items-center justify-between border-t border-border-soft bg-surface-overlay px-8 shrink-0">
             <div className="flex gap-5">
-              {/* <FooterLink href={ROUTES.public.faq} label={t.app.settingsModal.status} />
-              <FooterLink href={ROUTES.public.features} label={t.app.settingsModal.docs} />
-              <FooterLink href={ROUTES.public.pricing} label={t.app.settingsModal.changelog} /> */}
+              <FooterLink href={ROUTES.private.terms} label={t.footer.termsOfUse} onClick={closeModal} />
+              <FooterLink href={ROUTES.private.privacy} label={t.footer.privacyPolicy} onClick={closeModal} />
             </div>
             <div className="flex items-center gap-2 opacity-50">
               <span className="text-[10px] font-bold">{t.app.settingsModal.poweredBy} STAR HOLDINGS</span>
@@ -330,10 +340,10 @@ const SettingsTabTrigger = ({ value, icon, label }: { value: string, icon: React
   </TabsTrigger>
 )
 
-// const FooterLink = ({ href, label }: { href: string, label: string }) => (
-//   <a href={href} className="settings-footer-link flex items-center gap-1">
-//     {label} <ExternalLink className="h-2.5 w-2.5" />
-//   </a>
-// )
+const FooterLink = ({ href, label, onClick }: { href: string, label: string, onClick?: () => void }) => (
+  <Link href={href} className="settings-footer-link" onClick={onClick}>
+    {label}
+  </Link>
+)
 
 export default SettingsModal
