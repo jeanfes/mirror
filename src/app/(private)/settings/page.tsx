@@ -308,15 +308,6 @@ export default function SettingsPage() {
                         <p className="mt-2 body-muted">{t.app.settings.whyMattersDesc}</p>
                     </div>
 
-                    <div className="mt-4 rounded-3xl border border-accent-purple/20 bg-accent-purple/6 p-4">
-                        <p className="text-[12px] font-semibold text-primary-text">{t.app.settings.goalsSettingsMoved}</p>
-                        <Link
-                            href={ROUTES.private.goals}
-                            className="mt-3 inline-flex h-9 items-center rounded-xl border border-border-soft bg-surface-elevated px-3.5 text-[12px] font-semibold text-primary-text transition-colors hover:bg-surface-hover"
-                        >
-                            {t.app.goals.title}
-                        </Link>
-                    </div>
                 </Card>
             </section>
 

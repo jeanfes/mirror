@@ -525,7 +525,6 @@ const es = {
       languageBaselineDesc: "Estas opciones definen cómo Mirror se inicializa antes de cada generación.",
       whyMattersTitle: "Preferencias",
       whyMattersDesc: "Configura Mirror para que se adapte mejor a tu estilo de escritura.",
-      goalsSettingsMoved: "La configuración de objetivos se gestiona en un espacio dedicado.",
       preferencesUpdated: "Preferencias actualizadas",
       preferencesError: "No se pudieron guardar las preferencias",
       noActiveProfile: "Sin perfil activo",

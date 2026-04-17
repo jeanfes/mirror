@@ -525,7 +525,6 @@ const de = {
       languageBaselineDesc: "Initialisierung der Erweiterung.",
       whyMattersTitle: "Präferenzen",
       whyMattersDesc: "Mirror an Ihren Schreibstil anpassen.",
-      goalsSettingsMoved: "Die Zielkonfiguration wird in einem eigenen Bereich verwaltet.",
       preferencesUpdated: "Gespeichert",
       preferencesError: "Fehler beim Speichern",
       noActiveProfile: "Kein aktives Profil",

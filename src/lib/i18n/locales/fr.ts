@@ -525,7 +525,6 @@ const fr = {
       languageBaselineDesc: "Configuration initiale avant chaque génération.",
       whyMattersTitle: "Préférences",
       whyMattersDesc: "Configurez Mirror pour qu'il s'adapte au mieux à votre style.",
-      goalsSettingsMoved: "La configuration des objectifs est gérée dans un espace dédié.",
       preferencesUpdated: "Préférences mises à jour",
       preferencesError: "Impossible de sauvegarder les préférences",
       noActiveProfile: "Aucun profil actif",

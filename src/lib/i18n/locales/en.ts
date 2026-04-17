@@ -525,7 +525,6 @@ const en = {
       languageBaselineDesc: "These choices define how Mirror initializes before each generation.",
       whyMattersTitle: "Preferences",
       whyMattersDesc: "Configure Mirror to best fit your writing style.",
-      goalsSettingsMoved: "Objective setup is managed in a dedicated workspace.",
       preferencesUpdated: "Preferences updated",
       preferencesError: "Could not save preferences",
       noActiveProfile: "No active profile",
