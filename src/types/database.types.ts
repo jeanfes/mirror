@@ -5,11 +5,11 @@ export interface VoiceProfileRow {
   name: string
   description: string | null
   tone: string | null
-  // Note: The following fields are stored for future feature expansion but not currently exposed in the UI.
-  // Consider implementing advanced profile customization in v2:
-  // - preferred_phrases: Phrases to encourage in generated text
-  // - banned_phrases: Phrases to avoid in generated text
-  // - target_length: Desired output length (in words or characters)
+  persona_bio: string | null
+  expertise_topics: string[] | null
+  personality_traits: string[] | null
+  writing_traits: Record<string, unknown> | null
+  vocabulary_level: string | null
   preferred_phrases: string[] | null
   banned_phrases: string[] | null
   target_length: number | null
@@ -42,11 +42,9 @@ export interface GenerationHistoryRow {
   post_snippet: string | null
   generated_text: string
   goal: string | null
+  rating: number | null
+  feedback_note: string | null
   origin: "web" | "extension"
-  // Note: The following fields are reserved for analytics and future metrics features.
-  // They store structured data about generation context and results but are not exposed in the current UI.
-  // - input_context: Context passed to the AI model (author sentiment, audience, tone hints, etc.)
-  // - output_meta: Metadata about the generated text (token count, confidence scores, alternative count, etc.)
   input_context: Record<string, unknown> | null
   output_meta: Record<string, unknown> | null
   sync_fingerprint: string | null
@@ -95,6 +93,7 @@ export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question"
 export type PlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 export type ObjectiveScope = PlatformId[]
 export type ObjectiveSource = "platform_base" | "user_custom" | "imported_pack"
+export type VocabularyLevel = "simple" | "conversational" | "technical" | "academic"
 
 export interface ObjectiveProfile {
   id: string
@@ -126,6 +125,11 @@ export interface VoiceProfile {
   name: string
   description: string
   tone: string
+  personaBio: string
+  expertiseTopics: string[]
+  personalityTraits: string[]
+  writingTraits: Record<string, unknown>
+  vocabularyLevel: VocabularyLevel | null
   preferredPhrases: string[]
   bannedPhrases: string[]
   targetLength: number | null
@@ -150,6 +154,8 @@ export interface GenerationHistory {
   postSnippet: string
   generatedText: string
   goal: string | undefined
+  rating?: number | null
+  feedbackNote?: string | null
   origin: "web" | "extension"
   createdAt: number 
 }

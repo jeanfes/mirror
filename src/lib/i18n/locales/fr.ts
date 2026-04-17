@@ -76,7 +76,7 @@ const fr = {
     description: "Votre assistant intelligent pour maîtriser le réseautage professionnel.",
     product: "Produit",
     contactTitle: "Contact",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     helpCenter: "Centre d'Aide",
     termsOfUse: "Conditions d'utilisation",
     privacyPolicy: "Politique de confidentialité",
@@ -213,7 +213,7 @@ const fr = {
       messageMin: "Le message doit contenir au moins 10 caractères"
     },
     supportTitle: "E-mail de Support",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     socialTitle: "Réseaux Sociaux",
     socialHandle: "@mirror_extension"
   },
@@ -677,6 +677,11 @@ const fr = {
       copyTooltip: "Copier ce commentaire dans le presse-papiers",
       copyAction: "Copier",
       markApplied: "Marquer appliqué",
+      feedbackRatingLabel: "Note",
+      feedbackNoRating: "Aucune note",
+      feedbackNoteLabel: "Note de feedback",
+      feedbackNotePlaceholder: "Exemple : trop générique, bonne ouverture, conclusion faible...",
+      feedbackSaveAction: "Enregistrer le feedback",
       trashTooltip: "Déplacer cet élément d'historique vers la corbeille",
       moveToTrash: "Déplacer vers la corbeille"
     },

@@ -76,7 +76,7 @@ const en = {
     description: "Your smart assistant to master professional networking.",
     product: "Product",
     contactTitle: "Contact",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     helpCenter: "Help Center",
     termsOfUse: "Terms of Use",
     privacyPolicy: "Privacy Policy",
@@ -213,7 +213,7 @@ const en = {
       messageMin: "Message must be at least 10 characters"
     },
     supportTitle: "Support Email",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     socialTitle: "Social Media",
     socialHandle: "@mirror_extension"
   },
@@ -677,6 +677,11 @@ const en = {
       copyTooltip: "Copy this generated comment to your clipboard",
       copyAction: "Copy",
       markApplied: "Mark applied",
+      feedbackRatingLabel: "Rating",
+      feedbackNoRating: "No rating",
+      feedbackNoteLabel: "Feedback note",
+      feedbackNotePlaceholder: "Example: too generic, great opening, close was weak...",
+      feedbackSaveAction: "Save feedback",
       trashTooltip: "Move this history item to trash",
       moveToTrash: "Move to trash"
     },

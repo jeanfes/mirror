@@ -133,7 +133,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     article13Body:
       "Estos Términos se rigen por las leyes de la República de Colombia. Para resolver controversias, las partes se someten a la competencia de los jueces y tribunales de Bogotá, Colombia.",
     contactLabel: "Para cualquier comunicación relacionada con estos Términos:",
-    contactEmail: "legal@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   en: {
     backLabel: "Back to home",
@@ -217,7 +217,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     article13Body:
       "These Terms are governed by the laws of the Republic of Colombia. Any dispute will be subject to the courts of Bogotá, Colombia.",
     contactLabel: "For any communication related to these Terms:",
-    contactEmail: "legal@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   pt: {
     backLabel: "Voltar ao início",
@@ -301,7 +301,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     article13Body:
       "Estes Termos são regidos pelas leis da República da Colômbia. Para resolver controvérsias, as partes se submetem aos juízes e tribunais de Bogotá, Colômbia.",
     contactLabel: "Para qualquer comunicação relacionada a estes Termos:",
-    contactEmail: "legal@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   fr: {
     backLabel: "Retour à l'accueil",
@@ -387,7 +387,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     article13Body:
       "Les présentes Conditions sont régies par les lois de la République de Colombie. Tout litige relève de la compétence des tribunaux de Bogotá, Colombie.",
     contactLabel: "Pour toute communication relative à ces Conditions :",
-    contactEmail: "legal@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   de: {
     backLabel: "Zurück zur Startseite",
@@ -471,7 +471,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     article13Body:
       "Diese Bedingungen unterliegen dem Recht der Republik Kolumbien. Für Streitigkeiten sind die Gerichte in Bogotá, Kolumbien zuständig.",
     contactLabel: "Für Mitteilungen zu diesen Bedingungen:",
-    contactEmail: "legal@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   }
 }
 

@@ -27,6 +27,11 @@ const createProfileSchema = (t: Dictionary) => z.object({
   name: z.string().min(2, t.app.profileForm.errors.nameRequired),
   description: z.string().min(8, t.app.profileForm.errors.descRequired),
   tone: z.string().min(3, t.app.profileForm.errors.toneRequired),
+  personaBio: z.string().min(8, t.app.profileForm.errors.descRequired),
+  expertiseTopics: z.string().min(2, t.app.profileForm.errors.descRequired),
+  personalityTraits: z.string().min(2, t.app.profileForm.errors.descRequired),
+  writingTraits: z.string().optional(),
+  vocabularyLevel: z.string().optional(),
   example1: z.string().min(6, t.app.profileForm.errors.exampleMin),
   example2: z.string().min(6, t.app.profileForm.errors.exampleMin),
   example3: z.string().min(6, t.app.profileForm.errors.exampleMin),
@@ -47,10 +52,46 @@ interface ProfileFormDialogProps {
   ) => Promise<void>
 }
 
+function parseCommaSeparated(value: string): string[] {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+}
+
+function parseWritingTraits(value: string | undefined): Record<string, unknown> {
+  const normalized = (value ?? "").trim()
+  if (!normalized) {
+    return {}
+  }
+
+  try {
+    const parsed = JSON.parse(normalized)
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>
+    }
+  } catch {
+    // Keep graceful fallback to avoid blocking the submit flow.
+  }
+
+  return {}
+}
+
+function normalizeVocabularyLevel(value: string | undefined): CreateProfileInput["vocabularyLevel"] {
+  return value === "simple" || value === "conversational" || value === "technical" || value === "academic"
+    ? value
+    : null
+}
+
 const defaults: ProfileFormValues = {
   name: "",
   description: "",
   tone: "",
+  personaBio: "",
+  expertiseTopics: "",
+  personalityTraits: "",
+  writingTraits: "",
+  vocabularyLevel: "",
   example1: "",
   example2: "",
   example3: "",
@@ -86,6 +127,13 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
         name: profile.name,
         description: profile.description,
         tone: profile.tone,
+        personaBio: profile.personaBio,
+        expertiseTopics: profile.expertiseTopics.join(", "),
+        personalityTraits: profile.personalityTraits.join(", "),
+        writingTraits: Object.keys(profile.writingTraits).length
+          ? JSON.stringify(profile.writingTraits, null, 2)
+          : "",
+        vocabularyLevel: profile.vocabularyLevel ?? "",
         example1: profile.examples[0] ?? "",
         example2: profile.examples[1] ?? "",
         example3: profile.examples[2] ?? "",
@@ -98,14 +146,23 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
   }, [open, profile, reset])
 
   const submit = handleSubmit(async (values) => {
-    await onSubmit(values, profile?.id)
+    const payload: CreateProfileInput = {
+      ...values,
+      personaBio: values.personaBio.trim(),
+      expertiseTopics: parseCommaSeparated(values.expertiseTopics),
+      personalityTraits: parseCommaSeparated(values.personalityTraits),
+      writingTraits: parseWritingTraits(values.writingTraits),
+      vocabularyLevel: normalizeVocabularyLevel(values.vocabularyLevel)
+    }
+
+    await onSubmit(payload, profile?.id)
     reset(defaults)
   })
 
   return (
     <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
       {/* Remove inline style — border-none class already handles this */}
-      <DialogContent className="w-[min(94vw,760px)] max-h-[90vh] flex flex-col rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden">
+      <DialogContent className="w-[min(94vw,880px)] max-h-[90vh] flex flex-col rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden">
         <DialogDescription className="sr-only">
           {t.app.profileForm.formDescription}
         </DialogDescription>
@@ -139,15 +196,19 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
             </div>
           </div>
 
-          <div className="bg-surface-elevated p-5 md:p-6 overflow-y-auto custom-scrollbar flex-1 lg:max-h-[80vh]">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold text-primary-text">
-                {profile ? t.app.profileForm.editProfile : t.app.profileForm.createProfile}
-              </DialogTitle>
-              <p className="text-[13px] leading-6 text-secondary-text">
-                {t.app.profileForm.defineVoiceDesc}
-              </p>
-            </DialogHeader>
+          <div className="bg-surface-elevated flex flex-col flex-1 overflow-hidden lg:max-h-[80vh]">
+            <div className="px-5 md:px-6 pt-5 md:pt-6 pb-2 shrink-0 pr-12">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold text-primary-text">
+                  {profile ? t.app.profileForm.editProfile : t.app.profileForm.createProfile}
+                </DialogTitle>
+                <p className="text-[13px] leading-6 text-secondary-text">
+                  {t.app.profileForm.defineVoiceDesc}
+                </p>
+              </DialogHeader>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 md:px-6 pb-5 md:pb-6 custom-scrollbar">
 
             <form onSubmit={submit}>
               <div className="grid gap-5">
@@ -170,6 +231,54 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                   error={errors.tone?.message}
                   {...register("tone")}
                 />
+
+                <Textarea
+                  label="Persona bio"
+                  placeholder="Founder in B2B SaaS, 6 years in enterprise sales..."
+                  rows={2}
+                  error={errors.personaBio?.message}
+                  {...register("personaBio")}
+                />
+
+                <Input
+                  label="Expertise topics (comma separated)"
+                  placeholder="startups, sales, AI, product"
+                  error={errors.expertiseTopics?.message}
+                  {...register("expertiseTopics")}
+                />
+
+                <Input
+                  label="Personality traits (comma separated)"
+                  placeholder="direct, analytical, provocative"
+                  error={errors.personalityTraits?.message}
+                  {...register("personalityTraits")}
+                />
+
+                <Textarea
+                  label="Writing traits JSON (optional)"
+                  placeholder='{"sentence_length":"short","opener_style":"question"}'
+                  rows={3}
+                  error={errors.writingTraits?.message}
+                  {...register("writingTraits")}
+                />
+
+                <div className="w-full space-y-2 group">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text transition-colors group-focus-within:text-accent-purple">
+                      Vocabulary level
+                    </label>
+                  </div>
+                  <select
+                    className="flex h-11 w-full flex-row items-center rounded-2xl border border-border-soft bg-surface-elevated px-4 text-[13px] font-medium text-primary-text transition-all duration-200 hover:border-border-medium focus:border-accent-purple/40 focus:ring-4 focus:ring-accent-purple/8 focus:outline-none"
+                    {...register("vocabularyLevel")}
+                  >
+                    <option value="">Auto</option>
+                    <option value="simple">Simple</option>
+                    <option value="conversational">Conversational</option>
+                    <option value="technical">Technical</option>
+                    <option value="academic">Academic</option>
+                  </select>
+                </div>
 
                 <div className="space-y-3">
                   <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text">
@@ -234,7 +343,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                 >
                   {t.app.profileForm.cancel}
                 </Button>
-                <Button type="submit" disabled={isPending}>
+                <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
                   {isPending
                     ? t.app.profileForm.saving
                     : profile
@@ -243,6 +352,7 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                 </Button>
               </DialogFooter>
             </form>
+            </div>
           </div>
         </div>
       </DialogContent>

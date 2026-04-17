@@ -47,7 +47,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       "Esta Política de Privacidad y Tratamiento de Datos Personales se emite conforme a la Ley 1581 de 2012 de Colombia, el GDPR de la Unión Europea y la CCPA de California.",
     article1Title: "ARTÍCULO 1 — RESPONSABLE DEL TRATAMIENTO",
     article1Body:
-      "El responsable del tratamiento de los datos personales recopilados a través de Mirror es su propietario y operador, con domicilio en Bogotá, Colombia. Para consultas: privacy@mirror.com",
+      "El responsable del tratamiento de los datos personales recopilados a través de Mirror es su propietario y operador, con domicilio en Bogotá, Colombia. Para consultas: starcorporationint@gmail.com",
     article2Title: "ARTÍCULO 2 — DATOS PERSONALES QUE RECOPILAMOS",
     directDataTitle: "Datos directos",
     directDataItems: [
@@ -87,7 +87,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       { title: "Eliminación", text: "Configuración → Exportar → Eliminar cuenta" }
     ],
     contactLabel: "¿Consultas sobre tu privacidad?",
-    contactEmail: "privacy@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   en: {
     backLabel: "Back to home",
@@ -102,7 +102,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       "This Privacy Policy and Personal Data Processing Policy is issued in accordance with Colombia Law 1581/2012, the EU GDPR, and the California CCPA.",
     article1Title: "ARTICLE 1 — DATA CONTROLLER",
     article1Body:
-      "The data controller of personal data collected through Mirror is its owner and operator, based in Bogotá, Colombia. Contact: privacy@mirror.com",
+      "The data controller of personal data collected through Mirror is its owner and operator, based in Bogotá, Colombia. Contact: starcorporationint@gmail.com",
     article2Title: "ARTICLE 2 — PERSONAL DATA WE COLLECT",
     directDataTitle: "Direct data",
     directDataItems: [
@@ -142,7 +142,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       { title: "Deletion", text: "Settings → Export → Delete account" }
     ],
     contactLabel: "Questions about your privacy?",
-    contactEmail: "privacy@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   pt: {
     backLabel: "Voltar ao início",
@@ -157,7 +157,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       "Esta Política de Privacidade e Tratamento de Dados Pessoais é emitida em conformidade com a Lei 1581/2012 da Colômbia, o GDPR da União Europeia e a CCPA da Califórnia.",
     article1Title: "ARTIGO 1 — CONTROLADOR DE DADOS",
     article1Body:
-      "O controlador dos dados pessoais coletados pelo Mirror é seu proprietário e operador, com domicílio em Bogotá, Colômbia. Contato: privacy@mirror.com",
+      "O controlador dos dados pessoais coletados pelo Mirror é seu proprietário e operador, com domicílio em Bogotá, Colômbia. Contato: starcorporationint@gmail.com",
     article2Title: "ARTIGO 2 — DADOS PESSOAIS COLETADOS",
     directDataTitle: "Dados diretos",
     directDataItems: [
@@ -197,7 +197,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       { title: "Exclusão", text: "Configurações → Exportar → Excluir conta" }
     ],
     contactLabel: "Dúvidas sobre sua privacidade?",
-    contactEmail: "privacy@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   fr: {
     backLabel: "Retour à l'accueil",
@@ -212,7 +212,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       "Cette Politique de Confidentialité et de Traitement des Données Personnelles est émise conformément à la loi colombienne 1581/2012, au RGPD de l'Union européenne et à la CCPA californienne.",
     article1Title: "ARTICLE 1 — RESPONSABLE DU TRAITEMENT",
     article1Body:
-      "Le responsable du traitement des données personnelles collectées via Mirror est son propriétaire et opérateur, domicilié à Bogotá, Colombie. Contact : privacy@mirror.com",
+      "Le responsable du traitement des données personnelles collectées via Mirror est son propriétaire et opérateur, domicilié à Bogotá, Colombie. Contact : starcorporationint@gmail.com",
     article2Title: "ARTICLE 2 — DONNÉES PERSONNELLES COLLECTÉES",
     directDataTitle: "Données directes",
     directDataItems: [
@@ -252,7 +252,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       { title: "Suppression", text: "Paramètres → Exporter → Supprimer le compte" }
     ],
     contactLabel: "Des questions sur votre confidentialité ?",
-    contactEmail: "privacy@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   },
   de: {
     backLabel: "Zurück zur Startseite",
@@ -267,7 +267,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       "Diese Datenschutz- und Datenverarbeitungsrichtlinie wird gemäß dem kolumbianischen Gesetz 1581/2012, der EU-DSGVO und dem kalifornischen CCPA bereitgestellt.",
     article1Title: "ARTIKEL 1 — VERANTWORTLICHER",
     article1Body:
-      "Verantwortlicher für die über Mirror erhobenen personenbezogenen Daten ist der Eigentümer und Betreiber mit Sitz in Bogotá, Kolumbien. Kontakt: privacy@mirror.com",
+      "Verantwortlicher für die über Mirror erhobenen personenbezogenen Daten ist der Eigentümer und Betreiber mit Sitz in Bogotá, Kolumbien. Kontakt: starcorporationint@gmail.com",
     article2Title: "ARTIKEL 2 — PERSONENBEZOGENE DATEN, DIE WIR ERHEBEN",
     directDataTitle: "Direkte Daten",
     directDataItems: [
@@ -307,7 +307,7 @@ const privacyCopy: Record<LegalLocale, PrivacyCopy> = {
       { title: "Löschung", text: "Einstellungen → Exportieren → Konto löschen" }
     ],
     contactLabel: "Fragen zu Ihrem Datenschutz?",
-    contactEmail: "privacy@mirror.com"
+    contactEmail: "starcorporationint@gmail.com"
   }
 }
 

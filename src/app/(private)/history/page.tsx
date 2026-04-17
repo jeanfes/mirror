@@ -14,7 +14,7 @@ import { useHistoryUIStore } from "@/store/useHistoryUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
 
 export default function HistoryPage() {
-    const { data: history, isLoading, isError, moveToTrash } = useHistory()
+    const { data: history, isLoading, isError, moveToTrash, updateFeedback } = useHistory()
     const { data: profiles } = useProfiles()
     const {
         selectedProfileId,
@@ -101,6 +101,19 @@ export default function HistoryPage() {
             toast.error(t.app.common.historyUpdateError || "Could not update history item")
         }
     }, [moveToTrash, t])
+
+    const handleUpdateFeedback = useCallback(async (input: {
+        id: string
+        rating?: number | null
+        feedbackNote?: string | null
+    }) => {
+        try {
+            await updateFeedback(input)
+            toast.success(t.app.common.historyUpdated || "History item updated")
+        } catch {
+            toast.error(t.app.common.historyUpdateError || "Could not update history item")
+        }
+    }, [t, updateFeedback])
 
     if (showLoading) {
         return <LoadingOverlay show={true} />
@@ -226,6 +239,7 @@ export default function HistoryPage() {
                             profileName={item.profileId ? (profileMap.get(item.profileId) ?? t.app.common.unknownProfile) : t.app.common.unknownProfile}
                             onCopy={handleCopy}
                             onMoveToTrash={handleMoveToTrash}
+                            onUpdateFeedback={handleUpdateFeedback}
                         />
                     ))}
                 </div>

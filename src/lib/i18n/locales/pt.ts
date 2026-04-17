@@ -76,7 +76,7 @@ const pt = {
     description: "Seu assistente inteligente para dominar o networking profissional.",
     product: "Produto",
     contactTitle: "Contato",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     helpCenter: "Centro de Ajuda",
     termsOfUse: "Termos de Uso",
     privacyPolicy: "Política de Privacidade",
@@ -213,7 +213,7 @@ const pt = {
       messageMin: "A mensagem deve ter pelo menos 10 caracteres"
     },
     supportTitle: "E-mail de Suporte",
-    supportEmail: "support@mirror.com",
+    supportEmail: "starcorporationint@gmail.com",
     socialTitle: "Redes Sociais",
     socialHandle: "@mirror_extension"
   },
@@ -677,6 +677,11 @@ const pt = {
       copyTooltip: "Copiar este comentário para a área de transferência",
       copyAction: "Copiar",
       markApplied: "Marcar aplicado",
+      feedbackRatingLabel: "Avaliação",
+      feedbackNoRating: "Sem avaliação",
+      feedbackNoteLabel: "Nota de feedback",
+      feedbackNotePlaceholder: "Exemplo: muito genérico, ótima abertura, fechamento fraco...",
+      feedbackSaveAction: "Salvar feedback",
       trashTooltip: "Mover este item de histórico para a lixeira",
       moveToTrash: "Mover para lixeira"
     },

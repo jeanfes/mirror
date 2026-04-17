@@ -1,10 +1,12 @@
 "use client"
 
-import { memo } from "react"
+import { memo, useEffect, useState } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { Copy, MessageSquareQuote, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
+import { Select } from "@/components/ui/Select"
+import { Textarea } from "@/components/ui/Textarea"
 import { Tooltip } from "@/components/ui/Tooltip"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { GenerationHistory } from "@/types/database.types"
@@ -14,15 +16,23 @@ interface HistoryItemCardProps {
     profileName: string
     onCopy: (comment: string) => void
     onMoveToTrash: (id: string) => void
+    onUpdateFeedback: (input: {
+        id: string
+        rating?: number | null
+        feedbackNote?: string | null
+    }) => void
 }
 
 export const HistoryItemCard = memo(function HistoryItemCard({
     item,
     profileName,
     onCopy,
-    onMoveToTrash
+    onMoveToTrash,
+    onUpdateFeedback
 }: HistoryItemCardProps) {
     const { t } = useLanguageStore()
+    const [ratingValue, setRatingValue] = useState<string>(item.rating ? String(item.rating) : "")
+    const [feedbackValue, setFeedbackValue] = useState<string>(item.feedbackNote ?? "")
 
     const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
         add_value: t.app.settings.goalValue,
@@ -38,6 +48,31 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     }
 
     const statusMeta = { label: t.app.history.applied, className: "badge-success" }
+    const ratingOptions = [
+        { label: t.app.historyItem.feedbackNoRating, value: "" },
+        { label: "1", value: "1" },
+        { label: "2", value: "2" },
+        { label: "3", value: "3" },
+        { label: "4", value: "4" },
+        { label: "5", value: "5" }
+    ]
+
+    const hasPendingFeedbackChanges =
+        (item.rating ? String(item.rating) : "") !== ratingValue ||
+        (item.feedbackNote ?? "") !== feedbackValue
+
+    useEffect(() => {
+        setRatingValue(item.rating ? String(item.rating) : "")
+        setFeedbackValue(item.feedbackNote ?? "")
+    }, [item.feedbackNote, item.rating])
+
+    const handleSaveFeedback = () => {
+        onUpdateFeedback({
+            id: item.id,
+            rating: ratingValue ? Number(ratingValue) : null,
+            feedbackNote: feedbackValue.trim() ? feedbackValue.trim() : null
+        })
+    }
 
     return (
         <Card className="overflow-hidden border-border-soft p-0 shadow-premium-md">
@@ -85,6 +120,39 @@ export const HistoryItemCard = memo(function HistoryItemCard({
                             <p className="text-[11px] font-semibold uppercase tracking-widest">{t.app.historyItem.generatedCommentLabel}</p>
                         </div>
                         <p className="mt-3 text-[15px] leading-7 text-white/95">{item.generatedText}</p>
+                    </div>
+                </div>
+
+                <div className="mt-4 rounded-3xl border border-border-soft bg-surface-card p-4">
+                    <div className="grid gap-3">
+                        <Select
+                            label={t.app.historyItem.feedbackRatingLabel}
+                            value={ratingValue}
+                            onChange={setRatingValue}
+                            options={ratingOptions}
+                            placeholder={t.app.historyItem.feedbackNoRating}
+                        />
+                    </div>
+
+                    <div className="mt-3">
+                        <Textarea
+                            label={t.app.historyItem.feedbackNoteLabel}
+                            className="min-h-21.5"
+                            placeholder={t.app.historyItem.feedbackNotePlaceholder}
+                            value={feedbackValue}
+                            onChange={(event) => setFeedbackValue(event.target.value)}
+                        />
+                    </div>
+
+                    <div className="mt-3 flex justify-end">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleSaveFeedback}
+                            disabled={!hasPendingFeedbackChanges}
+                        >
+                            {t.app.historyItem.feedbackSaveAction}
+                        </Button>
                     </div>
                 </div>
 

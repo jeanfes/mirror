@@ -13,8 +13,8 @@ import { Dictionary } from "@/lib/i18n"
 
 export const getNavItems = (t: Dictionary) => [
   { href: ROUTES.private.profiles, label: t.app.navigation.profiles, icon: Users },
-  { href: ROUTES.private.history, label: t.app.navigation.history, icon: History },
   { href: ROUTES.private.goals, label: t.app.navigation.goals, icon: Flag },
+  { href: ROUTES.private.history, label: t.app.navigation.history, icon: History },
   { href: ROUTES.private.settings, label: t.app.navigation.settings, icon: Settings },
   { href: ROUTES.private.account, label: t.app.navigation.account, icon: CreditCard },
   { href: ROUTES.private.plans, label: t.app.navigation.plans, icon: Crown },

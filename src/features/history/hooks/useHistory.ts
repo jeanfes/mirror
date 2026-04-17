@@ -5,6 +5,7 @@ import { useSession } from "@/lib/supabase/useSession"
 import {
   listHistory,
   moveToTrash,
+  updateHistoryFeedback,
   type ListHistoryFilters,
 } from "@/features/history/services/history.service"
 import type { GenerationHistory } from "@/types/database.types"
@@ -44,10 +45,40 @@ export function useHistory(
     },
   })
 
+  const feedbackMutation = useMutation({
+    mutationFn: ({
+      id,
+      rating,
+      feedbackNote,
+    }: {
+      id: string
+      rating?: number | null
+      feedbackNote?: string | null
+    }) =>
+      updateHistoryFeedback(supabase, userId!, id, {
+        rating,
+        feedbackNote,
+      }),
+    onSuccess: (_, payload) => {
+      queryClient.setQueryData<GenerationHistory[]>(historyKey, (prev) =>
+        (prev ?? []).map((item) =>
+          item.id === payload.id
+            ? {
+                ...item,
+                rating: payload.rating ?? item.rating ?? null,
+                feedbackNote: payload.feedbackNote ?? item.feedbackNote ?? null,
+              }
+            : item
+        )
+      )
+    },
+  })
+
   return {
     ...query,
     isLoading: query.isPending || isAuthenticating,
     moveToTrash: trashMutation.mutateAsync,
-    isMutating: trashMutation.isPending,
+    updateFeedback: feedbackMutation.mutateAsync,
+    isMutating: trashMutation.isPending || feedbackMutation.isPending,
   }
 }
