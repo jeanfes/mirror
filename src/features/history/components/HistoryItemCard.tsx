@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useEffect, useState } from "react"
+import { memo, useState } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { Copy, MessageSquareQuote, Trash2 } from "lucide-react"
 import { Card } from "@/components/ui/Card"
@@ -58,10 +58,13 @@ export const HistoryItemCard = memo(function HistoryItemCard({
         (item.liked === true ? "true" : item.liked === false ? "false" : "") !== likedValue ||
         (item.feedbackNote ?? "") !== feedbackValue
 
-    useEffect(() => {
+    const [prevItem, setPrevItem] = useState(item)
+
+    if (item.liked !== prevItem.liked || item.feedbackNote !== prevItem.feedbackNote) {
+        setPrevItem(item)
         setLikedValue(item.liked === true ? "true" : item.liked === false ? "false" : "")
         setFeedbackValue(item.feedbackNote ?? "")
-    }, [item.feedbackNote, item.liked])
+    }
 
     const handleSaveFeedback = () => {
         onUpdateFeedback({

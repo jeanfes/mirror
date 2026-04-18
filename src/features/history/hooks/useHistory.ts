@@ -76,7 +76,7 @@ export function useHistory(
 
   return {
     ...query,
-    isLoading: query.isPending || isAuthenticating,
+    isLoading: query.isPending || (query.isFetching && !query.data) || isAuthenticating,
     moveToTrash: trashMutation.mutateAsync,
     updateFeedback: feedbackMutation.mutateAsync,
     isMutating: trashMutation.isPending || feedbackMutation.isPending,

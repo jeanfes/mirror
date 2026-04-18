@@ -8,6 +8,7 @@ import {
 import { useSession } from "@/lib/supabase/useSession"
 import { createClient } from "@/lib/supabase/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { UserAccount } from "@/types/database.types"
 
 export function useBilling(options?: { enabled?: boolean }) {
   const queryClient = useQueryClient()
@@ -42,7 +43,7 @@ export function useBilling(options?: { enabled?: boolean }) {
       // Optimistic upate
       await queryClient.cancelQueries({ queryKey: ["account", userId] })
       const previousAccount = queryClient.getQueryData(["account", userId])
-      queryClient.setQueryData(["account", userId], (old: any) => {
+      queryClient.setQueryData(["account", userId], (old: UserAccount | undefined) => {
         if (!old) return old
         return {
           ...old,
@@ -63,11 +64,11 @@ export function useBilling(options?: { enabled?: boolean }) {
 
   return {
     invoices: invoicesQuery.data ?? [],
-    isLoadingInvoices: invoicesQuery.isPending || isAuthenticating,
+    isLoadingInvoices: invoicesQuery.isPending || (invoicesQuery.isFetching && !invoicesQuery.data) || isAuthenticating,
     isErrorInvoices: invoicesQuery.isError,
     paymentMethods: billingInfoQuery.data?.paymentMethod ? [billingInfoQuery.data.paymentMethod] : [],
     billingInfo: billingInfoQuery.data,
-    isLoadingSettings: billingInfoQuery.isPending || isAuthenticating,
+    isLoadingSettings: billingInfoQuery.isPending || (billingInfoQuery.isFetching && !billingInfoQuery.data) || isAuthenticating,
     isErrorSettings: billingInfoQuery.isError,
     refetchInvoices: invoicesQuery.refetch,
     refetchBillingInfo: billingInfoQuery.refetch,

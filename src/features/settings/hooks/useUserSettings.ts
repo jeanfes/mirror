@@ -40,7 +40,7 @@ export function useUserSettings(): UseUserSettingsResult {
 
   return {
     ...query,
-    isLoading: query.isPending || isAuthenticating,
+    isLoading: query.isPending || (query.isFetching && !query.data) || isAuthenticating,
     updateSettings: mutation.mutateAsync,
     isMutating: mutation.isPending,
   }

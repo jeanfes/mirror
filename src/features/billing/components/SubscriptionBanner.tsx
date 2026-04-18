@@ -1,12 +1,10 @@
 "use client"
 
-import Link from "next/link"
-import { AlertCircle, Clock, CheckCircle2 } from "lucide-react"
+import { AlertCircle, Clock } from "lucide-react"
 import { format } from "date-fns"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { useBilling } from "@/features/billing/hooks/useBilling"
-import { ROUTES } from "@/lib/routes"
 
 export function SubscriptionBanner() {
   const { data: account, isLoading } = useAccount()

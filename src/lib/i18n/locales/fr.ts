@@ -353,7 +353,15 @@ const fr = {
       updateCard: "Mettre à jour",
       managePaymentMethod: "Gérer le mode de paiement",
       manageSubscription: "Gérer l'abonnement",
-      cancelSubscription: "Annuler l'abonnement"
+      cancelSubscription: "Annuler l'abonnement",
+      subscriptionCanceledNotice: "Votre accès Pro continue jusqu'au {0}",
+      freeTrialEndsOn: "Essai gratuit · expire le {0}",
+      pastDue: "Paiement en attente",
+      outOfCredits: "Plus de crédits",
+      outOfCreditsDesc: "Vous avez épuisé vos crédits. Améliorez votre forfait pour continuer à générer.",
+      paymentFailedBanner: "Un problème est survenu avec votre paiement. Mettez à jour votre carte pour continuer à générer.",
+      creditsWidgetRenewsAt: "Renouvellement le {0}",
+      deleteAccountEmailPlaceholder: "Saisissez votre e-mail pour confirmer"
     },
     navigation: {
       profiles: "Profils",
@@ -664,7 +672,7 @@ const fr = {
       statusLabel: "Statut",
       statusAll: "Tous les statuts",
       statusApplied: "Appliqué",
-      activeFilters: "Filtros actifs",
+      activeFilters: "Filtres actifs",
       noFiltersActive: "Aucun filtre actif"
     },
     historyItem: {
@@ -676,9 +684,8 @@ const fr = {
       generatedCommentLabel: "Commentaire généré",
       copyTooltip: "Copier ce commentaire dans le presse-papiers",
       copyAction: "Copier",
-      markApplied: "Marquer appliqué",
-      feedbackRatingLabel: "Note",
-      feedbackNoRating: "Aucune note",
+      feedbackRatingLabel: "Cela vous a plu ?",
+      feedbackNoRating: "Sans feedback",
       feedbackNoteLabel: "Note de feedback",
       feedbackNotePlaceholder: "Exemple : trop générique, bonne ouverture, conclusion faible...",
       feedbackSaveAction: "Enregistrer le feedback",
@@ -703,7 +710,7 @@ const fr = {
       descPlaceholder: "Quel type de perspective apporte ce profil ?",
       toneLabel: "Ton",
       tonePlaceholder: "Confiant, pratique, concis",
-      exampleComments: "Comentários de exemplo",
+      exampleComments: "Exemples de commentaires",
       exampleCommentsDesc: "Utilisez trois exemples courts prêts à poster.",
       example1Placeholder: "Exemple #1",
       example2Placeholder: "Exemple #2",

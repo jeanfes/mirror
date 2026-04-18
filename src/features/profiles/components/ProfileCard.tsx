@@ -2,6 +2,7 @@
 
 import { formatDistanceToNow } from "date-fns"
 import {
+  Download,
   Eye,
   EyeOff,
   MessageSquareQuote,
@@ -27,12 +28,13 @@ interface ProfileCardProps {
   onEdit: (id: string) => void
   onToggle: (id: string) => void
   onDelete: (id: string) => void
+  onExport?: (id: string) => void
 }
-
 export function ProfileCard({
   profile,
   onEdit,
   onToggle,
+  onExport,
   onDelete,
 }: ProfileCardProps) {
   const t = useLanguageStore((state) => state.t)
@@ -81,6 +83,12 @@ export function ProfileCard({
                 )}
                 {profile.enabled ? t.app.profiles.disable : t.app.profiles.enable}
               </DropdownMenuItem>
+              {onExport && (
+                <DropdownMenuItem onClick={() => onExport(profile.id)}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {t.app.settingsModal.tabExport}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 className="text-red-600"
                 onClick={() => onDelete(profile.id)}

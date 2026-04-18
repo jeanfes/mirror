@@ -75,7 +75,7 @@ export function useProfiles(options?: { enabled?: boolean }) {
 
   return {
     ...query,
-    isLoading: query.isPending || isAuthenticating,
+    isLoading: query.isPending || (query.isFetching && !query.data) || isAuthenticating,
     createProfile: createMutation.mutateAsync,
     updateProfile: updateMutation.mutateAsync,
     toggleProfile: (id: string, currentEnabled: boolean) =>

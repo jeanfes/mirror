@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useMemo, useState } from "react"
-import { Check, Flag, Sparkles, Plus, MoreHorizontal, Trash2, Edit2, Layout, Zap } from "lucide-react"
+import { Check, Flag, Sparkles, Plus, MoreHorizontal, Trash2, Edit2, Layout, Zap, Download } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
@@ -11,6 +11,8 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
+import { startDataExport } from "@/features/settings/services/account-data.service"
+import { createClient } from "@/lib/supabase/client"
 import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type {
@@ -49,6 +51,8 @@ export default function GoalsPage() {
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingGoal, setEditingGoal] = useState<ObjectiveProfile | null>(null)
     const [goalToDelete, setGoalToDelete] = useState<string | null>(null)
+    const [isExporting, setIsExporting] = useState(false)
+    const supabase = createClient()
 
     const platformLabelById = useMemo<Record<PlatformId, string>>(
         () => ({
@@ -206,6 +210,48 @@ export default function GoalsPage() {
         setGoalToDelete(null)
     }
 
+    const handleExportOne = async (objectiveId: string) => {
+        try {
+            setIsExporting(true)
+            const downloadUrl = await startDataExport(supabase, { profiles: [], objectives: [objectiveId] })
+            if (downloadUrl) {
+                const link = document.createElement("a")
+                link.href = downloadUrl
+                link.download = `mirror-export-objective.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 500)
+            }
+            toast.success(t.app.settingsModal.backupStarted)
+        } catch {
+            toast.error(t.app.common.exportError)
+        } finally {
+            setIsExporting(false)
+        }
+    }
+
+    const handleExportAll = async () => {
+        try {
+            setIsExporting(true)
+            const downloadUrl = await startDataExport(supabase, { profiles: [], objectives: userObjectives.map(o => o.id) })
+            if (downloadUrl) {
+                const link = document.createElement("a")
+                link.href = downloadUrl
+                link.download = `mirror-export-objectives.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 500)
+            }
+            toast.success(t.app.settingsModal.backupStarted)
+        } catch {
+            toast.error(t.app.common.exportError)
+        } finally {
+            setIsExporting(false)
+        }
+    }
+
     if (showLoading) return <LoadingOverlay show={true} />
     if (isError || !settings) return <StatePanel tone="error" title={t.app.common.accountErrorTitle} description={t.app.common.accountErrorDesc} />
 
@@ -326,9 +372,19 @@ export default function GoalsPage() {
 
             {/* Custom Strategies - Standardizing on Profile Style */}
             <section className="space-y-6">
-                <div className="px-2">
-                    <h2 className="text-2xl font-bold tracking-tight text-primary-text">{t.app.goals.myStrategy}</h2>
-                    <p className="mt-1 text-[14px] text-secondary-text">{t.app.goals.myStrategyDesc}</p>
+                <div className="px-2 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight text-primary-text">{t.app.goals.myStrategy}</h2>
+                        <p className="mt-1 text-[14px] text-secondary-text">{t.app.goals.myStrategyDesc}</p>
+                    </div>
+                    {userObjectives.length > 0 && (
+                        <div className="flex items-center">
+                            <Button onClick={handleExportAll} disabled={isExporting} variant="ghost" className="border border-border-soft bg-surface-elevated text-secondary-text hover:text-primary-text">
+                                <Download className="mr-2 h-4 w-4" />
+                                {t.app.settingsModal.tabExport}
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 <div className={userObjectives.length === 0 ? "grid gap-4 grid-cols-1" : "grid gap-4 xl:grid-cols-2"}>
@@ -399,6 +455,10 @@ export default function GoalsPage() {
                                             <DropdownMenuContent align="end" className="rounded-2xl border-border-soft p-1.5 shadow-premium-md">
                                                 <DropdownMenuItem onClick={() => toggleObjectiveActive(objective.id)} className="rounded-xl px-3 py-2 text-[13px] font-medium">
                                                     {objective.active ? t.app.goals.deactivate : t.app.goals.activate}
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleExportOne(objective.id)} className="rounded-xl px-3 py-2 text-[13px] font-medium">
+                                                    <Download className="mr-2 h-4 w-4" />
+                                                    {t.app.settingsModal.tabExport}
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>

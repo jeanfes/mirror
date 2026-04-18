@@ -353,7 +353,15 @@ const pt = {
       updateCard: "Atualizar",
       managePaymentMethod: "Gerenciar método de pagamento",
       manageSubscription: "Gerenciar assinatura",
-      cancelSubscription: "Cancelar assinatura"
+      cancelSubscription: "Cancelar assinatura",
+      subscriptionCanceledNotice: "Seu acesso Pro continua até {0}",
+      freeTrialEndsOn: "Teste gratuito · expira em {0}",
+      pastDue: "Pagamento pendente",
+      outOfCredits: "Sem créditos",
+      outOfCreditsDesc: "Você esgotou seus créditos. Melhore seu plano para continuar gerando.",
+      paymentFailedBanner: "Houve um problema com seu pagamento. Atualize seu cartão para continuar gerando.",
+      creditsWidgetRenewsAt: "Renovam em {0}",
+      deleteAccountEmailPlaceholder: "Digite seu e-mail para confirmar"
     },
     navigation: {
       profiles: "Perfis",
@@ -676,9 +684,8 @@ const pt = {
       generatedCommentLabel: "Comentário gerado",
       copyTooltip: "Copiar este comentário para a área de transferência",
       copyAction: "Copiar",
-      markApplied: "Marcar aplicado",
-      feedbackRatingLabel: "Avaliação",
-      feedbackNoRating: "Sem avaliação",
+      feedbackRatingLabel: "Você gostou?",
+      feedbackNoRating: "Sem feedback",
       feedbackNoteLabel: "Nota de feedback",
       feedbackNotePlaceholder: "Exemplo: muito genérico, ótima abertura, fechamento fraco...",
       feedbackSaveAction: "Salvar feedback",

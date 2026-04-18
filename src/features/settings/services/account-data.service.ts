@@ -1,31 +1,32 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { callEdgeFunction } from "@/lib/supabase/edge-functions"
 
-interface ExportDataResponse {
-  download_url?: string
-  downloadUrl?: string
-  url?: string
-  file_url?: string
-  fileUrl?: string
+
+export interface ExportOptions {
+  profiles?: string[] | "all"
+  objectives?: string[] | "all"
 }
 
 export async function startDataExport(
-  supabase: SupabaseClient
+  supabase: SupabaseClient,
+  options: ExportOptions = { profiles: "all", objectives: "all" }
 ): Promise<string | null> {
-  const payload = await callEdgeFunction<ExportDataResponse>(
+  const payload = await callEdgeFunction<Record<string, unknown>>(
     supabase,
     "export-data",
-    {}
+    options
   )
 
-  return (
-    payload.download_url ||
-    payload.downloadUrl ||
-    payload.file_url ||
-    payload.fileUrl ||
-    payload.url ||
-    null
-  )
+  if (!payload || Object.keys(payload).length === 0) {
+    return null
+  }
+
+  // Create a blob URL from the JSON data!
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  })
+  
+  return URL.createObjectURL(blob)
 }
 
 export async function deleteAccount(supabase: SupabaseClient): Promise<void> {

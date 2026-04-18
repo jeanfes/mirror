@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Layers3, MessageSquareQuote, Plus, WandSparkles, Star } from "lucide-react"
+import { Download, Layers3, MessageSquareQuote, Plus, WandSparkles, Star } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/Button"
@@ -12,6 +12,8 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
+import { startDataExport } from "@/features/settings/services/account-data.service"
+import { createClient } from "@/lib/supabase/client"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { useProfilesUIStore } from "@/store/useProfilesUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
@@ -34,7 +36,9 @@ export default function ProfilesPage() {
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
 
     const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
+    const [isExporting, setIsExporting] = useState(false)
     const { t } = useLanguageStore()
+    const supabase = createClient()
     const showLoading = useLoadingDelay(isLoading)
 
     const deleteTarget = useMemo(
@@ -111,6 +115,49 @@ export default function ProfilesPage() {
         }
     }
 
+    const handleExportOne = async (profileId: string) => {
+        try {
+            setIsExporting(true)
+            const downloadUrl = await startDataExport(supabase, { profiles: [profileId], objectives: [] })
+            if (downloadUrl) {
+                const link = document.createElement("a")
+                link.href = downloadUrl
+                link.download = `mirror-export-profile.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 500)
+            }
+            toast.success(t.app.settingsModal.backupStarted)
+        } catch {
+            toast.error(t.app.common.exportError)
+        } finally {
+            setIsExporting(false)
+        }
+    }
+
+    const handleExportAll = async () => {
+        try {
+            setIsExporting(true)
+            const allIds = profiles ? profiles.map(p => p.id) : []
+            const downloadUrl = await startDataExport(supabase, { profiles: allIds, objectives: [] })
+            if (downloadUrl) {
+                const link = document.createElement("a")
+                link.href = downloadUrl
+                link.download = `mirror-export-profiles.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 500)
+            }
+            toast.success(t.app.settingsModal.backupStarted)
+        } catch {
+            toast.error(t.app.common.exportError)
+        } finally {
+            setIsExporting(false)
+        }
+    }
+
     if (showLoading) {
         return <LoadingOverlay show={true} />
     }
@@ -165,10 +212,18 @@ export default function ProfilesPage() {
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">{t.app.profiles.profileCoverage}</p>
                                 <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{list.length}</p>
                             </div>
-                            <Button onClick={openCreateDialog} className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft">
-                                <Plus className="h-4 w-4" />
-                                {t.app.profiles.newProfile}
-                            </Button>
+                            <div className="flex items-center gap-2">
+                                {list.length > 0 && (
+                                    <Button onClick={handleExportAll} disabled={isExporting} className="hidden sm:inline-flex bg-white/5 border-white/5 text-white hover:bg-white/10" variant="secondary">
+                                        <Download className="mr-2 h-4 w-4" />
+                                        {t.app.settingsModal.tabExport}
+                                    </Button>
+                                )}
+                                <Button onClick={openCreateDialog} className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft">
+                                    <Plus className="h-4 w-4" />
+                                    {t.app.profiles.newProfile}
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="mt-6">
@@ -228,6 +283,7 @@ export default function ProfilesPage() {
                                 profile={profile}
                                 onEdit={openEditDialog}
                                 onToggle={handleToggle}
+                                onExport={handleExportOne}
                                 onDelete={handleDelete}
                             />
                         ))}

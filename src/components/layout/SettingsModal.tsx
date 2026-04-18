@@ -130,7 +130,13 @@ const SettingsModal = memo(function SettingsModal({
       setIsExportingData(true)
       const downloadUrl = await startDataExport(supabase)
       if (downloadUrl) {
-        window.open(downloadUrl, "_blank", "noopener,noreferrer")
+        const link = document.createElement("a")
+        link.href = downloadUrl
+        link.download = `mirror-export-${new Date().toISOString().split("T")[0]}.json`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 500)
       }
       toast.success(t.app.settingsModal.backupStarted)
     } catch {

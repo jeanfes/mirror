@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import Link from "next/link"
 import { Globe, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
@@ -12,10 +11,8 @@ import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { isActiveProfileValidationError } from "@/features/settings/services/user-settings.service"
-import { ROUTES } from "@/lib/routes"
 import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
-import { Button } from "@/components/ui/Button"
 import type { UserSettings } from "@/types/database.types"
 
 type UpdateUserSettingsInput = Pick<

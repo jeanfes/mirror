@@ -25,7 +25,7 @@ const supabase = createClient()
 
   return {
     ...query,
-    isLoading: query.isLoading || isAuthenticating,
+    isLoading: query.isPending || (query.isFetching && !query.data) || isAuthenticating,
     startCheckout: mutation.mutateAsync,
     isMutating: mutation.isPending,
     isUpdatingPlan: mutation.isPending

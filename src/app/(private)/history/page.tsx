@@ -104,7 +104,7 @@ export default function HistoryPage() {
 
     const handleUpdateFeedback = useCallback(async (input: {
         id: string
-        rating?: number | null
+        liked?: boolean | null
         feedbackNote?: string | null
     }) => {
         try {
