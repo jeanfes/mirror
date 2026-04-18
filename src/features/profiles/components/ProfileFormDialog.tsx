@@ -25,17 +25,13 @@ import { Dictionary } from "@/lib/i18n"
 
 const createProfileSchema = (t: Dictionary) => z.object({
   name: z.string().min(2, t.app.profileForm.errors.nameRequired),
-  description: z.string().min(8, t.app.profileForm.errors.descRequired),
-  tone: z.string().min(3, t.app.profileForm.errors.toneRequired),
-  personaBio: z.string().min(8, t.app.profileForm.errors.descRequired),
-  expertiseTopics: z.string().min(2, t.app.profileForm.errors.descRequired),
-  personalityTraits: z.string().min(2, t.app.profileForm.errors.descRequired),
-  vocabularyLevel: z.string().optional(),
+  description: z.string().optional(),
+  tone: z.string().optional(),
+  bannedPhrases: z.string().optional(),
   example1: z.string().min(6, t.app.profileForm.errors.exampleMin),
   example2: z.string().min(6, t.app.profileForm.errors.exampleMin),
   example3: z.string().min(6, t.app.profileForm.errors.exampleMin),
   allowEmojis: z.boolean(),
-  enabled: z.boolean(),
 })
 
 type ProfileFormValues = z.infer<ReturnType<typeof createProfileSchema>>
@@ -60,25 +56,16 @@ function parseCommaSeparated(value: string): string[] {
 }
 
 
-function normalizeVocabularyLevel(value: string | undefined): CreateProfileInput["vocabularyLevel"] {
-  return value === "simple" || value === "conversational" || value === "technical" || value === "academic"
-    ? value
-    : null
-}
 
 const defaults: ProfileFormValues = {
   name: "",
   description: "",
   tone: "",
-  personaBio: "",
-  expertiseTopics: "",
-  personalityTraits: "",
-  vocabularyLevel: "",
+  bannedPhrases: "",
   example1: "",
   example2: "",
   example3: "",
   allowEmojis: false,
-  enabled: true,
 }
 
 export const ProfileFormDialog = memo(function ProfileFormDialog({
@@ -107,17 +94,13 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
     if (profile) {
       reset({
         name: profile.name,
-        description: profile.description,
-        tone: profile.tone,
-        personaBio: profile.personaBio,
-        expertiseTopics: profile.expertiseTopics.join(", "),
-        personalityTraits: profile.personalityTraits.join(", "),
-        vocabularyLevel: profile.vocabularyLevel ?? "",
+        description: profile.description ?? "",
+        tone: profile.tone ?? "",
+        bannedPhrases: profile.bannedPhrases.join(", "),
         example1: profile.examples[0] ?? "",
         example2: profile.examples[1] ?? "",
         example3: profile.examples[2] ?? "",
         allowEmojis: profile.allowEmojis,
-        enabled: profile.enabled,
       })
       return
     }
@@ -127,10 +110,9 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
   const submit = handleSubmit(async (values) => {
     const payload: CreateProfileInput = {
       ...values,
-      personaBio: values.personaBio.trim(),
-      expertiseTopics: parseCommaSeparated(values.expertiseTopics),
-      personalityTraits: parseCommaSeparated(values.personalityTraits),
-      vocabularyLevel: normalizeVocabularyLevel(values.vocabularyLevel)
+      description: values.description ?? "",
+      tone: values.tone ?? "",
+      bannedPhrases: parseCommaSeparated(values.bannedPhrases ?? ""),
     }
 
     try {
@@ -198,141 +180,96 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
 
             <div className="flex-1 overflow-y-auto px-5 md:px-6 pb-5 md:pb-6 custom-scrollbar">
 
-            <form onSubmit={submit}>
-              <div className="grid gap-5">
-                <Input
-                  label={t.app.profileForm.nameLabel}
-                  placeholder={t.app.profileForm.namePlaceholder}
-                  error={errors.name?.message}
-                  {...register("name")}
-                />
-                <Textarea
-                  label={t.app.profileForm.descLabel}
-                  placeholder={t.app.profileForm.descPlaceholder}
-                  rows={2}
-                  error={errors.description?.message}
-                  {...register("description")}
-                />
-                <Input
-                  label={t.app.profileForm.toneLabel}
-                  placeholder={t.app.profileForm.tonePlaceholder}
-                  error={errors.tone?.message}
-                  {...register("tone")}
-                />
+              <form onSubmit={submit}>
+                <div className="grid gap-5">
+                  <Input
+                    label={t.app.profileForm.nameLabel}
+                    placeholder={t.app.profileForm.namePlaceholder}
+                    error={errors.name?.message}
+                    {...register("name")}
+                  />
+                  <Textarea
+                    label={t.app.profileForm.descLabel}
+                    placeholder={t.app.profileForm.descPlaceholder}
+                    rows={2}
+                    error={errors.description?.message}
+                    {...register("description")}
+                  />
+                  <Input
+                    label={t.app.profileForm.toneLabel}
+                    placeholder={t.app.profileForm.tonePlaceholder}
+                    error={errors.tone?.message}
+                    {...register("tone")}
+                  />
 
-                <Textarea
-                  label="Persona bio"
-                  placeholder="Founder in B2B SaaS, 6 years in enterprise sales..."
-                  rows={2}
-                  error={errors.personaBio?.message}
-                  {...register("personaBio")}
-                />
+                  <Input
+                    label={t.app.profileForm.bannedPhrasesLabel}
+                    placeholder={t.app.profileForm.bannedPhrasesPlaceholder}
+                    error={errors.bannedPhrases?.message}
+                    {...register("bannedPhrases")}
+                  />
 
-                <Input
-                  label="Expertise topics (comma separated)"
-                  placeholder="startups, sales, AI, product"
-                  error={errors.expertiseTopics?.message}
-                  {...register("expertiseTopics")}
-                />
-
-                <Input
-                  label="Personality traits (comma separated)"
-                  placeholder="direct, analytical, provocative"
-                  error={errors.personalityTraits?.message}
-                  {...register("personalityTraits")}
-                />
-
-
-                <div className="w-full space-y-2 group">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text transition-colors group-focus-within:text-accent-purple">
-                      Vocabulary level
-                    </label>
+                  <div className="space-y-3">
+                    <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text">
+                      {t.app.profileForm.exampleComments}
+                    </p>
+                    <p className="text-[13px] text-secondary-text">
+                      {t.app.profileForm.exampleCommentsDesc}
+                    </p>
+                    <div className="mt-3 grid gap-3">
+                      <Textarea
+                        placeholder={t.app.profileForm.example1Placeholder}
+                        rows={2}
+                        error={errors.example1?.message}
+                        {...register("example1")}
+                      />
+                      <Textarea
+                        placeholder={t.app.profileForm.example2Placeholder}
+                        rows={2}
+                        error={errors.example2?.message}
+                        {...register("example2")}
+                      />
+                      <Textarea
+                        placeholder={t.app.profileForm.example3Placeholder}
+                        rows={2}
+                        error={errors.example3?.message}
+                        {...register("example3")}
+                      />
+                    </div>
                   </div>
-                  <select
-                    className="flex h-11 w-full flex-row items-center rounded-2xl border border-border-soft bg-surface-elevated px-4 text-[13px] font-medium text-primary-text transition-all duration-200 hover:border-border-medium focus:border-accent-purple/40 focus:ring-4 focus:ring-accent-purple/8 focus:outline-none"
-                    {...register("vocabularyLevel")}
+                </div>
+
+                <div className="grid gap-2 md:grid-cols-2 mt-3">
+                  <Controller
+                    name="allowEmojis"
+                    control={control}
+                    render={({ field }) => (
+                      <Toggle
+                        checked={field.value}
+                        onChange={field.onChange}
+                        label={t.app.profileForm.allowEmojis}
+                      />
+                    )}
+                  />
+                </div>
+
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={onClose}
                   >
-                    <option value="">Auto</option>
-                    <option value="simple">Simple</option>
-                    <option value="conversational">Conversational</option>
-                    <option value="technical">Technical</option>
-                    <option value="academic">Academic</option>
-                  </select>
-                </div>
-
-                <div className="space-y-3">
-                  <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-secondary-text">
-                    {t.app.profileForm.exampleComments}
-                  </p>
-                  <p className="text-[13px] text-secondary-text">
-                    {t.app.profileForm.exampleCommentsDesc}
-                  </p>
-                  <div className="mt-3 grid gap-3">
-                    <Textarea
-                      placeholder={t.app.profileForm.example1Placeholder}
-                      rows={2}
-                      error={errors.example1?.message}
-                      {...register("example1")}
-                    />
-                    <Textarea
-                      placeholder={t.app.profileForm.example2Placeholder}
-                      rows={2}
-                      error={errors.example2?.message}
-                      {...register("example2")}
-                    />
-                    <Textarea
-                      placeholder={t.app.profileForm.example3Placeholder}
-                      rows={2}
-                      error={errors.example3?.message}
-                      {...register("example3")}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-2 md:grid-cols-2 mt-3">
-                <Controller
-                  name="allowEmojis"
-                  control={control}
-                  render={({ field }) => (
-                    <Toggle
-                      checked={field.value}
-                      onChange={field.onChange}
-                      label={t.app.profileForm.allowEmojis}
-                    />
-                  )}
-                />
-                <Controller
-                  name="enabled"
-                  control={control}
-                  render={({ field }) => (
-                    <Toggle
-                      checked={field.value}
-                      onChange={field.onChange}
-                      label={t.app.profileForm.profileEnabled}
-                    />
-                  )}
-                />
-              </div>
-
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={onClose}
-                >
-                  {t.app.profileForm.cancel}
-                </Button>
-                <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-                  {isPending
-                    ? t.app.profileForm.saving
-                    : profile
-                      ? t.app.profileForm.saveChanges
-                      : t.app.profileForm.createProfile}
-                </Button>
-              </DialogFooter>
-            </form>
+                    {t.app.profileForm.cancel}
+                  </Button>
+                  <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+                    {isPending
+                      ? t.app.profileForm.saving
+                      : profile
+                        ? t.app.profileForm.saveChanges
+                        : t.app.profileForm.createProfile}
+                  </Button>
+                </DialogFooter>
+              </form>
             </div>
           </div>
         </div>

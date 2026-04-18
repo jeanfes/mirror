@@ -184,6 +184,8 @@ export async function startCheckout(
   supabase: SupabaseClient,
   planName: PlanName
 ) {
+  // NOTE: Currently, checkouts are restricted to the "Pro" plan. 
+  // If the "Elite" plan is enabled in planDefinitions, update this logic to allow it.
   if (planName !== "Pro") {
     throw new Error("Invalid plan. Only Pro plan is allowed for new checkouts.");
   }

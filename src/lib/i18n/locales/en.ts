@@ -362,7 +362,8 @@ const en = {
       outOfCreditsDesc: "You have run out of credits. Upgrade your plan to continue generating.",
       paymentFailedBanner: "There was an issue with your payment. Update your card to keep your active plan.",
       creditsWidgetRenewsAt: "Renews on {0}",
-      deleteAccountEmailPlaceholder: "Type your email to confirm"
+      deleteAccountEmailPlaceholder: "Type your email to confirm",
+      cancelSubscriptionDescription: "If you cancel your subscription, your current plan will be downgraded to Basic at the end of your billing cycle. Are you sure you want to cancel?"
     },
     navigation: {
       profiles: "Profiles",
@@ -569,7 +570,10 @@ const en = {
       labelEs: "Español",
       labelPt: "Português",
       labelFr: "Français",
-      labelDe: "Deutsch"
+      labelDe: "German",
+      personaBioTitle: "Who are you?",
+      personaBioDesc: "Your professional bio helps Mirror generate answers that sound more like you.",
+      personaBioPlaceholder: "e.g. Founder at B2B SaaS, sales expert and AI enthusiast..."
     },
     goals: {
       title: "Goals",
@@ -713,6 +717,8 @@ const en = {
       tonePlaceholder: "Confident, practical, concise",
       exampleComments: "Example comments",
       exampleCommentsDesc: "Use three short examples that feel ready to post, not abstract instructions.",
+      bannedPhrasesLabel: "Banned phrases (comma separated)",
+      bannedPhrasesPlaceholder: "great post, totally agree, love it",
       example1Placeholder: "Example #1",
       example2Placeholder: "Example #2",
       example3Placeholder: "Example #3",
@@ -783,7 +789,8 @@ const en = {
       languageUpdateError: "Could not change the language",
       themeSaveError: "Could not save the theme",
       savingChanges: "Saving changes...",
-      backupStarted: "Backup started"
+      backupStarted: "Backup started",
+      managedByGoogle: "Managed by Google"
     }
   }
 } as const

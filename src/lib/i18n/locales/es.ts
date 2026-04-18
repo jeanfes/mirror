@@ -362,7 +362,8 @@ const es = {
       outOfCreditsDesc: "Has agotado tus créditos. Mejora tu plan para seguir generando.",
       paymentFailedBanner: "Hubo un problema con tu pago. Actualiza tu tarjeta para seguir generando.",
       creditsWidgetRenewsAt: "Se renuevan el {0}",
-      deleteAccountEmailPlaceholder: "Escribe tu correo para confirmar"
+      deleteAccountEmailPlaceholder: "Escribe tu correo para confirmar",
+      cancelSubscriptionDescription: "Si cancelas tu suscripción, tu plan actual se degradará a Básico al final de tu ciclo de facturación. ¿Estás seguro de que deseas cancelar?"
     },
     navigation: {
       profiles: "Perfiles",
@@ -569,7 +570,10 @@ const es = {
       labelEs: "Español",
       labelPt: "Português",
       labelFr: "Français",
-      labelDe: "Deutsch"
+      labelDe: "Deutsch",
+      personaBioTitle: "¿Quién eres?",
+      personaBioDesc: "Tu bio profesional ayuda a Mirror a generar respuestas que suenen más como tú.",
+      personaBioPlaceholder: "Ej: Founder en B2B SaaS, experto en ventas y entusiasta de la IA..."
     },
     goals: {
       title: "Objetivos",
@@ -713,6 +717,8 @@ const es = {
       tonePlaceholder: "Confiado, práctico, conciso",
       exampleComments: "Comentarios de ejemplo",
       exampleCommentsDesc: "Usa tres ejemplos cortos que se sientan listos para publicar, no instrucciones abstractas.",
+      bannedPhrasesLabel: "Frases prohibidas (separadas por coma)",
+      bannedPhrasesPlaceholder: "gran post, totalmente de acuerdo, me encanta",
       example1Placeholder: "Ejemplo #1",
       example2Placeholder: "Ejemplo #2",
       example3Placeholder: "Ejemplo #3",
@@ -783,7 +789,8 @@ const es = {
       languageUpdateError: "No se pudo cambiar el idioma",
       themeSaveError: "No se pudo guardar el tema",
       savingChanges: "Guardando cambios...",
-      backupStarted: "Copia de seguridad iniciada"
+      backupStarted: "Copia de seguridad iniciada",
+      managedByGoogle: "Gestionado por Google"
     }
   }
 } as const

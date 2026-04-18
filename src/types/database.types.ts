@@ -5,13 +5,7 @@ export interface VoiceProfileRow {
   name: string
   description: string | null
   tone: string | null
-  persona_bio: string | null
-  expertise_topics: string[] | null
-  personality_traits: string[] | null
-  vocabulary_level: string | null
-  preferred_phrases: string[] | null
   banned_phrases: string[] | null
-  target_length: number | null
   allow_emojis: boolean
   enabled: boolean
   created_at: string
@@ -118,6 +112,7 @@ export interface UserSettings {
   objectiveLibrary: ObjectiveProfile[]
   notificationsEnabled: boolean
   desktopAlertsEnabled: boolean
+  personaBio: string | null
 }
 
 export interface VoiceProfile {
@@ -125,13 +120,7 @@ export interface VoiceProfile {
   name: string
   description: string
   tone: string
-  personaBio: string
-  expertiseTopics: string[]
-  personalityTraits: string[]
-  vocabularyLevel: VocabularyLevel | null
-  preferredPhrases: string[]
   bannedPhrases: string[]
-  targetLength: number | null
   allowEmojis: boolean
   enabled: boolean
   createdAt: number 

@@ -35,7 +35,7 @@ export const SecurityTab = memo(function SecurityTab({
             {isGoogleUser ? (
               <p className="text-[11px] text-success font-medium flex items-center gap-1.5 mt-0.5">
                 <span className="flex h-1.5 w-1.5 rounded-full bg-success" />
-                Gestionado por Google
+                {t.app.settingsModal.managedByGoogle}
               </p>
             ) : (
               <p className="text-[10px] text-secondary-text uppercase">{t.app.settingsModal.lastUpdated}</p>

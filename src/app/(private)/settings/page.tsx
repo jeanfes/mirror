@@ -24,6 +24,7 @@ type UpdateUserSettingsInput = Pick<
     | "autoInsert"
     | "desktopAlertsEnabled"
     | "notificationsEnabled"
+    | "personaBio"
 >
 
 const AUTO_SAVE_DEBOUNCE_MS = 450
@@ -35,7 +36,8 @@ const defaultDraft: UpdateUserSettingsInput = {
     defaultEmojis: true,
     autoInsert: false,
     desktopAlertsEnabled: false,
-    notificationsEnabled: true
+    notificationsEnabled: true,
+    personaBio: null
 }
 
 function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettingsInput): boolean {
@@ -46,7 +48,8 @@ function areSettingsEqual(left: UpdateUserSettingsInput, right: UpdateUserSettin
         left.defaultEmojis === right.defaultEmojis &&
         left.autoInsert === right.autoInsert &&
         left.desktopAlertsEnabled === right.desktopAlertsEnabled &&
-        left.notificationsEnabled === right.notificationsEnabled
+        left.notificationsEnabled === right.notificationsEnabled &&
+        left.personaBio === right.personaBio
     )
 }
 
@@ -66,6 +69,7 @@ function buildChangedPayload(
         payload.desktopAlertsEnabled = next.desktopAlertsEnabled
     if (next.notificationsEnabled !== base.notificationsEnabled)
         payload.notificationsEnabled = next.notificationsEnabled
+    if (next.personaBio !== base.personaBio) payload.personaBio = next.personaBio
 
     return payload
 }
@@ -89,7 +93,8 @@ export default function SettingsPage() {
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
-            notificationsEnabled: settings.notificationsEnabled
+            notificationsEnabled: settings.notificationsEnabled,
+            personaBio: settings.personaBio
         }
     }, [draft, settings])
 
@@ -105,7 +110,8 @@ export default function SettingsPage() {
             defaultEmojis: settings.defaultEmojis,
             autoInsert: settings.autoInsert,
             desktopAlertsEnabled: settings.desktopAlertsEnabled,
-            notificationsEnabled: settings.notificationsEnabled
+            notificationsEnabled: settings.notificationsEnabled,
+            personaBio: settings.personaBio
         }
     }, [settings])
 
@@ -238,6 +244,28 @@ export default function SettingsPage() {
                     </div>
                     <h2 className="mt-4 text-[18px] font-semibold tracking-[-0.03em] text-primary-text">{t.app.settings.languageProfileTitle}</h2>
                     <p className="mt-2 body-muted">{t.app.settings.languageProfileDesc}</p>
+                </Card>
+            </section>
+
+            <section>
+                <Card className="dashboard-card-xl">
+                    <div>
+                        <p className="dashboard-overline">{t.app.settings.defaultsLabel}</p>
+                        <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-primary-text">
+                            {t.app.settings.personaBioTitle}
+                        </h2>
+                        <p className="mt-2 body-muted">
+                            {t.app.settings.personaBioDesc}
+                        </p>
+                    </div>
+                    <div className="mt-6">
+                        <textarea
+                            className="flex min-h-32 w-full rounded-2xl border border-border-soft bg-surface-elevated px-4 py-3 text-[14px] font-medium text-primary-text transition-all duration-200 placeholder:text-secondary-text/50 hover:border-border-medium focus:border-accent-purple/40 focus:ring-4 focus:ring-accent-purple/8 focus:outline-none"
+                            placeholder={t.app.settings.personaBioPlaceholder}
+                            value={draft?.personaBio ?? resolvedSettings.personaBio ?? ""}
+                            onChange={(e) => updateDraft("personaBio", e.target.value || null)}
+                        />
+                    </div>
                 </Card>
             </section>
 

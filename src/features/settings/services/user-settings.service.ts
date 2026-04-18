@@ -15,6 +15,7 @@ const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200
 const USER_SETTINGS_SELECT_COLUMNS =
   "user_id, language, comment_language_mode, theme, active_profile_id, default_emojis, auto_insert, objective_library, desktop_alerts_enabled, notifications_enabled, updated_at"
+const USER_PROFILE_SELECT_COLUMNS = "persona_bio"
 const ACTIVE_PROFILE_INVALID_CODE = "ACTIVE_PROFILE_INVALID"
 
 type DomainError = Error & { code?: string }
@@ -267,10 +268,11 @@ const defaultUserSettings: UserSettings = {
   autoInsert: false,
   objectiveLibrary: defaultObjectiveLibrary,
   desktopAlertsEnabled: false,
-  notificationsEnabled: true
+  notificationsEnabled: true,
+  personaBio: null
 }
 
-function mapRowToSettings(row: Record<string, unknown>): UserSettings {
+function mapRowToSettings(row: Record<string, unknown>, personaBio: string | null): UserSettings {
   const language = row.language
   const theme = row.theme
   const activeProfileId = row.active_profile_id
@@ -313,8 +315,26 @@ function mapRowToSettings(row: Record<string, unknown>): UserSettings {
     notificationsEnabled:
       typeof notificationsEnabled === "boolean"
         ? notificationsEnabled
-        : defaultUserSettings.notificationsEnabled
+        : defaultUserSettings.notificationsEnabled,
+    personaBio
   }
+}
+
+async function getPersonaBio(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select(USER_PROFILE_SELECT_COLUMNS)
+    .eq("id", userId)
+    .maybeSingle()
+
+  if (error) {
+    throw error
+  }
+
+  return typeof data?.persona_bio === "string" ? data.persona_bio : null
 }
 
 export async function getUserSettings(
@@ -344,10 +364,12 @@ export async function getUserSettings(
       throw createError
     }
 
-    return mapRowToSettings(created)
+    const personaBio = await getPersonaBio(supabase, userId)
+    return mapRowToSettings(created, personaBio)
   }
 
-  return mapRowToSettings(data)
+  const personaBio = await getPersonaBio(supabase, userId)
+  return mapRowToSettings(data, personaBio)
 }
 
 export async function updateUserSettings(
@@ -405,5 +427,22 @@ export async function updateUserSettings(
     throw error
   }
 
-  return mapRowToSettings(data)
+  let nextPersonaBio: string | null
+
+  if (input.personaBio !== undefined) {
+    const { error: personaUpdateError } = await supabase
+      .from("user_profiles")
+      .update({ persona_bio: input.personaBio })
+      .eq("id", userId)
+
+    if (personaUpdateError) {
+      throw personaUpdateError
+    }
+
+    nextPersonaBio = input.personaBio
+  } else {
+    nextPersonaBio = await getPersonaBio(supabase, userId)
+  }
+
+  return mapRowToSettings(data, nextPersonaBio)
 }

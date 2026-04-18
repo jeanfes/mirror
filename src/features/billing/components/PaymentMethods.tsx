@@ -78,7 +78,7 @@ export function PaymentMethods({
                 </p>
                 {method.isDefault && (
                   <span className="inline-flex items-center rounded-full bg-accent-blue/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-accent-blue">
-                    Default
+                    {t.app.settingsModal.managedByGoogle}
                   </span>
                 )}
               </div>
@@ -116,7 +116,7 @@ export function PaymentMethods({
         open={showCancelModal}
         onCancel={() => setShowCancelModal(false)}
         title={t.app.billing.cancelSubscription}
-        description="Si cancelas tu suscripción, tu plan actual se degradará a Básico al final de tu ciclo de facturación. ¿Estás seguro de que deseas cancelar?"
+        description={t.app.billing.cancelSubscriptionDescription}
         confirmLabel={t.app.billing.cancelSubscription}
         cancelLabel={t.app.common.cancel}
         isPending={isCancelling}

@@ -1,23 +1,19 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
-import type { VoiceProfile, VoiceProfileRow, StyleTrainingRow, VocabularyLevel } from "@/types/database.types"
+import type { VoiceProfile, VoiceProfileRow, StyleTrainingRow } from "@/types/database.types"
 
 const VOICE_PROFILE_SELECT_COLUMNS =
-  "id, user_id, name, description, tone, persona_bio, expertise_topics, personality_traits, vocabulary_level, preferred_phrases, banned_phrases, target_length, allow_emojis, enabled, created_at, updated_at, deleted_at"
+  "id, user_id, name, description, tone, banned_phrases, allow_emojis, enabled, created_at, updated_at, deleted_at"
 const STYLE_TRAINING_SELECT_COLUMNS = "id, profile_id, kind, content, display_order, questionnaire_answers"
 
 export interface CreateProfileInput {
   name: string
   description: string
   tone: string
-  personaBio: string
-  expertiseTopics: string[]
-  personalityTraits: string[]
-  vocabularyLevel: VocabularyLevel | null
+  bannedPhrases: string[]
   example1: string
   example2: string
   example3: string
   allowEmojis: boolean
-  enabled: boolean
 }
 
 export interface UpdateProfileInput extends CreateProfileInput {
@@ -33,13 +29,7 @@ function mapRowToProfile(
     name: row.name,
     description: row.description ?? "",
     tone: row.tone ?? "",
-    personaBio: row.persona_bio ?? "",
-    expertiseTopics: row.expertise_topics ?? [],
-    personalityTraits: row.personality_traits ?? [],
-    vocabularyLevel: (row.vocabulary_level as VocabularyLevel | null) ?? null,
-    preferredPhrases: row.preferred_phrases ?? [],
     bannedPhrases: row.banned_phrases ?? [],
-    targetLength: row.target_length,
     allowEmojis: row.allow_emojis,
     enabled: row.enabled,
     createdAt: Date.parse(row.created_at),
@@ -90,12 +80,8 @@ export async function createProfile(
       name: input.name,
       description: input.description,
       tone: input.tone,
-      persona_bio: input.personaBio,
-      expertise_topics: input.expertiseTopics,
-      personality_traits: input.personalityTraits,
-      vocabulary_level: input.vocabularyLevel,
+      banned_phrases: input.bannedPhrases,
       allow_emojis: input.allowEmojis,
-      enabled: input.enabled,
     })
     .select(VOICE_PROFILE_SELECT_COLUMNS)
     .single()
@@ -133,12 +119,8 @@ export async function updateProfile(
       name: input.name,
       description: input.description,
       tone: input.tone,
-      persona_bio: input.personaBio,
-      expertise_topics: input.expertiseTopics,
-      personality_traits: input.personalityTraits,
-      vocabulary_level: input.vocabularyLevel,
+      banned_phrases: input.bannedPhrases,
       allow_emojis: input.allowEmojis,
-      enabled: input.enabled,
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.id)
