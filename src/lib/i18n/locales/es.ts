@@ -62,14 +62,14 @@ const es = {
       "Controles avanzados de personalización",
       "Soporte prioritario"
     ],
-    elitePlan: "Plan Elite",
-    eliteDesc: "Para líderes y agencias",
-    eliteBtn: "Elegir Elite",
+    elitePlan: "Plan Pro",
+    eliteDesc: "Para profesionales en crecimiento",
+    eliteBtn: "Elegir Pro",
     eliteFeatures: [
-      "4.000 generaciones al mes",
-      "Perfiles ilimitados",
-      "Acceso anticipado a funciones",
-      "Soporte VIP 24/7"
+      "1.200 generaciones al mes",
+      "10 Perfiles de voz activos",
+      "Controles avanzados de personalización",
+      "Soporte prioritario"
     ]
   },
   footer: {
@@ -425,7 +425,7 @@ const es = {
       heroDesc: "Elige el plan que mejor se adapte a tu ritmo de trabajo.",
       chip1: "Basic",
       chip2: "Pro",
-      chip3: "Elite",
+      chip3: "Pro",
       currentSub: "Suscripción actual",
       renewsOn: "Se renueva el {0}",
       lifetimeAccess: "De por vida",

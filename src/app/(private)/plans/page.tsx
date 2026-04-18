@@ -17,7 +17,7 @@ export default function PlansPage() {
     const { data: fetchedPlanDefinitions } = usePlanDefinitions()
     const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
     const { t } = useLanguageStore()
-    const handleSelectPlan = async (planName: "Free" | "Pro" | "Elite") => {
+    const handleSelectPlan = async (planName: "Free" | "Pro") => {
         try {
             const checkoutUrl = await startCheckout(planName)
             window.location.assign(checkoutUrl)

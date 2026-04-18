@@ -9,10 +9,13 @@ export class EdgeFunctionError extends Error {
   }
 }
 
+export type EdgeFunctionMethod = "GET" | "POST" | "DELETE"
+
 export async function callEdgeFunction<TResponse>(
   supabase: SupabaseClient,
   functionName: string,
-  body: unknown = {}
+  body: unknown = {},
+  method: EdgeFunctionMethod = "POST"
 ): Promise<TResponse> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   if (!supabaseUrl) {
@@ -28,13 +31,15 @@ export async function callEdgeFunction<TResponse>(
     throw new Error("Missing session token")
   }
 
+  const shouldSendBody = method !== "GET" && body !== undefined
+
   const response = await fetch(`${supabaseUrl}/functions/v1/${functionName}`, {
-    method: "POST",
+    method,
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
+      ...(shouldSendBody ? { "Content-Type": "application/json" } : {}),
     },
-    body: JSON.stringify(body),
+    ...(shouldSendBody ? { body: JSON.stringify(body) } : {}),
   })
 
   const raw = await response.text()
@@ -49,4 +54,4 @@ export async function callEdgeFunction<TResponse>(
   }
 
   return payload as TResponse
-}
+}

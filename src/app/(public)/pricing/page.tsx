@@ -19,7 +19,7 @@ export default async function PricingPage() {
         {
             name: t.pricing.proPlan,
             desc: t.pricing.proDesc,
-            price: "$19",
+            price: "$9.99",
             features: t.pricing.proFeatures,
             buttonText: t.pricing.proBtn,
             popular: true,

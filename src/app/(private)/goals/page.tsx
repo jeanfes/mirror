@@ -29,7 +29,8 @@ const GOAL_TYPE_TO_HISTORY_VALUE: Record<GoalType, string> = {
     "Add Value": "add_value",
     Challenge: "challenge",
     Networking: "networking",
-    Question: "question"
+    Question: "question",
+    Proposal: "proposal"
 }
 
 type GoalMetrics = {
@@ -113,7 +114,8 @@ export default function GoalsPage() {
             "Add Value": seed(),
             Challenge: seed(),
             Networking: seed(),
-            Question: seed()
+            Question: seed(),
+            Proposal: seed()
         }
 
         for (const item of history ?? []) {

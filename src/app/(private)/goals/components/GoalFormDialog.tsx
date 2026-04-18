@@ -23,7 +23,7 @@ import { Dictionary } from "@/lib/i18n"
 
 const PLATFORM_OPTIONS = ["linkedin", "upwork", "twitter", "reddit", "youtube"] as const
 const PLATFORMS: PlatformId[] = [...PLATFORM_OPTIONS]
-const GOAL_TYPE_OPTIONS = ["Add Value", "Challenge", "Networking", "Question"] as const
+const GOAL_TYPE_OPTIONS = ["Add Value", "Challenge", "Networking", "Question", "Proposal"] as const
 
 const createGoalSchema = (t: Dictionary) => z.object({
   name: z.string().min(2, t.app.goals.nameRequiredError),
@@ -67,7 +67,8 @@ export const GoalFormDialog = memo(function GoalFormDialog({
     { label: t.app.settings.goalValue, value: "Add Value" },
     { label: t.app.settings.goalChallenge, value: "Challenge" },
     { label: t.app.settings.goalConnect, value: "Networking" },
-    { label: t.app.settings.goalQuestion, value: "Question" }
+    { label: t.app.settings.goalQuestion, value: "Question" },
+    { label: t.app.goals.baseObjectiveNames?.["base-upwork-proposal"] ?? "Propuesta", value: "Proposal" }
   ], [t])
 
   const platformLabels: Record<PlatformId, string> = {

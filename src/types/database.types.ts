@@ -47,7 +47,7 @@ export interface GenerationHistoryRow {
 }
 
 export interface PlanQuotasRow {
-  plan: "Free" | "Pro" | "Elite"
+  plan: "Free" | "Pro"
   monthly_generations: number
   max_profiles: number | null
   max_history_retention_days: number
@@ -83,7 +83,7 @@ export interface InvoiceRow {
   created_at: string
 }
 
-export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question"
+export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question" | "Proposal"
 export type PlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 export type ObjectiveScope = PlatformId[]
 export type ObjectiveSource = "platform_base" | "user_custom" | "imported_pack"

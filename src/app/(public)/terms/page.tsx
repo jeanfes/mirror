@@ -118,8 +118,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     },
     tableRows: [
       { plan: "Free", price: "$0 USD/mes", credits: "120", profiles: "1" },
-      { plan: "Pro", price: "$19 USD/mes", credits: "1.200", profiles: "10" },
-      { plan: "Elite", price: "$59 USD/mes", credits: "4.000", profiles: "Ilimitados" }
+      { plan: "Pro", price: "$9.99 USD/mes", credits: "1.200", profiles: "10" }
     ],
     article42:
       "4.2 Los precios están expresados en USD. Mirror puede modificarlos con un aviso previo de treinta (30) días calendario.",
@@ -202,8 +201,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     },
     tableRows: [
       { plan: "Free", price: "$0 USD/month", credits: "120", profiles: "1" },
-      { plan: "Pro", price: "$19 USD/month", credits: "1,200", profiles: "10" },
-      { plan: "Elite", price: "$59 USD/month", credits: "4,000", profiles: "Unlimited" }
+      { plan: "Pro", price: "$9.99 USD/month", credits: "1,200", profiles: "10" }
     ],
     article42:
       "4.2 Prices are shown in USD. Mirror may update pricing with at least thirty (30) calendar days prior notice.",
@@ -286,8 +284,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     },
     tableRows: [
       { plan: "Free", price: "$0 USD/mês", credits: "120", profiles: "1" },
-      { plan: "Pro", price: "$19 USD/mês", credits: "1.200", profiles: "10" },
-      { plan: "Elite", price: "$59 USD/mês", credits: "4.000", profiles: "Ilimitados" }
+      { plan: "Pro", price: "$9.99 USD/mês", credits: "1.200", profiles: "10" }
     ],
     article42:
       "4.2 Os preços são expressos em USD. O Mirror pode alterá-los com aviso prévio de trinta (30) dias corridos.",
@@ -372,8 +369,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     },
     tableRows: [
       { plan: "Free", price: "$0 USD/mois", credits: "120", profiles: "1" },
-      { plan: "Pro", price: "$19 USD/mois", credits: "1 200", profiles: "10" },
-      { plan: "Elite", price: "$59 USD/mois", credits: "4 000", profiles: "Illimités" }
+      { plan: "Pro", price: "$9.99 USD/mois", credits: "1 200", profiles: "10" }
     ],
     article42:
       "4.2 Les prix sont indiqués en USD. Mirror peut les modifier avec un préavis de trente (30) jours calendaires.",
@@ -456,8 +452,7 @@ const termsCopy: Record<LegalLocale, TermsCopy> = {
     },
     tableRows: [
       { plan: "Free", price: "$0 USD/Monat", credits: "120", profiles: "1" },
-      { plan: "Pro", price: "$19 USD/Monat", credits: "1.200", profiles: "10" },
-      { plan: "Elite", price: "$59 USD/Monat", credits: "4.000", profiles: "Unbegrenzt" }
+      { plan: "Pro", price: "$9.99 USD/Monat", credits: "1.200", profiles: "10" }
     ],
     article42:
       "4.2 Preise sind in USD angegeben. Mirror kann Preise mit einer Frist von dreißig (30) Kalendertagen anpassen.",

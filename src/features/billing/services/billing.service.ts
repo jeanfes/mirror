@@ -12,7 +12,7 @@ import type {
 
 export type { Invoice, PaymentMethod }
 
-export type PlanName = "Free" | "Pro" | "Elite"
+export type PlanName = "Free" | "Pro"
 
 export interface PlanDefinition {
   name: PlanName
@@ -51,25 +51,11 @@ export const planDefinitions: PlanDefinition[] = [
       "Basic history archive",
     ],
   },
-  // {
-  //   name: "Elite",
-  //   price: "$49",
-  //   credits: 4000,
-  //   summary:
-  //     "High volume output and multi-persona testing for advanced users.",
-  //   features: [
-  //     "4,000 monthly generations",
-  //     "Unlimited voice profiles",
-  //     "Unlimited history archive",
-  //     "Priority API processing",
-  //   ],
-  // },
 ]
 
 const PLAN_PRICES: Record<PlanName, string> = {
   Free: "$0",
   Pro: "$9.99",
-  Elite: "$49",
 }
 
 const USER_ACCOUNT_SELECT_COLUMNS =
@@ -79,7 +65,7 @@ const INVOICES_SELECT_COLUMNS = "id, created_at, currency, amount_paid, status, 
 const PLAN_ORDER: PlanName[] = ["Free", "Pro"]
 
 function normalizePlanName(value: unknown): PlanName | null {
-  if (value === "Free" || value === "Pro" || value === "Elite") {
+  if (value === "Free" || value === "Pro") {
     return value
   }
 
@@ -184,8 +170,6 @@ export async function startCheckout(
   supabase: SupabaseClient,
   planName: PlanName
 ) {
-  // NOTE: Currently, checkouts are restricted to the "Pro" plan. 
-  // If the "Elite" plan is enabled in planDefinitions, update this logic to allow it.
   if (planName !== "Pro") {
     throw new Error("Invalid plan. Only Pro plan is allowed for new checkouts.");
   }
@@ -231,8 +215,10 @@ function mapRowToAccountStatus(
     "plan" | "credits_remaining" | "credits_used_this_month" | "renewal_date" | "subscription_status" | "last_generation_at"
   >
 ): UserAccount {
+  const normalizedPlan = normalizePlanName(row.plan) ?? "Free"
+
   return {
-    plan: row.plan,
+    plan: normalizedPlan,
     creditsRemaining: row.credits_remaining,
     creditsUsedThisMonth: row.credits_used_this_month ?? 0,
     renewalDate: row.renewal_date ?? addDays(new Date(), 30).toISOString(),
@@ -295,7 +281,7 @@ export async function getAccount(
   const { data: quotaRow, error: quotaError } = await supabase
     .from("plan_quotas")
     .select("plan, monthly_generations, max_profiles, max_history_retention_days, features_allowed, price_cents")
-    .eq("plan", accountRow.plan)
+    .eq("plan", account.plan)
     .maybeSingle()
 
   if (!quotaError && quotaRow) {
@@ -328,13 +314,11 @@ export async function getInvoices(
 
 interface BillingInfoResponse {
   payment_method?: {
-    id: string
     brand: string
     last4: string
-    exp_month: number
-    exp_year: number
+    ends_at: string | null
   }
-  subscription?: { update_payment_method_url: string }
+  subscription?: { update_payment_url: string | null }
   portal_url?: string
 }
 
@@ -342,7 +326,8 @@ export async function cancelSubscription(supabase: SupabaseClient) {
   await callEdgeFunction<Record<string, unknown>>(
     supabase,
     "cancel-subscription",
-    {}
+    undefined,
+    "DELETE"
   )
 }
 
@@ -352,7 +337,8 @@ export async function getBillingInfo(supabase: SupabaseClient) {
     payload = await callEdgeFunction<BillingInfoResponse>(
       supabase,
       "billing-info",
-      {}
+      undefined,
+      "GET"
     )
   } catch {
     return { paymentMethod: null, updateUrl: null, portalUrl: null }
@@ -368,21 +354,28 @@ export async function getBillingInfo(supabase: SupabaseClient) {
         ? "amex"
         : "visa"
 
-    const month = String(payload.payment_method.exp_month).padStart(2, "0")
-    const year = String(payload.payment_method.exp_year).slice(-2)
+    let expiry = "--/--"
+    if (typeof payload.payment_method.ends_at === "string") {
+      const parsed = new Date(payload.payment_method.ends_at)
+      if (!Number.isNaN(parsed.getTime())) {
+        const month = String(parsed.getMonth() + 1).padStart(2, "0")
+        const year = String(parsed.getFullYear()).slice(-2)
+        expiry = `${month}/${year}`
+      }
+    }
 
     pm = {
-      id: payload.payment_method.id,
+      id: "billing-info",
       brand: mappedType,
       last4: payload.payment_method.last4 ?? "0000",
-      expiry: `${month}/${year}`,
+      expiry,
       isDefault: true,
     }
   }
 
   return {
     paymentMethod: pm,
-    updateUrl: payload.subscription?.update_payment_method_url ?? null,
+    updateUrl: payload.subscription?.update_payment_url ?? null,
     portalUrl: payload.portal_url ?? null,
   }
 }

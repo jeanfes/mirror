@@ -62,14 +62,14 @@ const de = {
       "Fortgeschrittene Anpassungssteuerung",
       "Prioritärer Support"
     ],
-    elitePlan: "Elite-Plan",
-    eliteDesc: "Für Führungskräfte und Agenturen",
-    eliteBtn: "Elite wählen",
+    elitePlan: "Pro-Plan",
+    eliteDesc: "Für wachsende Profis",
+    eliteBtn: "Pro wählen",
     eliteFeatures: [
-      "4.000 Generationen pro Monat",
-      "Unbegrenzte Profile",
-      "Frühzeitiger Zugriff auf Funktionen",
-      "24/7 VIP-Support"
+      "1.200 Generationen pro Monat",
+      "10 aktive Sprachprofile",
+      "Fortgeschrittene Anpassungssteuerung",
+      "Prioritärer Support"
     ]
   },
   footer: {
@@ -425,7 +425,7 @@ const de = {
       heroDesc: "Wählen Sie den Plan, der zu Ihren Bedürfnissen passt.",
       chip1: "Basic",
       chip2: "Pro",
-      chip3: "Elite",
+      chip3: "Pro",
       currentSub: "Aktuelles Abo",
       renewsOn: "Erneuert am {0}",
       lifetimeAccess: "Lebenslang",

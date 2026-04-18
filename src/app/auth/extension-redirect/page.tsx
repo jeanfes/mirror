@@ -18,7 +18,7 @@ const BRIDGE_ATTEMPTS = 3
 type ExtensionTheme = "light" | "dark" | "system"
 type ExtensionLanguage = "es" | "en" | "pt" | "fr" | "de"
 type ExtensionCommentLanguageMode = "post" | "account"
-type ExtensionGoalType = "Add Value" | "Challenge" | "Networking" | "Question"
+type ExtensionGoalType = "Add Value" | "Challenge" | "Networking" | "Question" | "Proposal"
 type ExtensionPlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 type ExtensionObjectiveSource = "platform_base" | "user_custom" | "imported_pack"
 
@@ -53,7 +53,7 @@ type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
     refreshToken: string
-    plan?: "Free" | "Pro" | "Elite"
+    plan?: "Free" | "Pro"
     creditsRemaining?: number
     renewalDate?: string
     theme?: ExtensionTheme
@@ -154,8 +154,8 @@ function normalizeCommentLanguageMode(value: unknown): ExtensionCommentLanguageM
     return undefined
 }
 
-function normalizePlan(value: unknown): "Free" | "Pro" | "Elite" | undefined {
-    if (value === "Free" || value === "Pro" || value === "Elite") {
+function normalizePlan(value: unknown): "Free" | "Pro" | undefined {
+    if (value === "Free" || value === "Pro") {
         return value
     }
 

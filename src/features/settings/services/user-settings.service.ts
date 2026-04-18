@@ -9,7 +9,7 @@ import type {
 } from "@/types/database.types"
 
 const PLATFORM_IDS: PlatformId[] = ["linkedin", "twitter", "reddit", "youtube", "upwork"]
-const GOAL_SET = new Set<GoalType>(["Add Value", "Challenge", "Networking", "Question"])
+const GOAL_SET = new Set<GoalType>(["Add Value", "Challenge", "Networking", "Question", "Proposal"])
 const OBJECTIVE_NAME_MAX = 64
 const OBJECTIVE_DESCRIPTION_MAX = 300
 const OBJECTIVE_PROMPT_MAX = 1200

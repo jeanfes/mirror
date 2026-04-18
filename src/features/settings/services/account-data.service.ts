@@ -11,24 +11,55 @@ export async function startDataExport(
   supabase: SupabaseClient,
   options: ExportOptions = { profiles: "all", objectives: "all" }
 ): Promise<string | null> {
-  const payload = await callEdgeFunction<Record<string, unknown>>(
-    supabase,
-    "export-data",
-    options
-  )
+  // El endpoint export-data retorna el archivo completo del usuario.
+  void options
 
-  if (!payload || Object.keys(payload).length === 0) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!supabaseUrl) {
+    throw new Error("Supabase URL is not configured")
+  }
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+
+  const accessToken = session?.access_token
+  if (!accessToken) {
+    throw new Error("Missing session token")
+  }
+
+  const response = await fetch(`${supabaseUrl}/functions/v1/export-data`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+
+  if (!response.ok) {
+    const raw = await response.text()
+    let errorMessage = "Edge function export-data failed"
+
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as { error?: string; message?: string }
+        errorMessage = parsed.error || parsed.message || errorMessage
+      } catch {
+        errorMessage = raw
+      }
+    }
+
+    throw new Error(errorMessage)
+  }
+
+  const blob = await response.blob()
+
+  if (blob.size === 0) {
     return null
   }
 
-  // Create a blob URL from the JSON data!
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: "application/json",
-  })
-  
   return URL.createObjectURL(blob)
 }
 
 export async function deleteAccount(supabase: SupabaseClient): Promise<void> {
-  await callEdgeFunction<Record<string, unknown>>(supabase, "delete-account", {})
+  await callEdgeFunction<Record<string, unknown>>(supabase, "delete-account", undefined, "DELETE")
 }
