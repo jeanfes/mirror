@@ -30,6 +30,48 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
     const featureClass = isRecommended ? "text-white/88" : "text-slate-700"
     const bulletClass = isRecommended ? "text-[#75cef3]" : "text-success"
 
+    const renderLocalizedSummary = () => {
+        if (!plan.metadata) return plan.summary
+        
+        const { monthlyGenerations, maxProfiles } = plan.metadata
+        const profileText = maxProfiles === null || maxProfiles >= 999
+            ? t.app.plans.features.summary_profiles_unlimited
+            : t.app.plans.features.summary_profiles_count.replace("{0}", maxProfiles.toLocaleString())
+            
+        return t.app.plans.features.summary_template
+            .replace("{0}", monthlyGenerations.toLocaleString())
+            .replace("{1}", profileText)
+    }
+
+    const renderLocalizedFeatures = () => {
+        if (!plan.metadata) return plan.features
+        
+        const { monthlyGenerations, maxProfiles, historyRetentionDays, allowedFeatures } = plan.metadata
+        
+        const features: string[] = [
+            t.app.plans.features.generations.replace("{0}", monthlyGenerations.toLocaleString()),
+            maxProfiles === null || maxProfiles >= 999
+                ? t.app.plans.features.profiles_unlimited
+                : t.app.plans.features.profiles.replace("{0}", maxProfiles.toLocaleString()),
+            historyRetentionDays >= 3650
+                ? t.app.plans.features.history_unlimited
+                : t.app.plans.features.history.replace("{0}", historyRetentionDays.toLocaleString())
+        ]
+        
+        // Add specific allowed features
+        allowedFeatures.forEach(featureKey => {
+            const localizedKey = (t.app.plans.features as any)[featureKey]
+            if (localizedKey) {
+                features.push(localizedKey)
+            }
+        })
+        
+        return Array.from(new Set(features))
+    }
+
+    const localizedSummary = renderLocalizedSummary()
+    const localizedFeatures = renderLocalizedFeatures()
+
     return (
         <Card className={cn(
             "plan-card-surface relative flex min-h-115 flex-col overflow-hidden p-8 transition-all duration-300", 
@@ -69,10 +111,10 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
                     </div>
                 </div>
 
-                <p className={`mt-5 text-[14px] leading-6 ${mutedTextClass}`}>{plan.summary}</p>
+                <p className={`mt-5 text-[14px] leading-6 ${mutedTextClass}`}>{localizedSummary}</p>
 
                 <ul className="mt-6 space-y-3">
-                    {plan.features.map((feature) => (
+                    {localizedFeatures.map((feature) => (
                         <li key={feature} className={`flex items-start gap-2.5 text-[13px] leading-5 ${featureClass}`}>
                             <Check className={`mt-0.5 h-4 w-4 shrink-0 ${bulletClass}`} />
                             {feature}
@@ -82,7 +124,7 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
 
                 <div className="mt-auto pt-6">
                     <Button
-                        className={cn("w-full", isRecommended && "bg-white !text-[#141824] hover:bg-white/90")}
+                        className={cn("w-full", isRecommended && "!bg-white !text-[#141824] !hover:bg-white/90")}
                         variant={isCurrent ? "secondary" : "primary"}
                         disabled={isCurrent || isUpdating}
                         onClick={() => onSelect(plan.name)}

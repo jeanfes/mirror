@@ -35,27 +35,21 @@ export function LandingHeader() {
                             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border-soft bg-surface-subtle px-3 text-secondary-text transition-all duration-150 hover:bg-surface-hover hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/35 lg:px-4"
                         >
                             <Globe className="h-4 w-4" />
-                            <span className="hidden md:inline text-[12px] font-bold uppercase tracking-wider">{language}</span>
+                            <span className="hidden md:inline text-[12px] font-bold uppercase tracking-wider">{t.header.languages[language as keyof typeof t.header.languages]}</span>
                         </button>
-
+ 
                         <div className="absolute top-full right-0 mt-3 flex w-40 origin-top-right flex-col gap-0.5 rounded-[14px] border border-border-soft bg-surface-solid p-1.5 shadow-premium-lg opacity-0 invisible translate-y-2 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible">
-                            {[
-                                { code: "es", label: "Español" },
-                                { code: "en", label: "English" },
-                                { code: "pt", label: "Português" },
-                                { code: "fr", label: "Français" },
-                                { code: "de", label: "Deutsch" },
-                            ].map((lang) => (
+                            {(["es", "en", "pt", "fr", "de"] as const).map((code) => (
                                 <button
-                                    key={lang.code}
-                                    onClick={() => setLanguage(lang.code as "es" | "en" | "pt" | "fr" | "de")}
-                                    className={`relative flex w-full items-center justify-between rounded-[10px] px-3 py-2 text-[13px] outline-none transition-colors ${language === lang.code
+                                    key={code}
+                                    onClick={() => setLanguage(code)}
+                                    className={`relative flex w-full items-center justify-between rounded-[10px] px-3 py-2 text-[13px] outline-none transition-colors ${language === code
                                             ? "border border-border-light bg-surface-elevated text-primary-dark shadow-premium-sm"
                                             : "border border-transparent bg-transparent text-secondary-text hover:border-border-soft hover:bg-surface-hover hover:text-primary-dark"
                                         }`}
                                 >
-                                    {lang.label}
-                                    {language === lang.code && (
+                                    {t.header.languages[code]}
+                                    {language === code && (
                                         <div className="h-1.5 w-1.5 rounded-full bg-accent-blue shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                                     )}
                                 </button>

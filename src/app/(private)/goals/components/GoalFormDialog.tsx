@@ -29,8 +29,8 @@ const createGoalSchema = (t: Dictionary) => z.object({
   name: z.string().min(2, t.app.goals.nameRequiredError),
   canonicalGoal: z.enum(GOAL_TYPE_OPTIONS),
   description: z.string().max(300).optional(),
-  strategyPrompt: z.string().min(10, "El prompt debe ser más descriptivo").max(1200),
-  scope: z.array(z.enum(PLATFORM_OPTIONS)).min(1, "Selecciona al menos una plataforma"),
+  strategyPrompt: z.string().min(10, t.app.goals.promptMinLengthError).max(1200),
+  scope: z.array(z.enum(PLATFORM_OPTIONS)).min(1, t.app.goals.selectPlatformError),
   active: z.boolean(),
 })
 
@@ -68,7 +68,7 @@ export const GoalFormDialog = memo(function GoalFormDialog({
     { label: t.app.settings.goalChallenge, value: "Challenge" },
     { label: t.app.settings.goalConnect, value: "Networking" },
     { label: t.app.settings.goalQuestion, value: "Question" },
-    { label: t.app.goals.baseObjectiveNames?.["base-upwork-proposal"] ?? "Propuesta", value: "Proposal" }
+    { label: t.app.goals.proposalLabel, value: "Proposal" }
   ], [t])
 
   const platformLabels: Record<PlatformId, string> = {
@@ -125,7 +125,7 @@ export const GoalFormDialog = memo(function GoalFormDialog({
     <Dialog open={open} onOpenChange={(next) => (!next ? onClose() : undefined)}>
       <DialogContent className="w-[min(94vw,760px)] max-h-[90vh] flex flex-col rounded-[28px] border-none bg-surface-overlay-strong p-0 overflow-hidden">
         <DialogDescription className="sr-only">
-          Formulario para crear o editar un objetivo estratégico
+          {t.app.goals.formDescription}
         </DialogDescription>
         <div className="flex flex-col lg:grid lg:grid-cols-[0.92fr_1.08fr] overflow-hidden flex-1">
           <div className="dashboard-dark-panel dashboard-dark-panel-split shrink-0 overflow-hidden md:p-6">

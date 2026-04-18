@@ -124,7 +124,7 @@ export function PaymentMethods({
           if (!onCancelSubscription) return
           try {
             await onCancelSubscription()
-            const dateStr = renewalDate ? format(new Date(renewalDate), "MMM d, yyyy") : "el próximo ciclo"
+            const dateStr = renewalDate ? format(new Date(renewalDate), "MMM d, yyyy") : t.app.billing.nextCycleIndicator
             toast.success(t.app.billing.subscriptionCanceledNotice.replace("{0}", dateStr))
             setShowCancelModal(false)
           } catch {

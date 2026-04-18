@@ -21,6 +21,12 @@ export interface PlanDefinition {
   summary: string
   features: string[]
   recommended?: boolean
+  metadata?: {
+    monthlyGenerations: number
+    maxProfiles: number | null
+    historyRetentionDays: number
+    allowedFeatures: string[]
+  }
 }
 
 export const planDefinitions: PlanDefinition[] = [
@@ -29,13 +35,19 @@ export const planDefinitions: PlanDefinition[] = [
     price: "$0",
     credits: 120,
     summary:
-      "Basic generation access for occasional posting without advanced tuning.",
+      "Free generation access for occasional posting without advanced tuning.",
     features: [
-      "120 monthly generations",
-      "1 basic voice profile",
-      "Standard tone matching",
+      "120 generations / month",
+      "1 free voice profile",
+      "Free configuration",
       "Community support",
     ],
+    metadata: {
+      monthlyGenerations: 120,
+      maxProfiles: 1,
+      historyRetentionDays: 30,
+      allowedFeatures: ["free_config", "community_support"],
+    },
   },
   {
     name: "Pro",
@@ -50,6 +62,18 @@ export const planDefinitions: PlanDefinition[] = [
       "Tone strictness controls",
       "Basic history archive",
     ],
+    metadata: {
+      monthlyGenerations: 1200,
+      maxProfiles: 10,
+      historyRetentionDays: 180,
+      allowedFeatures: [
+        "tone_strictness",
+        "history_archive",
+        "priority_support",
+        "rewrite",
+        "advanced_tone",
+      ],
+    },
   },
 ]
 
@@ -93,6 +117,7 @@ function formatHistoryRetentionFeature(days: number) {
 }
 
 function mapAllowedFeature(rawFeature: string): string {
+  if (rawFeature.toLowerCase() === "basic") return "Base"
   return rawFeature
     .split(/[\s_\-]+/)
     .filter(Boolean)
@@ -127,15 +152,17 @@ export async function getPlanDefinitions(
       continue
     }
 
-    const allowedFeatures = Array.isArray(row.features_allowed)
-      ? row.features_allowed.map(mapAllowedFeature)
+    const rawFeatures = Array.isArray(row.features_allowed)
+      ? row.features_allowed.map(String)
       : []
+    
+    const allowedFeatureNames = rawFeatures.map(mapAllowedFeature)
 
     const features = [
       `${row.monthly_generations.toLocaleString()} monthly generations`,
       formatProfilesFeature(row.max_profiles),
       formatHistoryRetentionFeature(row.max_history_retention_days),
-      ...allowedFeatures,
+      ...allowedFeatureNames,
     ]
 
     let dynamicPrice = PLAN_PRICES[normalizedPlan]
@@ -152,6 +179,12 @@ export async function getPlanDefinitions(
       summary: buildPlanSummary(row),
       features: Array.from(new Set(features)),
       recommended: normalizedPlan === "Pro",
+      metadata: {
+        monthlyGenerations: row.monthly_generations,
+        maxProfiles: row.max_profiles,
+        historyRetentionDays: row.max_history_retention_days,
+        allowedFeatures: rawFeatures,
+      },
     })
   }
 

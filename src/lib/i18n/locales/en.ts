@@ -6,6 +6,13 @@ const en = {
     contact: "Contact",
     login: "Sign in",
     register: "Get Started",
+    languages: {
+      es: "Spanish",
+      en: "English",
+      pt: "Portuguese",
+      fr: "French",
+      de: "German"
+    },
     download: {
       button: "Download",
       availableFor: "Available for",
@@ -42,13 +49,13 @@ const en = {
     title1: "Clear",
     titleSpan: "Pricing",
     subtitle: "Plans designed for you. Start using Mirror for free today and scale when you need to.",
-    freePlan: "Basic Plan",
+    freePlan: "Free Plan",
     freeDesc: "For occasional users and testers",
     perMonth: "/ month",
     freeFeatures: [
       "120 generations per month",
       "1 Active Voice Profile",
-      "Basic settings",
+      "Free configuration",
       "Community support"
     ],
     freeBtn: "Start for Free",
@@ -57,15 +64,6 @@ const en = {
     proDesc: "For growing professionals",
     proBtn: "Choose Pro",
     proFeatures: [
-      "1,200 generations per month",
-      "10 Active Voice Profiles",
-      "Advanced customization controls",
-      "Priority support"
-    ],
-    elitePlan: "Pro Plan",
-    eliteDesc: "For growing professionals",
-    eliteBtn: "Choose Pro",
-    eliteFeatures: [
       "1,200 generations per month",
       "10 Active Voice Profiles",
       "Advanced customization controls",
@@ -168,7 +166,7 @@ const en = {
       },
       {
         q: "Can I try the extension before paying?",
-        a: "Yes! We have a free tier that allows you to generate basic prompts and use 1 Profile..."
+        a: "Yes! We have a free tier that allows you to generate a limited number of prompts and use 1 Profile..."
       },
       {
         q: "Does the AI sound like a robot?",
@@ -303,7 +301,8 @@ const en = {
       globalErrorTitle: "Unexpected error",
       globalErrorDesc: "We couldn't render this view right now. Please try again.",
       tryAgain: "Try again",
-      profileLimitReached: "Profile limit reached"
+      profileLimitReached: "Profile limit reached",
+      profileLimitReachedDesc: "You have reached your plan's profile limit. Upgrade to Pro to create more."
     },
     extensionRedirect: {
       secureConnectionStatus: "Establishing a secure connection...",
@@ -363,7 +362,8 @@ const en = {
       paymentFailedBanner: "There was an issue with your payment. Update your card to keep your active plan.",
       creditsWidgetRenewsAt: "Renews on {0}",
       deleteAccountEmailPlaceholder: "Type your email to confirm",
-      cancelSubscriptionDescription: "If you cancel your subscription, your current plan will be downgraded to Basic at the end of your billing cycle. Are you sure you want to cancel?"
+      cancelSubscriptionDescription: "If you cancel your subscription, your current plan will be downgraded to Free at the end of your billing cycle. Are you sure you want to cancel?",
+      nextCycleIndicator: "the next cycle"
     },
     navigation: {
       profiles: "Profiles",
@@ -423,9 +423,8 @@ const en = {
       title: "Plans",
       heroTitle: "Plans and Subscriptions",
       heroDesc: "Choose the plan that fits your professional needs.",
-      chip1: "Basic",
+      chip1: "Free",
       chip2: "Pro",
-      chip3: "Pro",
       currentSub: "Current subscription",
       renewsOn: "Renews {0}",
       lifetimeAccess: "Lifetime",
@@ -447,7 +446,25 @@ const en = {
       creditsPerMonth: "credits per month",
       updating: "Updating...",
       planUpdated: "Plan updated to {0}",
-      planUpdateError: "Could not update plan"
+      planUpdateError: "Could not update plan",
+      features: {
+        generations: "{0} monthly generations",
+        profiles: "{0} voice profiles",
+        profiles_unlimited: "Unlimited voice profiles",
+        history: "{0} days history retention",
+        history_unlimited: "Unlimited history retention",
+        summary_template: "{0} generations per month with {1}.",
+        summary_profiles_unlimited: "unlimited profiles",
+        summary_profiles_count: "{0} profiles",
+        basic: "Base",
+        advanced_tone: "Advanced Tone",
+        rewrite: "Rewrite",
+        community_support: "Community support",
+        priority_support: "Priority support",
+        tone_strictness: "Tone strictness controls",
+        history_archive: "History archive",
+        free_config: "Free configuration",
+      }
     },
     history: {
       title: "History",
@@ -602,6 +619,8 @@ const en = {
       objectiveGoalLabel: "Objective intent",
       objectiveGoalHelp: "This defines the communication angle used by the assistant.",
       objectiveDescriptionPlaceholder: "Optional description to remember the intent.",
+      formDescription: "Form to create or edit a strategic objective",
+      proposalLabel: "Proposal",
       scopeLabel: "Scope",
       scopeHelp: "Select one or more platforms for this objective.",
       selectAllScope: "Select all",

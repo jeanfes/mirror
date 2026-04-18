@@ -6,6 +6,13 @@ const de = {
     contact: "Kontakt",
     login: "Anmelden",
     register: "Loslegen",
+    languages: {
+      es: "Spanisch",
+      en: "Englisch",
+      pt: "Portugiesisch",
+      fr: "Französisch",
+      de: "Deutsch"
+    },
     download: {
       button: "Herunterladen",
       availableFor: "Verfügbar für",
@@ -42,30 +49,21 @@ const de = {
     title1: "Klare",
     titleSpan: "Preise",
     subtitle: "Pläne, die auf Sie zugeschnitten sind. Nutzen Sie Mirror ab sofort kostenlos und skalieren Sie bei Bedarf.",
-    freePlan: "Basis-Plan",
+    freePlan: "Plan Free",
     freeDesc: "Für gelegentliche Nutzer und Tester",
     perMonth: "/ Monat",
     freeFeatures: [
       "120 Generationen pro Monat",
       "1 aktives Sprachprofil",
-      "Basiseinstellungen",
+      "Kostenlose Konfiguration",
       "Community-Support"
     ],
-    freeBtn: "Kostenlos starten",
+    freeBtn: "Free starten",
     popular: "Am beliebtesten",
     proPlan: "Pro-Plan",
     proDesc: "Für wachsende Profis",
     proBtn: "Pro wählen",
     proFeatures: [
-      "1.200 Generationen pro Monat",
-      "10 aktive Sprachprofile",
-      "Fortgeschrittene Anpassungssteuerung",
-      "Prioritärer Support"
-    ],
-    elitePlan: "Pro-Plan",
-    eliteDesc: "Für wachsende Profis",
-    eliteBtn: "Pro wählen",
-    eliteFeatures: [
       "1.200 Generationen pro Monat",
       "10 aktive Sprachprofile",
       "Fortgeschrittene Anpassungssteuerung",
@@ -168,7 +166,7 @@ const de = {
       },
       {
         q: "Kann ich die Erweiterung vor dem Kauf testen?",
-        a: "Ja! Wir haben einen kostenlosen Plan, mit dem Sie eine grundlegende Anzahl von Prompts generieren und 1 Profil nutzen können..."
+        a: "Ja! Wir haben einen kostenlosen Plan, mit dem Sie eine begrenzte Anzahl von Prompts generieren und 1 Profil nutzen können..."
       },
       {
         q: "Klingt die KI wie ein Roboter?",
@@ -303,7 +301,8 @@ const de = {
       globalErrorTitle: "Unerwarteter Fehler",
       globalErrorDesc: "Diese Ansicht konnte gerade nicht gerendert werden. Bitte erneut versuchen.",
       tryAgain: "Erneut versuchen",
-      profileLimitReached: "Profil-Limit erreicht"
+      profileLimitReached: "Profil-Limit erreicht",
+      profileLimitReachedDesc: "Sie haben das Profil-Limit Ihres Plans erreicht. Wechseln Sie zu Pro, um mehr zu erstellen."
     },
     extensionRedirect: {
       secureConnectionStatus: "Sichere Verbindung wird aufgebaut...",
@@ -363,7 +362,8 @@ const de = {
       paymentFailedBanner: "Problem mit Ihrer Zahlung. Karte aktualisieren, um Plan aktiv zu halten.",
       creditsWidgetRenewsAt: "Erneuert am {0}",
       deleteAccountEmailPlaceholder: "E-Mail zur Bestätigung eingeben",
-      cancelSubscriptionDescription: "Bei einer Kündigung wird Ihr Plan zum Ende des Abrechnungszeitraums auf 'Basis' herabgestuft. Sicher, dass Sie kündigen möchten?"
+      cancelSubscriptionDescription: "Bei einer Kündigung wird Ihr Plan zum Ende des Abrechnungszeitraums auf 'Kostenlos' herabgestuft. Sicher, dass Sie kündigen möchten?",
+      nextCycleIndicator: "den nächsten Zyklus"
     },
     navigation: {
       profiles: "Profile",
@@ -423,9 +423,8 @@ const de = {
       title: "Pläne",
       heroTitle: "Pläne und Abos",
       heroDesc: "Wählen Sie den Plan, der zu Ihren Bedürfnissen passt.",
-      chip1: "Basic",
+      chip1: "Free",
       chip2: "Pro",
-      chip3: "Pro",
       currentSub: "Aktuelles Abo",
       renewsOn: "Erneuert am {0}",
       lifetimeAccess: "Lebenslang",
@@ -447,7 +446,25 @@ const de = {
       creditsPerMonth: "Credits pro Monat",
       updating: "Wird aktualisiert...",
       planUpdated: "Plan auf {0} aktualisiert",
-      planUpdateError: "Plan-Update fehlgeschlagen"
+      planUpdateError: "Plan-Update fehlgeschlagen",
+      features: {
+        generations: "{0} Generationen pro Monat",
+        profiles: "{0} Stimmprofile",
+        profiles_unlimited: "Unbegrenzte Stimmprofile",
+        history: "{0} Tage Historienaufbewahrung",
+        history_unlimited: "Unbegrenzte Historienaufbewahrung",
+        summary_template: "{0} Generationen pro Monat mit {1}.",
+        summary_profiles_unlimited: "unbegrenzten Profilen",
+        summary_profiles_count: "{0} Profilen",
+        basic: "Basis",
+        advanced_tone: "Erweiterter Ton",
+        rewrite: "Umschreiben",
+        community_support: "Community-Support",
+        priority_support: "Priorisierter Support",
+        tone_strictness: "Kontrollen für Tongenauigkeit",
+        history_archive: "Historien-Archiv",
+        free_config: "Basis-Konfiguration",
+      }
     },
     history: {
       title: "Verlauf",
@@ -602,6 +619,8 @@ const de = {
       objectiveGoalLabel: "Absicht des Ziels",
       objectiveGoalHelp: "Definiert den Kommunikationswinkel des Assistenten.",
       objectiveDescriptionPlaceholder: "Optionale Beschreibung der Absicht.",
+      formDescription: "Formular zum Erstellen oder Bearbeiten eines strategischen Ziels",
+      proposalLabel: "Vorschlag",
       scopeLabel: "Bereich",
       scopeHelp: "Wählen Sie eine oder mehrere Plattformen.",
       selectAllScope: "Alle wählen",

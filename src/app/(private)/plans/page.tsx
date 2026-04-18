@@ -73,10 +73,6 @@ export default function PlansPage() {
                                 <Layers3 className="h-4 w-4 text-primary-text" />
                                 {t.app.plans.chip2}
                             </div>
-                            <div className="workspace-hero-chip">
-                                <Zap className="h-4 w-4 text-primary-text" />
-                                {t.app.plans.chip3}
-                            </div>
                         </div>
                     </div>
 

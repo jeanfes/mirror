@@ -53,7 +53,7 @@ export function PricingCard({ plan, href, perMonthText, popularText }: PricingCa
             <div>
                 <Link 
                     href={href} 
-                    className={`${isPro ? "bg-white !text-[#141824] shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl transition-all duration-200 hover:opacity-90`}
+                    className={`${isPro ? "!bg-white !text-[#141824] shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl transition-all duration-200 hover:opacity-90`}
                 >
                     {plan.buttonText}
                 </Link>

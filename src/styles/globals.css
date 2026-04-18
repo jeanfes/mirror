@@ -332,19 +332,19 @@ h6 {
 .neo-btn-primary {
   cursor: pointer;
   color: var(--button-primary-text);
-  background: var(--button-primary-bg);
+  background-color: var(--button-primary-bg);
   border: 1px solid var(--button-primary-border);
   border-radius: 12px;
   transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
 .neo-btn-primary:hover {
-  background: var(--button-primary-hover-bg);
+  background-color: var(--button-primary-hover-bg);
 }
 
 .neo-btn-muted {
   cursor: pointer;
-  background: var(--button-secondary-bg);
+  background-color: var(--button-secondary-bg);
   border: 1px solid var(--button-secondary-border);
   border-radius: 12px;
   color: var(--button-secondary-text);
@@ -352,12 +352,12 @@ h6 {
 }
 
 .neo-btn-muted:hover {
-  background: var(--button-secondary-hover-bg);
+  background-color: var(--button-secondary-hover-bg);
 }
 
 .neo-btn-danger-soft {
   cursor: pointer;
-  background: var(--button-danger-soft-bg);
+  background-color: var(--button-danger-soft-bg);
   border: 1px solid var(--button-danger-soft-border);
   border-radius: 12px;
   color: var(--button-danger-soft-text);
@@ -365,7 +365,7 @@ h6 {
 }
 
 .neo-btn-danger-soft:hover {
-  background: var(--button-danger-soft-hover-bg);
+  background-color: var(--button-danger-soft-hover-bg);
   border-color: var(--danger-soft-border);
   color: var(--danger);
 }
