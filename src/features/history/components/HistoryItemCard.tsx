@@ -2,12 +2,12 @@
 
 import { memo, useState } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { Copy, MessageSquareQuote, Trash2 } from "lucide-react"
+import { Copy, MessageSquareQuote, Trash2, ThumbsUp, ThumbsDown, Check } from "lucide-react"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { Select } from "@/components/ui/Select"
 import { Textarea } from "@/components/ui/Textarea"
 import { Tooltip } from "@/components/ui/Tooltip"
+import { cn } from "@/lib/utils"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { GenerationHistory } from "@/types/database.types"
 
@@ -31,7 +31,6 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     onUpdateFeedback
 }: HistoryItemCardProps) {
     const { t } = useLanguageStore()
-    const [likedValue, setLikedValue] = useState<string>(item.liked === true ? "true" : item.liked === false ? "false" : "")
     const [feedbackValue, setFeedbackValue] = useState<string>(item.feedbackNote ?? "")
 
     const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
@@ -48,28 +47,26 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     }
 
     const statusMeta = { label: t.app.history.applied, className: "badge-success" }
-    const likedOptions = [
-        { label: t.app.historyItem.feedbackNoRating, value: "" },
-        { label: "👍", value: "true" },
-        { label: "👎", value: "false" }
-    ]
-
-    const hasPendingFeedbackChanges =
-        (item.liked === true ? "true" : item.liked === false ? "false" : "") !== likedValue ||
-        (item.feedbackNote ?? "") !== feedbackValue
 
     const [prevItem, setPrevItem] = useState(item)
 
     if (item.liked !== prevItem.liked || item.feedbackNote !== prevItem.feedbackNote) {
         setPrevItem(item)
-        setLikedValue(item.liked === true ? "true" : item.liked === false ? "false" : "")
         setFeedbackValue(item.feedbackNote ?? "")
     }
 
-    const handleSaveFeedback = () => {
+    const handleUpdateLiked = (liked: boolean | null) => {
         onUpdateFeedback({
             id: item.id,
-            liked: likedValue ? likedValue === "true" : null,
+            liked,
+            feedbackNote: feedbackValue.trim() ? feedbackValue.trim() : null
+        })
+    }
+
+    const handleSaveNote = () => {
+        onUpdateFeedback({
+            id: item.id,
+            liked: item.liked,
             feedbackNote: feedbackValue.trim() ? feedbackValue.trim() : null
         })
     }
@@ -124,35 +121,58 @@ export const HistoryItemCard = memo(function HistoryItemCard({
                 </div>
 
                 <div className="mt-4 rounded-3xl border border-border-soft bg-surface-card p-4">
-                    <div className="grid gap-3">
-                        <Select
-                            label={t.app.historyItem.feedbackRatingLabel}
-                            value={likedValue}
-                            onChange={setLikedValue}
-                            options={likedOptions}
-                            placeholder={t.app.historyItem.feedbackNoRating}
-                        />
+                    <div className="flex items-center justify-between">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-secondary-text">
+                            {t.app.historyItem.feedbackRatingLabel}
+                        </p>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleUpdateLiked(item.liked === true ? null : true)}
+                                className={cn(
+                                    "flex h-10 w-12 items-center justify-center rounded-2xl border transition-all duration-200",
+                                    item.liked === true
+                                        ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500 shadow-sm"
+                                        : "border-border-soft bg-surface-elevated text-secondary-text hover:border-border-medium hover:text-primary-text"
+                                )}
+                            >
+                                <ThumbsUp className="h-4 w-4" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleUpdateLiked(item.liked === false ? null : false)}
+                                className={cn(
+                                    "flex h-10 w-12 items-center justify-center rounded-2xl border transition-all duration-200",
+                                    item.liked === false
+                                        ? "border-red-500/50 bg-red-500/10 text-red-500 shadow-sm"
+                                        : "border-border-soft bg-surface-elevated text-secondary-text hover:border-border-medium hover:text-primary-text"
+                                )}
+                            >
+                                <ThumbsDown className="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="mt-3">
+                    <div className="mt-4 flex gap-2">
                         <Textarea
-                            label={t.app.historyItem.feedbackNoteLabel}
-                            className="min-h-21.5"
                             placeholder={t.app.historyItem.feedbackNotePlaceholder}
+                            className="min-h-[80px] flex-1"
                             value={feedbackValue}
                             onChange={(event) => setFeedbackValue(event.target.value)}
                         />
-                    </div>
-
-                    <div className="mt-3 flex justify-end">
-                        <Button
+                        <button
                             type="button"
-                            variant="secondary"
-                            onClick={handleSaveFeedback}
-                            disabled={!hasPendingFeedbackChanges}
+                            onClick={handleSaveNote}
+                            disabled={(item.feedbackNote ?? "") === feedbackValue.trim()}
+                            className={cn(
+                                "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl transition-all duration-200",
+                                (item.feedbackNote ?? "") !== feedbackValue.trim()
+                                    ? "bg-accent-purple text-white shadow-premium-sm"
+                                    : "bg-surface-elevated text-white/20"
+                            )}
                         >
-                            {t.app.historyItem.feedbackSaveAction}
-                        </Button>
+                            <Check className="h-4 w-4" />
+                        </button>
                     </div>
                 </div>
 

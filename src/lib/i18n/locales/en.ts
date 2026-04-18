@@ -302,7 +302,8 @@ const en = {
       working: "Working...",
       globalErrorTitle: "Unexpected error",
       globalErrorDesc: "We couldn't render this view right now. Please try again.",
-      tryAgain: "Try again"
+      tryAgain: "Try again",
+      profileLimitReached: "Profile limit reached"
     },
     extensionRedirect: {
       secureConnectionStatus: "Establishing a secure connection...",

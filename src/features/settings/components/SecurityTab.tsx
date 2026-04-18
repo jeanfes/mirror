@@ -10,27 +10,43 @@ interface SecurityTabProps {
   onUpdatePassword: () => void
   title: string
   description: string
+  provider?: string
 }
 
 export const SecurityTab = memo(function SecurityTab({
   onUpdatePassword,
   title,
-  description
+  description,
+  provider
 }: SecurityTabProps) {
   const { t } = useLanguageStore()
+  const isGoogleUser = provider === "google"
 
   return (
     <div className="mt-0 space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
       <SectionHeader title={title} description={description} />
       <Card className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Shield className="h-5 w-5" /></div>
+          <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+            <Shield className="h-5 w-5" />
+          </div>
           <div>
             <p className="text-sm font-bold text-primary-text">{t.app.settingsModal.masterPassword}</p>
-            <p className="text-[10px] text-secondary-text uppercase">{t.app.settingsModal.lastUpdated}</p>
+            {isGoogleUser ? (
+              <p className="text-[11px] text-success font-medium flex items-center gap-1.5 mt-0.5">
+                <span className="flex h-1.5 w-1.5 rounded-full bg-success" />
+                Gestionado por Google
+              </p>
+            ) : (
+              <p className="text-[10px] text-secondary-text uppercase">{t.app.settingsModal.lastUpdated}</p>
+            )}
           </div>
         </div>
-        <Button variant="secondary" onClick={onUpdatePassword}>{t.app.settingsModal.update}</Button>
+        {!isGoogleUser && (
+          <Button variant="secondary" onClick={onUpdatePassword}>
+            {t.app.settingsModal.update}
+          </Button>
+        )}
       </Card>
     </div>
   )

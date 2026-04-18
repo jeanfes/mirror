@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Card } from "@/components/ui/Card"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
@@ -17,6 +17,7 @@ import { createClient } from "@/lib/supabase/client"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { useProfilesUIStore } from "@/store/useProfilesUIStore"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { useAccount } from "@/features/billing/hooks/useAccount"
 
 export default function ProfilesPage() {
     const router = useRouter()
@@ -32,6 +33,7 @@ export default function ProfilesPage() {
         deleteProfile,
         isMutating
     } = useProfiles()
+    const { quota } = useAccount()
 
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
 
@@ -39,7 +41,6 @@ export default function ProfilesPage() {
     const [isExporting, setIsExporting] = useState(false)
     const { t } = useLanguageStore()
     const supabase = createClient()
-    const showLoading = useLoadingDelay(isLoading)
 
     const deleteTarget = useMemo(
         () => (profiles ? (profiles.find((p) => p.id === deleteTargetId) ?? null) : null),
@@ -62,14 +63,14 @@ export default function ProfilesPage() {
             return
         }
 
-        if (isLoading || showLoading || isDialogOpen) {
+        if (isLoading || isDialogOpen) {
             return
         }
 
         pendingCreateFromQueryRef.current = false
         openCreateDialog()
         router.replace("/profiles")
-    }, [isDialogOpen, isLoading, openCreateDialog, router, showLoading])
+    }, [isDialogOpen, isLoading, openCreateDialog, router])
 
     const handleSubmit = async (values: CreateProfileInput, profileId?: string) => {
         try {
@@ -82,7 +83,11 @@ export default function ProfilesPage() {
             }
 
             closeDialog()
-        } catch {
+        } catch (error: unknown) {
+            if ((error as { message?: string })?.message?.includes("profile_limit_reached")) {
+                toast.error(t.app.common.profileLimitReached ?? "Has alcanzado el límite de perfiles de tu plan. Pásate a Pro para crear más.")
+                return
+            }
             toast.error(t.app.common.profileSaveError)
         }
     }
@@ -158,7 +163,7 @@ export default function ProfilesPage() {
         }
     }
 
-    if (showLoading) {
+    if (isLoading || !profiles) {
         return <LoadingOverlay show={true} />
     }
 
@@ -210,7 +215,12 @@ export default function ProfilesPage() {
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">{t.app.profiles.profileCoverage}</p>
-                                <p className="mt-2 text-3xl font-black tracking-[-0.04em]">{list.length}</p>
+                                <p className="mt-2 text-3xl font-black tracking-[-0.04em]">
+                                    {list.length}
+                                    {quota && (
+                                        <span className="text-xl text-white/40 ml-1.5 font-bold">/ {quota.max_profiles ?? "∞"}</span>
+                                    )}
+                                </p>
                             </div>
                             <div className="flex items-center gap-2">
                                 {list.length > 0 && (
@@ -219,7 +229,11 @@ export default function ProfilesPage() {
                                         {t.app.settingsModal.tabExport}
                                     </Button>
                                 )}
-                                <Button onClick={openCreateDialog} className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft">
+                                <Button 
+                                    onClick={openCreateDialog} 
+                                    className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft disabled:opacity-50"
+                                    disabled={quota ? list.length >= (quota.max_profiles ?? 999) : false}
+                                >
                                     <Plus className="h-4 w-4" />
                                     {t.app.profiles.newProfile}
                                 </Button>
@@ -297,6 +311,7 @@ export default function ProfilesPage() {
                 isPending={isMutating}
                 onClose={closeDialog}
                 onSubmit={handleSubmit}
+                quota={quota}
             />
 
             <ConfirmDialog

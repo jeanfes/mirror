@@ -3,7 +3,7 @@
 import { format } from "date-fns"
 import { Crown, Gauge, Layers3, Zap } from "lucide-react"
 import { toast } from "sonner"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { PlanCard } from "@/features/billing/components/PlanCard"
@@ -17,8 +17,6 @@ export default function PlansPage() {
     const { data: fetchedPlanDefinitions } = usePlanDefinitions()
     const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
     const { t } = useLanguageStore()
-    const showLoading = useLoadingDelay(isLoading || !account)
-
     const handleSelectPlan = async (planName: "Free" | "Pro" | "Elite") => {
         try {
             const checkoutUrl = await startCheckout(planName)
@@ -28,11 +26,11 @@ export default function PlansPage() {
         }
     }
 
-    if (showLoading) {
+    if (isLoading || !account) {
         return <LoadingOverlay show={true} />
     }
 
-    if (isError || !account) {
+    if (isError) {
         return (
             <StatePanel
                 tone="error"
@@ -43,10 +41,10 @@ export default function PlansPage() {
     }
 
     const resolvedAccount = account!
+    const userQuota = resolvedAccount.quota
 
-    const currentPlanDefinition = resolvedPlanDefinitions.find((plan) => plan.name === resolvedAccount.plan)
-    const monthlyUsagePercent = currentPlanDefinition
-        ? Math.max(0, Math.min(100, Math.round((resolvedAccount.creditsRemaining / currentPlanDefinition.credits) * 100)))
+    const monthlyUsagePercent = userQuota
+        ? Math.max(0, Math.min(100, Math.round((resolvedAccount.creditsRemaining / userQuota.monthly_generations) * 100)))
         : 0
 
     return (

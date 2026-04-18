@@ -302,7 +302,8 @@ const fr = {
       working: "Traitement...",
       globalErrorTitle: "Erreur inattendue",
       globalErrorDesc: "Impossible d'afficher cette vue pour le moment. Veuillez réessayer.",
-      tryAgain: "Réessayer"
+      tryAgain: "Réessayer",
+      profileLimitReached: "Limite de profils atteint"
     },
     extensionRedirect: {
       secureConnectionStatus: "Établissement d'une connexion sécurisée...",

@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import {
   Bell,
   Download,
+  LifeBuoy,
   LogOut,
   Shield,
   Settings,
@@ -42,6 +43,7 @@ import { AppearanceTab } from "@/features/settings/components/AppearanceTab"
 import { SecurityTab } from "@/features/settings/components/SecurityTab"
 import { NotificationsTab } from "@/features/settings/components/NotificationsTab"
 import { DataTab } from "@/features/settings/components/DataTab"
+import { ContactSupportModal } from "@/features/contact/components/ContactSupportModal"
 
 interface SettingsModalProps {
   children: React.ReactNode
@@ -51,6 +53,7 @@ interface SettingsModalProps {
     name: string
     email: string
     avatar?: string
+    provider?: string
   }
 }
 
@@ -218,7 +221,18 @@ const SettingsModal = memo(function SettingsModal({
                       <LogOut className="h-4 w-4 stroke-[2.2]" />
                       <span>{isLogoutPending ? t.app.settingsModal.loggingOut : t.app.settingsModal.logOut}</span>
                     </Button>
-                    <p className="pt-4 text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.0</p>
+                    <div className="pt-4 flex items-center justify-between">
+                      <p className="text-[10px] font-bold text-secondary-text uppercase tracking-widest opacity-50">v1.0.0</p>
+                      <ContactSupportModal>
+                        <button
+                          className="h-6 w-6 rounded-md flex items-center justify-center text-secondary-text hover:text-primary-dark hover:bg-surface-hover transition-colors"
+                          aria-label={t.footer.helpCenter}
+                          title={t.footer.helpCenter}
+                        >
+                          <LifeBuoy className="h-4 w-4" />
+                        </button>
+                      </ContactSupportModal>
+                    </div>
                   </div>
                 </TabsList>
               </aside>
@@ -265,6 +279,7 @@ const SettingsModal = memo(function SettingsModal({
                       onUpdatePassword={() => setIsChangePasswordOpen(true)}
                       title={t.app.settingsModal.securityTitle}
                       description={t.app.settingsModal.securityDesc}
+                      provider={user.provider}
                     />
                   )}
                 </TabsContent>

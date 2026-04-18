@@ -18,9 +18,10 @@ import {
 
 interface ContactFormProps {
     t: Dictionary;
+    hideBackground?: boolean;
 }
 
-export function ContactForm({ t }: ContactFormProps) {
+export function ContactForm({ t, hideBackground }: ContactFormProps) {
     const schema = useMemo(
         () =>
             createContactFormSchema({
@@ -111,7 +112,7 @@ export function ContactForm({ t }: ContactFormProps) {
     });
 
     return (
-        <div className="neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative">
+        <div className={hideBackground ? "w-full max-w-2xl mx-auto" : "neo-panel max-w-2xl mx-auto rounded-3xl p-8 sm:p-12 text-left shadow-premium-md relative"}>
             <form className="space-y-6" onSubmit={onSubmit} noValidate aria-busy={isSubmitting}>
                 <div className="grid gap-6 sm:grid-cols-2">
                     <Input

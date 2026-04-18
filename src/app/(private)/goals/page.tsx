@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/DropdownMenu"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { useHistory } from "@/features/history/hooks/useHistory"
@@ -46,7 +46,6 @@ export default function GoalsPage() {
     const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
     const { data: history } = useHistory()
     const { t } = useLanguageStore()
-    const showLoading = useLoadingDelay(isLoading)
 
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingGoal, setEditingGoal] = useState<ObjectiveProfile | null>(null)
@@ -252,8 +251,13 @@ export default function GoalsPage() {
         }
     }
 
-    if (showLoading) return <LoadingOverlay show={true} />
-    if (isError || !settings) return <StatePanel tone="error" title={t.app.common.accountErrorTitle} description={t.app.common.accountErrorDesc} />
+    if (isLoading || !settings) {
+        return <LoadingOverlay show={true} />
+    }
+
+    if (isError) {
+        return <StatePanel tone="error" title={t.app.common.accountErrorTitle} description={t.app.common.accountErrorDesc} />
+    }
 
     return (
         <div className="w-full space-y-8 pb-20">

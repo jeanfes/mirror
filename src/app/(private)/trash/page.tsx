@@ -8,7 +8,7 @@ import { ArchiveRestore, Trash2, Undo2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useTrash } from "@/features/trash/hooks/useTrash"
 import type { TrashItem } from "@/features/trash/services/trash.service"
@@ -100,7 +100,6 @@ export default function TrashPage() {
     isMutating,
   } = useTrash()
   const { t, language } = useLanguageStore()
-  const showLoading = useLoadingDelay(isLoading)
   const items = useMemo<TrashItem[]>(() => data ?? [], [data])
 
   const summary = useMemo(() => {
@@ -132,7 +131,6 @@ export default function TrashPage() {
     }
   }
 
-  // Optimized batch restore from hook
   const handleRestoreAll = async () => {
     if (items.length === 0) return
     try {
@@ -145,7 +143,9 @@ export default function TrashPage() {
     }
   }
 
-  if (showLoading) return <LoadingOverlay show={true} />
+  if (isLoading || !data) {
+    return <LoadingOverlay show={true} />
+  }
 
   if (isError) {
     return (

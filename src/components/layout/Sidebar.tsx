@@ -15,7 +15,7 @@ const SettingsModal = dynamic(() => import("./SettingsModal"), {
 })
 
 interface SidebarProps {
-    user: { name: string; email: string; avatar?: string }
+    user: { name: string; email: string; avatar?: string; provider?: string }
 }
 
 export function Sidebar({ user }: SidebarProps) {

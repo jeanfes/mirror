@@ -302,7 +302,8 @@ const de = {
       working: "In Arbeit...",
       globalErrorTitle: "Unerwarteter Fehler",
       globalErrorDesc: "Diese Ansicht konnte gerade nicht geladen werden. Bitte erneut versuchen.",
-      tryAgain: "Erneut versuchen"
+      tryAgain: "Erneut versuchen",
+      profileLimitReached: "Profil-Limit erreicht"
     },
     extensionRedirect: {
       secureConnectionStatus: "Sichere Verbindung wird hergestellt...",

@@ -16,6 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     name: user.user_metadata?.name ?? "",
     email: user.email ?? "",
     avatar: user.user_metadata?.avatar_url ?? user.user_metadata?.picture ?? "",
+    provider: user.app_metadata?.provider ?? "email",
   }
 
   return (

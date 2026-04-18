@@ -302,7 +302,8 @@ const pt = {
       working: "Processando...",
       globalErrorTitle: "Erro inesperado",
       globalErrorDesc: "Não foi possível renderizar esta tela agora. Tente novamente.",
-      tryAgain: "Tentar novamente"
+      tryAgain: "Tentar novamente",
+      profileLimitReached: "Limite de perfis alcançado"
     },
     extensionRedirect: {
       secureConnectionStatus: "Estabelecendo conexão segura...",

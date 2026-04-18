@@ -5,8 +5,8 @@ import { z } from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Lightbulb } from "lucide-react"
-import type { VoiceProfile } from "@/types/database.types"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
+import type { VoiceProfile, PlanQuotasRow } from "@/types/database.types"
 import { Button } from "@/components/ui/Button"
 import { Toggle } from "@/components/ui/Toggle"
 import { Input } from "@/components/ui/Input"
@@ -30,7 +30,6 @@ const createProfileSchema = (t: Dictionary) => z.object({
   personaBio: z.string().min(8, t.app.profileForm.errors.descRequired),
   expertiseTopics: z.string().min(2, t.app.profileForm.errors.descRequired),
   personalityTraits: z.string().min(2, t.app.profileForm.errors.descRequired),
-  writingTraits: z.string().optional(),
   vocabularyLevel: z.string().optional(),
   example1: z.string().min(6, t.app.profileForm.errors.exampleMin),
   example2: z.string().min(6, t.app.profileForm.errors.exampleMin),
@@ -50,6 +49,7 @@ interface ProfileFormDialogProps {
     values: CreateProfileInput,
     profileId?: string
   ) => Promise<void>
+  quota?: PlanQuotasRow
 }
 
 function parseCommaSeparated(value: string): string[] {
@@ -59,23 +59,6 @@ function parseCommaSeparated(value: string): string[] {
     .filter((item) => item.length > 0)
 }
 
-function parseWritingTraits(value: string | undefined): Record<string, unknown> {
-  const normalized = (value ?? "").trim()
-  if (!normalized) {
-    return {}
-  }
-
-  try {
-    const parsed = JSON.parse(normalized)
-    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-      return parsed as Record<string, unknown>
-    }
-  } catch {
-    // Keep graceful fallback to avoid blocking the submit flow.
-  }
-
-  return {}
-}
 
 function normalizeVocabularyLevel(value: string | undefined): CreateProfileInput["vocabularyLevel"] {
   return value === "simple" || value === "conversational" || value === "technical" || value === "academic"
@@ -90,7 +73,6 @@ const defaults: ProfileFormValues = {
   personaBio: "",
   expertiseTopics: "",
   personalityTraits: "",
-  writingTraits: "",
   vocabularyLevel: "",
   example1: "",
   example2: "",
@@ -130,9 +112,6 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
         personaBio: profile.personaBio,
         expertiseTopics: profile.expertiseTopics.join(", "),
         personalityTraits: profile.personalityTraits.join(", "),
-        writingTraits: Object.keys(profile.writingTraits).length
-          ? JSON.stringify(profile.writingTraits, null, 2)
-          : "",
         vocabularyLevel: profile.vocabularyLevel ?? "",
         example1: profile.examples[0] ?? "",
         example2: profile.examples[1] ?? "",
@@ -151,12 +130,21 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
       personaBio: values.personaBio.trim(),
       expertiseTopics: parseCommaSeparated(values.expertiseTopics),
       personalityTraits: parseCommaSeparated(values.personalityTraits),
-      writingTraits: parseWritingTraits(values.writingTraits),
       vocabularyLevel: normalizeVocabularyLevel(values.vocabularyLevel)
     }
 
-    await onSubmit(payload, profile?.id)
-    reset(defaults)
+    try {
+      await onSubmit(payload, profile?.id)
+      reset(defaults)
+    } catch (error: unknown) {
+      const err = error as { message?: string }
+      if (err?.message?.includes("profile_limit_reached")) {
+        // We let the parent handle the toast specifically if needed, 
+        // but adding local feedback or specific error state could go here.
+        throw error
+      }
+      throw error
+    }
   })
 
   return (
@@ -254,13 +242,6 @@ export const ProfileFormDialog = memo(function ProfileFormDialog({
                   {...register("personalityTraits")}
                 />
 
-                <Textarea
-                  label="Writing traits JSON (optional)"
-                  placeholder='{"sentence_length":"short","opener_style":"question"}'
-                  rows={3}
-                  error={errors.writingTraits?.message}
-                  {...register("writingTraits")}
-                />
 
                 <div className="w-full space-y-2 group">
                   <div className="flex items-center justify-between">

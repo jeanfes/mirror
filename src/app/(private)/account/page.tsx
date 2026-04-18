@@ -6,7 +6,7 @@ import dynamic from "next/dynamic"
 import { useMemo, useState } from "react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
@@ -47,7 +47,6 @@ export default function AccountPage() {
   // ─────────────────────────────────────────────────────────────────────────────
 
   const { t } = useLanguageStore()
-  const showLoading = useLoadingDelay(isAccountLoading || !account)
 
   const stats = useMemo(() => {
     if (!account) return null
@@ -94,19 +93,18 @@ export default function AccountPage() {
     }
   }, [account, history, profiles, resolvedPlanDefinitions])
 
-  if (showLoading) return <LoadingOverlay show={true} />
-
   if (isAccountLoading || !account || !stats) {
-    if (isError) {
-      return (
-        <StatePanel
-          tone="error"
-          title={t.app.common.accountErrorTitle}
-          description={t.app.common.accountErrorDesc}
-        />
-      )
-    }
-    return null
+    return <LoadingOverlay show={true} />
+  }
+
+  if (isError) {
+    return (
+      <StatePanel
+        tone="error"
+        title={t.app.common.accountErrorTitle}
+        description={t.app.common.accountErrorDesc}
+      />
+    )
   }
 
   const {

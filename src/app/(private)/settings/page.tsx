@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { Select } from "@/components/ui/Select"
 import { Toggle } from "@/components/ui/Toggle"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
@@ -74,7 +74,6 @@ export default function SettingsPage() {
     const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
     const { data: profiles } = useProfiles()
     const { setLanguage: setAppLanguage, t } = useLanguageStore()
-    const showLoading = useLoadingDelay(isLoading)
     const [draft, setDraft] = useState<UpdateUserSettingsInput | null>(null)
     const draftRef = useRef<UpdateUserSettingsInput | null>(null)
     const saveTimeoutRef = useRef<number | null>(null)
@@ -192,7 +191,7 @@ export default function SettingsPage() {
 
 
 
-    if (showLoading) {
+    if (isLoading || !settings) {
         return <LoadingOverlay show={true} />
     }
 

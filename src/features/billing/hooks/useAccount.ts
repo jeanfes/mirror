@@ -26,6 +26,7 @@ const supabase = createClient()
   return {
     ...query,
     isLoading: query.isPending || (query.isFetching && !query.data) || isAuthenticating,
+    quota: query.data?.quota,
     startCheckout: mutation.mutateAsync,
     isMutating: mutation.isPending,
     isUpdatingPlan: mutation.isPending

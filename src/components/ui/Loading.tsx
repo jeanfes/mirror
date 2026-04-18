@@ -1,30 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect } from "react"
 import { useLoadingStore } from "@/store/useLoadingStore"
-
-const LOADING_MIN_DISPLAY_MS = 150
-
-export function useLoadingDelay(active: boolean, delayMs = LOADING_MIN_DISPLAY_MS) {
-    const [visible, setVisible] = useState(false)
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-    useEffect(() => {
-        if (timerRef.current) clearTimeout(timerRef.current)
-
-        if (active) {
-            timerRef.current = setTimeout(() => setVisible(true), 50)
-        } else {
-            timerRef.current = setTimeout(() => setVisible(false), delayMs)
-        }
-
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current)
-        }
-    }, [active, delayMs])
-
-    return visible
-}
 
 export function LoadingOverlay({ show, label = "Cargando..." }: { show: boolean, label?: string }) {
     const setIsPageLoading = useLoadingStore((state) => state.setIsPageLoading)

@@ -8,7 +8,6 @@ export interface VoiceProfileRow {
   persona_bio: string | null
   expertise_topics: string[] | null
   personality_traits: string[] | null
-  writing_traits: Record<string, unknown> | null
   vocabulary_level: string | null
   preferred_phrases: string[] | null
   banned_phrases: string[] | null
@@ -129,7 +128,6 @@ export interface VoiceProfile {
   personaBio: string
   expertiseTopics: string[]
   personalityTraits: string[]
-  writingTraits: Record<string, unknown>
   vocabularyLevel: VocabularyLevel | null
   preferredPhrases: string[]
   bannedPhrases: string[]
@@ -168,6 +166,7 @@ export interface UserAccount {
   renewalDate: string | null
   subscriptionStatus: string | null
   lastGenerationAt: string | null
+  quota?: PlanQuotasRow
 }
 
 

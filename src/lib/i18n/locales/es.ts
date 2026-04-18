@@ -302,7 +302,8 @@ const es = {
       working: "Trabajando...",
       globalErrorTitle: "Ocurrió un error inesperado",
       globalErrorDesc: "No pudimos renderizar esta vista en este momento. Intenta nuevamente.",
-      tryAgain: "Reintentar"
+      tryAgain: "Reintentar",
+      profileLimitReached: "Límite de perfiles alcanzado"
     },
     extensionRedirect: {
       secureConnectionStatus: "Estableciendo conexión segura...",

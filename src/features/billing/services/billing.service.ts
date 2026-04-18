@@ -268,15 +268,15 @@ export async function getAccount(
   supabase: SupabaseClient,
   userId: string
 ): Promise<UserAccount> {
-  const { data, error } = await supabase
+  const { data: accountRow, error: accountError } = await supabase
     .from("user_account")
     .select(USER_ACCOUNT_SELECT_COLUMNS)
     .eq("user_id", userId)
     .maybeSingle()
 
-  if (error) throw error
+  if (accountError) throw accountError
 
-  if (!data) {
+  if (!accountRow) {
     return {
       plan: "Free",
       creditsRemaining: 0,
@@ -287,7 +287,20 @@ export async function getAccount(
     }
   }
 
-  return mapRowToAccountStatus(data as UserAccountRow)
+  const account = mapRowToAccountStatus(accountRow)
+
+  // Fetch quota separately since there's no FK relationship for join
+  const { data: quotaRow, error: quotaError } = await supabase
+    .from("plan_quotas")
+    .select("plan, monthly_generations, max_profiles, max_history_retention_days, features_allowed, price_cents")
+    .eq("plan", accountRow.plan)
+    .maybeSingle()
+
+  if (!quotaError && quotaRow) {
+    account.quota = quotaRow as PlanQuotasRow
+  }
+
+  return account
 }
 
 export async function getInvoices(

@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { VoiceProfile, VoiceProfileRow, StyleTrainingRow, VocabularyLevel } from "@/types/database.types"
 
 const VOICE_PROFILE_SELECT_COLUMNS =
-  "id, user_id, name, description, tone, persona_bio, expertise_topics, personality_traits, writing_traits, vocabulary_level, preferred_phrases, banned_phrases, target_length, allow_emojis, enabled, created_at, updated_at, deleted_at"
+  "id, user_id, name, description, tone, persona_bio, expertise_topics, personality_traits, vocabulary_level, preferred_phrases, banned_phrases, target_length, allow_emojis, enabled, created_at, updated_at, deleted_at"
 const STYLE_TRAINING_SELECT_COLUMNS = "id, profile_id, kind, content, display_order, questionnaire_answers"
 
 export interface CreateProfileInput {
@@ -12,7 +12,6 @@ export interface CreateProfileInput {
   personaBio: string
   expertiseTopics: string[]
   personalityTraits: string[]
-  writingTraits: Record<string, unknown>
   vocabularyLevel: VocabularyLevel | null
   example1: string
   example2: string
@@ -37,7 +36,6 @@ function mapRowToProfile(
     personaBio: row.persona_bio ?? "",
     expertiseTopics: row.expertise_topics ?? [],
     personalityTraits: row.personality_traits ?? [],
-    writingTraits: row.writing_traits ?? {},
     vocabularyLevel: (row.vocabulary_level as VocabularyLevel | null) ?? null,
     preferredPhrases: row.preferred_phrases ?? [],
     bannedPhrases: row.banned_phrases ?? [],
@@ -95,7 +93,6 @@ export async function createProfile(
       persona_bio: input.personaBio,
       expertise_topics: input.expertiseTopics,
       personality_traits: input.personalityTraits,
-      writing_traits: input.writingTraits,
       vocabulary_level: input.vocabularyLevel,
       allow_emojis: input.allowEmojis,
       enabled: input.enabled,
@@ -139,7 +136,6 @@ export async function updateProfile(
       persona_bio: input.personaBio,
       expertise_topics: input.expertiseTopics,
       personality_traits: input.personalityTraits,
-      writing_traits: input.writingTraits,
       vocabulary_level: input.vocabularyLevel,
       allow_emojis: input.allowEmojis,
       enabled: input.enabled,

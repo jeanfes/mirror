@@ -4,7 +4,7 @@ import { useCallback, useDeferredValue, useMemo } from "react"
 import { Archive, CheckCircle2, Clock3, WandSparkles } from "lucide-react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
-import { LoadingOverlay, useLoadingDelay } from "@/components/ui/Loading"
+import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
 import { HistoryFilters } from "@/features/history/components/HistoryFilters"
 import { HistoryItemCard } from "@/features/history/components/HistoryItemCard"
@@ -26,7 +26,6 @@ export default function HistoryPage() {
         resetFilters
     } = useHistoryUIStore()
     const { t } = useLanguageStore()
-    const showLoading = useLoadingDelay(isLoading)
     const deferredSearch = useDeferredValue(search)
 
     const hasActiveFilters = useMemo(() => {
@@ -115,7 +114,7 @@ export default function HistoryPage() {
         }
     }, [t, updateFeedback])
 
-    if (showLoading) {
+    if (isLoading || !history) {
         return <LoadingOverlay show={true} />
     }
 
