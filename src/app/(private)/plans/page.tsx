@@ -131,7 +131,8 @@ export default function PlansPage() {
                     </div>
                 </div>
 
-                <div className="grid gap-4 xl:grid-cols-3">
+                <div className="relative mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-[1fr_1.15fr] md:items-center md:gap-0">
+                    <div className="absolute inset-0 top-1/2 -z-10 -translate-y-1/2 w-full h-[300px] bg-[radial-gradient(ellipse,rgba(117,206,243,0.1)_0%,transparent_70%)] rounded-full blur-[60px] pointer-events-none" />
                     {resolvedPlanDefinitions.map((plan) => (
                         <PlanCard
                             key={plan.name}

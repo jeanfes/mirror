@@ -38,11 +38,26 @@ export function useBilling(options?: { enabled?: boolean }) {
 
   const cancelSubscriptionMutation = useMutation({
     mutationFn: () => cancelSubscription(supabase),
+    onMutate: async () => {
+      // Optimistic upate
+      await queryClient.cancelQueries({ queryKey: ["account", userId] })
+      const previousAccount = queryClient.getQueryData(["account", userId])
+      queryClient.setQueryData(["account", userId], (old: any) => {
+        if (!old) return old
+        return {
+          ...old,
+          subscriptionStatus: "canceled"
+        }
+      })
+      return { previousAccount }
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousAccount) {
+        queryClient.setQueryData(["account", userId], context.previousAccount)
+      }
+    },
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: billingInfoKey }),
-        queryClient.invalidateQueries({ queryKey: ["account", userId] })
-      ])
+      await queryClient.invalidateQueries({ queryKey: billingInfoKey })
     }
   })
 

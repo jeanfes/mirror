@@ -48,15 +48,15 @@ export function useHistory(
   const feedbackMutation = useMutation({
     mutationFn: ({
       id,
-      rating,
+      liked,
       feedbackNote,
     }: {
       id: string
-      rating?: number | null
+      liked?: boolean | null
       feedbackNote?: string | null
     }) =>
       updateHistoryFeedback(supabase, userId!, id, {
-        rating,
+        liked,
         feedbackNote,
       }),
     onSuccess: (_, payload) => {
@@ -65,7 +65,7 @@ export function useHistory(
           item.id === payload.id
             ? {
                 ...item,
-                rating: payload.rating ?? item.rating ?? null,
+                liked: payload.liked !== undefined ? payload.liked : (item.liked ?? null),
                 feedbackNote: payload.feedbackNote ?? item.feedbackNote ?? null,
               }
             : item

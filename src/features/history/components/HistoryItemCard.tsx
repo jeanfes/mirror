@@ -18,7 +18,7 @@ interface HistoryItemCardProps {
     onMoveToTrash: (id: string) => void
     onUpdateFeedback: (input: {
         id: string
-        rating?: number | null
+        liked?: boolean | null
         feedbackNote?: string | null
     }) => void
 }
@@ -31,7 +31,7 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     onUpdateFeedback
 }: HistoryItemCardProps) {
     const { t } = useLanguageStore()
-    const [ratingValue, setRatingValue] = useState<string>(item.rating ? String(item.rating) : "")
+    const [likedValue, setLikedValue] = useState<string>(item.liked === true ? "true" : item.liked === false ? "false" : "")
     const [feedbackValue, setFeedbackValue] = useState<string>(item.feedbackNote ?? "")
 
     const goalLabels: Record<NonNullable<GenerationHistory["goal"]>, string> = {
@@ -48,28 +48,25 @@ export const HistoryItemCard = memo(function HistoryItemCard({
     }
 
     const statusMeta = { label: t.app.history.applied, className: "badge-success" }
-    const ratingOptions = [
+    const likedOptions = [
         { label: t.app.historyItem.feedbackNoRating, value: "" },
-        { label: "1", value: "1" },
-        { label: "2", value: "2" },
-        { label: "3", value: "3" },
-        { label: "4", value: "4" },
-        { label: "5", value: "5" }
+        { label: "👍", value: "true" },
+        { label: "👎", value: "false" }
     ]
 
     const hasPendingFeedbackChanges =
-        (item.rating ? String(item.rating) : "") !== ratingValue ||
+        (item.liked === true ? "true" : item.liked === false ? "false" : "") !== likedValue ||
         (item.feedbackNote ?? "") !== feedbackValue
 
     useEffect(() => {
-        setRatingValue(item.rating ? String(item.rating) : "")
+        setLikedValue(item.liked === true ? "true" : item.liked === false ? "false" : "")
         setFeedbackValue(item.feedbackNote ?? "")
-    }, [item.feedbackNote, item.rating])
+    }, [item.feedbackNote, item.liked])
 
     const handleSaveFeedback = () => {
         onUpdateFeedback({
             id: item.id,
-            rating: ratingValue ? Number(ratingValue) : null,
+            liked: likedValue ? likedValue === "true" : null,
             feedbackNote: feedbackValue.trim() ? feedbackValue.trim() : null
         })
     }
@@ -127,9 +124,9 @@ export const HistoryItemCard = memo(function HistoryItemCard({
                     <div className="grid gap-3">
                         <Select
                             label={t.app.historyItem.feedbackRatingLabel}
-                            value={ratingValue}
-                            onChange={setRatingValue}
-                            options={ratingOptions}
+                            value={likedValue}
+                            onChange={setLikedValue}
+                            options={likedOptions}
                             placeholder={t.app.historyItem.feedbackNoRating}
                         />
                     </div>

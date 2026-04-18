@@ -29,10 +29,10 @@ export function Navbar() {
   const isLoading = isAccountLoading || isPageLoading
 
   return (
-    <header className="relative flex pb-2 pt-0 w-full shrink-0 items-center justify-between border-b border-border-soft">
+    <header className="relative flex pb-3 pt-0 w-full shrink-0 items-center justify-between border-b border-border-soft">
       <div className="flex min-w-0 items-center gap-3">
         <MobileSidebar />
-        <h1 className="truncate text-[16px] font-semibold tracking-[-0.01em] text-primary-text">
+        <h1 className="truncate text-[16px] font-semibold leading-normal tracking-[-0.01em] text-primary-text">
           {isLoading ? t.auth.loading : currentSection}
         </h1>
       </div>
@@ -46,11 +46,9 @@ export function Navbar() {
           </Link>
         )}
         {isLoading && (
-          <div className="h-8.5 w-20 animate-pulse rounded-full bg-surface-hover" />
+          <div className="hidden sm:block h-8.5 w-32 animate-pulse rounded-full bg-surface-hover" />
         )}
-        {!isLoading && account?.plan !== "Free" && (
-          <div className="h-8 w-22.5" aria-hidden="true" />
-        )}
+
         <DownloadDropdown className="h-8.5 w-8.5" />
       </div>
     </header>

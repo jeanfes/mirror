@@ -23,13 +23,6 @@ export default async function PricingPage() {
             features: t.pricing.proFeatures,
             buttonText: t.pricing.proBtn,
             popular: true,
-        },
-        {
-            name: t.pricing.elitePlan,
-            desc: t.pricing.eliteDesc,
-            price: "$59",
-            features: t.pricing.eliteFeatures,
-            buttonText: t.pricing.eliteBtn,
         }
     ];
 
@@ -44,8 +37,9 @@ export default async function PricingPage() {
                 </p>
             </section>
 
-            <section className="w-full max-w-6xl px-6 py-12">
-                <div className="grid gap-8 md:grid-cols-3 lg:gap-8 items-stretch mx-auto">
+            <section className="relative w-full max-w-5xl px-6 py-20 mx-auto">
+                <div className="absolute inset-0 top-1/2 -z-10 -translate-y-1/2 w-[800px] h-[400px] left-1/2 -translate-x-1/2 bg-[radial-gradient(ellipse,rgba(139,92,246,0.15)_0%,transparent_70%)] rounded-full blur-[80px] pointer-events-none" />
+                <div className="grid gap-6 md:grid-cols-[1fr_1.2fr] md:items-center md:gap-0 mx-auto max-w-4xl">
                     {plans.map((plan, i) => (
                         <PricingCard
                             key={plan.name}

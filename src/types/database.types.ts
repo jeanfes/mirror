@@ -42,7 +42,7 @@ export interface GenerationHistoryRow {
   post_snippet: string | null
   generated_text: string
   goal: string | null
-  rating: number | null
+  liked: boolean | null
   feedback_note: string | null
   origin: "web" | "extension"
   input_context: Record<string, unknown> | null
@@ -59,6 +59,7 @@ export interface PlanQuotasRow {
   max_profiles: number | null
   max_history_retention_days: number
   features_allowed: string[]
+  price_cents: number
 }
 
 export interface UserAccountRow {
@@ -154,7 +155,7 @@ export interface GenerationHistory {
   postSnippet: string
   generatedText: string
   goal: string | undefined
-  rating?: number | null
+  liked?: boolean | null
   feedbackNote?: string | null
   origin: "web" | "extension"
   createdAt: number 

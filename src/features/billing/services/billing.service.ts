@@ -39,7 +39,7 @@ export const planDefinitions: PlanDefinition[] = [
   },
   {
     name: "Pro",
-    price: "$19",
+    price: "$9.99",
     credits: 1200,
     summary:
       "For professionals building a regular cadence and refining their own voice.",
@@ -51,24 +51,24 @@ export const planDefinitions: PlanDefinition[] = [
       "Basic history archive",
     ],
   },
-  {
-    name: "Elite",
-    price: "$49",
-    credits: 4000,
-    summary:
-      "High volume output and multi-persona testing for advanced users.",
-    features: [
-      "4,000 monthly generations",
-      "Unlimited voice profiles",
-      "Unlimited history archive",
-      "Priority API processing",
-    ],
-  },
+  // {
+  //   name: "Elite",
+  //   price: "$49",
+  //   credits: 4000,
+  //   summary:
+  //     "High volume output and multi-persona testing for advanced users.",
+  //   features: [
+  //     "4,000 monthly generations",
+  //     "Unlimited voice profiles",
+  //     "Unlimited history archive",
+  //     "Priority API processing",
+  //   ],
+  // },
 ]
 
 const PLAN_PRICES: Record<PlanName, string> = {
   Free: "$0",
-  Pro: "$19",
+  Pro: "$9.99",
   Elite: "$49",
 }
 
@@ -76,7 +76,7 @@ const USER_ACCOUNT_SELECT_COLUMNS =
   "plan, credits_remaining, credits_used_this_month, renewal_date, subscription_status, last_generation_at"
 const INVOICES_SELECT_COLUMNS = "id, created_at, currency, amount_paid, status, invoice_url"
 
-const PLAN_ORDER: PlanName[] = ["Free", "Pro", "Elite"]
+const PLAN_ORDER: PlanName[] = ["Free", "Pro"]
 
 function normalizePlanName(value: unknown): PlanName | null {
   if (value === "Free" || value === "Pro" || value === "Elite") {
@@ -127,7 +127,7 @@ export async function getPlanDefinitions(
 ): Promise<PlanDefinition[]> {
   const { data, error } = await supabase
     .from("plan_quotas")
-    .select("plan, monthly_generations, max_profiles, max_history_retention_days, features_allowed")
+    .select("plan, monthly_generations, max_profiles, max_history_retention_days, features_allowed, price_cents")
 
   if (error) {
     throw error
@@ -152,9 +152,16 @@ export async function getPlanDefinitions(
       ...allowedFeatures,
     ]
 
+    let dynamicPrice = PLAN_PRICES[normalizedPlan]
+    if (typeof row.price_cents === "number") {
+      dynamicPrice = row.price_cents === 0 
+        ? "$0" 
+        : `$${(row.price_cents / 100).toFixed(2).replace(/\.00$/, "")}`
+    }
+
     quotas.push({
       name: normalizedPlan,
-      price: PLAN_PRICES[normalizedPlan],
+      price: dynamicPrice,
       credits: row.monthly_generations,
       summary: buildPlanSummary(row),
       features: Array.from(new Set(features)),
@@ -177,6 +184,10 @@ export async function startCheckout(
   supabase: SupabaseClient,
   planName: PlanName
 ) {
+  if (planName !== "Pro") {
+    throw new Error("Invalid plan. Only Pro plan is allowed for new checkouts.");
+  }
+
   type CheckoutResponse = {
     checkout_url?: string
     checkoutUrl?: string
@@ -188,10 +199,13 @@ export async function startCheckout(
     }
   }
 
+  const successUrl = `${window.location.origin}/account?checkout=success`
+  const cancelUrl = window.location.href
+
   const payload = await callEdgeFunction<CheckoutResponse>(
     supabase,
     "create-checkout",
-    { plan: planName }
+    { plan: planName, success_url: successUrl, cancel_url: cancelUrl }
   )
 
   const checkoutUrl =

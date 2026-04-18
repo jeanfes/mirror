@@ -123,9 +123,10 @@ export default function AccountPage() {
   const handleCancelSubscription = async () => {
     try {
       await cancelSubscription()
-      toast.success(t.app.common.subscriptionCancelled)
+      // Toast success is now handled inside PaymentMethods using ConfirmDialog!
     } catch {
       toast.error(t.app.common.subscriptionCancelError)
+      throw new Error("CancelError") // Re-throw to prevent closing modal if it errored
     }
   }
 
@@ -324,6 +325,7 @@ export default function AccountPage() {
                 portalUrl={billingInfo?.portalUrl}
                 onCancelSubscription={handleCancelSubscription}
                 isCancelling={isCancellingSubscription}
+                renewalDate={account.renewalDate}
               />
             </div>
           </div>

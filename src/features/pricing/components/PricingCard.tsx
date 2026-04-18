@@ -22,10 +22,13 @@ export function PricingCard({ plan, href, perMonthText, popularText }: PricingCa
     return (
         <div
             className={`${isPro 
-                ? "neo-shell relative flex flex-col border border-border-soft bg-surface-overlay p-8 shadow-premium-md md:scale-105 z-20 rounded-[22px]" 
-                : "neo-card flex flex-col rounded-[22px] border border-border-light bg-surface-card backdrop-blur-sm p-8 shadow-premium-sm"
+                ? "neo-shell relative flex flex-col border border-[#2e313d] bg-[#141824] p-10 shadow-[0_0_80px_rgba(139,92,246,0.1)] md:scale-110 z-20 rounded-[32px]" 
+                : "neo-card relative flex flex-col rounded-[32px] md:rounded-r-none md:border-r-0 border border-[#2e313d] bg-[#1a1d27]/80 backdrop-blur-xl p-10 md:pr-14 shadow-premium-sm"
             }`}
         >
+            {isPro && (
+                <div className="absolute inset-0 bg-gradient-to-b from-[#75cef3]/5 to-[#8b5cf6]/5 pointer-events-none rounded-[32px] overflow-hidden" />
+            )}
             {isPro && popularText && (
                 <div className="absolute top-0 right-8 -translate-y-1/2 rounded-full bg-brand-dark px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-premium-sm">
                     {popularText}
@@ -50,7 +53,7 @@ export function PricingCard({ plan, href, perMonthText, popularText }: PricingCa
             <div>
                 <Link 
                     href={href} 
-                    className={`${isPro ? "neo-btn-primary shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl`}
+                    className={`${isPro ? "bg-white !text-[#141824] shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl transition-all duration-200 hover:opacity-90`}
                 >
                     {plan.buttonText}
                 </Link>

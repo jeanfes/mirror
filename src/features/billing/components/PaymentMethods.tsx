@@ -1,15 +1,20 @@
 import { type PaymentMethod } from "@/features/billing/services/billing.service"
+import { useState } from "react"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { CreditCard } from "lucide-react"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { toast } from "sonner"
+import { format } from "date-fns"
 
 interface PaymentMethodsProps {
   methods: PaymentMethod[]
   updateUrl?: string | null
   portalUrl?: string | null
-  onCancelSubscription?: () => void
+  onCancelSubscription?: () => Promise<void>
   isCancelling?: boolean
+  renewalDate?: string | null
 }
 
 export function PaymentMethods({
@@ -18,8 +23,10 @@ export function PaymentMethods({
   portalUrl,
   onCancelSubscription,
   isCancelling = false,
+  renewalDate,
 }: PaymentMethodsProps) {
   const { t } = useLanguageStore()
+  const [showCancelModal, setShowCancelModal] = useState(false)
   const method = methods[0]
 
   if (!method) {
@@ -95,7 +102,7 @@ export function PaymentMethods({
           <Button
             variant="dangerSoft"
             className="w-full"
-            onClick={() => onCancelSubscription?.()}
+            onClick={() => setShowCancelModal(true)}
             loading={isCancelling}
             loadingLabel={t.app.common.working}
             disabled={!onCancelSubscription}
@@ -104,6 +111,28 @@ export function PaymentMethods({
           </Button>
         </div>
       </Card>
+
+      <ConfirmDialog
+        open={showCancelModal}
+        onCancel={() => setShowCancelModal(false)}
+        title={t.app.billing.cancelSubscription}
+        description="Si cancelas tu suscripción, tu plan actual se degradará a Básico al final de tu ciclo de facturación. ¿Estás seguro de que deseas cancelar?"
+        confirmLabel={t.app.billing.cancelSubscription}
+        cancelLabel={t.app.common.cancel}
+        isPending={isCancelling}
+        onConfirm={async () => {
+          if (!onCancelSubscription) return
+          try {
+            await onCancelSubscription()
+            const dateStr = renewalDate ? format(new Date(renewalDate), "MMM d, yyyy") : "el próximo ciclo"
+            toast.success(t.app.billing.subscriptionCanceledNotice.replace("{0}", dateStr))
+            setShowCancelModal(false)
+          } catch {
+            // Error managed globally or above
+            setShowCancelModal(false)
+          }
+        }}
+      />
     </div>
   )
 }

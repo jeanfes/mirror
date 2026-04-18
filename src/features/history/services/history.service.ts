@@ -2,11 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { GenerationHistory, GenerationHistoryRow } from "@/types/database.types"
 
 const HISTORY_SELECT_COLUMNS =
-  "id, profile_id, platform, sync_fingerprint, kind, source, status, post_author, post_headline, post_snippet, generated_text, goal, origin, rating, feedback_note, created_at"
+  "id, profile_id, platform, sync_fingerprint, kind, source, status, post_author, post_headline, post_snippet, generated_text, goal, origin, liked, feedback_note, created_at"
 
 type HistoryRowProjection = Pick<
   GenerationHistoryRow,
-  "id" | "profile_id" | "platform" | "sync_fingerprint" | "kind" | "source" | "status" | "post_author" | "post_headline" | "post_snippet" | "generated_text" | "goal" | "origin" | "rating" | "feedback_note" | "created_at"
+  "id" | "profile_id" | "platform" | "sync_fingerprint" | "kind" | "source" | "status" | "post_author" | "post_headline" | "post_snippet" | "generated_text" | "goal" | "origin" | "liked" | "feedback_note" | "created_at"
 >
 
 function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string }): GenerationHistory {
@@ -24,7 +24,7 @@ function mapRowToHistoryItem(row: HistoryRowProjection & { profileName?: string 
     postSnippet: row.post_snippet ?? "",
     generatedText: row.generated_text,
     goal: row.goal ?? undefined,
-    rating: row.rating,
+    liked: row.liked,
     feedbackNote: row.feedback_note,
     origin: row.origin ?? "web",
     createdAt: Date.parse(row.created_at)
@@ -92,7 +92,7 @@ export async function updateHistoryFeedback(
   userId: string,
   id: string,
   input: {
-    rating?: number | null
+    liked?: boolean | null
     feedbackNote?: string | null
   }
 ): Promise<void> {
@@ -100,8 +100,8 @@ export async function updateHistoryFeedback(
     updated_at: new Date().toISOString()
   }
 
-  if (input.rating !== undefined) {
-    updates.rating = input.rating
+  if (input.liked !== undefined) {
+    updates.liked = input.liked
   }
 
   if (input.feedbackNote !== undefined) {

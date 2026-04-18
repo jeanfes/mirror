@@ -15,6 +15,7 @@ import { isActiveProfileValidationError } from "@/features/settings/services/use
 import { ROUTES } from "@/lib/routes"
 import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { Button } from "@/components/ui/Button"
 import type { UserSettings } from "@/types/database.types"
 
 type UpdateUserSettingsInput = Pick<
@@ -191,6 +192,8 @@ export default function SettingsPage() {
             }
         }
     }, [baseSettings, draft, isMutating, setAppLanguage, t.app.settings.noActiveProfile, t.app.settings.preferencesError, updateSettings])
+
+
 
     if (showLoading) {
         return <LoadingOverlay show={true} />

@@ -1,5 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+export class EdgeFunctionError extends Error {
+  status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = "EdgeFunctionError"
+    this.status = status
+  }
+}
+
 export async function callEdgeFunction<TResponse>(
   supabase: SupabaseClient,
   functionName: string,
@@ -36,8 +45,8 @@ export async function callEdgeFunction<TResponse>(
       (payload as { error?: string; message?: string }).error ||
       (payload as { error?: string; message?: string }).message ||
       `Edge function ${functionName} failed`
-    throw new Error(message)
+    throw new EdgeFunctionError(message, response.status)
   }
 
   return payload as TResponse
-}
+}

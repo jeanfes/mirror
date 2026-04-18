@@ -31,7 +31,15 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
     const bulletClass = isRecommended ? "text-[#75cef3]" : "text-success"
 
     return (
-        <Card className={cn("plan-card-surface relative flex min-h-115 flex-col overflow-hidden p-6", isRecommended && "plan-card-surface-recommended")}>
+        <Card className={cn(
+            "plan-card-surface relative flex min-h-115 flex-col overflow-hidden p-8 transition-all duration-300", 
+            isRecommended 
+                ? "plan-card-surface-recommended md:scale-110 z-20 shadow-[0_0_80px_rgba(117,206,243,0.15)] ring-1 ring-[#75cef3]/30" 
+                : "z-10 md:rounded-r-none md:border-r-0 md:opacity-90 hover:opacity-100"
+        )}>
+            {isRecommended && (
+                <div className="absolute inset-0 bg-gradient-to-b from-[#75cef3]/5 to-[#8b5cf6]/5 pointer-events-none" />
+            )}
             <div className="relative z-10 flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-3">
                     <div>
@@ -74,7 +82,7 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
 
                 <div className="mt-auto pt-6">
                     <Button
-                        className={cn("w-full", isRecommended && "bg-white text-[#141824] hover:bg-white/90")}
+                        className={cn("w-full", isRecommended && "bg-white !text-[#141824] hover:bg-white/90")}
                         variant={isCurrent ? "secondary" : "primary"}
                         disabled={isCurrent || isUpdating}
                         onClick={() => onSelect(plan.name)}

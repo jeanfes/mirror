@@ -353,7 +353,15 @@ const es = {
       updateCard: "Actualizar",
       managePaymentMethod: "Gestionar método de pago",
       manageSubscription: "Gestionar suscripción",
-      cancelSubscription: "Cancelar suscripción"
+      cancelSubscription: "Cancelar suscripción",
+      subscriptionCanceledNotice: "Tu acceso Pro continúa hasta el {0}",
+      freeTrialEndsOn: "Prueba gratuita · vence el {0}",
+      pastDue: "Pago pendiente",
+      outOfCredits: "Sin créditos",
+      outOfCreditsDesc: "Has agotado tus créditos. Mejora tu plan para seguir generando.",
+      paymentFailedBanner: "Hubo un problema con tu pago. Actualiza tu tarjeta para seguir generando.",
+      creditsWidgetRenewsAt: "Se renuevan el {0}",
+      deleteAccountEmailPlaceholder: "Escribe tu correo para confirmar"
     },
     navigation: {
       profiles: "Perfiles",

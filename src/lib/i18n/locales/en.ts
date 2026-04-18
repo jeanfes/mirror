@@ -353,7 +353,15 @@ const en = {
       updateCard: "Update",
       managePaymentMethod: "Manage payment method",
       manageSubscription: "Manage subscription",
-      cancelSubscription: "Cancel subscription"
+      cancelSubscription: "Cancel subscription",
+      subscriptionCanceledNotice: "Your Pro access continues until {0}",
+      freeTrialEndsOn: "Free trial · ends {0}",
+      pastDue: "Payment past due",
+      outOfCredits: "Out of credits",
+      outOfCreditsDesc: "You have run out of credits. Upgrade your plan to continue generating.",
+      paymentFailedBanner: "There was an issue with your payment. Update your card to keep your active plan.",
+      creditsWidgetRenewsAt: "Renews on {0}",
+      deleteAccountEmailPlaceholder: "Type your email to confirm"
     },
     navigation: {
       profiles: "Profiles",
