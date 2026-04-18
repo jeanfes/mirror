@@ -27,6 +27,22 @@ const PaymentMethods = dynamic(
   { loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" /> }
 )
 
+function formatSubscriptionStatusLabel(status: string | null, plan: string): string {
+  const fallback = plan === "Free" ? "free" : "active"
+  const normalized = (status ?? fallback).trim().toLowerCase()
+  return normalized.replace(/_/g, " ")
+}
+
+function resolveSubscriptionStatusClasses(statusLabel: string): string {
+  if (statusLabel === "active" || statusLabel === "trialing") {
+    return "bg-emerald-500/15 text-emerald-100 border-emerald-400/40"
+  }
+  if (statusLabel === "past due" || statusLabel === "unpaid") {
+    return "bg-amber-500/15 text-amber-100 border-amber-400/40"
+  }
+  return "bg-rose-500/15 text-rose-100 border-rose-400/40"
+}
+
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("overview")
 
@@ -118,6 +134,9 @@ export default function AccountPage() {
     latestHistoryItem,
   } = stats
 
+  const subscriptionStatusLabel = formatSubscriptionStatusLabel(account.subscriptionStatus, account.plan)
+  const latestActivityAt = account.lastGenerationAt ?? (latestHistoryItem ? new Date(latestHistoryItem.createdAt).toISOString() : null)
+
   const handleCancelSubscription = async () => {
     try {
       await cancelSubscription()
@@ -153,6 +172,13 @@ export default function AccountPage() {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-[28px] font-semibold tracking-[-0.04em] text-white">{account.plan}</h2>
+                <div className="mt-2">
+                  <span
+                    className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${resolveSubscriptionStatusClasses(subscriptionStatusLabel)}`}
+                  >
+                    {subscriptionStatusLabel}
+                  </span>
+                </div>
                 <p className="mt-2 text-[14px] leading-6 text-white/72">
                   {currentPlan?.summary ?? t.app.account.activePlanDesc}
                 </p>
@@ -189,8 +215,8 @@ export default function AccountPage() {
               <div className="dashboard-dark-stat-muted">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.latestOutput}</p>
                 <p className="mt-2 text-[15px] font-semibold text-white">
-                  {latestHistoryItem
-                    ? formatDistanceToNow(latestHistoryItem.createdAt, { addSuffix: true })
+                  {latestActivityAt
+                    ? formatDistanceToNow(new Date(latestActivityAt), { addSuffix: true })
                     : t.app.account.noActivity}
                 </p>
               </div>

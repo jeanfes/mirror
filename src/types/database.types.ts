@@ -66,6 +66,7 @@ export interface UserAccountRow {
   provider_subscription_id: string | null
   payment_provider: string
   provider_customer_id: string | null
+  last_credit_reset_at: string | null
   id: string
   created_at: string
   updated_at: string
