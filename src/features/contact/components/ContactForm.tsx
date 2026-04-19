@@ -171,12 +171,12 @@ export function ContactForm({ t, hideBackground }: ContactFormProps) {
                     <Button
                         type="submit"
                         variant="primary"
-                        className="w-full h-14 rounded-xl text-[1.05rem] shadow-premium-sm"
+                        className="w-full h-14 rounded-xl text-[1.05rem] shadow-premium-md group"
                         loading={isSubmitting}
                         loadingLabel={t.contactPage.sendingBtn}
                     >
                         {t.contactPage.sendBtn}
-                        <Send className="h-4 w-4" />
+                        <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                 </div>
             </form>

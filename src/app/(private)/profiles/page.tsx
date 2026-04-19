@@ -241,19 +241,19 @@ export default function ProfilesPage() {
     return (
         <div className="space-y-6">
             <section className="workspace-hero-shell">
-                <div aria-hidden="true" className="absolute -right-14 top-0 h-44 w-44 rounded-full workspace-hero-orb-purple" />
-                <div aria-hidden="true" className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full workspace-hero-orb-cyan" />
+                <div aria-hidden="true" className="absolute -right-8 top-0 h-32 w-32 rounded-full opacity-80 workspace-hero-orb-purple sm:-right-12 sm:h-40 sm:w-40 sm:opacity-100 md:-right-14 md:h-44 md:w-44" />
+                <div aria-hidden="true" className="absolute -bottom-12 -left-6 h-28 w-28 rounded-full opacity-80 workspace-hero-orb-cyan sm:-bottom-14 sm:-left-8 sm:h-36 sm:w-36 sm:opacity-100 md:-bottom-16 md:-left-10 md:h-40 md:w-40" />
 
-                <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-                    <div className="max-w-2xl">
-                        <h1 className="max-w-xl text-4xl font-black tracking-[-0.05em] text-primary-text md:text-5xl">
+                <div className="relative grid gap-5 md:grid-cols-[1.12fr_0.88fr] md:items-start md:gap-4 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
+                    <div className="max-w-2xl md:max-w-none">
+                        <h1 className="max-w-xl text-3xl font-black tracking-[-0.05em] text-primary-text sm:text-4xl md:max-w-none md:text-[2.55rem] lg:text-5xl">
                             {t.app.profiles.heroTitle}
                         </h1>
-                        <p className="mt-4 max-w-xl text-[15px] leading-7 text-secondary-text">
+                        <p className="mt-3 max-w-xl text-[14px] leading-6 text-secondary-text sm:mt-4 sm:text-[15px] sm:leading-7 md:max-w-none">
                             {t.app.profiles.heroDesc}
                         </p>
 
-                        <div className="mt-6 flex flex-wrap gap-3">
+                        <div className="mt-5 flex flex-wrap gap-2.5 sm:mt-6 sm:gap-3">
                             <div className="workspace-hero-chip">
                                 <MessageSquareQuote className="h-4 w-4 text-primary-text" />
                                 {t.app.profiles.chip1}
@@ -269,27 +269,27 @@ export default function ProfilesPage() {
                         </div>
                     </div>
 
-                    <div className="dashboard-dark-panel p-5">
-                        <div className="flex items-start justify-between gap-3">
+                    <div className="dashboard-dark-panel p-4 sm:p-5 md:p-4 lg:p-5">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
                             <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/60">{t.app.profiles.profileCoverage}</p>
-                                <p className="mt-2 text-3xl font-black tracking-[-0.04em]">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/60 sm:text-[12px]">{t.app.profiles.profileCoverage}</p>
+                                <p className="mt-1.5 text-[2rem] font-black tracking-[-0.04em] sm:mt-2 sm:text-3xl">
                                     {list.length}
                                     {quota && (
-                                        <span className="text-xl text-white/40 ml-1.5 font-bold">/ {quota.max_profiles ?? "∞"}</span>
+                                        <span className="ml-1.5 text-lg font-bold text-white/40 sm:text-xl">/ {quota.max_profiles ?? "∞"}</span>
                                     )}
                                 </p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex w-full items-center justify-end gap-2 sm:w-auto sm:flex-wrap sm:justify-start md:justify-end">
                                 {list.length > 0 && (
-                                    <Button onClick={handleExportAll} disabled={isExporting} className="hidden sm:inline-flex bg-white/5 border-white/5 text-white hover:bg-white/10" variant="secondary">
+                                    <Button onClick={handleExportAll} disabled={isExporting} className="hidden h-10 border-white/5 bg-white/5 px-3 text-[13px] text-white hover:bg-white/10 sm:inline-flex" variant="secondary">
                                         <Download className="mr-2 h-4 w-4" />
                                         {t.app.settingsModal.tabExport}
                                     </Button>
                                 )}
                                 <Button
                                     onClick={openCreateFlow}
-                                    className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft disabled:opacity-50"
+                                    className="h-10 whitespace-nowrap border border-border-soft bg-surface-elevated px-3 text-[13px] text-primary-text hover:bg-surface-hover disabled:opacity-50 sm:px-4"
                                     disabled={quota ? list.length >= (quota.max_profiles ?? 999) : false}
                                 >
                                     <Plus className="h-4 w-4" />
@@ -298,10 +298,10 @@ export default function ProfilesPage() {
                             </div>
                         </div>
 
-                        <div className="mt-6">
+                        <div className="mt-5 sm:mt-6">
                             <div>
-                                <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">{t.app.profiles.activeNow}</p>
-                                <p className="mt-2 text-2xl font-black tracking-[-0.03em]">{activeProfiles}</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/50 sm:text-[12px]">{t.app.profiles.activeNow}</p>
+                                <p className="mt-1.5 text-[1.75rem] font-black tracking-[-0.03em] sm:mt-2 sm:text-2xl">{activeProfiles}</p>
                             </div>
                         </div>
 
