@@ -1,7 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
-import { Crown, Gauge, Layers3, Zap } from "lucide-react"
+import { Crown, Gauge, Layers3 } from "lucide-react"
 import { toast } from "sonner"
 import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
@@ -11,13 +11,24 @@ import { useAccount } from "@/features/billing/hooks/useAccount"
 import { usePlanDefinitions } from "@/features/billing/hooks/usePlanDefinitions"
 import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { useBilling } from "@/features/billing/hooks/useBilling"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { useState } from "react"
 
 export default function PlansPage() {
     const { data: account, startCheckout, isMutating, isLoading, isError } = useAccount()
     const { data: fetchedPlanDefinitions } = usePlanDefinitions()
     const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
     const { t } = useLanguageStore()
+    const { cancelSubscription, isCancellingSubscription } = useBilling()
+    const [showCancelModal, setShowCancelModal] = useState(false)
+
     const handleSelectPlan = async (planName: "Free" | "Pro") => {
+        if (account?.plan === "Pro" && planName === "Free") {
+            setShowCancelModal(true)
+            return
+        }
+
         try {
             const checkoutUrl = await startCheckout(planName)
             window.location.assign(checkoutUrl)
@@ -43,8 +54,9 @@ export default function PlansPage() {
     const resolvedAccount = account!
     const userQuota = resolvedAccount.quota
 
-    const monthlyUsagePercent = userQuota
-        ? Math.max(0, Math.min(100, Math.round((resolvedAccount.creditsRemaining / userQuota.monthly_generations) * 100)))
+    const totalCredits = userQuota?.monthly_generations ?? resolvedAccount.creditsRemaining
+    const monthlyUsagePercent = totalCredits > 0
+        ? Math.min(100, Math.round(((resolvedAccount.creditsUsedThisMonth ?? 0) / totalCredits) * 100))
         : 0
 
     return (
@@ -125,8 +137,8 @@ export default function PlansPage() {
                     </div>
                 </div>
 
-                <div className="relative mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-[1fr_1.15fr] md:items-center md:gap-0">
-                    <div className="absolute inset-0 top-1/2 -z-10 -translate-y-1/2 w-full h-[300px] bg-[radial-gradient(ellipse,rgba(117,206,243,0.1)_0%,transparent_70%)] rounded-full blur-[60px] pointer-events-none" />
+                <div className="relative mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2 md:items-center md:gap-8">
+                    <div className="pointer-events-none absolute inset-0 top-1/2 -z-10 h-75 w-full -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(117,206,243,0.1)_0%,transparent_70%)] blur-[60px]" />
                     {resolvedPlanDefinitions.map((plan) => (
                         <PlanCard
                             key={plan.name}
@@ -139,6 +151,26 @@ export default function PlansPage() {
                 </div>
             </section>
 
+            <ConfirmDialog
+                open={showCancelModal}
+                onCancel={() => setShowCancelModal(false)}
+                title={t.app.billing.cancelSubscription}
+                description={t.app.billing.cancelSubscriptionDescription}
+                confirmLabel={t.app.billing.cancelSubscription}
+                cancelLabel={t.app.common.cancel}
+                isPending={isCancellingSubscription}
+                onConfirm={async () => {
+                    try {
+                        await cancelSubscription()
+                        const dateStr = resolvedAccount.renewalDate ? format(new Date(resolvedAccount.renewalDate), "MMM d, yyyy") : t.app.billing.nextCycleIndicator
+                        toast.success(t.app.billing.subscriptionCanceledNotice.replace("{0}", dateStr))
+                        setShowCancelModal(false)
+                    } catch {
+                        toast.error(t.app.common.subscriptionCancelError)
+                        setShowCancelModal(false)
+                    }
+                }}
+            />
 
         </div>
     )

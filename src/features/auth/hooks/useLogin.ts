@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
 import { sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { signInWithGoogle, signInWithPassword } from "@/features/auth/services/auth.service"
@@ -15,9 +15,15 @@ export const useLogin = () => {
     const [isPendingGoogle, setIsPendingGoogle] = useState(false)
     const [isNavigating, setIsNavigating] = useState(false)
     const router = useRouter()
+    const pathname = usePathname()
     const searchParams = useSearchParams()
     const nextParam = searchParams.get("next")
     const sanitizedNext = sanitizeAuthNext(nextParam)
+    const oauthNext = sanitizedNext ?? (
+        pathname === ROUTES.auth.register
+            ? ROUTES.private.onboardingProfessional
+            : null
+    )
     const extensionNext = sanitizeExtensionNext(sanitizedNext)
     const authErrors = useLanguageStore((state) => state.t.auth.errors)
     const extensionRedirectTarget = extensionNext
@@ -86,8 +92,8 @@ export const useLogin = () => {
         setIsPendingGoogle(true)
         try {
             const callbackUrl = new URL(`${window.location.origin}${ROUTES.auth.callback}`)
-            if (sanitizedNext) {
-                callbackUrl.searchParams.set("next", sanitizedNext)
+            if (oauthNext) {
+                callbackUrl.searchParams.set("next", oauthNext)
             }
             const { error } = await signInWithGoogle(callbackUrl.toString())
 
@@ -107,7 +113,7 @@ export const useLogin = () => {
             toast.error(authErrors.connectionError)
             setIsPendingGoogle(false)
         }
-    }, [authErrors, sanitizedNext])
+    }, [authErrors, oauthNext])
 
     return { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating }
 }

@@ -2,6 +2,7 @@
 
 import React, { memo, useCallback, useRef, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import {
   Bell,
@@ -73,6 +74,7 @@ const SettingsModal = memo(function SettingsModal({
   const [isDeletingAccount, setIsDeletingAccount] = useState(false)
   const [isExportingData, setIsExportingData] = useState(false)
 
+  const router = useRouter()
   const { logout, isPending: isLogoutPending } = useLogout()
   const supabase = createClient()
   const { themePreference, setThemePreference } = useTheme()
@@ -103,18 +105,20 @@ const SettingsModal = memo(function SettingsModal({
   const handleLanguageChange = useCallback(async (val: string) => {
     const prev = langRef.current
     const newLang = val as "en" | "es" | "pt" | "fr" | "de"
-    setLanguage(newLang)
+    
     try {
       setIsUpdating(true)
+      await setLanguage(newLang)
       await updateSettings({ language: newLang })
+      router.refresh()
       toast.success(t.app.settingsModal.languageUpdated)
     } catch {
-      setLanguage(prev)
+      await setLanguage(prev)
       toast.error(t.app.settingsModal.languageUpdateError)
     } finally {
       setIsUpdating(false)
     }
-  }, [setLanguage, updateSettings, t.app.settingsModal.languageUpdated, t.app.settingsModal.languageUpdateError])
+  }, [setLanguage, updateSettings, router, t.app.settingsModal.languageUpdated, t.app.settingsModal.languageUpdateError])
 
   const handleToggleChange = useCallback(async (key: 'notificationsEnabled' | 'desktopAlertsEnabled', value: boolean) => {
     try {

@@ -7,6 +7,7 @@ import { CreditCard } from "lucide-react"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { toast } from "sonner"
 import { format } from "date-fns"
+import { getFormatLocale } from "@/lib/utils/date-utils"
 
 interface PaymentMethodsProps {
   methods: PaymentMethod[]
@@ -25,7 +26,7 @@ export function PaymentMethods({
   isCancelling = false,
   renewalDate,
 }: PaymentMethodsProps) {
-  const { t } = useLanguageStore()
+  const { t, language } = useLanguageStore()
   const [showCancelModal, setShowCancelModal] = useState(false)
   const method = methods[0]
 
@@ -124,7 +125,7 @@ export function PaymentMethods({
           if (!onCancelSubscription) return
           try {
             await onCancelSubscription()
-            const dateStr = renewalDate ? format(new Date(renewalDate), "MMM d, yyyy") : t.app.billing.nextCycleIndicator
+            const dateStr = renewalDate ? format(new Date(renewalDate), "MMM d, yyyy", { locale: getFormatLocale(language) }) : t.app.billing.nextCycleIndicator
             toast.success(t.app.billing.subscriptionCanceledNotice.replace("{0}", dateStr))
             setShowCancelModal(false)
           } catch {

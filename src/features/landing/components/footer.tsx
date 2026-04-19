@@ -7,6 +7,7 @@ import { ROUTES } from "@/lib/routes";
 
 export function LandingFooter() {
   const { t } = useLanguageStore();
+
   const currentYear = new Date().getFullYear();
 
   return (

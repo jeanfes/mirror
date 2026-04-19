@@ -10,6 +10,13 @@ import {
 import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { getSupabasePublicEnv } from "@/lib/supabase/env"
 
+function redirectToLoginWithNext(request: NextRequest) {
+  const loginUrl = new URL(ROUTES.auth.login, request.url)
+  const requestedPath = `${request.nextUrl.pathname}${request.nextUrl.search}`
+  loginUrl.searchParams.set("next", requestedPath)
+  return NextResponse.redirect(loginUrl)
+}
+
 export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set("x-pathname", request.nextUrl.pathname)
@@ -25,7 +32,7 @@ export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname
 
     if (isPrivatePath(pathname)) {
-      return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
+      return redirectToLoginWithNext(request)
     }
 
     return response
@@ -87,7 +94,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isPrivatePath(pathname) && !user) {
-    return NextResponse.redirect(new URL(ROUTES.auth.login, request.url))
+    return redirectToLoginWithNext(request)
   }
 
   return response

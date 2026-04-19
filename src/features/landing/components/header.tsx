@@ -5,12 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, Globe } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useRouter } from "next/navigation";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { ROUTES } from "@/lib/routes";
 import { DownloadDropdown } from "@/components/ui/DownloadDropdown";
 
 export function LandingHeader() {
+    const router = useRouter();
     const { language, setLanguage, t } = useLanguageStore();
+
+
+
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -72,8 +77,9 @@ export function LandingHeader() {
                                 <button
                                     key={code}
                                     type="button"
-                                    onClick={() => {
-                                        void setLanguage(code);
+                                    onClick={async () => {
+                                        await setLanguage(code);
+                                        router.refresh();
                                         setIsLanguageMenuOpen(false);
                                     }}
                                     className={`relative flex w-full items-center justify-between rounded-[10px] px-3 py-2 text-[13px] outline-none transition-colors ${language === code

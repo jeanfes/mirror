@@ -10,7 +10,10 @@ interface LanguageState {
   language: Language;
   t: Dictionary;
   isLoading: boolean;
+  isHydrated: boolean;
   setLanguage: (lang: Language) => Promise<void>;
+  setDictionary: (dict: Dictionary) => void;
+  setHydrated: () => void;
 }
 
 export const useLanguageStore = create<LanguageState>()(
@@ -19,12 +22,12 @@ export const useLanguageStore = create<LanguageState>()(
       language: "es",
       t: esDict,
       isLoading: false,
+      isHydrated: false,
       setLanguage: async (lang: Language) => {
         set({ isLoading: true });
         try {
           const dict = await loadDictionary(lang);
           
-          // Set cookie for server-side middleware or components
           if (typeof document !== "undefined") {
             document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
           }
@@ -39,6 +42,8 @@ export const useLanguageStore = create<LanguageState>()(
           set({ isLoading: false });
         }
       },
+      setDictionary: (dict: Dictionary) => set({ t: dict }),
+      setHydrated: () => set({ isHydrated: true }),
     }),
     {
       name: "mirror-language-storage",
@@ -47,13 +52,11 @@ export const useLanguageStore = create<LanguageState>()(
         const savedLanguage = (persistedState as Partial<LanguageState> | undefined)?.language;
         const lang = (savedLanguage ?? currentState.language) as Language;
         
-        // Sync cookie if necessary
         if (typeof document !== "undefined" && lang) {
             document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
         }
 
-        // If not es, load in background
-        if (lang !== "es") {
+        if (lang !== "es" || currentState.t === null) {
           loadDictionary(lang).then((dict) => {
             useLanguageStore.setState({ t: dict });
           });
@@ -63,8 +66,13 @@ export const useLanguageStore = create<LanguageState>()(
           ...currentState,
           language: lang,
           t: lang === "es" ? esDict : currentState.t,
+          isHydrated: true,
         };
       },
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated();
+      },
+
     }
   )
 );

@@ -436,6 +436,7 @@ const de = {
       choosePlanDesc: "Ändern oder upgraden Sie Ihr Abo jederzeit.",
 
       currentPlan: "Aktueller Plan",
+      planBase: "Basisplan",
       upgradeTo: "Upgrade auf {0}",
       switchTo: "Wechseln zu {0}",
       recommended: "Empfohlen",

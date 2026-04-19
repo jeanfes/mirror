@@ -10,11 +10,40 @@ function resolveNextTarget(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const queryNext = requestUrl.searchParams.get("next")
   if (queryNext !== null) {
-    return sanitizeAuthNext(queryNext) ?? DEFAULT_AUTHENTICATED_ROUTE
+    return {
+      target: sanitizeAuthNext(queryNext) ?? DEFAULT_AUTHENTICATED_ROUTE,
+      hasExplicitNext: true
+    }
   }
 
   const nextFromCookie = sanitizeAuthNext(request.cookies.get("mirror_extension_sync")?.value ?? null)
-  return nextFromCookie ?? DEFAULT_AUTHENTICATED_ROUTE
+  if (nextFromCookie !== null) {
+    return {
+      target: nextFromCookie,
+      hasExplicitNext: true
+    }
+  }
+
+  return {
+    target: DEFAULT_AUTHENTICATED_ROUTE,
+    hasExplicitNext: false
+  }
+}
+
+function isLikelyNewOAuthUser(createdAt?: string | null, lastSignInAt?: string | null) {
+  if (!createdAt || !lastSignInAt) {
+    return false
+  }
+
+  const createdAtMs = Date.parse(createdAt)
+  const lastSignInAtMs = Date.parse(lastSignInAt)
+
+  if (!Number.isFinite(createdAtMs) || !Number.isFinite(lastSignInAtMs)) {
+    return false
+  }
+
+  // On first OAuth sign-in, Supabase timestamps are usually created nearly at the same time.
+  return Math.abs(lastSignInAtMs - createdAtMs) <= 2 * 60 * 1000
 }
 
 function redirectToLoginWithError(request: NextRequest, errorCode: string, nextPath: string) {
@@ -32,7 +61,7 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
   const error = requestUrl.searchParams.get("error")
-  const nextPath = resolveNextTarget(request)
+  const { target: nextPath, hasExplicitNext } = resolveNextTarget(request)
 
   if (error) {
     return redirectToLoginWithError(request, "oauth_failed", nextPath)
@@ -48,10 +77,20 @@ export async function GET(request: NextRequest) {
       }
 
       const user = session?.user
+      const shouldOnboardNewOAuthUser = Boolean(
+        user &&
+        !hasExplicitNext &&
+        !isExtensionNext(nextPath) &&
+        isLikelyNewOAuthUser(user.created_at, user.last_sign_in_at)
+      )
+      const redirectTarget = shouldOnboardNewOAuthUser
+        ? ROUTES.private.onboardingProfessional
+        : nextPath
+
       const response = NextResponse.redirect(
-        isExtensionNext(nextPath)
-          ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(nextPath)}`, request.url)
-          : new URL(nextPath, request.url)
+        isExtensionNext(redirectTarget)
+          ? new URL(`${ROUTES.auth.extensionRedirect}?next=${encodeURIComponent(redirectTarget)}`, request.url)
+          : new URL(redirectTarget, request.url)
       )
       
       if (user) {

@@ -51,7 +51,7 @@ export function CreditsWidget() {
 
   const currentPlan = planDefinitions.find(p => p.name === account.plan)
   const totalCredits = currentPlan?.credits ?? account.creditsRemaining // Fallback if no plan found
-  const usedCredits = Math.max(totalCredits - account.creditsRemaining, 0)
+  const usedCredits = account.creditsUsedThisMonth ?? 0
 
   const usagePercent = totalCredits > 0 ? Math.min((usedCredits / totalCredits) * 100, 100) : 0
   const dateStr = account.renewalDate ? format(new Date(account.renewalDate), "dd/MM") : ""

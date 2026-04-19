@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Globe, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
@@ -75,6 +76,7 @@ function buildChangedPayload(
 }
 
 export default function SettingsPage() {
+    const router = useRouter()
     const { data: settings, isLoading, isError, updateSettings, isMutating } = useUserSettings()
     const { data: profiles } = useProfiles()
     const { setLanguage: setAppLanguage, t } = useLanguageStore()
@@ -170,7 +172,8 @@ export default function SettingsPage() {
             void (async () => {
                 try {
                     const saved = await updateSettings(payload)
-                    setAppLanguage(saved.language)
+                    await setAppLanguage(saved.language)
+                    router.refresh()
                     void notifyExtensionSettingsChanged({ force: true })
                     setDraft((current) =>
                         current && areSettingsEqual(current, snapshot) ? null : current
@@ -193,7 +196,7 @@ export default function SettingsPage() {
                 saveTimeoutRef.current = null
             }
         }
-    }, [baseSettings, draft, isMutating, setAppLanguage, t.app.settings.noActiveProfile, t.app.settings.preferencesError, updateSettings])
+    }, [baseSettings, draft, isMutating, router, setAppLanguage, t.app.settings.noActiveProfile, t.app.settings.preferencesError, updateSettings])
 
 
 

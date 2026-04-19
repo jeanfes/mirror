@@ -436,6 +436,7 @@ const pt = {
       choosePlanDesc: "Alter ou melhore sua assinatura a qualquer momento.",
 
       currentPlan: "Plano atual",
+      planBase: "Plano base",
       upgradeTo: "Subir para {0}",
       switchTo: "Mudar para {0}",
       recommended: "Recomendado",

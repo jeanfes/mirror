@@ -4,6 +4,7 @@ import { useLanguageStore } from "@/store/useLanguageStore"
 import { type Invoice } from "@/features/billing/services/billing.service"
 import type { Dictionary } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
+import { getFormatLocale } from "@/lib/utils/date-utils"
 
 interface BillingHistoryProps {
   invoices: Invoice[]
@@ -30,7 +31,7 @@ function getStatusLabel(status: Invoice["status"], t: Dictionary) {
 }
 
 export function BillingHistory({ invoices }: BillingHistoryProps) {
-  const { t } = useLanguageStore()
+  const { t, language } = useLanguageStore()
 
   if (invoices.length === 0) {
     return (
@@ -71,7 +72,7 @@ export function BillingHistory({ invoices }: BillingHistoryProps) {
             {invoices.map((invoice) => (
               <tr key={invoice.id} className="group hover:bg-surface-subtle/30 transition-colors">
                 <td className="px-6 py-4 text-[14px] font-medium text-primary-text">
-                  {format(new Date(invoice.date), "MMM d, yyyy")}
+                  {format(new Date(invoice.date), "MMM d, yyyy", { locale: getFormatLocale(language) })}
                 </td>
                 <td className="px-6 py-4 text-[14px] font-bold text-primary-text">
                   {invoice.amount}

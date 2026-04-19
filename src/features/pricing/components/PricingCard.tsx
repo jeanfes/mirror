@@ -1,62 +1,85 @@
+"use client"
+
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
+import type { PlanDefinition } from "@/features/billing/services/billing.service";
+import { usePlanLocalization } from "@/features/billing/hooks/usePlanLocalization";
+import { useHasMounted } from "@/hooks/useHasMounted";
 
 interface PricingCardProps {
-    plan: {
-        readonly name: string;
-        readonly desc: string;
-        readonly price: string;
-        readonly features: readonly string[];
-        readonly buttonText: string;
-        readonly popular?: boolean;
-    };
-    readonly href: string;
-    readonly index: number;
-    readonly perMonthText: string;
-    readonly popularText?: string;
+    plan: PlanDefinition;
+    href: string;
+    index: number;
+    perMonthText: string;
+    popularText?: string;
+    buttonText: string;
 }
 
-export function PricingCard({ plan, href, perMonthText, popularText }: PricingCardProps) {
-    const isPro = plan.popular;
+export function PricingCard({ plan, href, perMonthText, popularText, buttonText }: PricingCardProps) {
+    const isPro = plan.recommended;
+    const hasMounted = useHasMounted();
+    const { summary, features } = usePlanLocalization(plan);
+
+    const mutedTextClass = isPro ? "text-primary-text/70" : "text-secondary-text"
+    const subtleTextClass = isPro ? "text-primary-text/60" : "text-muted-text"
+    const featureClass = "text-primary-text"
+    const bulletClass = isPro ? "text-[#8b5cf6]" : "text-[#75cef3]"
 
     return (
         <div
-            className={`${isPro 
-                ? "neo-shell relative flex flex-col border border-[#2e313d] bg-[#141824] p-10 shadow-[0_0_80px_rgba(139,92,246,0.1)] md:scale-110 z-20 rounded-[32px]" 
-                : "neo-card relative flex flex-col rounded-[32px] md:rounded-r-none md:border-r-0 border border-[#2e313d] bg-[#1a1d27]/80 backdrop-blur-xl p-10 md:pr-14 shadow-premium-sm"
-            }`}
+            className={`${isPro
+                ? "relative z-20 flex min-h-115 flex-col overflow-hidden rounded-[28px] border-[1.5px] border-[#75cef3]/40 bg-linear-to-b from-[#75cef3]/10 via-[#8b5cf6]/5 to-transparent p-8 shadow-[0_0_80px_rgba(117,206,243,0.15)] backdrop-blur-xl transition-all duration-300 md:-translate-y-2 md:scale-105"
+                : "relative z-10 flex min-h-115 flex-col overflow-hidden rounded-[28px] border border-border-soft bg-surface-card p-8 backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 hover:bg-surface-elevated hover:shadow-premium-md"
+                }`}
         >
             {isPro && (
-                <div className="absolute inset-0 bg-gradient-to-b from-[#75cef3]/5 to-[#8b5cf6]/5 pointer-events-none rounded-[32px] overflow-hidden" />
+                <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px] bg-linear-to-b from-[#75cef3]/5 to-[#8b5cf6]/5" />
             )}
-            {isPro && popularText && (
-                <div className="absolute top-0 right-8 -translate-y-1/2 rounded-full bg-brand-dark px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-premium-sm">
-                    {popularText}
+
+            <div className="relative z-10 flex flex-1 flex-col">
+                <div className="flex items-start justify-between gap-3">
+                    <div>
+                        <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${isPro ? "bg-linear-to-r from-[#75cef3] to-[#8b5cf6] text-white shadow-md" : "bg-surface-base text-primary-text ring-1 ring-border-soft"
+                            }`}>
+                            {isPro && popularText ? popularText : plan.name}
+                        </div>
+                        <p className={`mt-5 text-[13px] font-bold uppercase tracking-widest ${subtleTextClass}`}>{plan.name}</p>
+                    </div>
                 </div>
-            )}
-            <div className="mb-6">
-                <h2 className="text-xl font-black text-primary-dark uppercase tracking-tight">{plan.name}</h2>
-                <p className={`${isPro ? "text-primary-dark/70" : "text-secondary-text"} text-sm font-medium mt-1.5`}>{plan.desc}</p>
-            </div>
-            <div className="mb-8 flex items-baseline gap-1.5">
-                <span className="text-4xl font-black text-primary-dark">{plan.price}</span>
-                <span className={`${isPro ? "text-primary-dark/70" : "text-secondary-text"} text-sm font-bold uppercase tracking-wider`}>{perMonthText}</span>
-            </div>
-            <ul className="space-y-4 mb-10 flex-1">
-                {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-[0.95rem] text-primary-dark font-medium leading-tight">
-                        <CheckCircle2 className={`h-4.5 w-4.5 shrink-0 mt-0.5 ${isPro ? "text-accent-blue" : "text-primary-light"}`} />
-                        {feature}
-                    </li>
-                ))}
-            </ul>
-            <div>
-                <Link 
-                    href={href} 
-                    className={`${isPro ? "!bg-white !text-[#141824] shadow-premium-sm" : "neo-btn-muted"} inline-block text-center py-3.5 text-[0.95rem] font-bold w-full rounded-xl transition-all duration-200 hover:opacity-90`}
-                >
-                    {plan.buttonText}
-                </Link>
+
+                <div className="mt-6 flex items-end gap-2">
+                    <p className="text-5xl font-black tracking-[-0.05em] text-primary-text">{plan.price}</p>
+                    <p className={`pb-1.5 text-[14px] font-semibold ${mutedTextClass}`}>{perMonthText}</p>
+                </div>
+
+                <div className={`mt-5 rounded-2xl p-4 transition-all duration-300 ${isPro ? "bg-surface-elevated/40 shadow-inner ring-1 ring-border-soft/50" : "bg-surface-base ring-1 ring-border-soft"
+                    }`}>
+                    <p className={`text-[13px] leading-relaxed font-medium ${mutedTextClass}`}>
+                        {hasMounted ? summary : "..."}
+                    </p>
+                </div>
+
+                <ul className="mt-6 space-y-3 mb-10 flex-1">
+                    {hasMounted && features.map((feature) => (
+                        <li key={feature} className={`flex items-start gap-2.5 text-[13px] leading-5 ${featureClass}`}>
+                            <Check className={`mt-0.5 h-4 w-4 shrink-0 ${bulletClass}`} />
+                            {feature}
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="mt-auto pt-8">
+                    <Link
+                        href={href}
+                        className={`w-full h-12 rounded-xl text-[14px] font-bold shadow-sm transition-all duration-300 flex items-center justify-center ${isPro
+                                ? "bg-primary-text text-text-inverse hover:scale-[1.02] hover:shadow-md"
+                                : "bg-surface-elevated text-primary-text ring-1 ring-border-soft hover:bg-surface-hover"
+                            }`}
+                    >
+                        {buttonText}
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
+                </div>
             </div>
         </div>
     );

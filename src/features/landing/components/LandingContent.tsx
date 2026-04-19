@@ -16,7 +16,11 @@ interface LandingContentProps {
 
 export function LandingContent({ initialT, routes }: LandingContentProps) {
     const liveT = useLanguageStore((state) => state.t);
-    const t = useMemo(() => liveT ?? initialT, [liveT, initialT]);
+    const isHydrated = useLanguageStore((state) => state.isHydrated);
+    const t = useMemo(() => {
+        if (!isHydrated) return initialT;
+        return liveT ?? initialT;
+    }, [liveT, initialT, isHydrated]);
 
     return (
         <main className="relative flex flex-col items-center overflow-x-hidden pt-10">

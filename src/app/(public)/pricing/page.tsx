@@ -2,29 +2,17 @@ import { PricingCard } from "@/features/pricing/components/PricingCard";
 import { getDictionary } from "@/lib/i18n-server";
 import { getServerSession } from "@/lib/auth";
 import { ROUTES } from "@/lib/routes";
+import { planDefinitions } from "@/features/billing/services/billing.service";
 
 export default async function PricingPage() {
     const { t } = await getDictionary();
     const user = await getServerSession();
     const ctaHref = user ? ROUTES.private.plans : ROUTES.auth.register;
 
-    const plans = [
-        {
-            name: t.pricing.freePlan,
-            desc: t.pricing.freeDesc,
-            price: "$0",
-            features: t.pricing.freeFeatures,
-            buttonText: t.pricing.freeBtn,
-        },
-        {
-            name: t.pricing.proPlan,
-            desc: t.pricing.proDesc,
-            price: "$9.99",
-            features: t.pricing.proFeatures,
-            buttonText: t.pricing.proBtn,
-            popular: true,
-        }
-    ];
+    const plansToRender = planDefinitions.map((plan) => ({
+        plan,
+        buttonText: plan.name === "Free" ? t.pricing.freeBtn : t.pricing.proBtn
+    }));
 
     return (
         <main className="relative flex w-full flex-col items-center overflow-x-hidden pt-10 pb-20">
@@ -38,9 +26,9 @@ export default async function PricingPage() {
             </section>
 
             <section className="relative w-full max-w-5xl px-6 py-20 mx-auto">
-                <div className="absolute inset-0 top-1/2 -z-10 -translate-y-1/2 w-[800px] h-[400px] left-1/2 -translate-x-1/2 bg-[radial-gradient(ellipse,rgba(139,92,246,0.15)_0%,transparent_70%)] rounded-full blur-[80px] pointer-events-none" />
-                <div className="grid gap-6 md:grid-cols-[1fr_1.2fr] md:items-center md:gap-0 mx-auto max-w-4xl">
-                    {plans.map((plan, i) => (
+                <div className="pointer-events-none absolute inset-0 top-1/2 left-1/2 -z-10 h-100 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(139,92,246,0.15)_0%,transparent_70%)] blur-[80px]" />
+                <div className="grid gap-6 md:grid-cols-2 md:items-center md:gap-8 mx-auto max-w-4xl">
+                    {plansToRender.map(({ plan, buttonText }, i) => (
                         <PricingCard
                             key={plan.name}
                             plan={plan}
@@ -48,6 +36,7 @@ export default async function PricingPage() {
                             href={ctaHref}
                             perMonthText={t.pricing.perMonth}
                             popularText={t.pricing.popular}
+                            buttonText={buttonText}
                         />
                     ))}
                 </div>

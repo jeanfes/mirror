@@ -1,11 +1,13 @@
 "use client"
 
-import { ArrowRight, Check, WandSparkles, Star } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
 import type { PlanDefinition, PlanName } from "@/features/billing/services/billing.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { usePlanLocalization } from "@/features/billing/hooks/usePlanLocalization"
+import { useHasMounted } from "@/hooks/useHasMounted"
 
 interface PlanCardProps {
     plan: PlanDefinition
@@ -16,105 +18,69 @@ interface PlanCardProps {
 
 export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardProps) {
     const { t } = useLanguageStore()
+    const hasMounted = useHasMounted()
     const isCurrent = currentPlan === plan.name
     const isRecommended = plan.recommended
 
-    const actionLabel = isCurrent 
-        ? t.app.plans.currentPlan 
-        : currentPlan === "Free" 
-            ? t.app.plans.upgradeTo.replace("{0}", plan.name) 
-            : t.app.plans.switchTo.replace("{0}", plan.name)
+    const actionLabel = isCurrent
+        ? t.app.plans.currentPlan
+        : currentPlan === "Free"
+            ? t.app.plans.upgradeTo.replace("{0}", plan.name)
+            : currentPlan === "Pro" && plan.name === "Free"
+                ? t.app.plans.planBase
+                : t.app.plans.switchTo.replace("{0}", plan.name)
 
-    const mutedTextClass = isRecommended ? "text-white/82" : "text-slate-700"
-    const subtleTextClass = isRecommended ? "text-white/80" : "text-slate-600"
-    const featureClass = isRecommended ? "text-white/88" : "text-slate-700"
-    const bulletClass = isRecommended ? "text-[#75cef3]" : "text-success"
+    const mutedTextClass = isRecommended ? "text-primary-text/70" : "text-secondary-text"
+    const subtleTextClass = isRecommended ? "text-primary-text/60" : "text-muted-text"
+    const featureClass = "text-primary-text"
+    const bulletClass = isRecommended ? "text-[#8b5cf6]" : "text-[#75cef3]"
 
-    const renderLocalizedSummary = () => {
-        if (!plan.metadata) return plan.summary
-        
-        const { monthlyGenerations, maxProfiles } = plan.metadata
-        const profileText = maxProfiles === null || maxProfiles >= 999
-            ? t.app.plans.features.summary_profiles_unlimited
-            : t.app.plans.features.summary_profiles_count.replace("{0}", maxProfiles.toLocaleString())
-            
-        return t.app.plans.features.summary_template
-            .replace("{0}", monthlyGenerations.toLocaleString())
-            .replace("{1}", profileText)
-    }
-
-    const renderLocalizedFeatures = () => {
-        if (!plan.metadata) return plan.features
-        
-        const { monthlyGenerations, maxProfiles, historyRetentionDays, allowedFeatures } = plan.metadata
-        
-        const features: string[] = [
-            t.app.plans.features.generations.replace("{0}", monthlyGenerations.toLocaleString()),
-            maxProfiles === null || maxProfiles >= 999
-                ? t.app.plans.features.profiles_unlimited
-                : t.app.plans.features.profiles.replace("{0}", maxProfiles.toLocaleString()),
-            historyRetentionDays >= 3650
-                ? t.app.plans.features.history_unlimited
-                : t.app.plans.features.history.replace("{0}", historyRetentionDays.toLocaleString())
-        ]
-        
-        // Add specific allowed features
-        allowedFeatures.forEach(featureKey => {
-            const localizedKey = (t.app.plans.features as any)[featureKey]
-            if (localizedKey) {
-                features.push(localizedKey)
-            }
-        })
-        
-        return Array.from(new Set(features))
-    }
-
-    const localizedSummary = renderLocalizedSummary()
-    const localizedFeatures = renderLocalizedFeatures()
+    const { summary: localizedSummary, features: localizedFeatures } = usePlanLocalization(plan)
 
     return (
         <Card className={cn(
-            "plan-card-surface relative flex min-h-115 flex-col overflow-hidden p-8 transition-all duration-300", 
-            isRecommended 
-                ? "plan-card-surface-recommended md:scale-110 z-20 shadow-[0_0_80px_rgba(117,206,243,0.15)] ring-1 ring-[#75cef3]/30" 
-                : "z-10 md:rounded-r-none md:border-r-0 md:opacity-90 hover:opacity-100"
+            "relative flex min-h-115 flex-col overflow-hidden rounded-[28px] p-8 transition-all duration-300",
+            isRecommended
+                ? "z-20 border-[1.5px] border-[#75cef3]/40 bg-linear-to-b from-[#75cef3]/10 via-[#8b5cf6]/5 to-transparent shadow-[0_0_80px_rgba(117,206,243,0.15)] backdrop-blur-xl md:-translate-y-2 md:scale-105"
+                : "z-10 border border-border-soft bg-surface-card hover:bg-surface-elevated hover:shadow-premium-md hover:-translate-y-1 backdrop-blur-lg"
         )}>
             {isRecommended && (
-                <div className="absolute inset-0 bg-gradient-to-b from-[#75cef3]/5 to-[#8b5cf6]/5 pointer-events-none" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-[#75cef3]/5 to-[#8b5cf6]/5" />
             )}
             <div className="relative z-10 flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-3">
                     <div>
-                        <div className={cn("plan-card-badge", isRecommended && "plan-card-badge-recommended")}>
-                            {isRecommended ? <WandSparkles className="h-3.5 w-3.5" /> : <Star className="h-3.5 w-3.5" />}
-                            {isRecommended ? t.app.plans.recommended : t.app.plans.designedFor}
-                        </div>
-                        <p className={`mt-4 text-[12px] font-semibold uppercase tracking-[0.12em] ${subtleTextClass}`}>{plan.name}</p>
+                        <p className={`mt-5 text-[13px] font-bold uppercase tracking-widest ${subtleTextClass}`}>{plan.name}</p>
                     </div>
                     {isCurrent ? (
-                        <div className={cn("plan-card-badge", isRecommended && "plan-card-badge-recommended")}>
+                        <div className="inline-flex items-center rounded-full bg-surface-base px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-text ring-1 ring-border-soft">
                             {t.app.plans.activeNow}
                         </div>
                     ) : null}
                 </div>
 
                 <div className="mt-6 flex items-end gap-2">
-                    <p className="text-5xl font-black tracking-[-0.05em]">{plan.price}</p>
-                    <p className={`pb-1 text-[13px] font-medium ${mutedTextClass}`}>{t.app.plans.perMonth}</p>
+                    <p className="text-5xl font-black tracking-[-0.05em] text-primary-text">{plan.price}</p>
+                    <p className={`pb-1.5 text-[14px] font-semibold ${mutedTextClass}`}>{t.app.plans.perMonth}</p>
                 </div>
 
-                <div className={cn("plan-card-capacity mt-5", isRecommended && "plan-card-capacity-recommended")}>
-                    <p className={`text-[12px] font-semibold uppercase tracking-[0.08em] ${subtleTextClass}`}>{t.app.plans.capacity}</p>
+                <div className={cn(
+                    "mt-5 rounded-2xl p-4 transition-all duration-300",
+                    isRecommended ? "bg-surface-elevated/40 shadow-inner ring-1 ring-border-soft/50" : "bg-surface-base ring-1 ring-border-soft"
+                )}>
+                    <p className={`text-[11px] font-bold uppercase tracking-[0.12em] ${subtleTextClass}`}>{t.app.plans.capacity}</p>
                     <div className="mt-2 flex items-end justify-between gap-3">
-                        <p className="text-2xl font-bold">{plan.credits}</p>
-                        <p className={`text-[13px] ${mutedTextClass}`}>{t.app.plans.creditsPerMonth}</p>
+                        <p className="text-xl font-bold text-primary-text">{plan.credits}</p>
+                        <p className={`text-[13px] font-medium ${mutedTextClass}`}>{t.app.plans.creditsPerMonth}</p>
                     </div>
                 </div>
 
-                <p className={`mt-5 text-[14px] leading-6 ${mutedTextClass}`}>{localizedSummary}</p>
+                <p className={`mt-5 text-[14px] leading-6 ${mutedTextClass}`}>
+                    {hasMounted ? localizedSummary : "..."}
+                </p>
 
                 <ul className="mt-6 space-y-3">
-                    {localizedFeatures.map((feature) => (
+                    {hasMounted && localizedFeatures.map((feature) => (
                         <li key={feature} className={`flex items-start gap-2.5 text-[13px] leading-5 ${featureClass}`}>
                             <Check className={`mt-0.5 h-4 w-4 shrink-0 ${bulletClass}`} />
                             {feature}
@@ -122,15 +88,20 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
                     ))}
                 </ul>
 
-                <div className="mt-auto pt-6">
+                <div className="mt-auto pt-8">
                     <Button
-                        className={cn("w-full", isRecommended && "!bg-white !text-[#141824] !hover:bg-white/90")}
+                        className={cn(
+                            "w-full h-12 rounded-xl text-[14px] font-bold shadow-sm transition-all duration-300",
+                            isRecommended
+                                ? "bg-primary-text text-text-inverse hover:scale-[1.02] hover:shadow-md"
+                                : "bg-surface-elevated text-primary-text ring-1 ring-border-soft hover:bg-surface-hover"
+                        )}
                         variant={isCurrent ? "secondary" : "primary"}
                         disabled={isCurrent || isUpdating}
                         onClick={() => onSelect(plan.name)}
                     >
                         {isCurrent ? t.app.plans.currentPlan : isUpdating ? t.app.plans.updating : actionLabel}
-                        {!isCurrent && !isUpdating ? <ArrowRight className="h-4 w-4" /> : null}
+                        {!isCurrent && !isUpdating ? <ArrowRight className="h-4 w-4 ml-2" /> : null}
                     </Button>
                 </div>
             </div>

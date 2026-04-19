@@ -17,6 +17,9 @@ import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
 import { useLanguageStore } from "@/store/useLanguageStore"
+import { usePlanLocalization } from "@/features/billing/hooks/usePlanLocalization"
+import { useHasMounted } from "@/hooks/useHasMounted"
+import { getFormatLocale } from "@/lib/utils/date-utils"
 
 const BillingHistory = dynamic(
   () => import("@/features/billing/components/BillingHistory").then((m) => m.BillingHistory),
@@ -45,6 +48,7 @@ function resolveSubscriptionStatusClasses(statusLabel: string): string {
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("overview")
+  const hasMounted = useHasMounted()
 
   const { data: account, isLoading: isAccountLoading, isError } = useAccount()
   const { data: fetchedPlanDefinitions } = usePlanDefinitions()
@@ -62,7 +66,7 @@ export default function AccountPage() {
   const { data: profiles } = useProfiles({ enabled: activeTab !== "billing" })
   // ─────────────────────────────────────────────────────────────────────────────
 
-  const { t } = useLanguageStore()
+  const { t, language } = useLanguageStore()
 
   const stats = useMemo(() => {
     if (!account) return null
@@ -90,9 +94,10 @@ export default function AccountPage() {
       }
     }
 
-    const currentPlan = resolvedPlanDefinitions.find((p) => p.name === account.plan)
+    const defaultPlanDefinitions = resolvedPlanDefinitions ?? planDefinitions
+    const currentPlan = defaultPlanDefinitions.find((p) => p.name === account.plan)
     const totalCredits = currentPlan?.credits ?? account.creditsRemaining
-    const usedCredits = Math.max(totalCredits - account.creditsRemaining, 0)
+    const usedCredits = account.creditsUsedThisMonth ?? 0
     const creditUsage = totalCredits > 0 ? Math.min((usedCredits / totalCredits) * 100, 100) : 0
     const latestHistoryItem = historyItems[0]
 
@@ -108,6 +113,8 @@ export default function AccountPage() {
       latestHistoryItem,
     }
   }, [account, history, profiles, resolvedPlanDefinitions])
+
+  const { summary: localizedSummary, features: localizedFeatures } = usePlanLocalization(stats?.currentPlan ?? null)
 
   if (isAccountLoading || !account || !stats) {
     return <LoadingOverlay show={true} />
@@ -180,7 +187,7 @@ export default function AccountPage() {
                   </span>
                 </div>
                 <p className="mt-2 text-[14px] leading-6 text-white/72">
-                  {currentPlan?.summary ?? t.app.account.activePlanDesc}
+                  {hasMounted ? (localizedSummary || t.app.account.activePlanDesc) : "..."}
                 </p>
               </div>
               <p className="text-[28px] font-semibold tracking-[-0.04em] text-white">
@@ -209,14 +216,16 @@ export default function AccountPage() {
               <div className="dashboard-dark-stat-muted">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.renewal}</p>
                 <p className="mt-2 text-[15px] font-semibold text-white">
-                  {account.renewalDate ? format(new Date(account.renewalDate), "MMM d, yyyy") : t.app.account.na}
+                  {account.renewalDate && hasMounted
+                    ? format(new Date(account.renewalDate), "MMM d, yyyy", { locale: getFormatLocale(language) })
+                    : t.app.account.na}
                 </p>
               </div>
               <div className="dashboard-dark-stat-muted">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.latestOutput}</p>
                 <p className="mt-2 text-[15px] font-semibold text-white">
-                  {latestActivityAt
-                    ? formatDistanceToNow(new Date(latestActivityAt), { addSuffix: true })
+                  {latestActivityAt && hasMounted
+                    ? formatDistanceToNow(new Date(latestActivityAt), { addSuffix: true, locale: getFormatLocale(language) })
                     : t.app.account.noActivity}
                 </p>
               </div>
@@ -240,7 +249,9 @@ export default function AccountPage() {
               <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{account.plan}</p>
               <p className="mt-2 body-muted">
                 {t.app.account.renewsOn}{" "}
-                {account.renewalDate ? format(new Date(account.renewalDate), "MMM d, yyyy") : t.app.account.na}
+                {account.renewalDate && hasMounted
+                  ? format(new Date(account.renewalDate), "MMM d, yyyy", { locale: getFormatLocale(language) })
+                  : t.app.account.na}
               </p>
             </Card>
             <Card className="dashboard-card-lg">
@@ -260,9 +271,9 @@ export default function AccountPage() {
           <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_360px]">
             <Card className="dashboard-card-xl">
               <p className="dashboard-overline">{t.app.account.planNotes}</p>
-              <h3 className="mt-3 section-heading">{currentPlan?.summary ?? t.app.account.planActiveFallback}</h3>
+              <h3 className="mt-3 section-heading">{localizedSummary || t.app.account.planActiveFallback}</h3>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {(currentPlan?.features ?? []).map((feature) => (
+                {hasMounted && localizedFeatures.map((feature) => (
                   <div key={feature} className="rounded-3xl border border-border-soft bg-surface-card p-4 text-[14px] font-medium text-secondary-text">
                     {feature}
                   </div>
