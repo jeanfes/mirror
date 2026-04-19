@@ -52,19 +52,19 @@ type ExtensionSyncResponse = {
 type ExtensionSetSessionMessage = {
     type: "SET_SESSION"
     token: string
-    refreshToken: string
+    refresh_token: string
     plan?: "Free" | "Pro"
-    creditsRemaining?: number
-    renewalDate?: string
+    credits_remaining?: number
+    renewal_date?: string
     theme?: ExtensionTheme
     language?: ExtensionLanguage
-    commentLanguageMode?: ExtensionCommentLanguageMode
-    activeProfileId?: string | null
-    defaultEmojis?: boolean
-    autoInsert?: boolean
-    notificationsEnabled?: boolean
-    desktopAlertsEnabled?: boolean
-    objectiveLibrary?: ExtensionObjectiveProfile[]
+    comment_language_mode?: ExtensionCommentLanguageMode
+    active_profile_id?: string | null
+    default_emojis?: boolean
+    auto_insert?: boolean
+    notifications_enabled?: boolean
+    desktop_alerts_enabled?: boolean
+    objective_library?: ExtensionObjectiveProfile[]
 }
 
 type ExtensionBridgeMessage = ExtensionSetSessionMessage
@@ -417,37 +417,37 @@ function RedirectContent() {
                         const message: ExtensionSetSessionMessage = {
                             type: "SET_SESSION",
                             token: session.access_token,
-                            refreshToken: session.refresh_token,
+                            refresh_token: session.refresh_token,
                             plan: normalizePlan(accountRow?.plan),
-                            creditsRemaining:
+                            credits_remaining:
                                 typeof accountRow?.credits_remaining === "number"
                                     ? Math.max(0, accountRow.credits_remaining)
                                     : undefined,
-                            renewalDate:
+                            renewal_date:
                                 typeof accountRow?.renewal_date === "string" && accountRow.renewal_date.trim().length > 0
                                     ? accountRow.renewal_date
                                     : undefined,
                             theme: normalizeThemeForExtension(settingsRow?.theme),
                             language: normalizeLanguage(settingsRow?.language),
-                            commentLanguageMode: normalizeCommentLanguageMode(settingsRow?.comment_language_mode),
-                            activeProfileId: normalizeActiveProfileId(settingsRow?.active_profile_id),
-                            defaultEmojis:
+                            comment_language_mode: normalizeCommentLanguageMode(settingsRow?.comment_language_mode),
+                            active_profile_id: normalizeActiveProfileId(settingsRow?.active_profile_id),
+                            default_emojis:
                                 typeof settingsRow?.default_emojis === "boolean"
                                     ? settingsRow.default_emojis
                                     : undefined,
-                            autoInsert:
+                            auto_insert:
                                 typeof settingsRow?.auto_insert === "boolean"
                                     ? settingsRow.auto_insert
                                     : undefined,
-                            notificationsEnabled:
+                            notifications_enabled:
                                 typeof settingsRow?.notifications_enabled === "boolean"
                                     ? settingsRow.notifications_enabled
                                     : undefined,
-                            desktopAlertsEnabled:
+                            desktop_alerts_enabled:
                                 typeof settingsRow?.desktop_alerts_enabled === "boolean"
                                     ? settingsRow.desktop_alerts_enabled
                                     : undefined,
-                            objectiveLibrary
+                            objective_library: objectiveLibrary
                         }
 
                         setStatus(copy.syncSessionConnecting)
