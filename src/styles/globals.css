@@ -59,9 +59,9 @@ html[data-theme="light"] {
   --loading-panel-bg: rgba(255, 255, 255, 0.9);
   --loading-panel-border: rgba(226, 232, 240, 0.8);
   --loading-label: #334155;
-  --loading-shimmer-start: rgba(255, 255, 255, 0.72);
-  --loading-shimmer-end: rgba(236, 241, 245, 0.92);
-  --loading-shimmer-stripe: rgba(255, 255, 255, 0.85);
+  --loading-shimmer-start: rgba(0, 0, 0, 0.04);
+  --loading-shimmer-end: rgba(0, 0, 0, 0.08);
+  --loading-shimmer-stripe: rgba(255, 255, 255, 0.6);
   --spinner-track: rgba(148, 163, 184, 0.28);
   --spinner-head: #171b2d;
   --button-primary-bg: #171b2d;
@@ -189,6 +189,7 @@ html[data-theme="dark"] {
   --color-surface-overlay-strong: var(--surface-overlay-strong);
   --color-surface-solid: var(--surface-solid);
   --color-surface-hover: var(--surface-hover);
+  --color-surface-lowest: var(--bg-main);
   --color-text-inverse: var(--text-inverse);
 }
 
@@ -806,6 +807,18 @@ h6 {
   -webkit-text-fill-color: transparent;
   animation: mirror-fluid 8s ease infinite;
   display: inline-block;
+}
+
+.bg-mirror-fluid {
+  background: linear-gradient(
+    270deg,
+    #75cef3,
+    #a8c8f8,
+    #8b5cf6,
+    #75cef3
+  );
+  background-size: 400% 400%;
+  animation: mirror-fluid 8s ease infinite;
 }
 
 .badge-success {

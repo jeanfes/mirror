@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
         isLikelyNewOAuthUser(user.created_at, user.last_sign_in_at)
       )
       const redirectTarget = shouldOnboardNewOAuthUser
-        ? ROUTES.private.onboardingProfessional
+        ? `${ROUTES.private.profiles}?create=1`
         : nextPath
 
       const response = NextResponse.redirect(

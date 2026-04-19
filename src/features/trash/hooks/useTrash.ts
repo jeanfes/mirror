@@ -41,8 +41,8 @@ export function useTrash() {
         queryClient.setQueryData(trashKey, context.previousTrash)
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: trashKey })
+    onSuccess: () => {
+      // Logic for onSuccess if needed
     },
   })
 
@@ -62,8 +62,8 @@ export function useTrash() {
         queryClient.setQueryData(trashKey, context.previousTrash)
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: trashKey })
+    onSuccess: () => {
+      // Logic for onSuccess if needed
     },
   })
 
@@ -85,8 +85,8 @@ export function useTrash() {
         queryClient.setQueryData(trashKey, context.previousTrash)
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: trashKey })
+    onSuccess: () => {
+      // Logic for onSuccess if needed
     },
   })
 

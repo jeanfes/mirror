@@ -45,18 +45,20 @@ export function Select({
             <SelectPrimitive.Root value={safeValue} onValueChange={handleValueChange}>
                 <SelectPrimitive.Trigger
                     className={cn(
-                        "flex h-10 w-full items-center justify-between rounded-xl border border-border-soft bg-surface-elevated px-3 py-2 text-[13px] font-medium text-primary-text transition-all hover:bg-surface-hover focus:outline-none focus:ring-2 focus:ring-accent-purple/30 disabled:cursor-not-allowed disabled:opacity-50",
+                        "flex h-10 w-full items-center justify-between rounded-xl border border-border-soft bg-surface-elevated px-3 py-2 text-[13px] font-medium text-primary-text transition-all duration-200 hover:bg-surface-hover hover:border-border-medium focus:outline-none focus:ring-2 focus:ring-accent-purple/30 disabled:cursor-not-allowed disabled:opacity-50 group",
                         triggerClassName
                     )}
                 >
-                    <SelectPrimitive.Value placeholder={placeholder} />
+                    <div className="flex-1 text-left truncate [&:not([data-placeholder])]:text-primary-text data-[placeholder]:text-muted-text">
+                        <SelectPrimitive.Value placeholder={placeholder} />
+                    </div>
                     <SelectPrimitive.Icon asChild>
-                        <ChevronDown className="h-4 w-4 opacity-50" />
+                        <ChevronDown className="h-4 w-4 opacity-50 group-hover:opacity-80 transition-opacity" />
                     </SelectPrimitive.Icon>
                 </SelectPrimitive.Trigger>
                 <SelectPrimitive.Portal>
                     <SelectPrimitive.Content
-                        className="neo-card z-50 min-w-(--radix-select-trigger-width) overflow-hidden rounded-[14px] border border-border-soft bg-surface-overlay-strong backdrop-blur-sm p-1 shadow-premium-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                        className="neo-card z-[100] min-w-(--radix-select-trigger-width) overflow-hidden rounded-[14px] border border-border-soft bg-surface-overlay-strong backdrop-blur-sm p-1 shadow-premium-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
                         position="popper"
                         sideOffset={5}
                     >

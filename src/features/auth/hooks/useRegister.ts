@@ -40,7 +40,7 @@ export const useRegister = () => {
             if (extensionNext) {
                 router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(extensionNext)}`)
             } else {
-                router.push(ROUTES.private.onboardingProfessional)
+                router.push(`${ROUTES.private.profiles}?create=1`)
             }
             
             router.refresh()

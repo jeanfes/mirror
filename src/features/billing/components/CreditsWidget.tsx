@@ -20,6 +20,7 @@ export function CreditsWidget() {
   useEffect(() => {
     if (!userId) return
 
+    let timer: ReturnType<typeof setTimeout>
     const channel = supabase.channel(`public:user_account:user_id=eq.${userId}`)
       .on(
         "postgres_changes",
@@ -30,12 +31,16 @@ export function CreditsWidget() {
           filter: `user_id=eq.${userId}`,
         },
         () => {
-          void queryClient.invalidateQueries({ queryKey: ["account", userId] })
+          clearTimeout(timer)
+          timer = setTimeout(() => {
+            void queryClient.invalidateQueries({ queryKey: ["account", userId] })
+          }, 300)
         }
       )
       .subscribe()
 
     return () => {
+      clearTimeout(timer)
       void supabase.removeChannel(channel)
     }
   }, [supabase, userId, queryClient])

@@ -21,7 +21,7 @@ export const useLogin = () => {
     const sanitizedNext = sanitizeAuthNext(nextParam)
     const oauthNext = sanitizedNext ?? (
         pathname === ROUTES.auth.register
-            ? ROUTES.private.onboardingProfessional
+            ? `${ROUTES.private.profiles}?create=1`
             : null
     )
     const extensionNext = sanitizeExtensionNext(sanitizedNext)

@@ -45,7 +45,12 @@ export default function ProfilesPage() {
         deleteProfile,
         isMutating
     } = useProfiles()
-    const { data: settings, updateSettings, isMutating: isSettingsMutating } = useUserSettings()
+    const {
+        data: settings,
+        updateSettings,
+        isMutating: isSettingsMutating,
+        isLoading: isSettingsLoading
+    } = useUserSettings()
     const { quota } = useAccount()
 
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
@@ -76,6 +81,10 @@ export default function ProfilesPage() {
     }, [searchParams])
 
     const openCreateFlow = useCallback(() => {
+        if (isSettingsLoading) {
+            return
+        }
+
         const hasProfiles = (profiles?.length ?? 0) > 0
         const hasPersonaBio = (settings?.personaBio?.trim().length ?? 0) > 0
 
@@ -86,21 +95,21 @@ export default function ProfilesPage() {
         }
 
         openCreateDialog()
-    }, [openCreateDialog, personaBioPromptDismissed, profiles, settings?.personaBio])
+    }, [isSettingsLoading, openCreateDialog, personaBioPromptDismissed, profiles, settings?.personaBio])
 
     useEffect(() => {
         if (!pendingCreateFromQueryRef.current) {
             return
         }
 
-        if (isLoading || isDialogOpen || isPersonaBioPromptOpen) {
+        if (isLoading || isSettingsLoading || isDialogOpen || isPersonaBioPromptOpen) {
             return
         }
 
         pendingCreateFromQueryRef.current = false
         openCreateFlow()
         router.replace(ROUTES.private.profiles)
-    }, [isDialogOpen, isLoading, isPersonaBioPromptOpen, openCreateFlow, router])
+    }, [isDialogOpen, isLoading, isSettingsLoading, isPersonaBioPromptOpen, openCreateFlow, router])
 
     const continueToProfileDialog = () => {
         setIsPersonaBioPromptOpen(false)

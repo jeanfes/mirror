@@ -39,7 +39,7 @@ export function PricingCard({ plan, href, perMonthText, popularText, buttonText 
             <div className="relative z-10 flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-3">
                     <div>
-                        <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${isPro ? "bg-linear-to-r from-[#75cef3] to-[#8b5cf6] text-white shadow-md" : "bg-surface-base text-primary-text ring-1 ring-border-soft"
+                        <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${isPro ? "bg-mirror-fluid text-white shadow-md" : "bg-surface-base text-primary-text ring-1 ring-border-soft"
                             }`}>
                             {isPro && popularText ? popularText : plan.name}
                         </div>
@@ -72,8 +72,8 @@ export function PricingCard({ plan, href, perMonthText, popularText, buttonText 
                     <Link
                         href={href}
                         className={`w-full h-12 rounded-xl text-[14px] font-bold shadow-sm transition-all duration-300 flex items-center justify-center ${isPro
-                                ? "bg-primary-text text-text-inverse hover:scale-[1.02] hover:shadow-md"
-                                : "bg-surface-elevated text-primary-text ring-1 ring-border-soft hover:bg-surface-hover"
+                            ? "bg-primary-text text-text-inverse hover:scale-[1.02] hover:shadow-md"
+                            : "bg-surface-elevated text-primary-text ring-1 ring-border-soft hover:bg-surface-hover"
                             }`}
                     >
                         {buttonText}
