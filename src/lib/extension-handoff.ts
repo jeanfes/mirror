@@ -3,6 +3,7 @@ const EXTENSION_ID_PATTERN = /^[a-p]{32}$/
 
 const ALLOWED_EXTENSION_PATHS = new Set(["/sync.html"])
 const ALLOWED_INTERNAL_PATH_PREFIXES = [
+  "/onboarding",
   "/profiles",
   "/history",
   "/settings",

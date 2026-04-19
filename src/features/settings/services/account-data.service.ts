@@ -11,8 +11,6 @@ export async function startDataExport(
   supabase: SupabaseClient,
   options: ExportOptions = { profiles: "all", objectives: "all" }
 ): Promise<string | null> {
-  // El endpoint export-data retorna el archivo completo del usuario.
-  void options
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   if (!supabaseUrl) {
@@ -29,10 +27,12 @@ export async function startDataExport(
   }
 
   const response = await fetch(`${supabaseUrl}/functions/v1/export-data`, {
-    method: "GET",
+    method: "POST",
     headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(options)
   })
 
   if (!response.ok) {

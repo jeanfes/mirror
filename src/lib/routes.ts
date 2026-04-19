@@ -18,6 +18,7 @@ export const ROUTES = {
     extensionRedirect: "/auth/extension-redirect"
   },
   private: {
+    onboardingProfessional: "/onboarding/professional",
     profiles: "/profiles",
     history: "/history",
     goals: "/goals",

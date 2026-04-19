@@ -1,18 +1,30 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Download, Layers3, MessageSquareQuote, Plus, WandSparkles, Star } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/Button"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/Dialog"
 import { Card } from "@/components/ui/Card"
 import { LoadingOverlay } from "@/components/ui/Loading"
 import { StatePanel } from "@/components/ui/StatePanel"
+import { Textarea } from "@/components/ui/Textarea"
 import { ProfileCard } from "@/features/profiles/components/ProfileCard"
 import { ProfileFormDialog } from "@/features/profiles/components/ProfileFormDialog"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
+import { useUserSettings } from "@/features/settings/hooks/useUserSettings"
 import { startDataExport } from "@/features/settings/services/account-data.service"
+import { notifyExtensionSettingsChanged } from "@/lib/extension-bridge"
+import { ROUTES } from "@/lib/routes"
 import { createClient } from "@/lib/supabase/client"
 import type { CreateProfileInput } from "@/features/profiles/services/profiles.service"
 import { useProfilesUIStore } from "@/store/useProfilesUIStore"
@@ -33,12 +45,17 @@ export default function ProfilesPage() {
         deleteProfile,
         isMutating
     } = useProfiles()
+    const { data: settings, updateSettings, isMutating: isSettingsMutating } = useUserSettings()
     const { quota } = useAccount()
 
     const { isDialogOpen, editingProfileId, openCreateDialog, openEditDialog, closeDialog } = useProfilesUIStore()
 
     const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
     const [isExporting, setIsExporting] = useState(false)
+    const [isPersonaBioPromptOpen, setIsPersonaBioPromptOpen] = useState(false)
+    const [personaBioDraft, setPersonaBioDraft] = useState("")
+    const [isSavingPersonaBio, setIsSavingPersonaBio] = useState(false)
+    const [personaBioPromptDismissed, setPersonaBioPromptDismissed] = useState(false)
     const { t } = useLanguageStore()
     const supabase = createClient()
 
@@ -58,19 +75,60 @@ export default function ProfilesPage() {
         }
     }, [searchParams])
 
+    const openCreateFlow = useCallback(() => {
+        const hasProfiles = (profiles?.length ?? 0) > 0
+        const hasPersonaBio = (settings?.personaBio?.trim().length ?? 0) > 0
+
+        if (!hasProfiles && !hasPersonaBio && !personaBioPromptDismissed) {
+            setPersonaBioDraft("")
+            setIsPersonaBioPromptOpen(true)
+            return
+        }
+
+        openCreateDialog()
+    }, [openCreateDialog, personaBioPromptDismissed, profiles, settings?.personaBio])
+
     useEffect(() => {
         if (!pendingCreateFromQueryRef.current) {
             return
         }
 
-        if (isLoading || isDialogOpen) {
+        if (isLoading || isDialogOpen || isPersonaBioPromptOpen) {
             return
         }
 
         pendingCreateFromQueryRef.current = false
+        openCreateFlow()
+        router.replace(ROUTES.private.profiles)
+    }, [isDialogOpen, isLoading, isPersonaBioPromptOpen, openCreateFlow, router])
+
+    const continueToProfileDialog = () => {
+        setIsPersonaBioPromptOpen(false)
+        setPersonaBioPromptDismissed(true)
         openCreateDialog()
-        router.replace("/profiles")
-    }, [isDialogOpen, isLoading, openCreateDialog, router])
+    }
+
+    const handleSavePersonaBio = async () => {
+        const normalized = personaBioDraft.trim()
+
+        if (!normalized) {
+            continueToProfileDialog()
+            return
+        }
+
+        setIsSavingPersonaBio(true)
+
+        try {
+            await updateSettings({ personaBio: normalized })
+            void notifyExtensionSettingsChanged({ force: true })
+            toast.success(t.app.onboardingProfessional.savedToast)
+            continueToProfileDialog()
+        } catch {
+            toast.error(t.app.settings.preferencesError)
+        } finally {
+            setIsSavingPersonaBio(false)
+        }
+    }
 
     const handleSubmit = async (values: CreateProfileInput, profileId?: string) => {
         try {
@@ -229,8 +287,8 @@ export default function ProfilesPage() {
                                         {t.app.settingsModal.tabExport}
                                     </Button>
                                 )}
-                                <Button 
-                                    onClick={openCreateDialog} 
+                                <Button
+                                    onClick={openCreateFlow}
                                     className="bg-surface-elevated text-primary-text hover:bg-surface-hover border border-border-soft disabled:opacity-50"
                                     disabled={quota ? list.length >= (quota.max_profiles ?? 999) : false}
                                 >
@@ -275,7 +333,7 @@ export default function ProfilesPage() {
                     title={t.app.common.profilesEmptyTitle}
                     description={t.app.common.profilesEmptyDesc}
                     actionLabel={t.app.common.profilesEmptyAction}
-                    onAction={openCreateDialog}
+                    onAction={openCreateFlow}
                 />
             ) : (
                 <section className="space-y-3">
@@ -313,6 +371,50 @@ export default function ProfilesPage() {
                 onSubmit={handleSubmit}
                 quota={quota}
             />
+
+            <Dialog open={isPersonaBioPromptOpen} onOpenChange={setIsPersonaBioPromptOpen}>
+                <DialogContent className="w-[min(92vw,640px)] rounded-3xl bg-surface-elevated p-0">
+                    <DialogHeader className="border-b border-border-soft px-6 py-5">
+                        <DialogTitle className="text-[22px] font-semibold tracking-[-0.03em] text-primary-text">
+                            {t.app.onboardingProfessional.firstProfileTitle}
+                        </DialogTitle>
+                        <DialogDescription className="mt-2 text-[14px] leading-6 text-secondary-text">
+                            {t.app.onboardingProfessional.firstProfileDesc}
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="px-6 pb-6 pt-5">
+                        <Textarea
+                            rows={5}
+                            placeholder={t.app.onboardingProfessional.placeholder}
+                            value={personaBioDraft}
+                            onChange={(event) => setPersonaBioDraft(event.target.value)}
+                        />
+
+                        <DialogFooter className="mt-5">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={continueToProfileDialog}
+                                disabled={isSavingPersonaBio || isSettingsMutating}
+                            >
+                                {t.app.onboardingProfessional.skipAction}
+                            </Button>
+
+                            <Button
+                                type="button"
+                                onClick={handleSavePersonaBio}
+                                loading={isSavingPersonaBio || isSettingsMutating}
+                                loadingLabel={t.app.profileForm.saving}
+                            >
+                                {personaBioDraft.trim().length > 0
+                                    ? t.app.onboardingProfessional.continueAction
+                                    : t.app.onboardingProfessional.continueWithoutBio}
+                            </Button>
+                        </DialogFooter>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             <ConfirmDialog
                 open={deleteTargetId !== null}

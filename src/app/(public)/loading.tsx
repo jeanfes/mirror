@@ -27,7 +27,7 @@ export default function PublicLoading() {
             
             {/* Image/Dashboard preview skeleton */}
             <div className="mt-20 flex justify-center w-full">
-                <div className="w-full max-w-5xl h-[400px] sm:h-[600px] bg-surface-hover rounded-2xl md:rounded-[40px] shadow-sm border border-border-soft" />
+                <div className="w-full max-w-5xl h-100 sm:h-150 bg-surface-hover rounded-2xl md:rounded-[40px] shadow-sm border border-border-soft" />
             </div>
         </div>
     );

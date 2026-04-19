@@ -544,6 +544,20 @@ const en = {
       voiceProfile: "Voice profile",
       openActions: "Open profile actions"
     },
+    onboardingProfessional: {
+      badge: "Onboarding",
+      title: "Tell us who you are professionally",
+      description: "This helps Mirror understand your context and generate replies that sound more like you.",
+      question: "What do you do, and what do you want to achieve with your online presence?",
+      helper: "Keep it short if you want. Focus on your role, audience, and the positioning you want to build.",
+      placeholder: "e.g. I'm a freelance growth marketer working with B2B startups in LATAM, and I want to position myself as a trusted expert without sounding salesy.",
+      skipAction: "Skip for now",
+      continueAction: "Save and continue",
+      continueWithoutBio: "Continue without bio",
+      savedToast: "Professional profile saved",
+      firstProfileTitle: "Before creating your first profile",
+      firstProfileDesc: "Tell us briefly who you are. This helps the AI understand you better."
+    },
     settings: {
       heroTitle: "Settings",
       heroDesc: "Customize extension behavior and account preferences.",

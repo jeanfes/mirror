@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import { useRouter, useSearchParams } from "next/navigation"
-import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
-import { sanitizeAuthNext, sanitizeExtensionNext } from "@/lib/extension-handoff"
+import { ROUTES } from "@/lib/routes"
+import { sanitizeExtensionNext } from "@/lib/extension-handoff"
 import { signUpWithPassword } from "@/features/auth/services/auth.service"
 import { useLanguageStore } from "@/store/useLanguageStore"
 import type { RegisterValues } from "../schemas"
@@ -16,8 +16,7 @@ export const useRegister = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const nextParam = searchParams.get("next")
-    const sanitizedNext = sanitizeAuthNext(nextParam)
-    const extensionNext = sanitizeExtensionNext(sanitizedNext)
+    const extensionNext = sanitizeExtensionNext(nextParam)
     const registerSuccessMessage = useLanguageStore((state) => state.t.auth.registerSuccess)
 
     const register = useCallback(async (data: RegisterValues): Promise<RegisterError | null> => {
@@ -41,7 +40,7 @@ export const useRegister = () => {
             if (extensionNext) {
                 router.push(`${ROUTES.auth.login.replace("/login", "/extension-redirect")}?next=${encodeURIComponent(extensionNext)}`)
             } else {
-                router.push(sanitizedNext || DEFAULT_AUTHENTICATED_ROUTE)
+                router.push(ROUTES.private.onboardingProfessional)
             }
             
             router.refresh()
@@ -50,7 +49,7 @@ export const useRegister = () => {
             setIsPending(false)
             return "connection_error"
         }
-    }, [registerSuccessMessage, router, sanitizedNext, extensionNext])
+    }, [registerSuccessMessage, router, extensionNext])
 
     return { register, isPending, isNavigating }
 }
