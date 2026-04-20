@@ -82,6 +82,9 @@ export default async function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {buildThemeInitScript(initialThemePreference, initialResolvedTheme)}
         </Script>
+        <Script id="popup-terminator" strategy="beforeInteractive">
+          {`if (typeof window !== 'undefined' && window.opener && window.name === 'Google-Login') { window.opener.postMessage({ source: 'mirror-auth', status: 'success' }, window.location.origin); window.close(); }`}
+        </Script>
       </head>
       <body
         className={`${spaceGrotesk.className} font-sans text-primary-text antialiased selection:bg-accent-purple/20 selection:text-accent-purple`}

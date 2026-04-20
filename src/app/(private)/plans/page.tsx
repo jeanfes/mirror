@@ -22,6 +22,7 @@ export default function PlansPage() {
     const { t } = useLanguageStore()
     const { cancelSubscription, isCancellingSubscription } = useBilling()
     const [showCancelModal, setShowCancelModal] = useState(false)
+    const [isRedirecting, setIsRedirecting] = useState(false)
 
     const handleSelectPlan = async (planName: "Free" | "Pro") => {
         if (account?.plan === "Pro" && planName === "Free") {
@@ -30,9 +31,11 @@ export default function PlansPage() {
         }
 
         try {
+            setIsRedirecting(true)
             const checkoutUrl = await startCheckout(planName)
             window.location.assign(checkoutUrl)
         } catch {
+            setIsRedirecting(false)
             toast.error(t.app.common.checkoutError)
         }
     }
@@ -144,7 +147,7 @@ export default function PlansPage() {
                             key={plan.name}
                             plan={plan}
                             currentPlan={resolvedAccount.plan}
-                            isUpdating={isMutating}
+                            isUpdating={isMutating || isRedirecting}
                             onSelect={handleSelectPlan}
                         />
                     ))}

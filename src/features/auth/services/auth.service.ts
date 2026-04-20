@@ -18,11 +18,15 @@ export async function signInWithPassword(input: SignInInput) {
   })
 }
 
-export async function signInWithGoogle(redirectTo: string) {
+export async function signInWithGoogle(redirectTo: string, skipBrowserRedirect = false) {
   const supabase = createClient()
   return supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo, queryParams: { prompt: "select_account" } }
+    options: { 
+      redirectTo, 
+      queryParams: { prompt: "select_account" },
+      skipBrowserRedirect 
+    }
   })
 }
 

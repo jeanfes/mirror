@@ -5,12 +5,15 @@ import type {
   UserAccount,
   Invoice,
   PaymentMethod,
+  CreditTransaction,
+  PlanChangeHistory,
+  AccountStats,
   PlanQuotasRow,
   UserAccountRow,
   InvoiceRow,
 } from "@/types/database.types"
 
-export type { Invoice, PaymentMethod }
+export type { Invoice, PaymentMethod, CreditTransaction, PlanChangeHistory, AccountStats }
 
 export type PlanName = "Free" | "Pro"
 
@@ -224,7 +227,12 @@ export async function startCheckout(
   const payload = await callEdgeFunction<CheckoutResponse>(
     supabase,
     "create-checkout",
-    { plan: planName, success_url: successUrl, cancel_url: cancelUrl }
+    {
+      plan: planName,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      redirect_url: window.location.href,
+    }
   )
 
   const checkoutUrl =
@@ -283,6 +291,195 @@ function mapInvoiceStatus(rawStatus: string): Invoice["status"] {
     return normalized as Invoice["status"]
   }
   return "unknown"
+}
+
+type SupabaseErrorLike = {
+  code?: string
+  message?: string
+  details?: string
+  hint?: string
+}
+
+function toNumber(value: unknown, fallback = 0): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value)
+    if (Number.isFinite(parsed)) {
+      return parsed
+    }
+  }
+  return fallback
+}
+
+function toNullableNumber(value: unknown): number | null {
+  if (value === null || value === undefined) {
+    return null
+  }
+  return toNumber(value, 0)
+}
+
+function isMissingRelationError(error: unknown): boolean {
+  const err = (error ?? {}) as SupabaseErrorLike
+  const message = (err.message ?? "").toLowerCase()
+  return (
+    err.code === "42P01" ||
+    (message.includes("relation") && message.includes("does not exist"))
+  )
+}
+
+function isRpcLookupError(error: unknown): boolean {
+  const err = (error ?? {}) as SupabaseErrorLike
+  const message = (err.message ?? "").toLowerCase()
+  return (
+    err.code === "42883" ||
+    err.code === "PGRST202" ||
+    err.code === "PGRST204" ||
+    (message.includes("function") && message.includes("does not exist")) ||
+    message.includes("could not find the function")
+  )
+}
+
+function normalizeDate(value: unknown): string {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value
+  }
+  return new Date().toISOString()
+}
+
+function mapCreditTransactionRow(row: Record<string, unknown>, index: number): CreditTransaction {
+  const createdAt = normalizeDate(row.created_at)
+  const delta = toNumber(row.delta ?? row.credits_delta ?? row.amount ?? row.change ?? 0, 0)
+  const balanceAfter = toNullableNumber(
+    row.balance_after ?? row.credits_after ?? row.credits_remaining ?? null
+  )
+
+  return {
+    id: String(row.id ?? `${createdAt}-${index}`),
+    createdAt,
+    delta,
+    balanceAfter,
+    type: String(row.type ?? row.kind ?? row.event_type ?? "unknown"),
+    reason: row.reason ? String(row.reason) : null,
+  }
+}
+
+function mapPlanChangeRow(row: Record<string, unknown>, index: number): PlanChangeHistory {
+  const createdAt = normalizeDate(row.created_at)
+
+  return {
+    id: String(row.id ?? `${createdAt}-${index}`),
+    createdAt,
+    fromPlan: normalizePlanName(row.from_plan ?? row.previous_plan ?? row.old_plan),
+    toPlan: normalizePlanName(row.to_plan ?? row.new_plan ?? row.plan),
+    reason: row.reason ? String(row.reason) : null,
+  }
+}
+
+function mapAccountStats(data: Record<string, unknown>): AccountStats {
+  const successRateValue = data.success_rate ?? data.successRate ?? data.apply_rate ?? null
+  const parsedSuccessRate = toNullableNumber(successRateValue)
+
+  return {
+    totalGenerated: toNumber(data.total_generated ?? data.totalGenerated ?? data.generated_total ?? 0, 0),
+    totalApplied: toNumber(data.total_applied ?? data.totalApplied ?? data.applied_total ?? 0, 0),
+    monthlyGenerated: toNumber(data.monthly_generated ?? data.monthlyGenerated ?? data.generated_this_month ?? 0, 0),
+    monthlyApplied: toNumber(data.monthly_applied ?? data.monthlyApplied ?? data.applied_this_month ?? 0, 0),
+    successRate: parsedSuccessRate,
+  }
+}
+
+export async function getCreditTransactions(
+  supabase: SupabaseClient,
+  userId: string,
+  limit = 50
+): Promise<CreditTransaction[]> {
+  const { data, error } = await supabase
+    .from("credit_transactions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    if (isMissingRelationError(error)) {
+      return []
+    }
+    throw error
+  }
+
+  return ((data ?? []) as Record<string, unknown>[]).map((row, index) => mapCreditTransactionRow(row, index))
+}
+
+export async function getPlanChangeHistory(
+  supabase: SupabaseClient,
+  userId: string,
+  limit = 50
+): Promise<PlanChangeHistory[]> {
+  const { data, error } = await supabase
+    .from("plan_change_history")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    if (isMissingRelationError(error)) {
+      return []
+    }
+    throw error
+  }
+
+  return ((data ?? []) as Record<string, unknown>[]).map((row, index) => mapPlanChangeRow(row, index))
+}
+
+export async function getAccountStats(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<AccountStats | null> {
+  type RpcExecutor = (
+    fn: string,
+    params?: Record<string, unknown>
+  ) => Promise<{ data: unknown; error: unknown }>
+
+  const rpc = supabase.rpc as unknown as RpcExecutor
+  const attempts: Array<Record<string, unknown> | undefined> = [
+    undefined,
+    { user_id: userId },
+    { p_user_id: userId },
+  ]
+
+  for (const params of attempts) {
+    const { data, error } = await rpc("get_account_stats", params)
+
+    if (error) {
+      if (isRpcLookupError(error)) {
+        continue
+      }
+      throw error
+    }
+
+    if (!data) {
+      return null
+    }
+
+    if (Array.isArray(data)) {
+      const first = data[0]
+      if (first && typeof first === "object") {
+        return mapAccountStats(first as Record<string, unknown>)
+      }
+      return null
+    }
+
+    if (typeof data === "object") {
+      return mapAccountStats(data as Record<string, unknown>)
+    }
+
+    return null
+  }
+
+  return null
 }
 
 export async function getAccount(

@@ -84,6 +84,27 @@ export interface InvoiceRow {
   created_at: string
 }
 
+export interface CreditTransactionRow {
+  id: string
+  user_id: string
+  created_at: string
+  delta: number | null
+  balance_after: number | null
+  type: string | null
+  reason: string | null
+  metadata: Record<string, unknown> | null
+}
+
+export interface PlanChangeHistoryRow {
+  id: string
+  user_id: string
+  created_at: string
+  from_plan: PlanQuotasRow["plan"] | null
+  to_plan: PlanQuotasRow["plan"] | null
+  reason: string | null
+  metadata: Record<string, unknown> | null
+}
+
 export type GoalType = "Add Value" | "Challenge" | "Networking" | "Question" | "Proposal"
 export type PlatformId = "linkedin" | "twitter" | "reddit" | "youtube" | "upwork"
 export type ObjectiveScope = PlatformId[]
@@ -166,6 +187,31 @@ export interface Invoice {
   amount: string 
   status: "paid" | "pending" | "failed" | "refunded" | "void" | "unknown"
   downloadUrl: string
+}
+
+export interface CreditTransaction {
+  id: string
+  createdAt: string
+  delta: number
+  balanceAfter: number | null
+  type: string
+  reason: string | null
+}
+
+export interface PlanChangeHistory {
+  id: string
+  createdAt: string
+  fromPlan: PlanQuotasRow["plan"] | null
+  toPlan: PlanQuotasRow["plan"] | null
+  reason: string | null
+}
+
+export interface AccountStats {
+  totalGenerated: number
+  totalApplied: number
+  monthlyGenerated: number
+  monthlyApplied: number
+  successRate: number | null
 }
 
 export interface PaymentMethod {

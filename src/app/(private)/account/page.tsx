@@ -29,6 +29,14 @@ const PaymentMethods = dynamic(
   () => import("@/features/billing/components/PaymentMethods").then((m) => m.PaymentMethods),
   { loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" /> }
 )
+const CreditTransactionsHistory = dynamic(
+  () => import("@/features/billing/components/CreditTransactionsHistory").then((m) => m.CreditTransactionsHistory),
+  { loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" /> }
+)
+const PlanChangeHistoryTable = dynamic(
+  () => import("@/features/billing/components/PlanChangeHistoryTable").then((m) => m.PlanChangeHistoryTable),
+  { loading: () => <div className="h-32 animate-pulse rounded-xl bg-surface-subtle" /> }
+)
 
 function formatSubscriptionStatusLabel(status: string | null, plan: string): string {
   const fallback = plan === "Free" ? "free" : "active"
@@ -57,11 +65,14 @@ export default function AccountPage() {
   // ── True lazy loading — only fetch when the tab is actually open ─────────────
   const {
     invoices,
+    creditTransactions,
+    planChangeHistory,
+    accountStats,
     paymentMethods,
     billingInfo,
     cancelSubscription,
     isCancellingSubscription,
-  } = useBilling({ enabled: activeTab === "billing" })
+  } = useBilling({ enabled: activeTab === "billing" || activeTab === "usage" })
   const { data: history } = useHistory(undefined, { enabled: activeTab === "usage" })
   const { data: profiles } = useProfiles({ enabled: activeTab !== "billing" })
   // ─────────────────────────────────────────────────────────────────────────────
@@ -94,6 +105,11 @@ export default function AccountPage() {
       }
     }
 
+    if (accountStats) {
+      appliedCount = accountStats.totalApplied
+      generatedThisMonth = accountStats.monthlyGenerated
+    }
+
     const defaultPlanDefinitions = resolvedPlanDefinitions ?? planDefinitions
     const currentPlan = defaultPlanDefinitions.find((p) => p.name === account.plan)
     const totalCredits = currentPlan?.credits ?? account.creditsRemaining
@@ -112,7 +128,7 @@ export default function AccountPage() {
       creditUsage,
       latestHistoryItem,
     }
-  }, [account, history, profiles, resolvedPlanDefinitions])
+  }, [account, history, profiles, resolvedPlanDefinitions, accountStats])
 
   const { summary: localizedSummary, features: localizedFeatures } = usePlanLocalization(stats?.currentPlan ?? null)
 
@@ -143,6 +159,11 @@ export default function AccountPage() {
 
   const subscriptionStatusLabel = formatSubscriptionStatusLabel(account.subscriptionStatus, account.plan)
   const latestActivityAt = account.lastGenerationAt ?? (latestHistoryItem ? new Date(latestHistoryItem.createdAt).toISOString() : null)
+  const effectiveGeneratedTotal = accountStats?.totalGenerated ?? historyItems.length
+  const adoptionRatio =
+    effectiveGeneratedTotal > 0
+      ? Math.round((appliedCount / effectiveGeneratedTotal) * 100)
+      : 0
 
   const handleCancelSubscription = async () => {
     try {
@@ -320,11 +341,11 @@ export default function AccountPage() {
             <Card className="dashboard-card-xl">
               <p className="dashboard-overline">{t.app.account.adoptionSignal}</p>
               <p className="mt-3 section-heading">
-                {historyItems.length === 0
+                {effectiveGeneratedTotal === 0
                   ? t.app.account.noUsageYet
                   : t.app.account.adoptionMetrix.replace(
                     "{0}",
-                    Math.round((appliedCount / historyItems.length) * 100).toString()
+                    adoptionRatio.toString()
                   )}
               </p>
               <p className="mt-2 body-muted">{t.app.account.adoptionDesc}</p>
@@ -347,6 +368,24 @@ export default function AccountPage() {
         </TabsContent>
 
         <TabsContent value="billing">
+          <div className="mb-4 grid gap-4 md:grid-cols-3">
+            <Card className="dashboard-card-lg">
+              <p className="dashboard-overline">{t.app.billing.creditTransactions}</p>
+              <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{creditTransactions.length}</p>
+              <p className="mt-2 body-muted">{t.app.billing.creditTransactionsDesc}</p>
+            </Card>
+            <Card className="dashboard-card-lg">
+              <p className="dashboard-overline">{t.app.billing.planChanges}</p>
+              <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{planChangeHistory.length}</p>
+              <p className="mt-2 body-muted">{t.app.billing.planChangesDesc}</p>
+            </Card>
+            <Card className="dashboard-card-lg">
+              <p className="dashboard-overline">{t.app.billing.billingSnapshot}</p>
+              <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{accountStats?.monthlyGenerated ?? generatedThisMonth}</p>
+              <p className="mt-2 body-muted">{t.app.billing.billingSnapshotDesc}</p>
+            </Card>
+          </div>
+
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.7fr]">
             <div className="space-y-3 px-1">
               <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.history}</h3>
@@ -362,6 +401,17 @@ export default function AccountPage() {
                 isCancelling={isCancellingSubscription}
                 renewalDate={account.renewalDate}
               />
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <div className="space-y-3 px-1">
+              <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.creditActivityTitle}</h3>
+              <CreditTransactionsHistory transactions={creditTransactions} />
+            </div>
+            <div className="space-y-3 px-1">
+              <h3 className="text-lg font-black tracking-tight text-primary-text">{t.app.billing.planChanges}</h3>
+              <PlanChangeHistoryTable changes={planChangeHistory} />
             </div>
           </div>
         </TabsContent>
