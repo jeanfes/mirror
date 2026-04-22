@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef } from "react"
+import { useCallback, useMemo, useRef } from "react"
 import { useMutation, useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query"
 import { useSession } from "@/lib/supabase/useSession"
 import { createClient } from "@/lib/supabase/client"
@@ -20,11 +20,11 @@ export function useUserSettings(): UseUserSettingsResult {
   const queryClient = useQueryClient()
   const supabase = createClient()
   const { userId, isAuthenticating } = useSession()
-  const settingsKey = ["user-settings", userId] as const
+  const settingsKey = useMemo(() => ["user-settings", userId] as const, [userId])
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
   const stagedChangesRef = useRef<Partial<UserSettings>>({})
-  const resolversRef = useRef<{ resolve: (s: UserSettings) => void; reject: (e: any) => void }[]>([])
+  const resolversRef = useRef<{ resolve: (s: UserSettings) => void; reject: (e: unknown) => void }[]>([])
 
   const query = useQuery<UserSettings, Error>({
     queryKey: settingsKey,

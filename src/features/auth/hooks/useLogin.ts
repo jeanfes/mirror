@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
 import { toast } from "sonner"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { DEFAULT_AUTHENTICATED_ROUTE, ROUTES } from "@/lib/routes"
@@ -95,7 +95,8 @@ export const useLogin = () => {
             if (oauthNext) {
                 callbackUrl.searchParams.set("next", oauthNext)
             }
-            const { error } = await signInWithGoogle(callbackUrl.toString())
+
+            const { data, error } = await signInWithGoogle(callbackUrl.toString(), true)
 
             if (error) {
                 const mappedError = mapOAuthStartError(error)
@@ -106,7 +107,17 @@ export const useLogin = () => {
                 } else {
                     toast.error(authErrors.oauthStartError)
                 }
+                setIsPendingGoogle(false)
+                return
+            }
 
+            if (data?.url) {
+                const width = 500
+                const height = 600
+                const left = window.screenX + (window.innerWidth - width) / 2
+                const top = window.screenY + (window.innerHeight - height) / 2
+                window.open(data.url, "Google-Login", `width=${width},height=${height},left=${left},top=${top}`)
+            } else {
                 setIsPendingGoogle(false)
             }
         } catch {
@@ -114,6 +125,27 @@ export const useLogin = () => {
             setIsPendingGoogle(false)
         }
     }, [authErrors, oauthNext])
+
+    useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.origin !== window.location.origin) return
+
+            if (event.data?.source === 'mirror-auth' && event.data?.status === 'success') {
+                setIsPendingGoogle(false)
+                setIsNavigating(true)
+
+                if (extensionRedirectTarget) {
+                    router.push(extensionRedirectTarget)
+                } else {
+                    router.push(oauthNext || DEFAULT_AUTHENTICATED_ROUTE)
+                }
+                router.refresh()
+            }
+        }
+
+        window.addEventListener("message", handleMessage)
+        return () => window.removeEventListener("message", handleMessage)
+    }, [router, oauthNext, extensionRedirectTarget])
 
     return { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating }
 }

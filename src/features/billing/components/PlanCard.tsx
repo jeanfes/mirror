@@ -97,11 +97,12 @@ export function PlanCard({ plan, currentPlan, isUpdating, onSelect }: PlanCardPr
                                 : "bg-surface-elevated text-primary-text ring-1 ring-border-soft hover:bg-surface-hover"
                         )}
                         variant={isCurrent ? "secondary" : "primary"}
-                        disabled={isCurrent || isUpdating}
+                        disabled={isCurrent}
+                        loading={isUpdating}
                         onClick={() => onSelect(plan.name)}
                     >
-                        {isCurrent ? t.app.plans.currentPlan : isUpdating ? t.app.plans.updating : actionLabel}
-                        {!isCurrent && !isUpdating ? <ArrowRight className="h-4 w-4 ml-2" /> : null}
+                        {isCurrent ? t.app.plans.currentPlan : actionLabel}
+                        {!isCurrent && <ArrowRight className="h-4 w-4" />}
                     </Button>
                 </div>
             </div>
