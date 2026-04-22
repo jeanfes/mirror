@@ -468,6 +468,9 @@ const fr = {
       updating: "Mise à jour...",
       planUpdated: "Plan mis à jour vers {0}",
       planUpdateError: "Impossible de mettre à jour le plan",
+      checkoutSuccessTitle: "Paiement réussi !",
+      checkoutSuccessDesc: "Votre compte a été mis à niveau vers Pro avec succès. Vous pouvez maintenant profiter de profils supplémentaires et d'une capacité de génération accrue.",
+      checkoutSuccessAction: "Commencer à utiliser",
       features: {
         generations: "{0} générations par mois",
         profiles: "{0} profils de voix",

@@ -98,7 +98,9 @@ export default function PlansPage() {
                                 <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{resolvedAccount.plan}</p>
                             </div>
                             <div className="rounded-full bg-surface-base/10 px-2.5 py-1 text-[11px] font-semibold text-white/85 ring-1 ring-white/10">
-                                {resolvedAccount.renewalDate ? t.app.plans.renewsOn.replace('{0}', format(new Date(resolvedAccount.renewalDate), "MMM d")) : t.app.plans.lifetimeAccess}
+                                {resolvedAccount.renewalDate && !isNaN(new Date(resolvedAccount.renewalDate).getTime()) 
+                                    ? t.app.plans.renewsOn.replace('{0}', format(new Date(resolvedAccount.renewalDate), "MMM d")) 
+                                    : t.app.plans.lifetimeAccess}
                             </div>
                         </div>
 

@@ -232,7 +232,7 @@ const es = {
     title: "¿Cómo funciona Mirror?",
     subtitle: "Impulsa tu networking en 3 simples pasos",
     s1Title: "1. Instala la Extensión",
-    s1Desc: "Anade Mirror a Chrome y ancla la extension. No requiere contrasenas de plataformas.",
+    s1Desc: "Anade Mirror a Chrome y ancla la extension. No requiere contraseñas de plataformas.",
     s2Title: "2. Crea tus Perfiles",
     s2Desc: "Define tus perfiles. ¿Quieres sonar analítico, casual o como un experto interrumpiendo el debate?",
     s3Title: "3. Comenta al Instante",
@@ -468,6 +468,9 @@ const es = {
       updating: "Actualizando...",
       planUpdated: "Plan actualizado a {0}",
       planUpdateError: "No se pudo actualizar el plan",
+      checkoutSuccessTitle: "¡Pago procesado con éxito!",
+      checkoutSuccessDesc: "Tu cuenta ha sido actualizada al plan Pro exitosamente. Ya puedes disfrutar de perfiles adicionales y mayor capacidad de generación.",
+      checkoutSuccessAction: "Comenzar a usar",
       features: {
         generations: "{0} generaciones al mes",
         profiles: "{0} perfiles de voz",

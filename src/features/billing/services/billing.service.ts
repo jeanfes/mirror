@@ -231,7 +231,7 @@ export async function startCheckout(
       plan: planName,
       success_url: successUrl,
       cancel_url: cancelUrl,
-      redirect_url: window.location.href,
+      redirect_url: successUrl,
     }
   )
 

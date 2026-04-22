@@ -468,6 +468,9 @@ const en = {
       updating: "Updating...",
       planUpdated: "Plan updated to {0}",
       planUpdateError: "Could not update plan",
+      checkoutSuccessTitle: "Checkout successful!",
+      checkoutSuccessDesc: "Your account has been successfully upgraded to Pro. You can now enjoy additional profiles and increased generation capacity.",
+      checkoutSuccessAction: "Start using",
       features: {
         generations: "{0} monthly generations",
         profiles: "{0} voice profiles",

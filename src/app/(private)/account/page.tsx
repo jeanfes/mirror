@@ -3,7 +3,7 @@
 import { format, formatDistanceToNow } from "date-fns"
 import { BarChart3, CreditCard, Layers3 } from "lucide-react"
 import dynamic from "next/dynamic"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/Card"
 import { LoadingOverlay } from "@/components/ui/Loading"
@@ -13,6 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { useAccount } from "@/features/billing/hooks/useAccount"
 import { usePlanDefinitions } from "@/features/billing/hooks/usePlanDefinitions"
 import { useBilling } from "@/features/billing/hooks/useBilling"
+import { useQueryClient } from "@tanstack/react-query"
+import { useSearchParams, useRouter } from "next/navigation"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/Dialog"
+import { Button } from "@/components/ui/Button"
+import { CheckCircle2 } from "lucide-react"
 import { planDefinitions } from "@/features/billing/services/billing.service"
 import { useHistory } from "@/features/history/hooks/useHistory"
 import { useProfiles } from "@/features/profiles/hooks/useProfiles"
@@ -57,12 +62,29 @@ function resolveSubscriptionStatusClasses(statusLabel: string): string {
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("overview")
   const hasMounted = useHasMounted()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
-  const { data: account, isLoading: isAccountLoading, isError } = useAccount()
+  const { data: account, isLoading: isAccountLoading, isError, refetch: refetchAccount } = useAccount()
   const { data: fetchedPlanDefinitions } = usePlanDefinitions()
   const resolvedPlanDefinitions = fetchedPlanDefinitions ?? planDefinitions
 
-  // ── True lazy loading — only fetch when the tab is actually open ─────────────
+  const isCheckoutSuccess = searchParams?.get("checkout") === "success"
+
+  const handleCloseSuccess = () => {
+    router.replace("/account", { scroll: false })
+  }
+
+  // Auto-refresh account data when landing with success param
+  useEffect(() => {
+    if (isCheckoutSuccess && hasMounted) {
+      refetchAccount()
+      queryClient.invalidateQueries({ queryKey: ["billingInfo"] })
+      queryClient.invalidateQueries({ queryKey: ["accountStats"] })
+    }
+  }, [isCheckoutSuccess, hasMounted, refetchAccount, queryClient])
+
   const {
     invoices,
     creditTransactions,
@@ -72,8 +94,8 @@ export default function AccountPage() {
     billingInfo,
     cancelSubscription,
     isCancellingSubscription,
-  } = useBilling({ enabled: activeTab === "billing" || activeTab === "usage" })
-  const { data: history } = useHistory(undefined, { enabled: activeTab === "usage" })
+  } = useBilling({ enabled: ["billing", "usage", "overview"].includes(activeTab) })
+  const { data: history } = useHistory(undefined, { enabled: ["usage", "overview"].includes(activeTab) })
   const { data: profiles } = useProfiles({ enabled: activeTab !== "billing" })
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -237,7 +259,7 @@ export default function AccountPage() {
               <div className="dashboard-dark-stat-muted">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.renewal}</p>
                 <p className="mt-2 text-[15px] font-semibold text-white">
-                  {account.renewalDate && hasMounted
+                  {account.renewalDate && !isNaN(new Date(account.renewalDate).getTime()) && hasMounted
                     ? format(new Date(account.renewalDate), "MMM d, yyyy", { locale: getFormatLocale(language) })
                     : t.app.account.na}
                 </p>
@@ -245,7 +267,7 @@ export default function AccountPage() {
               <div className="dashboard-dark-stat-muted">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/55">{t.app.account.latestOutput}</p>
                 <p className="mt-2 text-[15px] font-semibold text-white">
-                  {latestActivityAt && hasMounted
+                  {latestActivityAt && !isNaN(new Date(latestActivityAt).getTime()) && hasMounted
                     ? formatDistanceToNow(new Date(latestActivityAt), { addSuffix: true, locale: getFormatLocale(language) })
                     : t.app.account.noActivity}
                 </p>
@@ -270,7 +292,7 @@ export default function AccountPage() {
               <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-primary-text">{account.plan}</p>
               <p className="mt-2 body-muted">
                 {t.app.account.renewsOn}{" "}
-                {account.renewalDate && hasMounted
+                {account.renewalDate && !isNaN(new Date(account.renewalDate).getTime()) && hasMounted
                   ? format(new Date(account.renewalDate), "MMM d, yyyy", { locale: getFormatLocale(language) })
                   : t.app.account.na}
               </p>
@@ -416,6 +438,31 @@ export default function AccountPage() {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={isCheckoutSuccess} onOpenChange={(open) => !open && handleCloseSuccess()}>
+        <DialogContent className="w-[min(94vw,420px)] rounded-[28px] border border-border-light p-6 shadow-premium-md [--panel-bg:var(--surface-overlay-strong)] [--panel-border-color:var(--border-light)]" hideCloseButton>
+          <div className="flex flex-col items-center text-center">
+            <div className="mt-4 flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(ellipse,rgba(117,206,243,0.3)_0%,transparent_70%)] ring-1 ring-[#75cef3]/30">
+              <CheckCircle2 className="h-6 w-6 text-[#75cef3]" />
+            </div>
+            <DialogTitle className="mt-5 text-xl font-bold tracking-tight text-primary-text">
+              {t.app.plans.checkoutSuccessTitle}
+            </DialogTitle>
+            <DialogDescription className="mt-2 text-[14px] leading-relaxed text-secondary-text max-w-sm">
+              {t.app.plans.checkoutSuccessDesc}
+            </DialogDescription>
+            <div className="mt-8 w-full">
+              <Button
+                type="button"
+                className="w-full"
+                onClick={handleCloseSuccess}
+              >
+                {t.app.plans.checkoutSuccessAction}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

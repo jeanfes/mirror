@@ -468,6 +468,9 @@ const de = {
       updating: "Wird aktualisiert...",
       planUpdated: "Plan auf {0} aktualisiert",
       planUpdateError: "Plan-Update fehlgeschlagen",
+      checkoutSuccessTitle: "Checkout erfolgreich!",
+      checkoutSuccessDesc: "Ihr Konto wurde erfolgreich auf Pro aktualisiert. Sie können nun zusätzliche Profile und eine höhere Generationskapazität genießen.",
+      checkoutSuccessAction: "Jetzt nutzen",
       features: {
         generations: "{0} Generationen pro Monat",
         profiles: "{0} Stimmprofile",

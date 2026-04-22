@@ -145,7 +145,7 @@ export const useLogin = () => {
 
         window.addEventListener("message", handleMessage)
         return () => window.removeEventListener("message", handleMessage)
-    }, [router, sanitizedNext, extensionRedirectTarget])
+    }, [router, oauthNext, extensionRedirectTarget])
 
     return { login, loginWithGoogle, isPending, isPendingGoogle, isNavigating }
 }

@@ -468,6 +468,9 @@ const pt = {
       updating: "Atualizando...",
       planUpdated: "Plano atualizado para {0}",
       planUpdateError: "Não foi possível atualizar o plano",
+      checkoutSuccessTitle: "Pagamento bem-sucedido!",
+      checkoutSuccessDesc: "Sua conta foi atualizada para Pro com sucesso. Agora você pode desfrutar de perfis adicionais e maior capacidade de geração.",
+      checkoutSuccessAction: "Começar a usar",
       features: {
         generations: "{0} gerações por mês",
         profiles: "{0} perfis de voz",
